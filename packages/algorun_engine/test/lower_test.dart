@@ -34,6 +34,11 @@ Puzzle _puzzle({
   final inJson = [
     for (final i in inputs) '{ "name": "${i['name']}", "type": "${i['type']}" }',
   ].join(',');
+  // Lowering never reads fixtures, but the schema does: give each input and
+  // the output a value of its declared type.
+  final given = [
+    for (final i in inputs) '"${i['name']}": ${_sample[i['type']]}',
+  ].join(', ');
   return parsePuzzleJson('''
 {
   "id": "lower_probe",
@@ -50,12 +55,14 @@ Puzzle _puzzle({
   "limits": { "maxOps": 10000 },
   "validators": { "output": "equal" },
   "fixtures": {
-    "visible": [{ "id": "v1", "in": { "x": 1 }, "out": 1 }],
-    "hidden": [{ "id": "h1", "in": { "x": 2 }, "out": 2 }]
+    "visible": [{ "id": "v1", "in": { $given }, "out": ${_sample[output]} }],
+    "hidden": [{ "id": "h1", "in": { $given }, "out": ${_sample[output]} }]
   }
 }
 ''');
 }
+
+const _sample = {'num': '1', 'bool': 'true', 'array<num>': '[1]'};
 
 void main() {
   const lowerer = Lowerer();

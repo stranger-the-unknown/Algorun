@@ -504,7 +504,26 @@ final class NullExpr extends Expr {
       };
 }
 
-enum BinaryOp { add, sub, mul, div, mod, eq, ne, lt, le, gt, ge, and, or, min, max }
+enum BinaryOp {
+  add,
+  sub,
+  mul,
+  div,
+  mod,
+  eq,
+  ne,
+  lt,
+  le,
+  gt,
+  ge,
+  and,
+  or,
+  min,
+  max,
+
+  /// Division rounded down to a whole number (Milestone 7).
+  floorDiv,
+}
 
 enum UnaryOp { not, abs, neg }
 

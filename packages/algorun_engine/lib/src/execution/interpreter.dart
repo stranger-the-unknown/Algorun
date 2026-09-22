@@ -391,6 +391,7 @@ final class Interpreter {
       BinaryOp.sub => NumValue(a - b),
       BinaryOp.mul => NumValue(a * b),
       BinaryOp.div => NumValue(_divide(a, b, id)),
+      BinaryOp.floorDiv => NumValue(_floorDivide(a, b, id)),
       BinaryOp.mod => NumValue(_modulo(a, b, id)),
       BinaryOp.min => NumValue(a < b ? a : b),
       BinaryOp.max => NumValue(a > b ? a : b),
@@ -410,6 +411,26 @@ final class Interpreter {
     }
     if (a is int && b is int && a % b == 0) return a ~/ b;
     return a / b;
+  }
+
+  /// FLOOR DIVIDE: the largest whole number not above `a / b`, so 7 FLOOR
+  /// DIVIDE 2 is 3 and -7 FLOOR DIVIDE 2 is -4. The result is always whole, which
+  /// makes it a valid list position. Whole operands use exact integer
+  /// arithmetic; anything else floors the real quotient.
+  int _floorDivide(num a, num b, String? blockId) {
+    if (b == 0) {
+      throw _Halt(ResultKind.runtimeError, 'You cannot divide by zero.', blockId);
+    }
+    if (a is int && b is int) {
+      final truncated = a ~/ b;
+      final inexact = truncated * b != a;
+      return inexact && (a < 0) != (b < 0) ? truncated - 1 : truncated;
+    }
+    final quotient = a / b;
+    if (!quotient.isFinite) {
+      throw _Halt(ResultKind.runtimeError, 'This number is too big.', blockId);
+    }
+    return quotient.floor();
   }
 
   num _modulo(num a, num b, String? blockId) {

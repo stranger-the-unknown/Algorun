@@ -42,6 +42,10 @@ abstract final class BlockIds {
   static const arithSub = 'arith.sub';
   static const arithMul = 'arith.mul';
   static const arithDiv = 'arith.div';
+
+  /// Whole-number division that rounds down. DIVIDE is untouched: `7 / 2`
+  /// is still `3.5`; FLOOR DIVIDE gives `3`, a valid list position.
+  static const arithFloorDiv = 'arith.floor_div';
   static const arithMod = 'arith.mod';
   static const arithMin = 'arith.min';
   static const arithMax = 'arith.max';
@@ -104,7 +108,7 @@ abstract final class BlockIds {
     litNum, litBool, litStr, litNull,
     cmpEq, cmpNe, cmpLt, cmpLe, cmpGt, cmpGe,
     logicAnd, logicOr, logicNot,
-    arithAdd, arithSub, arithMul, arithDiv, arithMod,
+    arithAdd, arithSub, arithMul, arithDiv, arithFloorDiv, arithMod,
     arithMin, arithMax, arithAbs,
     arrGet, arrSet, arrLen, arrAppend, arrRemove, arrSwap,
     mapGet, mapSet, mapHas, mapRemove, mapSize,
@@ -198,6 +202,7 @@ abstract final class BlockCatalog {
     BlockIds.arithMod: _numBin(BlockIds.arithMod),
     BlockIds.arithMin: _numBin(BlockIds.arithMin),
     BlockIds.arithMax: _numBin(BlockIds.arithMax),
+    BlockIds.arithFloorDiv: _numBin(BlockIds.arithFloorDiv),
     BlockIds.arithAbs: reporter(BlockIds.arithAbs, ValueType.number, [
       exprIn('arg', ValueType.number),
     ]),

@@ -1,51 +1,69 @@
 import 'dart:io';
 
 import 'package:algorun_content/algorun_content.dart';
-import 'package:algorun_engine/algorun_engine.dart';
 
-/// Offline CLI: dart run algorun_content:validate puzzles_dir [worlds.json]
+/// Offline CLI:
+///
+///     dart run packages/algorun_content/bin/validate.dart <puzzles_dir> [worlds.json]
+///
+/// Validates every `.json` file under `puzzles_dir` against the closed puzzle
+/// schema, then the set as a whole (duplicate ids, file locations, world
+/// membership). Exits 1 when there is any error. Output order is stable.
 void main(List<String> args) {
   if (args.isEmpty) {
-    stderr.writeln('usage: dart run algorun_content:validate <puzzles_dir> [worlds.json]');
+    stderr.writeln('usage: validate <puzzles_dir> [worlds.json]');
     exitCode = 64;
     return;
   }
-  const validator = ContentValidator();
-  var failed = false;
-  final puzzleIds = <String>{};
-  final dir = Directory(args[0]);
-  if (!dir.existsSync()) {
+  final root = Directory(args[0]);
+  if (!root.existsSync()) {
     stderr.writeln('Not a directory: ${args[0]}');
     exitCode = 2;
     return;
   }
-  for (final entity in dir.listSync(recursive: true)) {
-    if (entity is! File || !entity.path.endsWith('.json')) continue;
-    if (entity.uri.pathSegments.last == 'worlds.json') continue;
-    try {
-      final puzzle = parsePuzzleJson(entity.readAsStringSync());
-      puzzleIds.add(puzzle.id);
-      final report = validator.validatePuzzle(puzzle);
-      for (final issue in report.issues) {
-        stdout.writeln('${issue.severity.toUpperCase()} ${entity.path}: ${issue.message}');
-        if (issue.severity == 'error') failed = true;
-      }
-    } on FormatException catch (e) {
-      stdout.writeln('ERROR ${entity.path}: $e');
-      failed = true;
-    }
-  }
+
+  String? worldsSource;
+  String? worldsPath;
+  var worldsName = 'worlds.json';
   if (args.length >= 2) {
-    final worlds = parseWorldsJson(File(args[1]).readAsStringSync());
-    final report = validator.validateWorlds(worlds, puzzleIds);
-    for (final issue in report.issues) {
-      stdout.writeln('${issue.severity.toUpperCase()} worlds: ${issue.message}');
-      if (issue.severity == 'error') failed = true;
+    final worlds = File(args[1]);
+    if (!worlds.existsSync()) {
+      stderr.writeln('Not a file: ${args[1]}');
+      exitCode = 2;
+      return;
     }
+    worldsSource = worlds.readAsStringSync();
+    worldsPath = worlds.absolute.uri.path;
+    worldsName = worlds.uri.pathSegments.last;
   }
-  if (failed) {
+
+  final rootPath = root.absolute.uri.path;
+  final files = <ContentFile>[];
+  for (final entity in root.listSync(recursive: true)) {
+    if (entity is! File || !entity.path.endsWith('.json')) continue;
+    final absolute = entity.absolute.uri.path;
+    // A manifest kept next to the puzzles is not a puzzle.
+    if (absolute == worldsPath || entity.uri.pathSegments.last == 'worlds.json') {
+      continue;
+    }
+    files.add(ContentFile(absolute.substring(rootPath.length), entity.readAsStringSync()));
+  }
+
+  final report = const ContentValidator().validateContent(
+    puzzles: files,
+    worldsSource: worldsSource,
+    worldsFile: worldsName,
+  );
+  for (final issue in report.issues) {
+    stdout.writeln(issue);
+  }
+  final errors = report.errors.length;
+  final warnings = report.warnings.length;
+  final warningNote = warnings == 0 ? '' : ', $warnings warning(s)';
+  if (errors > 0) {
+    stdout.writeln('FAILED $errors error(s)$warningNote');
     exitCode = 1;
   } else {
-    stdout.writeln('OK ${puzzleIds.length} puzzle(s)');
+    stdout.writeln('OK ${report.puzzleCount} puzzle(s)$warningNote');
   }
 }

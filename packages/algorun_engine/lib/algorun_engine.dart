@@ -27,6 +27,7 @@ export 'src/runner/test_runner.dart';
 export 'src/runner/validators.dart';
 export 'src/runtime/limits.dart';
 export 'src/runtime/runtime_value.dart';
+export 'src/runtime/value_json.dart';
 export 'src/types/parse_type.dart';
 export 'src/types/value_type.dart';
 export 'src/validation/validation_report.dart';

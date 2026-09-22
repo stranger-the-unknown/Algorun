@@ -245,11 +245,9 @@ void main() {
       expect(suite.hiddenSummary!.allPassed, isTrue);
     });
 
-    test('a puzzle with no checker the game knows is invalid', () {
-      final suite = runner.run(_returnLength(), _puzzle(validator: 'bogus'));
-      expect(suite.kind, ResultKind.invalidProgram);
-      expect(suite.message, 'This puzzle does not have a checker the game knows.');
-      expect(suite.visible, isEmpty);
+    test('a puzzle naming a checker the game does not know never loads', () {
+      // Since MS7 the schema rejects it, so the runner never sees it.
+      expect(() => _puzzle(validator: 'bogus'), throwsA(isA<SchemaException>()));
     });
   });
 
@@ -362,9 +360,10 @@ void main() {
         right: TreeNodeValue(3),
       );
       final expected = valueFromJson({
+        'type': 'treeNode',
         'value': 2,
-        'left': {'value': 1, 'left': null, 'right': null},
-        'right': {'value': 3, 'left': null, 'right': null},
+        'left': {'type': 'treeNode', 'value': 1, 'left': null, 'right': null},
+        'right': {'type': 'treeNode', 'value': 3},
       });
       expect(compareOutputs(ValidatorId.treeEqual, tree, expected), isTrue);
       final mirrored = TreeNodeValue(
@@ -447,8 +446,8 @@ void main() {
         hidden: '[{ "id": "h1", "in": { "nums": [7] }, "out": 2 }]',
       );
       runner.run(_appendThenLength(), puzzle);
-      expect(puzzle.visibleTests.single.input['nums'], [1, 2]);
-      expect(puzzle.hiddenTests.single.input['nums'], [7]);
+      expect(valueToJson(puzzle.visibleTests.single.input['nums']!), [1, 2]);
+      expect(valueToJson(puzzle.hiddenTests.single.input['nums']!), [7]);
       // And a second suite sees the same fixtures.
       final again = runner.run(_appendThenLength(), puzzle);
       expect(again.kind, ResultKind.correct);

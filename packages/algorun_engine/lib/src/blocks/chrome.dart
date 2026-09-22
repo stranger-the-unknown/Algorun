@@ -114,6 +114,7 @@ final Map<String, BlockChrome> _all = {
   BlockIds.arithSub: _ch('MINUS', _m, BlockLayout.infixBinary),
   BlockIds.arithMul: _ch('TIMES', _m, BlockLayout.infixBinary),
   BlockIds.arithDiv: _ch('DIVIDE', _m, BlockLayout.infixBinary),
+  BlockIds.arithFloorDiv: _ch('FLOOR DIVIDE', _m, BlockLayout.infixBinary),
   BlockIds.arithMod: _ch('REMAINDER', _m, BlockLayout.infixBinary),
   BlockIds.arithMin: _ch('MIN', _m, BlockLayout.infixBinary),
   BlockIds.arithMax: _ch('MAX', _m, BlockLayout.infixBinary),

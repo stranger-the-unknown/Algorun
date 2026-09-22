@@ -949,10 +949,7 @@ void main() {
       final fixture = puzzle.visibleTests.single;
       final result = engine.run(
         lowered.program!,
-        {
-          for (final input in puzzle.io.inputs)
-            input.name: valueFromJson(fixture.input[input.name]),
-        },
+        fixture.input,
         puzzle.limits.asLimits,
       );
       expect(result.kind, ResultKind.correct);

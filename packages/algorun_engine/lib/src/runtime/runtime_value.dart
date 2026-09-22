@@ -87,23 +87,6 @@ final class MapValue extends RuntimeValue {
       };
 }
 
-/// Decode a JSON fixture into a runtime value. Used by the test runner.
-RuntimeValue valueFromJson(Object? json) {
-  if (json == null) return const NilValue();
-  if (json is bool) return BoolValue(json);
-  if (json is num) return NumValue(json);
-  if (json is String) return StrValue(json);
-  if (json is List) {
-    return ArrayValue(json.map(valueFromJson).toList());
-  }
-  if (json is Map) {
-    return MapValue({
-      for (final e in json.entries) e.key as Object: valueFromJson(e.value),
-    });
-  }
-  throw FormatException('Unsupported fixture value: $json');
-}
-
 /// Insertion-ordered set. Members are keyed by [primitiveKey] so value
 /// equality works for numbers, strings, and booleans.
 final class SetValue extends RuntimeValue {

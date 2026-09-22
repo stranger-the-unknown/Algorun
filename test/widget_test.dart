@@ -221,6 +221,29 @@ void main() {
     );
   });
 
+  test('RUN solves the shipped contract probe through the hardened schema',
+      () async {
+    const repo = AssetPuzzleRepository();
+    final puzzle = await repo.loadPuzzle('world_01', 'ms1_contract_probe');
+    final controller = EditorController(puzzle: puzzle);
+    final ret = controller.place(
+      const Placement(catalogId: BlockIds.ctrlReturn),
+      to: PortRef.mainBody,
+    )!;
+    final len = controller.place(
+      const Placement(catalogId: BlockIds.arrLen),
+      to: PortRef(ret, 'value'),
+    )!;
+    controller.place(
+      const Placement(catalogId: BlockIds.varGet, literals: {'name': 'nums'}),
+      to: PortRef(len, 'array'),
+    );
+    final outcome = runPuzzle(const DefaultEngine(), controller.graph, puzzle);
+    expect(outcome.suite.kind, ResultKind.correct, reason: outcome.suite.message);
+    expect(outcome.suite.visible.single.input, {'nums': [1, 2, 3]});
+    expect(outcome.suite.hiddenSummary!.passed, 1);
+  });
+
   test('RUN grades the real fixtures instead of a placeholder', () {
     final suite = _solvedLengthRun().suite;
     expect(suite.kind, ResultKind.correct);

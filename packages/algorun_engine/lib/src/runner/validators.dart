@@ -1,8 +1,13 @@
 import '../runtime/runtime_value.dart';
+import '../types/value_type.dart';
 
 /// Named output comparators. JSON must never embed executable predicates: a
 /// puzzle picks a comparator by name from this closed registry, and nothing
 /// else. Adding a comparator is a change here, never in content.
+///
+/// A comparator also declares which output types it can grade
+/// ([validatorAccepts]), so a puzzle that pairs `treeEqual` with a number is
+/// rejected as content instead of failing when a player runs it.
 enum ValidatorId {
   equal,
   unorderedArray,
@@ -37,6 +42,43 @@ const Map<ValidatorId, OutputComparator> outputValidators = {
 
 bool compareOutputs(ValidatorId id, RuntimeValue actual, RuntimeValue expected) {
   return outputValidators[id]!(actual, expected);
+}
+
+const _sequenceAtoms = {
+  TypeAtom.array,
+  TypeAtom.stack,
+  TypeAtom.queue,
+  TypeAtom.deque,
+  TypeAtom.listNode,
+};
+
+/// Whether [id] can grade a puzzle whose declared output is [output].
+bool validatorAccepts(ValidatorId id, ValueType output) {
+  final atom = output.atom;
+  return switch (id) {
+    ValidatorId.equal => true,
+    ValidatorId.listEqualByValue => _sequenceAtoms.contains(atom),
+    ValidatorId.unorderedArray =>
+      _sequenceAtoms.contains(atom) || atom == TypeAtom.set,
+    ValidatorId.setEqual => atom == TypeAtom.array || atom == TypeAtom.set,
+    ValidatorId.unorderedPairs =>
+      atom == TypeAtom.array && output.param?.atom == TypeAtom.array,
+    ValidatorId.treeEqual => atom == TypeAtom.treeNode,
+  };
+}
+
+/// What [id] needs from the declared output, for content error messages.
+String validatorNeeds(ValidatorId id) {
+  return switch (id) {
+    ValidatorId.equal => 'any output',
+    ValidatorId.listEqualByValue =>
+      'an ordered output: array, stack, queue, deque or listNode',
+    ValidatorId.unorderedArray =>
+      'a list-like output: array, set, stack, queue, deque or listNode',
+    ValidatorId.setEqual => 'an array or a set',
+    ValidatorId.unorderedPairs => 'an array of arrays, such as array<array<num>>',
+    ValidatorId.treeEqual => 'a treeNode',
+  };
 }
 
 /// Strict equality. Shapes must match: a linked list is not an array, even
@@ -102,16 +144,13 @@ bool unorderedPairsEqual(RuntimeValue a, RuntimeValue b) {
   return _multisetEqual(left, right, _pairEqual);
 }
 
-/// Structural tree comparison. Accepts a runtime tree on either side, and a
-/// `{ "value": …, "left": …, "right": … }` fixture as the expected side.
+/// Structural tree comparison: same values in the same shape. An empty tree
+/// is `null` on either side.
 bool treeEqual(RuntimeValue a, RuntimeValue b) {
-  final left = _asTree(a);
-  final right = _asTree(b);
+  final left = _treeOrEmpty(a);
+  final right = _treeOrEmpty(b);
   if (left == null || right == null) return valuesEqual(a, b);
-  if (left.empty || right.empty) return left.empty && right.empty;
-  return left.value == right.value &&
-      treeEqual(left.left, right.left) &&
-      treeEqual(left.right, right.right);
+  return _treeNodeEqual(left.node, right.node);
 }
 
 /// The values of an ordered collection, or null when the value is not one.
@@ -175,40 +214,10 @@ List<RuntimeValue> _chainValues(ListNodeValue head) {
   return out;
 }
 
-/// A tree node, or a fixture object shaped like one. `empty` is the null leaf.
-final class _TreeShape {
-  const _TreeShape.empty()
-      : value = 0,
-        left = const NilValue(),
-        right = const NilValue(),
-        empty = true;
-
-  const _TreeShape(this.value, this.left, this.right) : empty = false;
-
-  final num value;
-  final RuntimeValue left;
-  final RuntimeValue right;
-  final bool empty;
-}
-
-_TreeShape? _asTree(RuntimeValue value) {
-  if (value is NilValue) return const _TreeShape.empty();
-  if (value is TreeNodeValue) {
-    return _TreeShape(
-      value.value,
-      value.left ?? const NilValue(),
-      value.right ?? const NilValue(),
-    );
-  }
-  if (value is MapValue) {
-    final node = value.entries['value'];
-    if (node is! NumValue) return null;
-    return _TreeShape(
-      node.value,
-      value.entries['left'] ?? const NilValue(),
-      value.entries['right'] ?? const NilValue(),
-    );
-  }
+/// A tree, or the empty tree; null when [value] is neither.
+({TreeNodeValue? node})? _treeOrEmpty(RuntimeValue value) {
+  if (value is NilValue) return (node: null);
+  if (value is TreeNodeValue) return (node: value);
   return null;
 }
 

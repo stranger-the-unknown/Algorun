@@ -493,6 +493,8 @@ final class _Session {
         BlockIds.arithSub => _binary(block, BinaryOp.sub, ValueType.number),
         BlockIds.arithMul => _binary(block, BinaryOp.mul, ValueType.number),
         BlockIds.arithDiv => _binary(block, BinaryOp.div, ValueType.number),
+        BlockIds.arithFloorDiv =>
+          _binary(block, BinaryOp.floorDiv, ValueType.number),
         BlockIds.arithMod => _binary(block, BinaryOp.mod, ValueType.number),
         BlockIds.arithMin => _binary(block, BinaryOp.min, ValueType.number),
         BlockIds.arithMax => _binary(block, BinaryOp.max, ValueType.number),

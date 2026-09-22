@@ -6,6 +6,7 @@ import '../execution/suite_result.dart';
 import '../puzzles/puzzle.dart';
 import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
+import '../runtime/value_json.dart';
 import 'validators.dart';
 
 /// Runs a lowered [Program] against a puzzle's fixtures and grades it.
@@ -13,9 +14,14 @@ import 'validators.dart';
 /// Pipeline: `Program → interpreter → test cases → named validator →
 /// SuiteResult`.
 ///
-/// Every case gets a fresh interpreter and freshly decoded input, so one case
-/// can never see another's state. Failures are the interpreter's own
-/// structured results; the runner adds only `wrongAnswer`.
+/// Cases arrive already decoded and type-checked: the puzzle schema reads every
+/// fixture once, through `valueFromJson`, against the declared io types. There
+/// is no second conversion here.
+///
+/// Every case gets a fresh interpreter, and the interpreter deep-copies its
+/// input on entry, so one case can never see another's state and no run can
+/// change a fixture. Failures are the interpreter's own structured results;
+/// the runner adds only `wrongAnswer`.
 ///
 /// Hidden fixtures never leave the engine: they are counted, never listed.
 final class TestRunner {
@@ -29,18 +35,7 @@ final class TestRunner {
   /// Grade a given list of cases. This is the seam a future generator plugs
   /// into: it hands over plain [TestCase] data, never executable content.
   SuiteResult runCases(Program program, Puzzle puzzle, List<TestCase> cases) {
-    final ValidatorId validator;
-    try {
-      validator = parseValidatorId(puzzle.outputValidator);
-    } on FormatException {
-      return SuiteResult(
-        kind: ResultKind.invalidProgram,
-        visible: const [],
-        metrics: RunMetrics(blocks: countBlocks(program)),
-        message: 'This puzzle does not have a checker the game knows.',
-      );
-    }
-
+    final validator = puzzle.outputValidator;
     final limits = puzzle.limits.asLimits;
     final visible = <CaseResult>[];
     var hiddenPassed = 0;
@@ -56,7 +51,7 @@ final class TestRunner {
     String? failureCaseId;
 
     for (final testCase in cases) {
-      final result = _runCase(program, puzzle, testCase, validator, limits);
+      final result = _runCase(program, testCase, validator, limits);
       final metrics = result.run.metrics;
       if (metrics.ops > worstOps) worstOps = metrics.ops;
       if (metrics.peakAlloc > worstAlloc) worstAlloc = metrics.peakAlloc;
@@ -103,44 +98,51 @@ final class TestRunner {
 
   CaseResult _runCase(
     Program program,
-    Puzzle puzzle,
     TestCase testCase,
     ValidatorId validator,
     RunLimits limits,
   ) {
-    // Fresh values per case. The interpreter also copies what it is given, so
-    // neither the fixture data nor another case can be reached from here.
-    final input = <String, RuntimeValue>{};
-    for (final binding in puzzle.io.inputs) {
-      if (testCase.input.containsKey(binding.name)) {
-        input[binding.name] = valueFromJson(testCase.input[binding.name]);
-      }
-    }
-
-    final run = runProgram(program, input, limits);
+    final run = runProgram(program, testCase.input, limits);
     final graded = run.kind == ResultKind.correct
         ? _grade(run, testCase, validator)
         : run;
+    if (!testCase.visible) {
+      return CaseResult(id: testCase.id, visible: false, run: graded);
+    }
+    final output = run.output;
     return CaseResult(
       id: testCase.id,
-      visible: testCase.visible,
+      visible: true,
       run: graded,
-      input: testCase.visible ? Map<String, Object?>.from(testCase.input) : null,
-      expected: testCase.visible ? testCase.output : null,
-      actual: testCase.visible ? run.output?.toJson() : null,
+      input: {
+        for (final entry in testCase.input.entries)
+          entry.key: _canonical(entry.value),
+      },
+      expected: _canonical(testCase.output),
+      actual: output == null ? null : _canonical(output),
     );
   }
 
   RunResult _grade(RunResult run, TestCase testCase, ValidatorId validator) {
-    final expected = valueFromJson(testCase.output);
     final actual = run.output ?? const NilValue();
-    if (compareOutputs(validator, actual, expected)) return run;
+    if (compareOutputs(validator, actual, testCase.output)) return run;
     return RunResult(
       kind: ResultKind.wrongAnswer,
       metrics: run.metrics,
       output: run.output,
       message: 'This case did not come out the way the puzzle expects.',
     );
+  }
+
+  /// The same canonical JSON a puzzle author writes, so expected and actual
+  /// read alike. A value the format cannot hold (a tree that contains itself)
+  /// falls back to its display form rather than hiding the result.
+  Object? _canonical(RuntimeValue value) {
+    try {
+      return valueToJson(value);
+    } on FixtureFormatException {
+      return value.toJson();
+    }
   }
 
   String _failureMessage(RunResult run, TestCase testCase) {

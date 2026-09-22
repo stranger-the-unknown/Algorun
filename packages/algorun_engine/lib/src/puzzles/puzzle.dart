@@ -1,4 +1,6 @@
+import '../runner/validators.dart';
 import '../runtime/limits.dart';
+import '../runtime/runtime_value.dart';
 import '../types/value_type.dart';
 
 enum PuzzleMode {
@@ -70,6 +72,9 @@ final class ScoringSpec {
   final bool hintPenalty;
 }
 
+/// One fixture, already decoded and type-checked against the puzzle's io by
+/// the schema. The runner hands [input] to the interpreter, which copies it on
+/// entry, so a run never changes these values.
 final class TestCase {
   const TestCase({
     required this.id,
@@ -79,8 +84,13 @@ final class TestCase {
   });
 
   final String id;
-  final Map<String, Object?> input;
-  final Object? output;
+
+  /// One value per declared input, keyed by input name.
+  final Map<String, RuntimeValue> input;
+
+  /// The expected result, compared with the puzzle's named validator.
+  final RuntimeValue output;
+
   final bool visible;
 }
 
@@ -108,6 +118,7 @@ final class Puzzle {
     this.edgeCases = const [],
     this.verdictSource = VerdictSource.local,
     this.variablePool = const [],
+    this.meta = const {},
   });
 
   final String id;
@@ -126,7 +137,9 @@ final class Puzzle {
   final PerformanceTarget limits;
   final ScoringSpec scoring;
   final List<String> hints;
-  final String outputValidator;
+
+  /// A name from the closed validator registry, checked against [io] output.
+  final ValidatorId outputValidator;
   final List<TestCase> visibleTests;
   final List<TestCase> hiddenTests;
   final List<String> edgeCases;
@@ -134,6 +147,10 @@ final class Puzzle {
 
   /// Closed names the player may CREATE. Not free text.
   final List<IoBinding> variablePool;
+
+  /// Reserved forward-compatible metadata: flat string / number / boolean
+  /// values the engine never reads. Nothing in it is ever executed.
+  final Map<String, Object> meta;
 
   /// Hidden tests are UI-hidden only. On a local APK they can be unpacked.
   /// Do not treat them as cryptographic secrets.
