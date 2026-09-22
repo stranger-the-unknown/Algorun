@@ -65,7 +65,7 @@ that actually happened, never the step that broke the budget.
 |---|---|---|
 | `maxOps` | one op per executed block; a loop header costs one op per iteration | `ResultKind.operationLimit` |
 | `maxAlloc` | live collection cells: container = 1, each stored element = 1, removal gives the cell back | `ResultKind.memoryLimit` |
-| `maxDepth` | function frames — only recursion nests | `ResultKind.runtimeError` |
+| `maxDepth` | function frames — only recursion nests | `ResultKind.runtimeError` (MS6 changed this to `ResultKind.depthLimit`) |
 | `maxArrayLen` / `maxMapSize` | per-container growth on append / push / insert | `ResultKind.memoryLimit` |
 
 `seq` and the statement wrapper around a call are lowering artifacts and cost

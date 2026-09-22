@@ -2,10 +2,12 @@
 
 Handoff document for the next coding agent. Read this before changing anything.
 
-**Current milestone: 5 complete (Program IR → sandboxed interpreter).**
-**Next milestone: 6 (Test runner). Not started.**
+**Current milestone: 6 complete (fixtures → interpreter → validator → SuiteResult; RUN is live).**
+**Next milestone: 7 (Puzzle schema hardening). Not started.**
 
-Do not implement Milestone 6 from this file unless the user explicitly asks. Do not change the architecture.
+Do not implement Milestone 7 from this file unless the user explicitly asks. Do not change the architecture.
+
+Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`.
 
 ---
 
@@ -38,13 +40,13 @@ Puzzle JSON
     → validate            (MS1/MS2)
       → AST / IR          (MS4, done)
         → Interpreter     (MS5, done)
-          → TestRunner    (MS6, NOT STARTED)
+          → TestRunner    (MS6, done)
             → Result + metrics
 ```
 
-MS3 shipped the Scratch-style editor on the MS2 graph. MS4 lowers that graph to a typed `Program`. MS5 runs that `Program` in a sandboxed, deterministic VM with op / alloc / depth budgets.
+MS3 shipped the Scratch-style editor on the MS2 graph. MS4 lowers that graph to a typed `Program`. MS5 runs that `Program` in a sandboxed, deterministic VM with op / alloc / depth budgets. MS6 grades it against the puzzle's fixtures with named validators.
 
-`DefaultEngine.runTests` still returns `ResultKind.invalidProgram` with a milestone message, and the puzzle screen's RUN calls `runTests` — so the app still shows "not implemented" until MS6 wires fixtures through `run`.
+The whole path is live: RUN in the app goes block graph → validate → lower → test runner → result. No placeholder remains.
 
 ## Package structure
 
@@ -55,6 +57,7 @@ algorun/                          Flutter app (this repo root after clone)
     screens/                      home, worlds, puzzle, results, settings
     puzzles/asset_repository.dart
     state/providers.dart          engineProvider → DefaultEngine
+    state/run_puzzle.dart         the RUN path: graph → lower → runTests
   assets/
     worlds.json
     puzzles/world_01/
@@ -67,11 +70,12 @@ algorun/                          Flutter app (this repo root after clone)
       lib/src/blocks/             catalog, graph, typing, commands, chrome
       lib/src/execution/          AlgorunEngine + DefaultEngine + Interpreter
       lib/src/puzzles/            Puzzle JSON model + parser
+      lib/src/runner/             TestRunner + validator registry
       lib/src/runtime/            RuntimeValue + RunLimits / RunMetrics
-      test/                       129 tests as of MS5 closeout
+      test/                       154 tests as of MS6 closeout
     algorun_content/              offline CLI validator, not imported by app
   docs/                           architecture + per-milestone notes
-  test/widget_test.dart           Flutter editor/picker tests
+  test/widget_test.dart           Flutter editor / picker / RUN tests
 ```
 
 App `pubspec.yaml` path-depends on `packages/algorun_engine` only.
@@ -161,28 +165,58 @@ Tree-walks the IR only. Never sees a `BlockGraph`, never evals, never generates 
 
 Details: [`MILESTONE_5.md`](MILESTONE_5.md).
 
+### Test runner (MS6)
+
+```dart
+final class TestRunner {
+  SuiteResult run(Program program, Puzzle puzzle);                              // puzzle.allTests
+  SuiteResult runCases(Program program, Puzzle puzzle, List<TestCase> cases);   // generator seam
+}
+```
+
+`DefaultEngine.runTests` calls it. Visible cases first, then hidden; every case runs.
+
+- Each case gets its own `Interpreter` and its own decoded input — cases cannot see each other, and a run cannot mutate the fixtures.
+- The runner invents one verdict, `wrongAnswer`. Every other failure is passed through from MS5 with its message and `srcBlockId`.
+- `SuiteResult.metrics`: worst `ops` / `peakAlloc` / `peakDepth` across cases (budgets are per run), `blocks` = distinct `srcBlockId`s in the IR, `hintsUsed` = 0 until MS9.
+- Hidden cases never enter `SuiteResult.visible`; only `HiddenSummary(passed, total)` leaves. `firstFailureCaseId` is set only for a visible failure; `firstFailureBlockId` / `firstFailureOpIndex` are the player's own program and are always reported.
+- Comparators live in a closed registry (`outputValidators`): `equal`, `listEqualByValue`, `unorderedArray`, `setEqual`, `unorderedPairs`, `treeEqual`. Puzzle JSON names one and can never carry a predicate. An unknown name grades as `invalidProgram`.
+- `ResultKind.depthLimit` exists as of MS6; MS5 used to fold it into `runtimeError`.
+
+App side: `lib/state/run_puzzle.dart` holds the whole RUN path, so the screen stays a button and the path stays testable.
+
+Details: [`MILESTONE_6.md`](MILESTONE_6.md).
+
 ### Editor (MS3) — do not regress
 
 Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
 
-## Test results at MS5 closeout
+## Test results at MS6 closeout
 
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **129 passed** |
+| `packages/algorun_engine` `dart test` | **154 passed** |
 | `packages/algorun_content` `dart analyze` / `dart test` | no issues, **3 passed** |
 | Content validator over `assets/` | OK 2 puzzles |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **9 passed** |
+| Flutter `test` | **13 passed** |
 
-Engine goldens A–J plus for-range, for-each, catalog `arr.len`, JSON round-trip, positions-do-not-affect-IR, invalid graphs, no-throw. MS5 adds 42 interpreter tests (control flow, expressions, collections, nodes and graphs, budgets, sandbox, trace, and graph → lower → run end to end).
+Engine goldens A–J plus for-range, for-each, catalog `arr.len`, JSON round-trip, positions-do-not-affect-IR, invalid graphs, no-throw. MS5 adds 42 interpreter tests (control flow, expressions, collections, nodes and graphs, budgets, sandbox, trace, graph → lower → run). MS6 adds 25 runner tests (grading, hidden isolation, every budget, the comparator registry, case isolation, fixture immutability, repeated runs, JSON round-trip grading, graph → validate → lower → runTests) and 4 app tests (RUN grades real fixtures, RUN on an empty canvas, results rendering, hidden stays a count).
 
 ## Known limitations
 
-- No test runner (MS6). RUN in the app still reports unimplemented: the puzzle screen calls `runTests`, not `run`.
-- `valueFromJson` has no tagged form for `listNode` / `treeNode` / `graph` / `set` fixtures yet, so those VM paths are tested from Dart, not from puzzle JSON. MS6/MS7 schema work.
-- No integer-division or floor block, so `(lo + hi) / 2` yields `1.5` and fails as a position. MS8 content needs `arith.floor` / `arith.div_int` or wording that avoids the midpoint.
+### Follow-ups carried forward
+
+- **Integer division.** Re-checked at MS6: no current puzzle divides and the catalog has no floor / integer-division block, so nothing is blocked today. `(lo + hi) / 2` yields `1.5` and then fails as a list position, so a binary-search puzzle needs a decision **before MS8 content**: add a typed `arith.floor` or `arith.div_int` block. Do not silently change what DIVIDE means.
+- **Node / graph fixtures.** `valueFromJson` has no tagged form for `listNode` / `treeNode` / `graph` / `set`, so those cases are written from Dart, not from puzzle JSON. Only `valueFromJson` has to change; the runner is already shape-agnostic. Belongs with MS7 schema hardening.
+
+### Other
+
+- No random test generation: no puzzle declares a generator. `TestRunner.runCases` is the seam — plain `TestCase` data in, never executable content.
+- `hintsUsed` is always 0 until hints ship (MS9).
+- The suite runs every case even after a failure: deterministic and complete, but more work than a judge that stops early.
+- The `PuzzleScreen` → `ResultsScreen` navigation is not pumped in a test; `runPuzzle` covers the logic. `AssetPuzzleRepository` would have to be injectable to test the screen itself.
 - `maxDepth` is enforced but stays at 1 until player-defined functions ship.
 - Allocation has no collector: an unreachable container still holds its cells for the rest of the run.
 - `heap` / `pair` have `ValueType` entries but no catalog blocks and no runtime values.
@@ -198,7 +232,7 @@ Engine goldens A–J plus for-range, for-each, catalog `arr.len`, JSON round-tri
 
 From the **repository root** (the Flutter app root: contains `pubspec.yaml` + `lib/` + `packages/`).
 
-Requires Flutter 3.47+ / Dart 3.13+. The app pubspec asks for `sdk: ^3.13.0` (MS4 asked for `^3.13.4`, which made `flutter pub get` fail on Flutter 3.47.2). SDK used at MS5 closeout: Flutter 3.47.2, Dart 3.13.2.
+Requires Flutter 3.47+ / Dart 3.13+. The app pubspec asks for `sdk: ^3.13.0` (MS4 asked for `^3.13.4`, which made `flutter pub get` fail on Flutter 3.47.2). SDK used at MS6 closeout: Flutter 3.47.2, Dart 3.13.2.
 
 ```bash
 flutter pub get
@@ -216,19 +250,17 @@ flutter test
 flutter run          # Android device/emulator
 ```
 
-Do not add a TypeScript app. Do not eval generated source. Do not start MS7–13 from a MS6 request.
+Do not add a TypeScript app. Do not eval generated source. Do not start MS8–13 from a MS7 request.
 
-## Milestone 6 contract (when asked)
+## Milestone 7 contract (when asked)
 
-Implement `runTests`: run every fixture through the MS5 interpreter and grade it.
+Harden the puzzle schema now that the whole pipeline runs real fixtures.
 
-- Input: `Program` + `Puzzle`. Build each case's input from `TestCase.input` and `puzzle.io.inputs`; run under `puzzle.limits.asLimits`.
-- Compare with `compareOutputs(parseValidatorId(puzzle.outputValidator), actual, expected)` — the named validators already exist in `runner/validators.dart`.
-- Output: `SuiteResult` — `visible` case results, `hiddenSummary` counts only, worst `ResultKind`, aggregate metrics, `firstFailureBlockId`.
-- Hidden fixture payloads must never reach UI state.
-- `valueFromJson` needs a tagged form before `listNode` / `treeNode` / `graph` / `set` fixtures can be written in puzzle JSON.
-- Wire the puzzle screen's RUN to the real suite (it already calls `runTests`, currently with `Program.empty` — it has to lower the editor graph first).
-- Do not change the MS2 typed-port model, the MS3 editor UX, or the IR shape; prefer keeping MS4 goldens and MS5 interpreter tests green.
+- Give `valueFromJson` a tagged form for `listNode`, `treeNode`, `graph` and `set` so those cases can be written in puzzle JSON. Nothing in `TestRunner` should have to change.
+- Teach `packages/algorun_content` to check what the runner now depends on: the named validator exists, fixture inputs cover `io.inputs`, declared types match the fixture shapes, and `limits.maxOps` is reachable for a reference solution.
+- Decide the integer-division question before MS8 content: a typed `arith.floor` / `arith.div_int` block, or puzzle wording that avoids a midpoint. Do not change what DIVIDE means.
+- Keep the schema closed: no predicates, no code, no generator that executes anything. A generator, if it arrives, produces `TestCase` data for `TestRunner.runCases`, with a deterministic seed and bounded size.
+- Do not change the MS2 typed-port model, the MS3 editor UX, the MS4 IR shape, or MS5/MS6 semantics; keep all 154 engine tests green.
 
 ## Milestone docs
 
@@ -240,4 +272,5 @@ Implement `runTests`: run every fixture through the MS5 interpreter and grade it
 | [`MILESTONE_3.md`](MILESTONE_3.md) | complete — visual editor |
 | [`MILESTONE_4.md`](MILESTONE_4.md) | complete — lowering |
 | [`MILESTONE_5.md`](MILESTONE_5.md) | complete — interpreter |
-| this file | MS5 handoff |
+| [`MILESTONE_6.md`](MILESTONE_6.md) | complete — test runner |
+| this file | MS6 handoff |

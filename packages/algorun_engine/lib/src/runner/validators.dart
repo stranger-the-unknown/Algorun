@@ -1,6 +1,8 @@
 import '../runtime/runtime_value.dart';
 
-/// Named output comparators. JSON must never embed executable predicates.
+/// Named output comparators. JSON must never embed executable predicates: a
+/// puzzle picks a comparator by name from this closed registry, and nothing
+/// else. Adding a comparator is a change here, never in content.
 enum ValidatorId {
   equal,
   unorderedArray,
@@ -17,6 +19,28 @@ ValidatorId parseValidatorId(String raw) {
   );
 }
 
+/// Every comparator is deterministic and free of side effects.
+typedef OutputComparator = bool Function(
+  RuntimeValue actual,
+  RuntimeValue expected,
+);
+
+/// The closed registry. `compareOutputs` is the only way in.
+const Map<ValidatorId, OutputComparator> outputValidators = {
+  ValidatorId.equal: valuesEqual,
+  ValidatorId.unorderedArray: unorderedArrayEqual,
+  ValidatorId.setEqual: setEqual,
+  ValidatorId.unorderedPairs: unorderedPairsEqual,
+  ValidatorId.listEqualByValue: sequenceEqual,
+  ValidatorId.treeEqual: treeEqual,
+};
+
+bool compareOutputs(ValidatorId id, RuntimeValue actual, RuntimeValue expected) {
+  return outputValidators[id]!(actual, expected);
+}
+
+/// Strict equality. Shapes must match: a linked list is not an array, even
+/// when it holds the same values. Use `listEqualByValue` for that.
 bool valuesEqual(RuntimeValue a, RuntimeValue b) {
   if (a.runtimeType != b.runtimeType) {
     if (a is NumValue && b is NumValue) {
@@ -36,9 +60,156 @@ bool valuesEqual(RuntimeValue a, RuntimeValue b) {
     QueueValue(:final items) => _listEqual(items, (b as QueueValue).items),
     DequeValue(:final items) => _listEqual(items, (b as DequeValue).items),
     ListNodeValue() => _chainEqual(a, b as ListNodeValue),
-    TreeNodeValue() => _treeEqual(a, b as TreeNodeValue),
+    TreeNodeValue() => _treeNodeEqual(a, b as TreeNodeValue),
     GraphValue() => _graphEqual(a, b as GraphValue),
   };
+}
+
+/// Ordered comparison across shapes: an array, stack, queue, deque, set or
+/// linked list with the same values in the same order is equal.
+bool sequenceEqual(RuntimeValue a, RuntimeValue b) {
+  final left = asSequence(a);
+  final right = asSequence(b);
+  if (left == null || right == null) return valuesEqual(a, b);
+  return _listEqual(left, right);
+}
+
+/// Order does not matter; how many times a value appears does.
+bool unorderedArrayEqual(RuntimeValue a, RuntimeValue b) {
+  final left = asSequence(a);
+  final right = asSequence(b);
+  if (left == null || right == null) return valuesEqual(a, b);
+  return _multisetEqual(left, right, valuesEqual);
+}
+
+/// Order and repeats do not matter: the same distinct members on both sides.
+bool setEqual(RuntimeValue a, RuntimeValue b) {
+  final left = asSequence(a);
+  final right = asSequence(b);
+  if (left == null || right == null) return valuesEqual(a, b);
+  final leftDistinct = _distinct(left);
+  final rightDistinct = _distinct(right);
+  if (leftDistinct.length != rightDistinct.length) return false;
+  return _multisetEqual(leftDistinct, rightDistinct, valuesEqual);
+}
+
+/// A collection of pairs where neither the order of the pairs nor the order
+/// inside a pair matters — index pairs like `[[0,1]]` and `[[1,0]]` match.
+bool unorderedPairsEqual(RuntimeValue a, RuntimeValue b) {
+  final left = asSequence(a);
+  final right = asSequence(b);
+  if (left == null || right == null) return valuesEqual(a, b);
+  return _multisetEqual(left, right, _pairEqual);
+}
+
+/// Structural tree comparison. Accepts a runtime tree on either side, and a
+/// `{ "value": …, "left": …, "right": … }` fixture as the expected side.
+bool treeEqual(RuntimeValue a, RuntimeValue b) {
+  final left = _asTree(a);
+  final right = _asTree(b);
+  if (left == null || right == null) return valuesEqual(a, b);
+  if (left.empty || right.empty) return left.empty && right.empty;
+  return left.value == right.value &&
+      treeEqual(left.left, right.left) &&
+      treeEqual(left.right, right.right);
+}
+
+/// The values of an ordered collection, or null when the value is not one.
+/// A cycle in a linked list stops the walk instead of hanging.
+List<RuntimeValue>? asSequence(RuntimeValue value) {
+  return switch (value) {
+    ArrayValue(:final elements) => elements,
+    StackValue(:final items) => items,
+    QueueValue(:final items) => items,
+    DequeValue(:final items) => items,
+    SetValue(:final members) => members.values.toList(),
+    ListNodeValue() => _chainValues(value),
+    _ => null,
+  };
+}
+
+bool _pairEqual(RuntimeValue a, RuntimeValue b) {
+  final left = asSequence(a);
+  final right = asSequence(b);
+  if (left == null || right == null) return valuesEqual(a, b);
+  return _multisetEqual(left, right, valuesEqual);
+}
+
+List<RuntimeValue> _distinct(List<RuntimeValue> values) {
+  final out = <RuntimeValue>[];
+  for (final value in values) {
+    if (!out.any((seen) => valuesEqual(seen, value))) out.add(value);
+  }
+  return out;
+}
+
+bool _multisetEqual(
+  List<RuntimeValue> a,
+  List<RuntimeValue> b,
+  OutputComparator equal,
+) {
+  if (a.length != b.length) return false;
+  final used = List<bool>.filled(b.length, false);
+  for (final item in a) {
+    var found = false;
+    for (var i = 0; i < b.length; i++) {
+      if (!used[i] && equal(item, b[i])) {
+        used[i] = true;
+        found = true;
+        break;
+      }
+    }
+    if (!found) return false;
+  }
+  return true;
+}
+
+List<RuntimeValue> _chainValues(ListNodeValue head) {
+  final out = <RuntimeValue>[];
+  final seen = <ListNodeValue>{};
+  ListNodeValue? cursor = head;
+  while (cursor != null && seen.add(cursor)) {
+    out.add(NumValue(cursor.value));
+    cursor = cursor.next;
+  }
+  return out;
+}
+
+/// A tree node, or a fixture object shaped like one. `empty` is the null leaf.
+final class _TreeShape {
+  const _TreeShape.empty()
+      : value = 0,
+        left = const NilValue(),
+        right = const NilValue(),
+        empty = true;
+
+  const _TreeShape(this.value, this.left, this.right) : empty = false;
+
+  final num value;
+  final RuntimeValue left;
+  final RuntimeValue right;
+  final bool empty;
+}
+
+_TreeShape? _asTree(RuntimeValue value) {
+  if (value is NilValue) return const _TreeShape.empty();
+  if (value is TreeNodeValue) {
+    return _TreeShape(
+      value.value,
+      value.left ?? const NilValue(),
+      value.right ?? const NilValue(),
+    );
+  }
+  if (value is MapValue) {
+    final node = value.entries['value'];
+    if (node is! NumValue) return null;
+    return _TreeShape(
+      node.value,
+      value.entries['left'] ?? const NilValue(),
+      value.entries['right'] ?? const NilValue(),
+    );
+  }
+  return null;
 }
 
 /// Linked lists compare by the values in the chain. A cycle on one side only
@@ -59,11 +230,11 @@ bool _chainEqual(ListNodeValue? a, ListNodeValue? b) {
   return left == null && right == null;
 }
 
-bool _treeEqual(TreeNodeValue? a, TreeNodeValue? b) {
+bool _treeNodeEqual(TreeNodeValue? a, TreeNodeValue? b) {
   if (a == null || b == null) return a == null && b == null;
   return a.value == b.value &&
-      _treeEqual(a.left, b.left) &&
-      _treeEqual(a.right, b.right);
+      _treeNodeEqual(a.left, b.left) &&
+      _treeNodeEqual(a.right, b.right);
 }
 
 bool _graphEqual(GraphValue a, GraphValue b) {
@@ -77,37 +248,6 @@ bool _graphEqual(GraphValue a, GraphValue b) {
   }
   return a.visited.length == b.visited.length &&
       a.visited.every(b.visited.contains);
-}
-
-bool unorderedArrayEqual(RuntimeValue a, RuntimeValue b) {
-  if (a is! ArrayValue || b is! ArrayValue) return valuesEqual(a, b);
-  if (a.elements.length != b.elements.length) return false;
-  final used = List<bool>.filled(b.elements.length, false);
-  for (final item in a.elements) {
-    var found = false;
-    for (var i = 0; i < b.elements.length; i++) {
-      if (!used[i] && valuesEqual(item, b.elements[i])) {
-        used[i] = true;
-        found = true;
-        break;
-      }
-    }
-    if (!found) return false;
-  }
-  return true;
-}
-
-bool compareOutputs(ValidatorId id, RuntimeValue actual, RuntimeValue expected) {
-  return switch (id) {
-    ValidatorId.equal ||
-    ValidatorId.listEqualByValue ||
-    ValidatorId.treeEqual =>
-      valuesEqual(actual, expected),
-    ValidatorId.unorderedArray ||
-    ValidatorId.setEqual ||
-    ValidatorId.unorderedPairs =>
-      unorderedArrayEqual(actual, expected),
-  };
 }
 
 bool _listEqual(List<RuntimeValue> a, List<RuntimeValue> b) {

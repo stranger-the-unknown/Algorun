@@ -4,16 +4,16 @@ import '../blocks/block_graph.dart';
 import '../blocks/catalog.dart';
 import '../blocks/structure.dart';
 import '../puzzles/puzzle.dart';
+import '../runner/test_runner.dart';
 import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
 import '../validation/validation_report.dart';
 import 'engine.dart';
 import 'interpreter.dart';
-import 'result_kind.dart';
 import 'run_result.dart';
 import 'suite_result.dart';
 
-/// Validates, lowers, and runs. Test execution is a later milestone.
+/// The shipping engine: validate → lower → run → grade.
 final class DefaultEngine implements AlgorunEngine {
   const DefaultEngine();
 
@@ -79,11 +79,6 @@ final class DefaultEngine implements AlgorunEngine {
 
   @override
   SuiteResult runTests(Program program, Puzzle puzzle) {
-    return const SuiteResult(
-      kind: ResultKind.invalidProgram,
-      visible: [],
-      metrics: RunMetrics.zero,
-      message: 'The test runner is not implemented yet (Milestone 6).',
-    );
+    return const TestRunner().run(program, puzzle);
   }
 }

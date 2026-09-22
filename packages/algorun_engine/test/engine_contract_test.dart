@@ -77,10 +77,13 @@ void main() {
     expect(run.message, 'This program has no starting point.');
   });
 
-  test('the test runner is still Milestone 6', () {
+  test('runTests grades a program that cannot start', () {
     final suite = engine.runTests(Program.empty, _puzzle());
     expect(suite.kind, ResultKind.invalidProgram);
-    expect(suite.message, contains('Milestone 6'));
+    expect(suite.message, 'This program has no starting point.');
+    expect(suite.visible.single.id, 'v1');
+    expect(suite.hiddenSummary!.passed, 0);
+    expect(suite.hiddenSummary!.total, 1);
   });
 
   test('unordered validator matches permuted index pairs', () {

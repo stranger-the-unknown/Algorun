@@ -8,6 +8,7 @@ import '../../editor/palette_tray.dart';
 import '../../editor/script_view.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../state/providers.dart';
+import '../../state/run_puzzle.dart';
 import '../results/results_screen.dart';
 
 final class PuzzleScreen extends ConsumerWidget {
@@ -69,16 +70,18 @@ class _PuzzleEditorState extends ConsumerState<_PuzzleEditor> {
   }
 
   void _run() {
-    final engine = ref.read(engineProvider);
-    final report = engine.validate(_controller.graph, widget.puzzle);
-    final suite = engine.runTests(Program.empty, widget.puzzle);
+    final outcome = runPuzzle(
+      ref.read(engineProvider),
+      _controller.graph,
+      widget.puzzle,
+    );
     Navigator.pushNamed(
       context,
       '/results',
       arguments: ResultsArgs(
         puzzle: widget.puzzle,
-        validation: report,
-        suite: suite,
+        validation: outcome.validation,
+        suite: outcome.suite,
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:algorun/app.dart';
 import 'package:algorun/editor/editor_controller.dart';
 import 'package:algorun/editor/script_view.dart';
 import 'package:algorun/puzzles/asset_repository.dart';
+import 'package:algorun/screens/results/results_screen.dart';
+import 'package:algorun/state/run_puzzle.dart';
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -218,4 +220,138 @@ void main() {
       findsNothing,
     );
   });
+
+  test('RUN grades the real fixtures instead of a placeholder', () {
+    final suite = _solvedLengthRun().suite;
+    expect(suite.kind, ResultKind.correct);
+    expect(suite.message, 'Every case passed.');
+    expect(suite.message, isNot(contains('not implemented')));
+    expect(suite.visible.single.id, 'v1');
+    expect(suite.visible.single.actual, 3);
+    expect(suite.hiddenSummary!.passed, 1);
+    expect(suite.metrics.blocks, 3);
+  });
+
+  test('RUN on an unfinished program says what to fix', () {
+    final puzzle = _lengthPuzzle();
+    // An empty canvas: nothing to lower, nothing to run.
+    final controller = EditorController(puzzle: puzzle);
+    final outcome = runPuzzle(const DefaultEngine(), controller.graph, puzzle);
+    expect(outcome.suite.kind, ResultKind.invalidProgram);
+    expect(outcome.validation.ok, isFalse);
+    expect(outcome.suite.message, isNot(contains('not implemented')));
+    expect(outcome.suite.message, isNot(contains('Milestone')));
+    expect(outcome.suite.visible, isEmpty);
+  });
+
+  testWidgets('results show visible cases and only a hidden count',
+      (tester) async {
+    final outcome = _solvedLengthRun();
+    final args = ResultsArgs(
+      puzzle: _lengthPuzzle(),
+      validation: outcome.validation,
+      suite: outcome.suite,
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        initialRoute: '/results',
+        onGenerateRoute: (_) => MaterialPageRoute(
+          settings: RouteSettings(name: '/results', arguments: args),
+          builder: (_) => const ResultsScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('CORRECT'), findsOneWidget);
+    expect(find.text('v1'), findsOneWidget);
+    expect(find.textContaining('1 of 1 hidden cases passed'), findsOneWidget);
+    // The hidden fixture's id and payload never reach the screen.
+    expect(find.textContaining('h1'), findsNothing);
+    expect(find.textContaining('[9]'), findsNothing);
+  });
+
+  testWidgets('a wrong visible case shows both sides, hidden stays a count',
+      (tester) async {
+    final puzzle = _lengthPuzzle();
+    final controller = EditorController(puzzle: puzzle);
+    final ret = controller.place(
+      const Placement(catalogId: BlockIds.ctrlReturn),
+      to: PortRef.mainBody,
+    )!;
+    controller.place(
+      const Placement(catalogId: BlockIds.litNum, literals: {'value': 7}),
+      to: PortRef(ret, 'value'),
+    );
+    final outcome = runPuzzle(const DefaultEngine(), controller.graph, puzzle);
+    expect(outcome.suite.kind, ResultKind.wrongAnswer);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        initialRoute: '/results',
+        onGenerateRoute: (_) => MaterialPageRoute(
+          settings: RouteSettings(
+            name: '/results',
+            arguments: ResultsArgs(
+              puzzle: puzzle,
+              validation: outcome.validation,
+              suite: outcome.suite,
+            ),
+          ),
+          builder: (_) => const ResultsScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('WRONG ANSWER'), findsOneWidget);
+    expect(find.textContaining('expected: 3'), findsOneWidget);
+    expect(find.textContaining('you gave: 7'), findsOneWidget);
+    expect(find.textContaining('h1'), findsNothing);
+  });
 }
+
+/// `return LENGTH OF nums`, built through the editor and run the way the RUN
+/// button runs it.
+RunOutcome _solvedLengthRun() {
+  final puzzle = _lengthPuzzle();
+  final controller = EditorController(puzzle: puzzle);
+  final ret = controller.place(
+    const Placement(catalogId: BlockIds.ctrlReturn),
+    to: PortRef.mainBody,
+  )!;
+  final len = controller.place(
+    const Placement(catalogId: BlockIds.arrLen),
+    to: PortRef(ret, 'value'),
+  )!;
+  controller.place(
+    const Placement(catalogId: BlockIds.varGet, literals: {'name': 'nums'}),
+    to: PortRef(len, 'array'),
+  );
+  return runPuzzle(const DefaultEngine(), controller.graph, puzzle);
+}
+
+Puzzle _lengthPuzzle() => parsePuzzleJson(r'''
+{
+  "id": "ms1_contract_probe",
+  "title": "Contract Probe",
+  "world": "world_01",
+  "tier": 1,
+  "mode": "build",
+  "story": "Engine probe.",
+  "io": {
+    "inputs": [{ "name": "nums", "type": "array<num>" }],
+    "output": { "type": "num" }
+  },
+  "blocks": {
+    "allow": ["var.set", "var.get", "ctrl.return", "arr.len", "lit.num"],
+    "maxBlocks": 8
+  },
+  "limits": { "maxOps": 10000, "maxDepth": 32, "maxAlloc": 1000 },
+  "validators": { "output": "equal" },
+  "fixtures": {
+    "visible": [{ "id": "v1", "in": { "nums": [1, 2, 3] }, "out": 3 }],
+    "hidden": [{ "id": "h1", "in": { "nums": [9] }, "out": 1 }]
+  }
+}
+''');

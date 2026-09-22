@@ -5,6 +5,7 @@ enum ResultKind {
   timeLimit,
   operationLimit,
   memoryLimit,
+  depthLimit,
   invalidProgram,
   runtimeError,
 }
@@ -16,6 +17,7 @@ extension ResultKindLabel on ResultKind {
         ResultKind.timeLimit => 'Time Limit',
         ResultKind.operationLimit => 'Operation Limit',
         ResultKind.memoryLimit => 'Memory Limit',
+        ResultKind.depthLimit => 'Depth Limit',
         ResultKind.invalidProgram => 'Invalid Program',
         ResultKind.runtimeError => 'Runtime Error',
       };

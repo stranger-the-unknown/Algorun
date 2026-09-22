@@ -23,6 +23,7 @@ export 'src/execution/suite_result.dart';
 export 'src/puzzles/parse.dart';
 export 'src/puzzles/puzzle.dart';
 export 'src/puzzles/world.dart';
+export 'src/runner/test_runner.dart';
 export 'src/runner/validators.dart';
 export 'src/runtime/limits.dart';
 export 'src/runtime/runtime_value.dart';

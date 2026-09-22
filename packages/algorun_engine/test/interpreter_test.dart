@@ -740,7 +740,7 @@ void main() {
         ),
       ]);
       final result = _run(program, limits: const RunLimits(maxDepth: 8));
-      expect(result.kind, ResultKind.runtimeError);
+      expect(result.kind, ResultKind.depthLimit);
       expect(result.message, 'This program went too many levels deep.');
       expect(result.metrics.peakDepth, 8);
     });

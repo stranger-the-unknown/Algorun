@@ -104,7 +104,7 @@ final class Interpreter {
     if (_depth > limits.maxDepth) {
       _depth--;
       throw _Halt(
-        ResultKind.runtimeError,
+        ResultKind.depthLimit,
         'This program went too many levels deep.',
         fn.srcBlockId,
       );
