@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../puzzles/asset_repository.dart';
 
 final engineProvider = Provider<AlgorunEngine>((ref) {
-  return const UnimplementedEngine();
+  return const DefaultEngine();
 });
 
 final puzzleRepositoryProvider = Provider<AssetPuzzleRepository>((ref) {

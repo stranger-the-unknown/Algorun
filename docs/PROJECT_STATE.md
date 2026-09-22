@@ -2,10 +2,10 @@
 
 Handoff document for the next coding agent. Read this before changing anything.
 
-**Current milestone: 4 complete (BlockGraph → typed Program IR).**
-**Next milestone: 5 (Interpreter / VM). Not started.**
+**Current milestone: 5 complete (Program IR → sandboxed interpreter).**
+**Next milestone: 6 (Test runner). Not started.**
 
-Do not implement Milestone 5 from this file unless the user explicitly asks. Do not change the architecture.
+Do not implement Milestone 6 from this file unless the user explicitly asks. Do not change the architecture.
 
 ---
 
@@ -37,12 +37,14 @@ Puzzle JSON
   → BlockGraph            (MS2)
     → validate            (MS1/MS2)
       → AST / IR          (MS4, done)
-        → Interpreter     (MS5, NOT STARTED)
-          → TestRunner    (MS6)
+        → Interpreter     (MS5, done)
+          → TestRunner    (MS6, NOT STARTED)
             → Result + metrics
 ```
 
-MS3 shipped the Scratch-style editor on the MS2 graph. MS4 lowers that graph to a typed `Program`. `UnimplementedEngine.run` / `runTests` still return `ResultKind.invalidProgram` with a milestone message.
+MS3 shipped the Scratch-style editor on the MS2 graph. MS4 lowers that graph to a typed `Program`. MS5 runs that `Program` in a sandboxed, deterministic VM with op / alloc / depth budgets.
+
+`DefaultEngine.runTests` still returns `ResultKind.invalidProgram` with a milestone message, and the puzzle screen's RUN calls `runTests` — so the app still shows "not implemented" until MS6 wires fixtures through `run`.
 
 ## Package structure
 
@@ -52,7 +54,7 @@ algorun/                          Flutter app (this repo root after clone)
     editor/                       Scratch-style editor (MS3)
     screens/                      home, worlds, puzzle, results, settings
     puzzles/asset_repository.dart
-    state/providers.dart          engineProvider → UnimplementedEngine
+    state/providers.dart          engineProvider → DefaultEngine
   assets/
     worlds.json
     puzzles/world_01/
@@ -63,9 +65,10 @@ algorun/                          Flutter app (this repo root after clone)
       lib/src/ast/ir.dart         typed Program / Stmt / Expr / LValue
       lib/src/ast/lower.dart      lower(graph, puzzle) → LowerResult
       lib/src/blocks/             catalog, graph, typing, commands, chrome
-      lib/src/execution/          AlgorunEngine + UnimplementedEngine
+      lib/src/execution/          AlgorunEngine + DefaultEngine + Interpreter
       lib/src/puzzles/            Puzzle JSON model + parser
-      test/                       86 tests as of MS4 closeout
+      lib/src/runtime/            RuntimeValue + RunLimits / RunMetrics
+      test/                       129 tests as of MS5 closeout
     algorun_content/              offline CLI validator, not imported by app
   docs/                           architecture + per-milestone notes
   test/widget_test.dart           Flutter editor/picker tests
@@ -96,7 +99,7 @@ LowerResult lower(BlockGraph graph, Puzzle puzzle);
 - Failure → structured `ValidationMessage`s. Game-facing copy. Never compiler jargon.
 - Never throws on a malformed graph.
 
-`UnimplementedEngine.lower` runs full `validate` (allowlist, budget, structure) first, then `Lowerer`.
+`DefaultEngine.lower` runs full `validate` (allowlist, budget, structure) first, then `Lowerer`. `DefaultEngine.run` forwards to the MS5 interpreter.
 
 ### Typed ports (MS2) — do not change
 
@@ -140,25 +143,49 @@ Catalog mapping (not puzzle ids):
 
 Types reuse `ValueType` / `GraphTyping`. No second type system.
 
+### Interpreter (MS5) — do not change without a reason
+
+```dart
+RunResult runProgram(Program program, Map<String, RuntimeValue> input, RunLimits limits, {TraceSink? trace});
+```
+
+Tree-walks the IR only. Never sees a `BlockGraph`, never evals, never generates source, no clock / random / I/O. Never throws: failures come back as a `RunResult` with game-facing copy and the failing `srcBlockId`.
+
+- `ResultKind.correct` = **ran to completion**. Verdicts belong to MS6.
+- Budgets are checked *before* a step, so `RunMetrics` reports work that happened: `maxOps` = one op per executed block (loop header = one per iteration, `seq` / call wrappers free, short-circuited operands free), `maxAlloc` = live collection cells (removal gives the cell back), `maxDepth` = function frames.
+- Deterministic: insertion-ordered maps and sets, `for each` iterates a snapshot, the `for range` counter is loop-owned, given values are deep-copied so a run cannot mutate fixtures.
+- Division keeps whole results whole (`8 / 2` → `2`, `7 / 2` → `3.5`); dividing by zero is a runtime error. Positions must be whole numbers inside the list.
+- Equality is by value for number / text / yes-no / empty; a list, map, set, node or graph is only equal to itself.
+- Unknown callee (including `fn.call`) → `ResultKind.invalidProgram`.
+- New runtime values live in `runtime/runtime_value.dart`: `SetValue`, `StackValue`, `QueueValue`, `DequeValue`, `ListNodeValue`, `TreeNodeValue`, `GraphValue`. `RuntimeValue` is sealed — adding one means updating `valuesEqual` in `runner/validators.dart`.
+
+Details: [`MILESTONE_5.md`](MILESTONE_5.md).
+
 ### Editor (MS3) — do not regress
 
 Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
 
-## Test results at MS4 closeout
+## Test results at MS5 closeout
 
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **86 passed** |
+| `packages/algorun_engine` `dart test` | **129 passed** |
 | `packages/algorun_content` `dart analyze` / `dart test` | no issues, **3 passed** |
+| Content validator over `assets/` | OK 2 puzzles |
 | Flutter `analyze` | no issues |
 | Flutter `test` | **9 passed** |
 
-Engine goldens A–J plus for-range, for-each, catalog `arr.len`, JSON round-trip, positions-do-not-affect-IR, invalid graphs, no-throw.
+Engine goldens A–J plus for-range, for-each, catalog `arr.len`, JSON round-trip, positions-do-not-affect-IR, invalid graphs, no-throw. MS5 adds 42 interpreter tests (control flow, expressions, collections, nodes and graphs, budgets, sandbox, trace, and graph → lower → run end to end).
 
 ## Known limitations
 
-- No interpreter (MS5). RUN still reports unimplemented.
+- No test runner (MS6). RUN in the app still reports unimplemented: the puzzle screen calls `runTests`, not `run`.
+- `valueFromJson` has no tagged form for `listNode` / `treeNode` / `graph` / `set` fixtures yet, so those VM paths are tested from Dart, not from puzzle JSON. MS6/MS7 schema work.
+- No integer-division or floor block, so `(lo + hi) / 2` yields `1.5` and fails as a position. MS8 content needs `arith.floor` / `arith.div_int` or wording that avoids the midpoint.
+- `maxDepth` is enforced but stays at 1 until player-defined functions ship.
+- Allocation has no collector: an unreachable container still holds its cells for the rest of the run.
+- `heap` / `pair` have `ValueType` entries but no catalog blocks and no runtime values.
 - `fn.def` / `fn.call` remain unsupported / hidden from the editor.
 - Collection ops that are not index/field lower as catalog-id `CallExpr` for the VM.
 - for-range `step` is optional in IR; an empty hole does not invent `1`.
@@ -171,7 +198,7 @@ Engine goldens A–J plus for-range, for-each, catalog `arr.len`, JSON round-tri
 
 From the **repository root** (the Flutter app root: contains `pubspec.yaml` + `lib/` + `packages/`).
 
-Requires Flutter 3.47+ / Dart 3.13+ (SDK used at closeout: Flutter 3.47.5, Dart 3.13.4).
+Requires Flutter 3.47+ / Dart 3.13+. The app pubspec asks for `sdk: ^3.13.0` (MS4 asked for `^3.13.4`, which made `flutter pub get` fail on Flutter 3.47.2). SDK used at MS5 closeout: Flutter 3.47.2, Dart 3.13.2.
 
 ```bash
 flutter pub get
@@ -181,7 +208,7 @@ cd packages/algorun_engine && dart analyze && dart test && cd ../..
 
 # Content validator
 cd packages/algorun_content && dart analyze && dart test && cd ../..
-dart run packages/algorun_content:validate assets/puzzles assets/worlds.json
+dart run packages/algorun_content/bin/validate.dart assets/puzzles assets/worlds.json
 
 # App
 flutter analyze
@@ -189,20 +216,19 @@ flutter test
 flutter run          # Android device/emulator
 ```
 
-Do not add a TypeScript app. Do not eval generated source. Do not start MS6–13 from a MS5 request.
+Do not add a TypeScript app. Do not eval generated source. Do not start MS7–13 from a MS6 request.
 
-## Milestone 5 contract (when asked)
+## Milestone 6 contract (when asked)
 
-Implement a sandboxed, deterministic interpreter over `Program` (not `BlockGraph`).
+Implement `runTests`: run every fixture through the MS5 interpreter and grade it.
 
-- Input: `Program` + `Map<String, RuntimeValue>` + `RunLimits`.
-- Output: `RunResult` with `ResultKind` + metrics (`ops`, `alloc`, `depth`).
-- Honor `maxOps` / `maxAlloc` / `maxDepth`.
-- Use `srcBlockId` for traces (`TraceSink` already exists).
-- No Dart/JS `eval`. No codegen.
-- `runTests` can stay stubbed until MS6 unless the user expands the request.
-- Do not change the MS2 typed-port model or the MS3 editor UX.
-- Do not change IR shape unless a genuine interpreter bug in lowering is found; prefer keeping MS4 goldens green.
+- Input: `Program` + `Puzzle`. Build each case's input from `TestCase.input` and `puzzle.io.inputs`; run under `puzzle.limits.asLimits`.
+- Compare with `compareOutputs(parseValidatorId(puzzle.outputValidator), actual, expected)` — the named validators already exist in `runner/validators.dart`.
+- Output: `SuiteResult` — `visible` case results, `hiddenSummary` counts only, worst `ResultKind`, aggregate metrics, `firstFailureBlockId`.
+- Hidden fixture payloads must never reach UI state.
+- `valueFromJson` needs a tagged form before `listNode` / `treeNode` / `graph` / `set` fixtures can be written in puzzle JSON.
+- Wire the puzzle screen's RUN to the real suite (it already calls `runTests`, currently with `Program.empty` — it has to lower the editor graph first).
+- Do not change the MS2 typed-port model, the MS3 editor UX, or the IR shape; prefer keeping MS4 goldens and MS5 interpreter tests green.
 
 ## Milestone docs
 
@@ -213,4 +239,5 @@ Implement a sandboxed, deterministic interpreter over `Program` (not `BlockGraph
 | [`MILESTONE_2.md`](MILESTONE_2.md) | complete — typed ports + undo |
 | [`MILESTONE_3.md`](MILESTONE_3.md) | complete — visual editor |
 | [`MILESTONE_4.md`](MILESTONE_4.md) | complete — lowering |
-| this file | MS4 handoff |
+| [`MILESTONE_5.md`](MILESTONE_5.md) | complete — interpreter |
+| this file | MS5 handoff |

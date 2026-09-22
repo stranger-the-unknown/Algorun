@@ -558,7 +558,7 @@ void main() {
   });
 
   test('engine.lower uses the same pipeline', () {
-    const engine = UnimplementedEngine();
+    const engine = DefaultEngine();
     final h = _hist({'x': ValueType.number});
     _add(h, BlockIds.varSet, id: 'set1', literals: {'name': 'x'});
     _add(h, BlockIds.litNum, id: 'n1', literals: {'value': 1});

@@ -8,13 +8,14 @@ import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
 import '../validation/validation_report.dart';
 import 'engine.dart';
+import 'interpreter.dart';
 import 'result_kind.dart';
 import 'run_result.dart';
 import 'suite_result.dart';
 
-/// Validates and lowers. Interpreting and test execution are later milestones.
-final class UnimplementedEngine implements AlgorunEngine {
-  const UnimplementedEngine();
+/// Validates, lowers, and runs. Test execution is a later milestone.
+final class DefaultEngine implements AlgorunEngine {
+  const DefaultEngine();
 
   @override
   ValidationReport validate(BlockGraph graph, Puzzle puzzle) {
@@ -73,11 +74,7 @@ final class UnimplementedEngine implements AlgorunEngine {
     RunLimits limits, {
     TraceSink? trace,
   }) {
-    return const RunResult(
-      kind: ResultKind.invalidProgram,
-      metrics: RunMetrics.zero,
-      message: 'The interpreter is not implemented yet (Milestone 5).',
-    );
+    return runProgram(program, input, limits, trace: trace);
   }
 
   @override

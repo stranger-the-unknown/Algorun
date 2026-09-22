@@ -26,7 +26,7 @@ Puzzle _puzzle() {
 }
 
 void main() {
-  const engine = UnimplementedEngine();
+  const engine = DefaultEngine();
 
   test('empty graph is invalid', () {
     final report = engine.validate(BlockGraph.empty, _puzzle());
@@ -68,14 +68,19 @@ void main() {
     expect(report.messages.any((m) => m.code == 'block_budget'), isTrue);
   });
 
-  test('run is not implemented; empty lower fails safely', () {
+  test('empty lower fails safely; a program with no entry cannot run', () {
     final lowered = engine.lower(BlockGraph.empty, _puzzle());
     expect(lowered.ok, isFalse);
     expect(lowered.errors.first.code, 'empty_program');
     final run = engine.run(Program.empty, const {}, RunLimits.standard);
     expect(run.kind, ResultKind.invalidProgram);
+    expect(run.message, 'This program has no starting point.');
+  });
+
+  test('the test runner is still Milestone 6', () {
     final suite = engine.runTests(Program.empty, _puzzle());
     expect(suite.kind, ResultKind.invalidProgram);
+    expect(suite.message, contains('Milestone 6'));
   });
 
   test('unordered validator matches permuted index pairs', () {
