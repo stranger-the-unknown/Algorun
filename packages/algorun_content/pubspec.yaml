@@ -1,0 +1,18 @@
+name: algorun_content
+description: Offline puzzle validator. Not shipped inside the game binary.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  algorun_engine:
+    path: ../algorun_engine
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.26.0
+
+executables:
+  validate: validate

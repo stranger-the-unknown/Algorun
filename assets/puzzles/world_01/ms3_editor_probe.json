@@ -1,0 +1,82 @@
+{
+  "id": "ms3_editor_probe",
+  "version": 1,
+  "title": "Editor Probe",
+  "world": "world_01",
+  "chapter": "engine",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["control", "arrays"],
+  "prerequisites": [],
+  "story": "Build with typed blocks. This probe is not interview difficulty — it exists so the editor can nest IF, WHILE, and ELSE. Campaign puzzles arrive later.",
+  "io": {
+    "inputs": [
+      { "name": "nums", "type": "array<num>" },
+      { "name": "target", "type": "num" }
+    ],
+    "output": { "type": "bool" }
+  },
+  "constraints": {
+    "n": { "min": 1, "max": 100 },
+    "notes": ["Editor probe only."]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.if",
+      "ctrl.else",
+      "ctrl.while",
+      "ctrl.for_range",
+      "ctrl.return",
+      "var.set",
+      "var.get",
+      "var.inc",
+      "lit.num",
+      "lit.bool",
+      "cmp.eq",
+      "cmp.ne",
+      "cmp.lt",
+      "cmp.gt",
+      "logic.and",
+      "logic.or",
+      "logic.not",
+      "arith.add",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "arr.append"
+    ],
+    "forbid": [],
+    "maxBlocks": 40
+  },
+  "limits": {
+    "maxOps": 10000,
+    "maxDepth": 32,
+    "maxAlloc": 1000
+  },
+  "scoring": { "blockBudget": 40 },
+  "hints": [
+    "Tap an empty slot to place a piece that fits.",
+    "Names are chips. Numbers use the pad, not a keyboard.",
+    "The interpreter is not in this milestone."
+  ],
+  "validators": { "output": "equal" },
+  "fixtures": {
+    "visible": [
+      { "id": "v1", "in": { "nums": [1, 4, 7], "target": 3 }, "out": true }
+    ],
+    "hidden": [
+      { "id": "h1", "in": { "nums": [0, 1], "target": 9 }, "out": false }
+    ]
+  },
+  "edgeCases": ["empty-looking nests still type-check"],
+  "verdictSource": "local",
+  "variables": {
+    "pool": [
+      { "name": "i", "type": "num" },
+      { "name": "j", "type": "num" },
+      { "name": "found", "type": "bool" },
+      { "name": "acc", "type": "num" },
+      { "name": "count", "type": "num" }
+    ]
+  }
+}

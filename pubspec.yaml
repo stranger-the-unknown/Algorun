@@ -1,0 +1,25 @@
+name: algorun
+description: "Algorun — construct the algorithm, never type it."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  algorun_engine:
+    path: packages/algorun_engine
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/worlds.json
+    - assets/puzzles/world_01/

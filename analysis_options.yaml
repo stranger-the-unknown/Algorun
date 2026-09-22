@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - packages/algorun_content/**
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    always_declare_return_types: true

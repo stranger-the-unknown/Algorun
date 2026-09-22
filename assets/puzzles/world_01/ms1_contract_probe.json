@@ -1,0 +1,48 @@
+{
+  "id": "ms1_contract_probe",
+  "version": 1,
+  "title": "Contract Probe",
+  "world": "world_01",
+  "chapter": "engine",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["engine_contract"],
+  "prerequisites": [],
+  "story": "This fixture exists so Milestone 1 can load a puzzle from data. It is not a campaign problem and must not be treated as the difficulty ceiling. Real interview-level and multi-concept puzzles ship from Milestone 8 onward.",
+  "io": {
+    "inputs": [{ "name": "nums", "type": "array<num>" }],
+    "output": { "type": "num" }
+  },
+  "constraints": {
+    "n": { "min": 1, "max": 100 },
+    "notes": ["Engine probe only."]
+  },
+  "blocks": {
+    "allow": ["var.set", "var.get", "ctrl.return", "arr.len", "lit.num"],
+    "forbid": [],
+    "maxBlocks": 8
+  },
+  "limits": {
+    "maxOps": 10000,
+    "maxDepth": 32,
+    "maxAlloc": 1000,
+    "notes": "Deterministic operation budget. Not a Big-O proof."
+  },
+  "scoring": { "blockBudget": 8 },
+  "hints": [
+    "This is an engine probe, not a puzzle to solve yet.",
+    "The editor arrives in Milestone 3.",
+    "The interpreter arrives in Milestone 5."
+  ],
+  "validators": { "output": "equal" },
+  "fixtures": {
+    "visible": [
+      { "id": "v1", "in": { "nums": [1, 2, 3] }, "out": 3 }
+    ],
+    "hidden": [
+      { "id": "h1", "in": { "nums": [9] }, "out": 1 }
+    ]
+  },
+  "edgeCases": ["single element"],
+  "verdictSource": "local"
+}
