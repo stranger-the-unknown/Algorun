@@ -240,7 +240,7 @@ void main() {
         references: _files('../../content/references'),
       );
       expect(report.errors, isEmpty, reason: report.issues.join('\n'));
-      expect(report.puzzleCount, 42);
+      expect(report.puzzleCount, 43);
     });
 
     test('every playable puzzle has a reference file', () {
@@ -628,7 +628,7 @@ void main() {
         '../../content/references',
       ]);
       expect(result.exitCode, 0, reason: '${result.stdout}${result.stderr}');
-      expect('${result.stdout}', contains('OK 42 puzzle(s)'));
+      expect('${result.stdout}', contains('OK 43 puzzle(s)'));
       expect('${result.stdout}', isNot(contains('ERROR')));
     });
 

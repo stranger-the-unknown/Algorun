@@ -96,6 +96,9 @@ final class ProgressNotifier extends AsyncNotifier<PlayerSave> {
   /// The saved progress of one puzzle, as of now.
   PuzzleProgress? progressOf(String puzzleId) => _current[puzzleId];
 
+  /// The whole save, as of now.
+  PlayerSave get current => _current;
+
   void _report(SaveIssue issue) {
     issues.add(issue);
     debugPrint('Algorun save: $issue');
@@ -135,9 +138,10 @@ final class ProgressNotifier extends AsyncNotifier<PlayerSave> {
     return opened;
   }
 
-  void saveDraft(Campaign campaign, Puzzle puzzle, BlockGraph graph) {
+  /// [edited] false: only the layout changed (a fold), not the program.
+  void saveDraft(Campaign campaign, Puzzle puzzle, BlockGraph graph, {bool edited = true}) {
     if (!state.hasValue) return;
-    _set(ledger.saveDraft(_current, campaign, puzzle, graph), now: false);
+    _set(ledger.saveDraft(_current, campaign, puzzle, graph, edited: edited), now: false);
   }
 
   ledger.RunRecordOutcome recordRun(Campaign campaign, Puzzle puzzle, BlockGraph graph, SuiteResult suite) {

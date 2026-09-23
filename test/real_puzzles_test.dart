@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/campaign_files.dart';
+import 'support/results_finders.dart';
 
 /// The five MS8 puzzles as the app sees them: loaded from the bundle, played
 /// through the same RUN path as the button.
@@ -125,7 +126,10 @@ void main() {
           'many operations: it was still running after 300,000, and the budget is 60,000.'),
       findsOneWidget,
     );
-    expect(find.text('Budget: 60,000 steps · 4,000 cells · depth 32 · 30 blocks'), findsOneWidget);
+    expect(costRow(tester, 'steps'), ['Steps', '300,000+', '60,000']);
+    expect(costRow(tester, 'memory').last, '4,000');
+    expect(costRow(tester, 'depth').last, '32');
+    expect(costRow(tester, 'blocks').last, '30');
     expect(find.text('v1'), findsOneWidget);
     expect(find.text('v2'), findsOneWidget);
     expect(find.textContaining('of 10 hidden cases passed'), findsOneWidget);

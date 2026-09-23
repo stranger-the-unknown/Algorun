@@ -1,11 +1,13 @@
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 import 'editor_theme.dart';
 import 'hole_widget.dart';
 import 'literal_sheet.dart';
+import 'statement_tile.dart';
 
 final class ReporterTile extends StatelessWidget {
   const ReporterTile({
@@ -25,33 +27,50 @@ final class ReporterTile extends StatelessWidget {
     if (def == null) return const SizedBox.shrink();
     final chrome = BlockChrome.of(block.catalogId);
     final selected = controller.selectedBlockId == blockId;
+    revealWhenBuilt(context, controller, blockId);
     final isBool = def.outputOfKind(PortKind.expression)?.type.atom ==
         TypeAtom.boolean;
-    final radius = isBool ? AppRadius.sm : 20.0;
+    final radius = isBool ? AppRadius.sm : 18.0;
+    final leaf = def.inputs.every((p) => !p.isExpr);
 
-    return Material(
-      color: EditorTheme.surface(BlockRole.expression),
-      borderRadius: BorderRadius.circular(radius),
-      child: InkWell(
+    return Semantics(
+      container: true,
+      selected: selected,
+      child: Material(
+        color: EditorTheme.surface(BlockRole.expression),
         borderRadius: BorderRadius.circular(radius),
-        onTap: () {
-          controller.selectBlock(blockId);
-          _maybeOpenLiteral(context, block);
-        },
-        onLongPress: () {
-          controller.selectBlock(blockId);
-          controller.apply(DisconnectCommand(blockId));
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(radius),
-            border: Border.all(
-              color: selected ? AppColors.accent : AppColors.border,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(radius),
+          onTap: () {
+            controller.selectBlock(blockId);
+            _maybeOpenLiteral(context, block);
+          },
+          // Selects only: the selection bar offers Replace and Delete.
+          onLongPress: () {
+            HapticFeedback.selectionClick();
+            controller.selectBlock(blockId);
+          },
+          child: Container(
+            // Leaves (a name, a number) are compact pills; a block with slots
+            // takes its slots' size. Rows stay about one thumb high.
+            constraints: leaf ? const BoxConstraints(minHeight: 36, minWidth: 40) : const BoxConstraints(),
+            padding: leaf
+                ? const EdgeInsets.symmetric(horizontal: 12, vertical: 6)
+                : const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(radius),
+              border: Border.all(
+                color: selected ? AppColors.accent : AppColors.borderStrong,
+                width: selected ? 2 : 1,
+              ),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              widthFactor: 1,
+              heightFactor: 1,
+              child: _body(context, block, def, chrome),
             ),
           ),
-          child: _body(context, block, def, chrome),
         ),
       ),
     );
@@ -118,11 +137,11 @@ final class ReporterTile extends StatelessWidget {
 
     final label = Text(
       chrome.label,
-      style: TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
         letterSpacing: 0.8,
-        color: EditorTheme.strip(chrome.category),
+        color: AppColors.muted,
       ),
     );
 

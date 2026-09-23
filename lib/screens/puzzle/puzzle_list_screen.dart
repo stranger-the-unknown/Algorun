@@ -15,9 +15,12 @@ final class PuzzleListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final worldId = ModalRoute.of(context)?.settings.arguments as String? ?? 'world_01';
     final view = ref.watch(campaignViewProvider);
+    final world = view.valueOrNull?.campaign.manifest.byId(worldId);
     return Scaffold(
-      appBar: AppBar(title: const Text('Puzzles')),
-      body: view.when(
+      appBar: AppBar(
+        title: Text(world == null ? 'Puzzles' : '${world.index.toString().padLeft(2, '0')} · ${world.title}'),
+      ),
+      body: SafeArea(top: false, child: view.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
         data: (view) {
@@ -36,12 +39,24 @@ final class PuzzleListScreen extends ConsumerWidget {
               ),
             );
           }
+          final solved = world.puzzleIds
+              .where((id) => view.progress.puzzleStatus(id) == PuzzleStatus.completed)
+              .length;
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 48),
-            itemCount: world.puzzleIds.length,
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 48),
+            itemCount: world.puzzleIds.length + 1,
             separatorBuilder: (_, _) => const SizedBox(height: 10),
             itemBuilder: (context, i) {
-              final id = world.puzzleIds[i];
+              if (i == 0) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: Text(
+                    '$solved of ${world.puzzleIds.length} solved · teaches ${world.concepts.map(conceptWords).join(', ')}',
+                    style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                  ),
+                );
+              }
+              final id = world.puzzleIds[i - 1];
               return _PuzzleRow(
                 worldId: world.id,
                 puzzle: view.campaign.puzzles[id]!,
@@ -53,7 +68,7 @@ final class PuzzleListScreen extends ConsumerWidget {
             },
           );
         },
-      ),
+      )),
     );
   }
 }
@@ -102,8 +117,10 @@ class _PuzzleRow extends StatelessWidget {
                   PuzzleStatus.inProgress => Icons.edit_outlined,
                   PuzzleStatus.completed => Icons.check_circle,
                 },
-                size: 20,
-                color: status == PuzzleStatus.completed ? AppColors.ok : AppColors.faint,
+                size: 22,
+                color: status == PuzzleStatus.completed ? AppColors.ok : AppColors.muted,
+                // The status line below says it in words.
+                semanticLabel: null,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -117,7 +134,7 @@ class _PuzzleRow extends StatelessWidget {
                             puzzle.title,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: locked ? AppColors.faint : AppColors.fg,
+                              color: locked ? AppColors.muted : AppColors.fg,
                             ),
                           ),
                         ),
@@ -127,7 +144,7 @@ class _PuzzleRow extends StatelessWidget {
                             'CURRENT',
                             style: TextStyle(
                               color: AppColors.accent,
-                              fontSize: 10,
+                              fontSize: 11,
                               letterSpacing: 1.2,
                               fontWeight: FontWeight.w600,
                             ),
@@ -138,12 +155,20 @@ class _PuzzleRow extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       puzzleStatusText(status, saved, missing),
-                      style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                      style: TextStyle(
+                        color: status == PuzzleStatus.completed ? AppColors.fg : AppColors.muted,
+                        fontSize: 13,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Tier ${puzzle.tier.index + 1}${puzzle.mode == PuzzleMode.build ? '' : ' · ${puzzle.mode.name}'}',
+                      style: const TextStyle(color: AppColors.muted, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              if (!locked) const Icon(Icons.chevron_right, color: AppColors.faint),
+              if (!locked) const Icon(Icons.chevron_right, color: AppColors.muted),
             ],
           ),
         ),

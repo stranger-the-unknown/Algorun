@@ -740,6 +740,11 @@ final class _Session {
       'set' => 'This block needs a set.',
       'stack' => 'This block needs a stack.',
       'queue' => 'This block needs a queue.',
+      // MS13: an empty value slot said "does not fit" — it is simply empty.
+      'value' || 'left' || 'right' || 'arg' => 'This block needs a value.',
+      'key' => 'This block needs a key.',
+      'node' || 'next' => 'This block needs a node.',
+      'graph' => 'This block needs a graph.',
       _ => 'This piece does not fit here.',
     };
   }

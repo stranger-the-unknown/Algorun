@@ -6,6 +6,7 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/results_finders.dart';
 
 Puzzle _puzzle({String hints = '["Think in pairs.", "Keep a set.", "Ask before you add."]'}) =>
     parsePuzzleJson('''
@@ -112,7 +113,7 @@ void main() {
     await tester.tap(find.text('RUN'));
     await tester.pumpAndSettle();
     expect(find.text('Result'), findsOneWidget);
-    expect(find.textContaining('· 2 hints'), findsOneWidget);
+    expect(costRow(tester, 'hints'), ['Hints', '2 hints', '—']);
   });
 
   testWidgets('a puzzle without hints shows no hint action and still runs', (tester) async {
@@ -122,7 +123,7 @@ void main() {
 
     await tester.tap(find.text('RUN'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('· 0 hints'), findsOneWidget);
+    expect(costRow(tester, 'hints'), ['Hints', '0 hints', '—']);
   });
 
   testWidgets('a real puzzle shows its own first hint and nothing else', (tester) async {

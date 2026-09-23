@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../dev/stress_probe.dart';
 import '../../progress/save_data.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../state/progress_providers.dart';
@@ -13,7 +15,7 @@ final class SettingsScreen extends ConsumerWidget {
     final save = ref.watch(progressProvider).valueOrNull;
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
+      body: SafeArea(top: false, child: ListView(
         padding: const EdgeInsets.all(AppSpace.s5),
         children: [
           SwitchListTile(
@@ -46,16 +48,38 @@ final class SettingsScreen extends ConsumerWidget {
             'Android is the primary target. Engine code is pure Dart and does not import Flutter.',
             style: TextStyle(color: AppColors.muted, height: 1.5),
           ),
+          if (kDebugMode) ...[
+            const SizedBox(height: AppSpace.s5),
+            const Text('DEVELOPER', style: AppText.label),
+            const SizedBox(height: AppSpace.s2),
+            const Text(
+              'Debug builds only. The stress probe opens a long, deep program for testing the editor on a phone; it is not saved and not part of the campaign.',
+              style: TextStyle(color: AppColors.muted, height: 1.5),
+            ),
+            const SizedBox(height: AppSpace.s2),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton(
+                key: const Key('settings-stress-probe'),
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  '/puzzle',
+                  arguments: {'worldId': 'world_01', 'puzzleId': stressProbeId},
+                ),
+                child: const Text('Open the editor stress probe'),
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpace.s5),
           const Text(
-            'Version 0.1.0  ·  Milestone 11',
+            'Version 0.1.0  ·  Milestone 13',
             style: TextStyle(
-              color: AppColors.faint,
+              color: AppColors.muted,
               fontFeatures: [FontFeature.tabularFigures()],
             ),
           ),
         ],
-      ),
+      )),
     );
   }
 

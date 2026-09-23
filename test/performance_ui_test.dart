@@ -4,6 +4,7 @@ import 'package:algorun/state/run_puzzle.dart';
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/results_finders.dart';
 
 /// Count the ones in a list. The budget is 30 operations per case.
 Puzzle _puzzle({String hiddenNums = '[5]', int hiddenOut = 1, String maxBlocks = ', "maxBlocks": 20'}) =>
@@ -162,9 +163,14 @@ void main() {
       find.text('The result is correct, but this solution uses too many operations: 58 against a budget of 30.'),
       findsOneWidget,
     );
-    expect(find.textContaining('58 steps'), findsOneWidget);
-    expect(find.textContaining('· 2 hints'), findsOneWidget);
-    expect(find.text('Budget: 30 steps · 50 cells · depth 8 · 20 blocks'), findsOneWidget);
+    // WHAT IT COST: what the run used against each budget.
+    expect(costRow(tester, 'steps'), ['Steps', '58', '30']);
+    expect(find.descendant(of: find.byKey(const Key('cost-steps')), matching: find.byIcon(Icons.warning_amber_rounded)),
+        findsOneWidget, reason: 'over budget is said with an icon, not colour alone');
+    expect(costRow(tester, 'memory'), ['Memory cells', '0', '50']);
+    expect(costRow(tester, 'depth'), ['Depth', '1', '8']);
+    expect(costRow(tester, 'blocks').last, '20');
+    expect(costRow(tester, 'hints'), ['Hints', '2 hints', '—']);
     expect(find.textContaining('h1'), findsNothing);
   });
 
@@ -174,7 +180,8 @@ void main() {
     await _showResults(tester, puzzle, outcome);
 
     expect(find.text('CORRECT'), findsOneWidget);
-    expect(find.textContaining('3 steps'), findsOneWidget);
-    expect(find.text('Budget: 30 steps · 50 cells · depth 8 · 20 blocks'), findsOneWidget);
+    expect(costRow(tester, 'steps'), ['Steps', '3', '30']);
+    expect(find.byIcon(Icons.warning_amber_rounded), findsNothing);
+    expect(costRow(tester, 'memory'), ['Memory cells', '0', '50']);
   });
 }

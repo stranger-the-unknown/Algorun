@@ -1,5 +1,6 @@
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
@@ -15,17 +16,9 @@ final class GivensBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'GIVENS',
-            style: TextStyle(
-              color: AppColors.faint,
-              fontSize: 10,
-              letterSpacing: 1.4,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          const Text('GIVENS', style: AppText.label),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -49,13 +42,16 @@ final class GivensBar extends StatelessWidget {
                       controller.showFlash('This given does not fit that slot.');
                       return;
                     }
-                    controller.place(hit.first, to: hole);
+                    if (controller.place(hit.first, to: hole) != null) {
+                      HapticFeedback.selectionClick();
+                    }
                   },
                 ),
               if (controller.unusedPool.isNotEmpty)
-                OutlinedButton(
+                ActionChip(
+                  avatar: const Icon(Icons.add, size: 18),
+                  label: const Text('CREATE VARIABLE'),
                   onPressed: () => _create(context),
-                  child: const Text('CREATE VARIABLE'),
                 ),
             ],
           ),
@@ -69,12 +65,10 @@ final class GivensBar extends StatelessWidget {
     await showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.elevated,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-      ),
       builder: (ctx) {
         return SafeArea(
-          child: Padding(
+          child: Container(
+            width: double.infinity,
             padding: const EdgeInsets.all(16),
             child: Wrap(
               spacing: 8,

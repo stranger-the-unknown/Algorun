@@ -6,6 +6,9 @@ import 'editor_controller.dart';
 import 'hole_picker.dart';
 import 'reporter_tile.dart';
 
+/// A value slot. Empty, it is a dashed outline naming what it takes
+/// (`condition`, `number`); tapping it opens the typed picker. Filled, it
+/// shows the block plugged into it.
 final class HoleWidget extends StatelessWidget {
   const HoleWidget({
     super.key,
@@ -34,28 +37,43 @@ final class HoleWidget extends StatelessWidget {
       }
     }
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
+    return Semantics(
+      container: true,
+      button: true,
+      label: 'Empty $caption slot',
+      selected: selected,
+      excludeSemantics: true,
+      child: Material(
+        color: selected ? AppColors.subtle : Colors.transparent,
         borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          controller.selectHole(hole);
-          HolePicker.show(context, controller, hole);
-        },
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 44, minWidth: 72),
-          child: CustomPaint(
-            painter: _DashedHolePainter(
-              color: selected ? AppColors.accent : AppColors.borderStrong,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Text(
-                caption,
-                style: const TextStyle(
-                  color: AppColors.faint,
-                  fontSize: 12,
-                  letterSpacing: 0.3,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => HolePicker.open(context, controller, hole),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 40, minWidth: 64),
+            child: CustomPaint(
+              painter: _DashedHolePainter(
+                color: selected ? AppColors.accent : AppColors.holeOutline,
+                width: selected ? 2 : 1.2,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 8, 12, 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.add, size: 14, color: AppColors.muted),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        caption,
+                        style: const TextStyle(
+                          color: AppColors.muted,
+                          fontSize: 13,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -67,20 +85,21 @@ final class HoleWidget extends StatelessWidget {
 }
 
 class _DashedHolePainter extends CustomPainter {
-  _DashedHolePainter({required this.color});
+  _DashedHolePainter({required this.color, required this.width});
   final Color color;
+  final double width;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
+      ..strokeWidth = width;
     final r = RRect.fromRectAndRadius(
-      Offset.zero & size,
+      (Offset.zero & size).deflate(width / 2),
       const Radius.circular(20),
     );
-    const dash = 4.0;
+    const dash = 5.0;
     const gap = 3.0;
     final path = Path()..addRRect(r);
     for (final metric in path.computeMetrics()) {
@@ -95,5 +114,5 @@ class _DashedHolePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _DashedHolePainter oldDelegate) =>
-      oldDelegate.color != color;
+      oldDelegate.color != color || oldDelegate.width != width;
 }

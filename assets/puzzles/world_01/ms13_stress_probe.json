@@ -1,0 +1,225 @@
+{
+  "id": "ms13_stress_probe",
+  "version": 1,
+  "title": "Editor Stress Probe",
+  "world": "world_01",
+  "chapter": "engine",
+  "tier": 1,
+  "mode": "build",
+  "concepts": [
+    "editor"
+  ],
+  "prerequisites": [],
+  "story": "Editor stress probe, not a campaign puzzle. It opens with a long program already built: two nested loops, IF and ELSE three deep, a map, two lists, a value that may be empty and a long variable name. For each reading: count it in a map, keep even readings in one list and odd readings in another, and count the earlier positive readings equal to it. Return those echoes plus the total of the even readings plus how many readings were odd. Use it to scroll, fold, move, copy, delete, undo and restore on a phone.",
+  "io": {
+    "inputs": [
+      {
+        "name": "readings",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "MS13 editor stress probe: a long, deep program for phone-size testing. Unlisted on purpose."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.if",
+      "ctrl.else",
+      "ctrl.while",
+      "ctrl.return",
+      "var.set",
+      "var.get",
+      "var.inc",
+      "lit.num",
+      "cmp.lt",
+      "cmp.eq",
+      "cmp.gt",
+      "arith.add",
+      "arith.mod",
+      "arr.get",
+      "arr.len",
+      "arr.append",
+      "new.array",
+      "new.map",
+      "map.get",
+      "map.set",
+      "logic.is_nothing",
+      "logic.is_not_nothing"
+    ],
+    "forbid": [],
+    "maxBlocks": 120
+  },
+  "limits": {
+    "maxOps": 20000,
+    "maxDepth": 32,
+    "maxAlloc": 400
+  },
+  "hints": [
+    "The program is already built: fold the loops to see its outline.",
+    "Select an instruction to move it, copy it or delete it; UNDO brings anything back.",
+    "Inside ELSE of IF c IS NOTHING, c is a number."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "readings": [
+            3,
+            3,
+            4,
+            -1,
+            3
+          ]
+        },
+        "out": 11
+      },
+      {
+        "id": "v2",
+        "in": {
+          "readings": [
+            2,
+            7,
+            2,
+            8
+          ]
+        },
+        "out": 14
+      }
+    ],
+    "hidden": [
+      {
+        "id": "empty",
+        "in": {
+          "readings": []
+        },
+        "out": 0
+      },
+      {
+        "id": "zeros",
+        "in": {
+          "readings": [
+            0,
+            0,
+            0
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "negative_evens",
+        "in": {
+          "readings": [
+            -2,
+            -2,
+            -6
+          ]
+        },
+        "out": -10
+      },
+      {
+        "id": "single_odd",
+        "in": {
+          "readings": [
+            5
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "all_same",
+        "in": {
+          "readings": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        "out": 39
+      },
+      {
+        "id": "twenty",
+        "in": {
+          "readings": [
+            9,
+            1,
+            4,
+            4,
+            7,
+            9,
+            2,
+            1,
+            6,
+            6,
+            3,
+            8,
+            9,
+            4,
+            5,
+            5,
+            2,
+            10,
+            1,
+            7
+          ]
+        },
+        "out": 70
+      }
+    ]
+  },
+  "variables": {
+    "pool": [
+      {
+        "name": "counts",
+        "type": "map<num,num>"
+      },
+      {
+        "name": "evens",
+        "type": "array<num>"
+      },
+      {
+        "name": "odds",
+        "type": "array<num>"
+      },
+      {
+        "name": "echoes",
+        "type": "num"
+      },
+      {
+        "name": "running_total_of_even_readings",
+        "type": "num"
+      },
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "x",
+        "type": "num"
+      },
+      {
+        "name": "c",
+        "type": "num?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "editor_stress_program"
+  }
+}

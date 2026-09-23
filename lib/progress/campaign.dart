@@ -150,3 +150,19 @@ CampaignProgress evaluateCampaign(Campaign campaign, PlayerSave save) {
 
 /// A concept id as words: `two_pointers` → `two pointers`.
 String conceptWords(String concept) => concept.replaceAll('_', ' ');
+
+/// The puzzle to offer after [puzzleId]: the first open, unsolved puzzle
+/// after it in campaign order (its own world first, then the worlds after
+/// it), else the first one before it. Null when everything open is solved.
+String? nextPuzzle(Campaign campaign, CampaignProgress progress, String puzzleId) {
+  final order = [
+    for (final world in campaign.manifest.worlds) ...world.puzzleIds,
+  ];
+  final at = order.indexOf(puzzleId);
+  final rotated = at < 0 ? order : [...order.sublist(at + 1), ...order.sublist(0, at)];
+  for (final id in rotated) {
+    final status = progress.puzzleStatus(id);
+    if (status == PuzzleStatus.open || status == PuzzleStatus.inProgress) return id;
+  }
+  return null;
+}

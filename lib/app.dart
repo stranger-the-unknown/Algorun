@@ -41,6 +41,11 @@ class _AlgorunAppState extends ConsumerState<AlgorunApp> {
       title: 'Algorun',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
+      // Honour the system font size, up to what the block editor can hold.
+      builder: (context, child) => MediaQuery.withClampedTextScaling(
+        maxScaleFactor: maxTextScale,
+        child: AnnotatedRegion(value: appOverlayStyle, child: child!),
+      ),
       initialRoute: '/',
       routes: {
         '/': (_) => const HomeScreen(),

@@ -145,7 +145,13 @@ abstract final class GraphTyping {
     for (final catalogId in allow) {
       final def = BlockCatalog.of(catalogId);
       if (def == null) continue;
-      if (catalogId == BlockIds.varGet) {
+      // GET, INCREMENT and DECREMENT name their variable, and the rules
+      // depend on it: offer one placement per variable the rules accept
+      // (MS13 — INCREMENT / DECREMENT without a name were never accepted, so
+      // the picker never offered them).
+      if (catalogId == BlockIds.varGet ||
+          catalogId == BlockIds.varInc ||
+          catalogId == BlockIds.varDec) {
         for (final name in graph.variables.keys) {
           final decision = _previewConnect(
             graph,

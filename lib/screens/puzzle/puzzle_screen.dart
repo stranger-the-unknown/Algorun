@@ -2,6 +2,8 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../dev/stress_probe.dart';
+import '../../editor/editor_bars.dart';
 import '../../editor/editor_controller.dart';
 import '../../editor/givens_bar.dart';
 import '../../editor/palette_tray.dart';
@@ -28,7 +30,13 @@ final class PuzzleScreen extends ConsumerStatefulWidget {
 }
 
 final class _Opening {
-  const _Opening(this.puzzle, {this.locked, this.opened, this.save, this.briefOpen = true});
+  const _Opening(
+    this.puzzle, {
+    this.locked,
+    this.opened,
+    this.save,
+    this.briefOpen = true,
+  });
 
   final Puzzle puzzle;
 
@@ -57,7 +65,9 @@ class _PuzzleScreenState extends ConsumerState<PuzzleScreen> {
     final save = await ref.read(progressProvider.future);
     final puzzle = campaign.puzzles[puzzleId];
     if (puzzle == null) {
-      return _Opening(await ref.read(puzzleRepositoryProvider).loadPuzzle(worldId, puzzleId));
+      return _Opening(
+        await ref.read(puzzleRepositoryProvider).loadPuzzle(worldId, puzzleId),
+      );
     }
     final progress = evaluateCampaign(campaign, save);
     if (!progress.isPuzzleOpen(puzzleId)) {
@@ -79,18 +89,49 @@ class _PuzzleScreenState extends ConsumerState<PuzzleScreen> {
       builder: (context, snap) {
         if (snap.hasError) {
           return Scaffold(
-            appBar: AppBar(),
-            body: Center(
-              child: Text(
-                '${snap.error}',
-                style: const TextStyle(color: AppColors.danger),
+            appBar: AppBar(title: const Text('Puzzle')),
+            body: Padding(
+              padding: const EdgeInsets.all(AppSpace.s5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.error_outline, color: AppColors.danger),
+                  const SizedBox(height: AppSpace.s3),
+                  const Text(
+                    'This puzzle could not be opened.',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: AppSpace.s2),
+                  Text(
+                    '${snap.error}',
+                    style: const TextStyle(
+                      color: AppColors.muted,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
             ),
           );
         }
         final opening = snap.data;
         if (opening == null) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return Scaffold(
+            appBar: AppBar(),
+            body: const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: AppSpace.s3),
+                  Text(
+                    'Opening the puzzle…',
+                    style: TextStyle(color: AppColors.muted),
+                  ),
+                ],
+              ),
+            ),
+          );
         }
         if (opening.locked case final missing?) {
           return _LockedPuzzle(puzzle: opening.puzzle, missing: missing);
@@ -119,20 +160,38 @@ class _LockedPuzzle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(puzzle.title)),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpace.s5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(Icons.lock_outline, color: AppColors.faint),
-            const SizedBox(height: AppSpace.s3),
-            Text(
-              missing.isEmpty
-                  ? 'This puzzle is locked.'
-                  : 'This puzzle is locked. It opens once you have learned ${missing.map(conceptWords).join(', ')}.',
-              style: const TextStyle(color: AppColors.muted, height: 1.45),
-            ),
-          ],
+      body: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpace.s5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.lock_outline,
+                color: AppColors.muted,
+                size: 28,
+                semanticLabel: 'Locked',
+              ),
+              const SizedBox(height: AppSpace.s3),
+              Text(
+                missing.isEmpty
+                    ? 'This puzzle is locked.'
+                    : 'This puzzle is locked. It opens once you have learned ${missing.map(conceptWords).join(', ')}.',
+                style: const TextStyle(color: AppColors.fg, height: 1.45),
+              ),
+              const SizedBox(height: AppSpace.s2),
+              const Text(
+                'A concept is learned by solving every puzzle of the world that teaches it.',
+                style: TextStyle(color: AppColors.muted, height: 1.45),
+              ),
+              const SizedBox(height: AppSpace.s5),
+              OutlinedButton(
+                onPressed: () => Navigator.maybePop(context),
+                child: const Text('BACK'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -142,8 +201,9 @@ class _LockedPuzzle extends StatelessWidget {
 /// How a puzzle screen talks to saved progress. A puzzle without it (a probe,
 /// or a test) plays exactly the same and saves nothing.
 abstract interface class PuzzleSaveHooks {
-  /// The program changed (autosave; written after a short pause).
-  void graphChanged(BlockGraph graph);
+  /// The program changed (autosave; written after a short pause). [edited]
+  /// is false when only its layout (a fold) changed.
+  void graphChanged(BlockGraph graph, {bool edited = true});
 
   /// A RUN finished. Returns what it changed in the player's progress.
   RunRecordOutcome runFinished(BlockGraph graph, SuiteResult suite);
@@ -155,6 +215,9 @@ abstract interface class PuzzleSaveHooks {
   BlockGraph? bestSolution();
 
   bool get solved;
+
+  /// The puzzle to offer next, as of now.
+  NextPuzzle? next();
 }
 
 final class _SavedPuzzle implements PuzzleSaveHooks {
@@ -165,7 +228,8 @@ final class _SavedPuzzle implements PuzzleSaveHooks {
   final Puzzle puzzle;
 
   @override
-  void graphChanged(BlockGraph graph) => notifier.saveDraft(campaign, puzzle, graph);
+  void graphChanged(BlockGraph graph, {bool edited = true}) =>
+      notifier.saveDraft(campaign, puzzle, graph, edited: edited);
 
   @override
   RunRecordOutcome runFinished(BlockGraph graph, SuiteResult suite) =>
@@ -179,9 +243,31 @@ final class _SavedPuzzle implements PuzzleSaveHooks {
 
   @override
   bool get solved => notifier.progressOf(puzzle.id)?.completed ?? false;
+
+  @override
+  NextPuzzle? next() {
+    final id = nextPuzzle(
+      campaign,
+      evaluateCampaign(campaign, notifier.current),
+      puzzle.id,
+    );
+    final world = id == null ? null : campaign.worldOf(id);
+    if (id == null || world == null) return null;
+    return NextPuzzle(
+      worldId: world.id,
+      puzzleId: id,
+      title: campaign.puzzles[id]!.title,
+      worldTitle: world.title,
+    );
+  }
 }
 
 /// One puzzle being played: brief, hints, editor and RUN.
+///
+/// Phone layout, top to bottom: the edit feedback line; the brief, hints,
+/// givens and program in one scroll; the selection bar (a block is
+/// selected) or the block palette; undo / redo, the block count and RUN.
+/// Wide screens (≥ 840) put the palette in a side rail.
 final class PuzzleEditor extends ConsumerStatefulWidget {
   const PuzzleEditor({
     super.key,
@@ -199,7 +285,7 @@ final class PuzzleEditor extends ConsumerStatefulWidget {
   final PuzzleSaveHooks? save;
   final bool briefOpen;
 
-  /// Shown once above the brief.
+  /// Shown once above the program.
   final String? notice;
 
   @override
@@ -211,7 +297,9 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
   late final HintSession _hints = HintSession(widget.puzzle.hints);
   late bool _briefOpen = widget.briefOpen;
   bool _hintsOpen = false;
+  bool _running = false;
   late BlockGraph _saved;
+  late int _savedFolds;
 
   @override
   void initState() {
@@ -221,17 +309,25 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
       seedExample: widget.puzzle.id == 'ms3_editor_probe',
       initialGraph: widget.initialGraph,
     );
+    if (widget.puzzle.id == stressProbeId && widget.initialGraph == null) {
+      buildStressProgram(_controller);
+      _controller.markBaseline();
+    }
     _controller.flash = widget.notice;
     _saved = _controller.graph;
+    _savedFolds = _controller.foldsVersion;
     _controller.addListener(_autosave);
   }
 
-  /// Only a new program counts as a change: selection, the picker and the
-  /// hint panel never write.
+  /// Only the program (and its folds) counts as a change: selection, the
+  /// picker and the hint panel never write.
   void _autosave() {
-    if (identical(_controller.graph, _saved)) return;
+    final graphChanged = !identical(_controller.graph, _saved);
+    final foldsChanged = _controller.foldsVersion != _savedFolds;
+    if (!graphChanged && !foldsChanged) return;
     _saved = _controller.graph;
-    widget.save?.graphChanged(_saved);
+    _savedFolds = _controller.foldsVersion;
+    widget.save?.graphChanged(_controller.graphForSave, edited: graphChanged);
   }
 
   @override
@@ -243,14 +339,24 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
   }
 
   Future<void> _run() async {
+    if (_running) return;
+    _controller.clearSelection();
+    setState(() => _running = true);
+    // Let RUNNING reach the screen before the cases run.
+    await Future<void>.delayed(const Duration(milliseconds: 16));
+    if (!mounted) return;
+    final graph = _controller.graphForSave;
     final outcome = runPuzzle(
       ref.read(engineProvider),
       _controller.graph,
       widget.puzzle,
       hintsUsed: _hints.used,
     );
-    final progress = widget.save?.runFinished(_controller.graph, outcome.suite);
-    await Navigator.pushNamed(
+    final progress = widget.save?.runFinished(graph, outcome.suite);
+    final solved = outcome.suite.kind == ResultKind.correct;
+    final next = solved ? widget.save?.next() : null;
+    setState(() => _running = false);
+    final action = await Navigator.pushNamed(
       context,
       '/results',
       arguments: ResultsArgs(
@@ -258,16 +364,44 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
         validation: outcome.validation,
         suite: outcome.suite,
         progress: progress,
+        next: next,
       ),
     );
-    if (mounted) setState(() {});
+    if (!mounted) return;
+    if (action == ResultsAction.next && next != null) {
+      await Navigator.pushReplacementNamed(
+        context,
+        '/puzzle',
+        arguments: {'worldId': next.worldId, 'puzzleId': next.puzzleId},
+      );
+      return;
+    }
+    // A program that could not run points at the block to fix.
+    final problem = outcome.suite.firstFailureBlockId;
+    if (outcome.suite.kind == ResultKind.invalidProgram && problem != null) {
+      _controller.showProblem(
+        problem,
+        outcome.suite.message ?? 'This block needs attention.',
+      );
+    }
+    setState(() {});
   }
 
   void _loadBest() {
     final best = widget.save?.bestSolution();
     if (best == null) return;
     _controller.replaceGraph(best);
-    _controller.showFlash('Your best solution is loaded. UNDO brings back the program you had.');
+    _controller.showFlash(
+      'Your best solution is loaded. UNDO brings back the program you had.',
+    );
+  }
+
+  void _clearProgram() {
+    if (_controller.graph.blocks.isEmpty) return;
+    _controller.replaceGraph(
+      BlockGraph(blocks: const {}, variables: _controller.graph.variables),
+    );
+    _controller.showFlash('The program is cleared. UNDO brings it back.');
   }
 
   @override
@@ -275,113 +409,176 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
     return ListenableBuilder(
       listenable: _controller,
       builder: (context, _) {
-        final wide = MediaQuery.sizeOf(context).width >= 840;
+        final size = MediaQuery.sizeOf(context);
+        final wide = size.width >= 840;
+        final short = size.height < 560;
         final solved = widget.save?.solved ?? false;
         final best = widget.save?.bestSolution();
-        return Scaffold(
-          appBar: AppBar(
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(child: Text(widget.puzzle.title, overflow: TextOverflow.ellipsis)),
-                if (solved) ...[
-                  const SizedBox(width: 8),
-                  const Icon(Icons.check_circle, size: 18, color: AppColors.ok, semanticLabel: 'Solved'),
-                ],
-              ],
-            ),
-            actions: [
-              if (best != null)
-                IconButton(
-                  tooltip: 'Load best solution',
-                  onPressed: _loadBest,
-                  icon: const Icon(Icons.emoji_events_outlined),
-                ),
-              IconButton(
-                tooltip: 'Undo',
-                onPressed: _controller.canUndo ? _controller.undo : null,
-                icon: const Icon(Icons.undo),
-              ),
-              IconButton(
-                tooltip: 'Redo',
-                onPressed: _controller.canRedo ? _controller.redo : null,
-                icon: const Icon(Icons.redo),
-              ),
-              IconButton(
-                tooltip: 'Remove block',
-                onPressed: _controller.selectedBlockId == null
-                    ? null
-                    : _controller.detachSelected,
-                icon: const Icon(Icons.delete_outline),
-              ),
-            ],
+        final selection = _controller.selection;
+        final header = <Widget>[
+          if (solved) _SolvedLine(onLoadBest: best == null ? null : _loadBest),
+          _Brief(
+            puzzle: widget.puzzle,
+            open: _briefOpen,
+            onToggle: () => setState(() => _briefOpen = !_briefOpen),
           ),
-          body: Column(
-            children: [
-              if (_controller.flash != null)
-                Material(
-                  color: AppColors.subtle,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.info_outline,
-                            size: 16, color: AppColors.warn),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _controller.flash!,
-                            style: const TextStyle(color: AppColors.muted),
-                          ),
-                        ),
-                      ],
+          _HintBar(
+            hints: _hints,
+            open: _hintsOpen,
+            onToggle: () => setState(() => _hintsOpen = !_hintsOpen),
+            onReveal: () => setState(() {
+              _hints.revealNext();
+              _hintsOpen = true;
+            }),
+          ),
+          GivensBar(controller: _controller),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+            child: Text('PROGRAM', style: AppText.label),
+          ),
+        ];
+        final script = ScriptView(controller: _controller, header: header);
+        return PopScope(
+          // Back first lets go of a selection, then leaves (the program is
+          // already saved).
+          canPop: selection == null && _controller.activeHole == null,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) _controller.clearSelection();
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      widget.puzzle.title,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  if (solved) ...[
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.check_circle,
+                      size: 18,
+                      color: AppColors.ok,
+                      semanticLabel: 'Solved',
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                PopupMenuButton<String>(
+                  tooltip: 'Program options',
+                  icon: const Icon(Icons.more_vert),
+                  onSelected: (value) => switch (value) {
+                    'fold' => _controller.collapseAll(),
+                    'unfold' => _controller.expandAll(),
+                    'clear' => _clearProgram(),
+                    _ => null,
+                  },
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      value: 'fold',
+                      enabled: _controller.cBlockIds.isNotEmpty,
+                      child: const Text('Fold every block'),
+                    ),
+                    PopupMenuItem(
+                      value: 'unfold',
+                      enabled: _controller.collapsedIds.isNotEmpty,
+                      child: const Text('Unfold every block'),
+                    ),
+                    PopupMenuItem(
+                      value: 'clear',
+                      enabled: _controller.graph.blocks.isNotEmpty,
+                      child: const Text('Clear the program'),
+                    ),
+                  ],
                 ),
-              _Brief(
-                puzzle: widget.puzzle,
-                open: _briefOpen,
-                onToggle: () => setState(() => _briefOpen = !_briefOpen),
+              ],
+            ),
+            // Side insets (landscape system bars, cutouts); the RUN bar keeps
+            // clear of the bottom one itself.
+            body: SafeArea(
+              top: false,
+              bottom: false,
+              child: Column(
+                children: [
+                  FlashBanner(controller: _controller),
+                  Expanded(
+                    child: wide
+                        ? Row(
+                            children: [
+                              SizedBox(
+                                width: 280,
+                                child: PaletteTray(
+                                  controller: _controller,
+                                  vertical: true,
+                                ),
+                              ),
+                              const VerticalDivider(width: 1),
+                              Expanded(child: script),
+                            ],
+                          )
+                        : script,
+                  ),
+                  if (selection != null)
+                    BlockActionsBar(controller: _controller, info: selection)
+                  else if (!wide && !short)
+                    DecoratedBox(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: AppColors.border),
+                        ),
+                      ),
+                      child: PaletteTray(controller: _controller),
+                    ),
+                  RunBar(
+                    controller: _controller,
+                    onRun: _run,
+                    running: _running,
+                    saved: widget.save != null,
+                  ),
+                ],
               ),
-              _HintBar(
-                hints: _hints,
-                open: _hintsOpen,
-                onToggle: () => setState(() => _hintsOpen = !_hintsOpen),
-                onReveal: () => setState(() {
-                  _hints.revealNext();
-                  _hintsOpen = true;
-                }),
-              ),
-              GivensBar(controller: _controller),
-              Expanded(
-                child: wide
-                    ? Row(
-                        children: [
-                          SizedBox(
-                            width: 260,
-                            child: PaletteTray(controller: _controller),
-                          ),
-                          const VerticalDivider(width: 1),
-                          Expanded(child: ScriptView(controller: _controller)),
-                        ],
-                      )
-                    : ScriptView(controller: _controller),
-              ),
-              if (!wide) PaletteTray(controller: _controller),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                child: FilledButton(
-                  onPressed: _run,
-                  child: const Text('RUN'),
-                ),
-              ),
-            ],
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+/// A solved puzzle says so, and offers its best program back.
+class _SolvedLine extends StatelessWidget {
+  const _SolvedLine({required this.onLoadBest});
+  final VoidCallback? onLoadBest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
+      child: Row(
+        children: [
+          const Icon(Icons.task_alt, size: 18, color: AppColors.ok),
+          const SizedBox(width: 8),
+          const Expanded(
+            child: Text(
+              'Solved. Keep improving, or try the next one.',
+              style: TextStyle(color: AppColors.fg),
+            ),
+          ),
+          if (onLoadBest != null)
+            Tooltip(
+              message: 'Load best solution',
+              child: TextButton.icon(
+                onPressed: onLoadBest,
+                icon: const Icon(Icons.emoji_events_outlined, size: 18),
+                label: const Text('BEST'),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -399,41 +596,69 @@ class _Brief extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onToggle,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Text(
-                  'BRIEF',
-                  style: TextStyle(
-                    color: AppColors.faint,
-                    fontSize: 10,
-                    letterSpacing: 1.4,
-                    fontWeight: FontWeight.w600,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          button: true,
+          expanded: open,
+          child: InkWell(
+            onTap: onToggle,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 48),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  const Text('BRIEF', style: AppText.label),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _TierTag(tier: puzzle.tier, mode: puzzle.mode),
                   ),
-                ),
-                const Spacer(),
-                Icon(
-                  open ? Icons.expand_less : Icons.expand_more,
-                  size: 18,
-                  color: AppColors.faint,
-                ),
-              ],
-            ),
-            if (open) ...[
-              const SizedBox(height: 6),
-              Text(
-                puzzle.story,
-                style: const TextStyle(color: AppColors.muted, height: 1.45),
+                  Icon(
+                    open ? Icons.expand_less : Icons.expand_more,
+                    size: 22,
+                    color: AppColors.muted,
+                  ),
+                ],
               ),
-            ],
-          ],
+            ),
+          ),
         ),
+        if (open)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Text(
+              puzzle.story,
+              style: const TextStyle(
+                color: AppColors.fg,
+                height: 1.5,
+                fontSize: 15,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// `TIER 3 · BUDGET`: how hard, and what kind of challenge.
+class _TierTag extends StatelessWidget {
+  const _TierTag({required this.tier, required this.mode});
+  final PuzzleTier tier;
+  final PuzzleMode mode;
+
+  @override
+  Widget build(BuildContext context) {
+    final kind = mode == PuzzleMode.build
+        ? ''
+        : ' · ${mode.name.toUpperCase()}';
+    return Text(
+      'TIER ${tier.index + 1}$kind',
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(
+        color: AppColors.muted,
+        fontSize: 11,
+        letterSpacing: 1.1,
       ),
     );
   }
@@ -459,52 +684,62 @@ class _HintBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (hints.total == 0) return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 8, 4),
+      padding: const EdgeInsets.only(right: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(
-                child: InkWell(
-                  key: const Key('hints-toggle'),
-                  onTap: onToggle,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Row(
-                      children: [
-                        const Text(
-                          'HINTS',
-                          style: TextStyle(
-                            color: AppColors.faint,
-                            fontSize: 10,
-                            letterSpacing: 1.4,
-                            fontWeight: FontWeight.w600,
+                child: Semantics(
+                  button: true,
+                  expanded: open,
+                  child: InkWell(
+                    key: const Key('hints-toggle'),
+                    onTap: onToggle,
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: 48),
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Row(
+                        children: [
+                          const Text('HINTS', style: AppText.label),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              '${hints.used}/${hints.total}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: AppColors.muted,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${hints.used}/${hints.total}',
-                          style: const TextStyle(color: AppColors.faint, fontSize: 12),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          open ? Icons.expand_less : Icons.expand_more,
-                          size: 18,
-                          color: AppColors.faint,
-                        ),
-                      ],
+                          const Spacer(),
+                          Icon(
+                            open ? Icons.expand_less : Icons.expand_more,
+                            size: 22,
+                            color: AppColors.muted,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-              TextButton.icon(
-                key: const Key('hints-reveal'),
-                onPressed: hints.hasMore ? onReveal : null,
-                icon: const Icon(Icons.lightbulb_outline, size: 16),
-                label: Text(
-                  hints.hasMore ? 'SHOW HINT ${hints.used + 1}' : 'NO MORE HINTS',
-                  style: const TextStyle(fontSize: 12, letterSpacing: 0.6),
+              Flexible(
+                child: TextButton.icon(
+                  key: const Key('hints-reveal'),
+                  onPressed: hints.hasMore ? onReveal : null,
+                  icon: const Icon(Icons.lightbulb_outline, size: 18),
+                  label: Text(
+                    hints.hasMore
+                        ? 'SHOW HINT ${hints.used + 1}'
+                        : 'NO MORE HINTS',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12, letterSpacing: 0.6),
+                  ),
                 ),
               ),
             ],
@@ -512,18 +747,31 @@ class _HintBar extends StatelessWidget {
           if (open)
             for (final (i, hint) in hints.revealed.indexed)
               Padding(
-                padding: const EdgeInsets.only(bottom: 6, right: 8),
-                child: Text(
-                  '${i + 1}. $hint',
-                  style: const TextStyle(color: AppColors.muted, height: 1.45),
+                padding: const EdgeInsets.fromLTRB(16, 0, 8, 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                    decoration: const BoxDecoration(
+                      color: AppColors.elevated,
+                      border: Border(
+                        left: BorderSide(color: AppColors.warn, width: 2),
+                      ),
+                    ),
+                    child: Text(
+                      '${i + 1}. $hint',
+                      style: const TextStyle(color: AppColors.fg, height: 1.45),
+                    ),
+                  ),
                 ),
               ),
           if (open && hints.used == 0)
             const Padding(
-              padding: EdgeInsets.only(bottom: 6, right: 8),
+              padding: EdgeInsets.fromLTRB(16, 0, 8, 8),
               child: Text(
-                'Hints go from the idea to the approach, one at a time.',
-                style: TextStyle(color: AppColors.faint, height: 1.45),
+                'Hints go from the idea to the approach, one at a time. They are counted, never charged.',
+                style: TextStyle(color: AppColors.muted, height: 1.45),
               ),
             ),
         ],

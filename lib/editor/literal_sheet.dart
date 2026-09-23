@@ -13,10 +13,7 @@ abstract final class LiteralSheet {
     return showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.elevated,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-      ),
-      builder: (_) => _NumberPad(controller: controller, blockId: blockId),
+      builder: (_) => SizedBox(width: double.infinity, child: _NumberPad(controller: controller, blockId: blockId)),
     );
   }
 
@@ -28,9 +25,6 @@ abstract final class LiteralSheet {
     return showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.elevated,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-      ),
       builder: (_) {
         return SafeArea(
           child: Padding(
@@ -75,15 +69,15 @@ abstract final class LiteralSheet {
     return showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.elevated,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-      ),
-      builder: (_) => _VariableChips(
-        controller: controller,
-        blockId: blockId,
-        nameKey: key,
-        names: names,
-        allowCreate: allowCreate,
+      builder: (_) => SizedBox(
+        width: double.infinity,
+        child: _VariableChips(
+          controller: controller,
+          blockId: blockId,
+          nameKey: key,
+          names: names,
+          allowCreate: allowCreate,
+        ),
       ),
     );
   }
@@ -162,7 +156,14 @@ class _NumberPadState extends State<_NumberPad> {
                                 _digit(int.parse(key));
                               }
                             },
-                            child: Text(key),
+                            child: Text(
+                              key,
+                              semanticsLabel: switch (key) {
+                                '±' => 'Change sign',
+                                '⌫' => 'Delete last digit',
+                                _ => key,
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -173,12 +174,14 @@ class _NumberPadState extends State<_NumberPad> {
             Row(
               children: [
                 IconButton(
+                  tooltip: 'One less',
                   onPressed: () => setState(() {
                     _value = (_value - 1).clamp(0, 999999);
                   }),
                   icon: const Icon(Icons.remove),
                 ),
                 IconButton(
+                  tooltip: 'One more',
                   onPressed: () => setState(() {
                     _value = (_value + 1).clamp(0, 999999);
                   }),
@@ -230,6 +233,11 @@ class _VariableChips extends StatelessWidget {
               'Choose a name',
               style: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.4),
             ),
+            const SizedBox(height: 2),
+            const Text(
+              'Names come from the puzzle; there is no typing.',
+              style: TextStyle(color: AppColors.muted, fontSize: 13),
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
@@ -247,15 +255,7 @@ class _VariableChips extends StatelessWidget {
             ),
             if (allowCreate && pool.isNotEmpty) ...[
               const SizedBox(height: 16),
-              const Text(
-                'CREATE VARIABLE',
-                style: TextStyle(
-                  color: AppColors.faint,
-                  fontSize: 10,
-                  letterSpacing: 1.4,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              const Text('CREATE VARIABLE', style: AppText.label),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,

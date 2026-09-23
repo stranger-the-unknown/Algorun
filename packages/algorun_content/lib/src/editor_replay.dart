@@ -153,14 +153,21 @@ final class _Replay {
             if (!_statement(child, PortRef(block.id, port.name), k)) return false;
           }
         case PortKind.elseClause:
-          if (slot is! RefBinding) return _shape(block, port.name);
-          final clause = _add(slot.blockId);
+          // The editor's own connect stores an ELSE as a one-item list;
+          // hand-written graphs use a ref. Both are the same program.
+          final clauseId = switch (slot) {
+            RefBinding(:final blockId) => blockId,
+            ListBinding(:final blockIds) when blockIds.length == 1 => blockIds.single,
+            _ => null,
+          };
+          if (clauseId == null) return _shape(block, port.name);
+          final clause = _add(clauseId);
           if (clause == null) return false;
           final connect = ConnectCommand(
-            from: PortRef(slot.blockId, 'clause'),
+            from: PortRef(clauseId, 'clause'),
             to: PortRef(block.id, port.name),
           );
-          if (!_apply(connect, 'blocks.${slot.blockId}')) return false;
+          if (!_apply(connect, 'blocks.$clauseId')) return false;
           if (!_fill(clause)) return false;
       }
     }

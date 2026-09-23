@@ -1,4 +1,5 @@
 import 'package:algorun/app.dart';
+import 'package:algorun/editor/script_view.dart';
 import 'package:algorun/progress/progress_ledger.dart';
 import 'package:algorun/progress/progress_store.dart';
 import 'package:algorun/progress/save_codec.dart';
@@ -105,8 +106,9 @@ void main() {
 
     await _tap(tester, find.byKey(const Key('home-continue')));
     expect(find.text('RUN'), findsOneWidget);
-    expect(find.text('LENGTH'), findsOneWidget, reason: 'the restored program');
-    expect(find.text('RETURN'), findsOneWidget);
+    final program = find.byType(ScriptView);
+    expect(find.descendant(of: program, matching: find.text('LENGTH')), findsOneWidget, reason: 'the restored program');
+    expect(find.descendant(of: program, matching: find.text('RETURN')), findsOneWidget);
   });
 
   testWidgets('the best solution can be loaded back, and leaving saves the program', (tester) async {

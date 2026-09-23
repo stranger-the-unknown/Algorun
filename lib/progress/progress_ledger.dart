@@ -76,10 +76,13 @@ final class RunRecordOutcome {
 }
 
 /// The player changed the program: it becomes the draft.
-PlayerSave saveDraft(PlayerSave save, Campaign campaign, Puzzle puzzle, BlockGraph graph) {
+PlayerSave saveDraft(PlayerSave save, Campaign campaign, Puzzle puzzle, BlockGraph graph, {bool edited = true}) {
   if (!campaign.contains(puzzle.id)) return save;
   final current = _onVersion(save[puzzle.id], puzzle);
-  return save.withPuzzle(puzzle.id, current.copyWith(draft: graph, editedSinceRun: true));
+  return save.withPuzzle(
+    puzzle.id,
+    current.copyWith(draft: graph, editedSinceRun: edited || current.editedSinceRun),
+  );
 }
 
 /// A RUN of [graph] finished with [suite] (`hintsUsed` already stamped).

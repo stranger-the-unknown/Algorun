@@ -3,8 +3,8 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current milestone: 12 COMPLETE (content pipeline with independent oracles, progression reachability, coverage and redundancy checks; 33 new puzzles — 38 in the campaign).**
-**Next milestone: 13 — Mobile UX polish per the roadmap, or a further content batch through the MS12 pipeline; the user decides.**
+**Current milestone: 13 COMPLETE (mobile UX polish and real-device usability, verified on an Android emulator — no physical device).**
+**Next milestone: 14 — the user decides: a second content batch through the MS12 pipeline (recommended first), or a language milestone (player functions / recursion) that unblocks Backtracking.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
 Do not change the architecture.
@@ -16,8 +16,9 @@ MS8 `9b005b88cc1953b9b629f890697746ffccca2939`,
 MS9 `2be68bde64fc537c9a8e211c52d355a6d0c31d52`,
 MS10 `c192118c079e73c8ff78b7fa71d00adf0285959a`,
 L1 `d850525b2869271381356b27227e42648476192f`,
-MS11 `033f3ec63dc137e1b74a7b2b20d2233da0fe3da8`, MS12 — see `git log` (the
-commit titled "Milestone 12: scalable puzzle content pipeline and expansion").
+MS11 `033f3ec63dc137e1b74a7b2b20d2233da0fe3da8`,
+MS12 `c3f3d5d75c128f62ea1547715bb89a0f62d41857`, MS13 — see `git log` (the
+commit titled "Milestone 13: mobile UX polish and usability").
 
 ---
 
@@ -69,7 +70,10 @@ test runner → result.
 ```
 algorun/                          Flutter app (repository root)
   lib/                            UI, editor, Riverpod
-    editor/                       Scratch-style editor (MS3)
+    editor/                       Scratch-style editor (MS3; reworked for phones in MS13)
+      editor_controller.dart      EditorController: typed placement, selection, moves, copy, delete, folds (MS13)
+      editor_bars.dart            FlashBanner, BlockActionsBar (selection), RunBar (undo / redo / count / RUN) (MS13)
+    dev/stress_probe.dart         the 82-block editor stress program, built through EditorController.place (MS13)
     screens/                      home, worlds, puzzle, results, settings
     puzzles/asset_repository.dart loads assets through the engine schema
     state/providers.dart          engineProvider → DefaultEngine
@@ -86,7 +90,7 @@ algorun/                          Flutter app (repository root)
     state/progress_text.dart      player wording for locks and statuses
   assets/                         bundled with the app
     worlds.json                   14 worlds, 38 puzzles; 09 (heaps) and 12 (backtracking) have none
-    puzzles/world_01/             warm_readings, highest_tide + ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe (unlisted dev probes)
+    puzzles/world_01/             warm_readings, highest_tide + ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe, ms13_stress_probe (unlisted dev probes)
     puzzles/world_02 … world_14/  the campaign puzzles (list: "Content backlog and coverage")
   content/                        offline only, NOT bundled
     references/<world>/<id>.json  reference solutions + spec + metrics + rejects
@@ -107,7 +111,7 @@ algorun/                          Flutter app (repository root)
       lib/src/types/              ValueType + parser
       lib/src/execution/performance.dart  BudgetOverrun, SuitePerformance (MS10)
       lib/src/runner/benchmark.dart       measureCase, benchmark, PerformanceReport (MS10)
-      test/                       347 tests
+      test/                       350 tests
     algorun_content/              offline content pipeline (MS12), CLI bin/validate.dart
       lib/src/content_validator.dart      orchestration, per-puzzle verdicts
       lib/src/reference_check.dart        levels 1–5 per reference (spec, capabilities, replay, runs, oracle, budgets)
@@ -119,7 +123,7 @@ algorun/                          Flutter app (repository root)
       lib/src/coverage.dart               level 7: coverage matrix and gaps
       lib/src/difficulty.dart             level 7: difficulty signals and advice
       lib/src/content_issue.dart          ContentIssue, Level, PuzzleVerdict, ContentReport
-      test/                       82 tests
+      test/                       85 tests
   docs/                           architecture + per-milestone notes
   test/widget_test.dart           Flutter editor / picker / RUN tests
   test/real_puzzles_test.dart     the five real puzzles through the bundle and RUN
@@ -131,7 +135,13 @@ algorun/                          Flutter app (repository root)
   test/progression_ui_test.dart   fresh install, locks, CONTINUE, restore, RUN completing a puzzle, settings (MS11)
   test/campaign_test.dart         the shipped campaign: every puzzle reachable, the unlock order (MS12)
   test/fixtures/ms11_worlds.json  the MS11 manifest, frozen: the MS11 rule tests run against it
-  test/support/                   shared test helpers (campaign from files, progress fixtures)
+  test/editor_actions_test.dart   select, move, copy, delete, folds, one undo step each (MS13)
+  test/stress_probe_test.dart     the 82-block probe on a 360 × 800 phone (MS13)
+  test/responsive_test.dart       the whole flow on 5 phone sizes × 2 font scales (MS13)
+  test/campaign_regression_test.dart  all 38 puzzles: built by taps, saved, run, reported at 360 × 800 (MS13)
+  test/screens_polish_test.dart   verdicts, next puzzle, world / puzzle wording (MS13)
+  test/literal_sheets_test.dart   number pad and name sheet under the real theme (MS13)
+  test/support/                   shared helpers: campaign from files, progress fixtures, phone sizes, UI replay, results rows
   lib/state/performance_text.dart player wording for budgets (MS10)
 ```
 
@@ -571,22 +581,57 @@ Authoring contract for people and AI sessions:
 [`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md). Details:
 [`MILESTONE_12.md`](MILESTONE_12.md).
 
-### Editor (MS3) — do not regress
+### Editor (MS3, MS13) — do not regress
 
-Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
+Scratch-style vertical stacks + typed holes, tap to place. No canvas, no
+drag, no TextField (names are chips, numbers a pad). Labels via
+`BlockChrome` (GREATER THAN, never `cmp.gt`). IF + ELSE draw as one card.
 
-## Test results at MS12 closeout
+- **Typed insertion.** Picker = `allowlist ∩ GraphTyping.compatiblePlacements`
+  (GET, INCREMENT and DECREMENT come one per variable the rules accept). The
+  picker says where the piece goes (*For the condition of WHILE*) and closes
+  with a button or back. Tapping a slot scrolls it above the sheet first; the
+  new block is selected and scrolled into view, unfolding what hides it.
+- **Selection** (tap or long-press; nothing is deleted by a gesture): the
+  selection bar replaces the palette — UP / DOWN / OUT / IN / COPY / DELETE
+  for instructions, REPLACE / DELETE for values. Each action is one undo step
+  built from the engine's own commands (`_Batch` in the controller), so
+  `GraphTyping` still decides. Delete removes the whole subtree; a placement
+  is one step. Back first clears the selection.
+- **Folds**: per C-block, fold all / unfold all in the menu, *Folded · n blocks
+  inside* (tap to open). Saved in the draft (`BlockInstance.collapsed`), never
+  an undo step, never "edited since run".
+- **Layout** (phone): feedback line · one scroll (brief, hints, givens,
+  PROGRAM) · selection bar or palette · RUN bar (UNDO, REDO, `n / max blocks`,
+  saved / practice, RUN). Palette hidden below 560 dp height; a 280 dp side
+  rail from 840 dp width. Instruction rows ≥ 48 dp, values 36 dp, empty slots
+  40 × 64 dp. System font honoured to ×1.6.
+- After *Invalid Program*, returning selects the block to fix and says why.
+
+Details: [`MILESTONE_13.md`](MILESTONE_13.md).
+
+### Android shell (MS13)
+
+Edge to edge on every version (`SystemUiMode.edgeToEdge`), light system-bar
+icons, no navigation-bar scrim, dark window theme and launch background
+(`android/app/src/main/res`). Every screen keeps its content inside the side
+insets; the RUN bar and results buttons stay above the navigation bar.
+Verified on the emulator: back, background autosave, process death and
+restore, no keyboard ever.
+
+## Test results at MS13 closeout
 
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **347 passed** |
+| `packages/algorun_engine` `dart test` | **350 passed** |
 | `packages/algorun_content` `dart analyze` | no issues |
-| `packages/algorun_content` `dart test` | **82 passed** |
-| Content validator (assets + worlds + references) | `PIPELINE 38 of 38 campaign puzzle(s) accepted, 4 probe(s) checked` · `OK 42 puzzle(s), 6 warning(s)` |
+| `packages/algorun_content` `dart test` | **85 passed** |
+| Content validator (assets + worlds + references) | `PIPELINE 38 of 38 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 43 puzzle(s), 7 warning(s)` |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **114 passed** |
+| Flutter `test` | **235 passed** |
 | `flutter build apk --debug` | built |
+| Emulator checklist (18 steps, MILESTONE_13.md) | passed on Android 15 emulator, 360 / 390 / 412 dp, landscape |
 
 Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (26), MS7 codec
 (40), schema (41), FLOOR DIVIDE (14), MS8 shipped puzzles (30), MS10
@@ -598,12 +643,20 @@ shipped corpus accepted, coverage file up to date, one oracle per puzzle).
 App: editor, picker, RUN, results, the MS8 puzzles, hints, budget wording, IS
 NOT NOTHING in the editor; MS11 save format (22), progression and best
 results (18), sessions and autosave (9), purity guards (2), progression UI
-(10) — against the frozen MS11 manifest; the MS12 campaign (3).
+(10) — against the frozen MS11 manifest; the MS12 campaign (3); MS13:
+editor actions (13), stress probe (6), responsive flows (11), all 38 puzzles
+built by taps and run on a phone (77), screens (11), literal sheets under the
+real theme (3). Engine +3 (INCREMENT / DECREMENT placements), content +3
+(replay of an editor-saved ELSE).
 
-The six warnings are known and deliberate: Backtracking (world 12) requires
+The seven warnings are known and deliberate: Backtracking (world 12) requires
 `recursion`, which no world teaches (the world has no puzzles; two warnings:
-it never opens, and the prerequisite is untaught), and the four dev probes
+it never opens, and the prerequisite is untaught), and the five dev probes
 are unlisted.
+
+**Widget tests and the theme:** a test that opens sheets or buttons must use
+`buildAppTheme()` (or `AlgorunApp`): the MS12 number-pad failure only showed
+under the real theme.
 
 **Widget tests and assets:** load the campaign from the repository files
 (`test/support/campaign_files.dart`), never through `rootBundle` inside a
@@ -635,12 +688,14 @@ test waits on it forever.
 - Graph fixtures do not enforce "stations are numbered 0 to n-1"; `fewest_rides` states it and its fixtures follow it.
 - `maxDepth` stays at 1 until player-defined functions ship; `fn.def` / `fn.call` remain unsupported and hidden.
 - Allocation has no collector: an unreachable container keeps its cells for the rest of the run.
-- Generic unification is per-block, not Hindley–Milner. Editor is tap-to-place. Flutter web is preview-only.
+- Generic unification is per-block, not Hindley–Milner. Flutter web is preview-only.
+- **Editor (MS13).** No drag and drop: blocks move one step at a time (UP / DOWN / OUT / IN). A move is typed by `GraphTyping`, but narrowing that changes with the new position is reported by lowering at RUN. The picker has no search. Landscape phones lose the palette (the picker remains). The stress probe opens from Settings in debug builds only.
+- **Device testing (MS13).** Emulator only (software rendering, three-button navigation); no physical phone, no TalkBack pass, no frame timing on real hardware yet.
 - `ARCHITECTURE.md` spells the validator command `dart run algorun_content:validate`; use the command below.
 
 ## Exact commands
 
-From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS12 closeout: Flutter 3.47.2, Dart 3.13.2.
+From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS13 closeout: Flutter 3.47.2, Dart 3.13.2.
 
 ```bash
 flutter pub get
@@ -656,7 +711,13 @@ dart run packages/algorun_content/bin/validate.dart assets/puzzles assets/worlds
 flutter analyze
 flutter test
 flutter run          # Android device/emulator
+flutter build apk --debug
 ```
+
+Emulator used for MS13 (see MILESTONE_13.md): AVD `algorun_phone`, Pixel 7
+profile, `system-images;android-35;default;x86_64`; phone sizes via
+`adb shell wm size 720x1600` + `wm density 320` (360 × 800 dp),
+`1170x2532` + `480` (390 × 844), `wm size reset` (412 × 915).
 
 Every new or edited puzzle must pass the content validator — with the
 references directory — before it is committed under `assets/puzzles`. A new
@@ -676,12 +737,13 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | L1 | Language: values that may be empty, IS NOTHING / IS NOT NOTHING, narrowing | complete |
 | 11 | Progression + local save | complete |
 | 12 | Content pipeline (oracles, reachability, coverage, redundancy) + 33 new puzzles | complete |
-| **13** | **Mobile UX polish** | **next per the roadmap** — or first another content batch through the MS12 pipeline, as the user decides |
+| 13 | Mobile UX polish and usability (emulator-verified) | complete |
+| **14** | **Content batch 2 through the MS12 pipeline** (recommended) — or a language milestone | **next, when the user asks** |
 | later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content (see the backlog) |
 
 ## Content backlog and coverage (MS12)
 
-Accepted: **38 campaign puzzles** (+ 4 unlisted probes) against a planning
+Accepted: **38 campaign puzzles** (+ 5 unlisted probes) against a planning
 target of ~300 (`content/coverage_targets.json`). Source of truth:
 `content/coverage.json` (regenerate with `--coverage`).
 
@@ -728,15 +790,21 @@ Maps, Two Pointers and Greedy; iterative DFS, grid DP, queue simulation and
 a deque window; more optimize / restricted / edge puzzles; tier 5 capstones
 for Sliding Window, Trees, Graphs and DP.
 
-## Milestone 13 contract (next — when asked)
+## Milestone 14 contract (next — when asked)
 
-Mobile UX polish, per the roadmap — or, if the user asks for content first, a
-further batch through the MS12 pipeline:
+Recommended: content batch 2 through the MS12 pipeline (the editor can now
+build 80–90-block programs by taps on a 360 dp phone, INCREMENT included).
+Alternative: a language milestone (player functions / recursion) that
+unblocks Backtracking and recursive tree content.
 
 - Content: every candidate goes through `CONTENT_AUTHORING.md` and must be
   `ACCEPTED` at all seven levels, with an independent oracle; regenerate and
-  commit `content/coverage.json`; aim at the backlog's gaps; never weaken a
-  check or edit an expected answer to make a candidate pass.
+  commit `content/coverage.json`; aim at the backlog's gaps (tier 2 entries
+  for Linked Lists / Trees / Graphs / DP, iterative DFS, grid DP, queue
+  simulation, deque windows, optimize / restricted / edge modes); never
+  weaken a check or edit an expected answer to make a candidate pass.
+- Every new listed puzzle is covered by `test/campaign_regression_test.dart`
+  automatically: its reference must be buildable through the picker.
 - Bump a puzzle's `version` for any incompatible change to a shipped puzzle
   (saved best results for it are then cleared, completion kept).
 - Do not change the unlock rules to make content pass; keep the MS11 rule
@@ -762,4 +830,5 @@ further batch through the MS12 pipeline:
 | [`MILESTONE_11.md`](MILESTONE_11.md) | complete — progression and local persistence |
 | [`MILESTONE_12.md`](MILESTONE_12.md) | complete — content pipeline and first expansion batch |
 | [`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md) | the authoring contract (people and AI sessions) |
-| this file | MS12 handoff |
+| [`MILESTONE_13.md`](MILESTONE_13.md) | complete — mobile UX polish, emulator verification |
+| this file | MS13 handoff |
