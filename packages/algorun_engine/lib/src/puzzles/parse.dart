@@ -53,6 +53,7 @@ const puzzleFields = {
   'variables',
   'meta',
   'reference',
+  'performance',
 };
 
 /// Budget ceilings. A puzzle past them could freeze a phone, so it is content
@@ -212,13 +213,14 @@ final class _PuzzleSchema {
     final scoring = _scoring(m);
     final hints = r.strings(m, 'hints', '') ?? const [];
     final validator = _validator(m, io);
-    final fixtures = _fixtures(m, io);
+    final fixtures = _fixtures(m, io, limits?.maxOps);
     final edgeCases = r.strings(m, 'edgeCases', '') ?? const [];
     final verdict = r.choice(m, 'verdictSource', '', {for (final v in VerdictSource.values) v.name: v}) ??
         VerdictSource.local;
     final pool = _pool(m, io);
     final meta = _meta(m);
     final reference = _reference(m);
+    final performance = _performance(m);
 
     if (id == null ||
         title == null ||
@@ -259,7 +261,26 @@ final class _PuzzleSchema {
       variablePool: pool,
       meta: meta,
       reference: reference,
+      performance: performance,
     );
+  }
+
+  /// `performance` says whether meeting the operation budget is the point of
+  /// the puzzle. It holds no budget of its own: `limits.maxOps` is the one
+  /// authoritative operation budget, and a case may only tighten it.
+  PerformanceSpec _performance(Map<String, Object?> m) {
+    final perf = r.object(m, 'performance', '');
+    if (perf == null) return PerformanceSpec.none;
+    r.closed(perf, const {'required', 'baselineFactor'}, 'performance');
+    final required = r.boolean(perf, 'required', 'performance') ?? false;
+    final factor = r.integer(perf, 'baselineFactor', 'performance', min: 2, max: 1000);
+    if (factor != null && !required) {
+      r.issue(
+        'performance.baselineFactor',
+        'Only meaningful when performance.required is true.',
+      );
+    }
+    return PerformanceSpec(required: required, baselineFactor: factor);
   }
 
   PuzzleReference? _reference(Map<String, Object?> m) {
@@ -434,13 +455,14 @@ final class _PuzzleSchema {
   ({List<TestCase> visible, List<TestCase> hidden})? _fixtures(
     Map<String, Object?> m,
     IoSpec? io,
+    int? puzzleBudget,
   ) {
     final f = r.object(m, 'fixtures', '', required: true);
     if (f == null) return null;
     r.closed(f, const {'visible', 'hidden'}, 'fixtures');
     final ids = <String>{};
-    final visible = _cases(f, 'visible', io, ids);
-    final hidden = _cases(f, 'hidden', io, ids);
+    final visible = _cases(f, 'visible', io, ids, puzzleBudget);
+    final hidden = _cases(f, 'hidden', io, ids, puzzleBudget);
     if (visible == null || hidden == null) return null;
     return (visible: visible, hidden: hidden);
   }
@@ -450,6 +472,7 @@ final class _PuzzleSchema {
     String key,
     IoSpec? io,
     Set<String> ids,
+    int? puzzleBudget,
   ) {
     final raw = r.list(fixtures, key, 'fixtures', required: true);
     if (raw == null) return null;
@@ -461,7 +484,7 @@ final class _PuzzleSchema {
     var ok = true;
     for (final (i, item) in raw.indexed) {
       final at = 'fixtures.$key[$i]';
-      final testCase = _case(item, at, io, ids, visible: key == 'visible');
+      final testCase = _case(item, at, io, ids, puzzleBudget, visible: key == 'visible');
       if (testCase == null) {
         ok = false;
       } else {
@@ -475,14 +498,23 @@ final class _PuzzleSchema {
     Object? item,
     String at,
     IoSpec? io,
-    Set<String> ids, {
+    Set<String> ids,
+    int? puzzleBudget, {
     required bool visible,
   }) {
     if (item is! Map<String, Object?>) {
       r.issue(at, 'A case is {"id": …, "in": {…}, "out": …}.');
       return null;
     }
-    r.closed(item, const {'id', 'in', 'out'}, at);
+    r.closed(item, const {'id', 'in', 'out', 'maxOps'}, at);
+    final caseBudget = r.integer(item, 'maxOps', at, min: 1, max: maxOpsCeiling);
+    if (caseBudget != null && puzzleBudget != null && caseBudget > puzzleBudget) {
+      r.issue(
+        '$at.maxOps',
+        'A case budget ($caseBudget) cannot exceed limits.maxOps ($puzzleBudget); '
+        'it can only be tighter.',
+      );
+    }
     final id = r.string(item, 'id', at, required: true, pattern: _caseId, hint: _caseIdHint);
     if (id != null && !ids.add(id)) {
       r.issue('$at.id', 'The case id "$id" is already used.');
@@ -526,7 +558,13 @@ final class _PuzzleSchema {
     }
     final output = item.containsKey('out') ? _value(item['out'], io?.output, '$at.out') : null;
     if (!ok || output == null || io == null) return null;
-    return TestCase(id: id!, input: input, output: output, visible: visible);
+    return TestCase(
+      id: id!,
+      input: input,
+      output: output,
+      visible: visible,
+      maxOps: caseBudget,
+    );
   }
 
   RuntimeValue? _value(Object? json, ValueType? type, String path) {
@@ -640,6 +678,7 @@ const _codeLike = {
   'eval',
   'expr',
   'expression',
+  'formula',
   'function',
   'generate',
   'generator',

@@ -1,5 +1,5 @@
 import '../ast/ir.dart';
-import '../execution/interpreter.dart';
+import '../execution/performance.dart';
 import '../execution/result_kind.dart';
 import '../execution/run_result.dart';
 import '../execution/suite_result.dart';
@@ -7,6 +7,7 @@ import '../puzzles/puzzle.dart';
 import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
 import '../runtime/value_json.dart';
+import 'benchmark.dart';
 import 'validators.dart';
 
 /// Runs a lowered [Program] against a puzzle's fixtures and grades it.
@@ -24,6 +25,12 @@ import 'validators.dart';
 /// the runner adds only `wrongAnswer`.
 ///
 /// Hidden fixtures never leave the engine: they are counted, never listed.
+///
+/// Performance (MS10): each case runs under its operation budget — its own
+/// `maxOps` or the puzzle's `limits.maxOps` — with the unchanged MS5 operation
+/// model. A case that runs out is an `operationLimit`, exactly as before; it is
+/// then measured once more ([measureCase]) so the suite can say how far over
+/// it went and whether its answer would have been right ([SuitePerformance]).
 final class TestRunner {
   const TestRunner();
 
@@ -36,7 +43,6 @@ final class TestRunner {
   /// into: it hands over plain [TestCase] data, never executable content.
   SuiteResult runCases(Program program, Puzzle puzzle, List<TestCase> cases) {
     final validator = puzzle.outputValidator;
-    final limits = puzzle.limits.asLimits;
     final visible = <CaseResult>[];
     var hiddenPassed = 0;
     var hiddenTotal = 0;
@@ -50,9 +56,34 @@ final class TestRunner {
     int? failureOpIndex;
     String? failureCaseId;
 
+    var measuredWorst = 0;
+    var overBudget = 0;
+    var overBudgetFinished = true;
+    var correctWhereFinished = true;
+    BudgetOverrun? worstOverrun;
+
     for (final testCase in cases) {
-      final result = _runCase(program, testCase, validator, limits);
+      final measurement = measureCase(program, puzzle, testCase);
+      final result = _caseResult(measurement, testCase, validator);
       final metrics = result.run.metrics;
+
+      final overrun = measurement.overrun;
+      final needed = overrun?.measuredOps ?? metrics.ops;
+      if (needed > measuredWorst) measuredWorst = needed;
+      if (overrun == null) {
+        correctWhereFinished = correctWhereFinished && result.ok;
+      } else {
+        overBudget++;
+        overBudgetFinished = overBudgetFinished && overrun.finished;
+        if (worstOverrun == null ||
+            overrun.measuredOps * worstOverrun.budget >
+                worstOverrun.measuredOps * overrun.budget) {
+          worstOverrun = overrun;
+        }
+        if (overrun.finished) {
+          correctWhereFinished = correctWhereFinished && overrun.outputCorrect == true;
+        }
+      }
       if (metrics.ops > worstOps) worstOps = metrics.ops;
       if (metrics.peakAlloc > worstAlloc) worstAlloc = metrics.peakAlloc;
       if (metrics.peakDepth > worstDepth) worstDepth = metrics.peakDepth;
@@ -93,16 +124,23 @@ final class TestRunner {
       firstFailureBlockId: failureBlockId,
       firstFailureOpIndex: failureOpIndex,
       firstFailureCaseId: failureCaseId,
+      performance: SuitePerformance(
+        opsBudget: puzzle.limits.maxOps,
+        worstOps: measuredWorst,
+        overBudgetCases: overBudget,
+        overBudgetFinished: overBudgetFinished,
+        correctWhereFinished: correctWhereFinished,
+        worstOverrun: worstOverrun,
+      ),
     );
   }
 
-  CaseResult _runCase(
-    Program program,
+  CaseResult _caseResult(
+    CaseMeasurement measurement,
     TestCase testCase,
     ValidatorId validator,
-    RunLimits limits,
   ) {
-    final run = runProgram(program, testCase.input, limits);
+    final run = measurement.run;
     final graded = run.kind == ResultKind.correct
         ? _grade(run, testCase, validator)
         : run;
@@ -120,6 +158,7 @@ final class TestRunner {
       },
       expected: _canonical(testCase.output),
       actual: output == null ? null : _canonical(output),
+      overrun: measurement.overrun,
     );
   }
 

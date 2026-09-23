@@ -80,6 +80,20 @@ void main() {
         expect(suite.metrics.ops, lessThan(puzzle.limits.maxOps * 0.6));
       });
 
+      test('reference metrics are recorded and reproducible', () {
+        final recorded = _reference(id)['metrics']! as Map<String, Object?>;
+        for (var i = 0; i < 2; i++) {
+          final m = _engine.runTests(_lowered(solution, puzzle), puzzle).metrics;
+          expect(
+            {'ops': m.ops, 'peakAlloc': m.peakAlloc, 'peakDepth': m.peakDepth, 'blocks': m.blocks},
+            recorded,
+          );
+        }
+        final report = benchmark(_lowered(solution, puzzle), puzzle);
+        expect(report.passed, isTrue);
+        expect(report.samples.map((s) => s.ops).reduce((a, b) => a > b ? a : b), recorded['ops']);
+      });
+
       test('reference survives a JSON round trip unchanged', () {
         final again = BlockGraph.fromJsonString(solution.toJsonString());
         final a = _engine.runTests(_lowered(solution, puzzle), puzzle);
@@ -105,6 +119,19 @@ void main() {
       expect(unlimited.kind, ResultKind.correct);
       expect(valuesEqual(unlimited.output!, big.output), isTrue);
       expect(unlimited.metrics.ops, greaterThan(puzzle.limits.maxOps * 100));
+    });
+
+    test('twin_beacons declares performance, and the baseline is measured as slow', () {
+      final puzzle = _puzzle('twin_beacons');
+      expect(puzzle.mode, PuzzleMode.budget);
+      expect(puzzle.performance.required, isTrue);
+      expect(puzzle.performance.baselineFactor, 10);
+      final suite = _engine.runTests(_lowered(_reject('twin_beacons', 'compare every pair'), puzzle), puzzle);
+      final perf = suite.performance!;
+      expect(perf.overBudgetCases, 2, reason: 'the two long logs');
+      expect(perf.correctWhereFinished, isTrue, reason: 'right on every case it finished');
+      expect(perf.overBudgetFinished, isFalse, reason: 'far beyond five budgets');
+      expect(perf.worstOps, overrunCeiling(60000));
     });
 
     test('twin_beacons: adding before asking pairs a beacon with itself', () {

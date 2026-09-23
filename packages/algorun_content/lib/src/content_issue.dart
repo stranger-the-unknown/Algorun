@@ -1,4 +1,6 @@
-enum Severity { error, warning }
+/// Errors block a commit, warnings are advice, info records facts (such as a
+/// reference solution's measured cost).
+enum Severity { error, warning, info }
 
 /// One finding. [file] is relative to the puzzles root (`world_01/x.json`) or
 /// the manifest name; [path] points into the JSON, `''` for the whole file.
@@ -30,7 +32,10 @@ final class ContentReport {
   bool get ok => !issues.any((i) => i.isError);
 
   Iterable<ContentIssue> get errors => issues.where((i) => i.isError);
-  Iterable<ContentIssue> get warnings => issues.where((i) => !i.isError);
+  Iterable<ContentIssue> get warnings =>
+      issues.where((i) => i.severity == Severity.warning);
+  Iterable<ContentIssue> get infos =>
+      issues.where((i) => i.severity == Severity.info);
 }
 
 /// A puzzle file: its path relative to the puzzles root, and its text.

@@ -105,7 +105,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('OPERATION LIMIT'), findsOneWidget);
-    expect(find.text('This program took too many steps.'), findsOneWidget);
+    // Since MS10 the screen explains the budget instead of the bare
+    // 'This program took too many steps.' (still the suite's own message).
+    expect(outcome.suite.message, 'This program took too many steps.');
+    expect(
+      find.text('Every case that finished came out right, but this solution uses too '
+          'many operations: it was still running after 300,000, and the budget is 60,000.'),
+      findsOneWidget,
+    );
+    expect(find.text('Budget: 60,000 steps · 4,000 cells · depth 32 · 30 blocks'), findsOneWidget);
     expect(find.text('v1'), findsOneWidget);
     expect(find.text('v2'), findsOneWidget);
     expect(find.textContaining('of 10 hidden cases passed'), findsOneWidget);

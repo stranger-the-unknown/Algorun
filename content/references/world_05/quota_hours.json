@@ -1,6 +1,7 @@
 {
   "puzzle": "quota_hours",
   "notes": "A window grows on the right and shrinks on the left. Because every hour adds at least one unit, shrinking never has to look back, so each hour enters and leaves the window once. The best length starts one past the longest possible run so that 'never reached' can be told apart from a real answer.",
+  "metrics": {"ops": 59944, "peakAlloc": 0, "peakDepth": 1, "blocks": 47},
   "solution": {
     "variables": {"energy": "array<num>", "quota": "num", "left": "num", "right": "num", "total": "num", "best": "num"},
     "entryIds": ["set_5", "set_7", "set_9", "for_range_38", "if_45", "return_47"],

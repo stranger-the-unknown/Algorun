@@ -275,6 +275,53 @@ void main() {
       );
     });
 
+    test('performance is closed data, never a formula', () {
+      _rejects(_with((m) => m['performance'] = {'required': 'yes'}), 'performance.required', 'true or false');
+      _rejects(
+        _with((m) => m['performance'] = {'required': true, 'budget': 5}),
+        'performance.budget',
+        'Unknown field',
+      );
+      _rejects(
+        _with((m) => m['performance'] = {'required': true, 'formula': 'n * log(n)'}),
+        'performance.formula',
+        'data only',
+      );
+      _rejects(
+        _with((m) => m['performance'] = {'baselineFactor': 10}),
+        'performance.baselineFactor',
+        'Only meaningful when performance.required is true',
+      );
+      _rejects(
+        _with((m) => m['performance'] = {'required': true, 'baselineFactor': 1}),
+        'performance.baselineFactor',
+        'from 2 to 1000',
+      );
+      final ok = readPuzzleJson(jsonEncode(_with((m) {
+        m['performance'] = {'required': true, 'baselineFactor': 5};
+      })));
+      expect(ok.issues, isEmpty);
+      expect(ok.puzzle!.performance.required, isTrue);
+      expect(ok.puzzle!.performance.baselineFactor, 5);
+      expect(readPuzzleJson(jsonEncode(_base())).puzzle!.performance.required, isFalse);
+    });
+
+    test('a case budget is a whole positive number no larger than limits.maxOps', () {
+      _rejects(_with((m) => _visible(m)['maxOps'] = 0), 'fixtures.visible[0].maxOps', 'from 1');
+      _rejects(_with((m) => _visible(m)['maxOps'] = 5.5), 'fixtures.visible[0].maxOps', 'whole number');
+      _rejects(
+        _with((m) => _visible(m)['maxOps'] = 5000),
+        'fixtures.visible[0].maxOps',
+        'cannot exceed limits.maxOps (1000)',
+      );
+      final ok = readPuzzleJson(jsonEncode(_with((m) => _visible(m)['maxOps'] = 200)));
+      expect(ok.issues, isEmpty);
+      final puzzle = ok.puzzle!;
+      expect(puzzle.visibleTests.single.maxOps, 200);
+      expect(puzzle.opsBudgetFor(puzzle.visibleTests.single), 200);
+      expect(puzzle.opsBudgetFor(puzzle.hiddenTests.single), 1000);
+    });
+
     test('meta holds only flat values', () {
       _rejects(
         _with((m) => m['meta'] = {

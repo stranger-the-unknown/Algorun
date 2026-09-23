@@ -1,6 +1,7 @@
 {
   "puzzle": "smallest_cart",
   "notes": "Binary search over capacities, not over parcels. 'Fits in time' only ever turns from false to true as capacity grows, so the answer is the first capacity that fits. Each probe walks the conveyor once. The midpoint uses FLOOR DIVIDE: capacities are whole numbers, and DIVIDE would probe 7.5. Raising the capacity one unit at a time is correct but walks the conveyor thousands of times.",
+  "metrics": {"ops": 65204, "peakAlloc": 0, "peakDepth": 1, "blocks": 55},
   "solution": {
     "variables": {"weights": "array<num>", "trips": "num", "w": "num", "lo": "num", "hi": "num", "mid": "num", "used": "num", "load": "num"},
     "entryIds": ["set_2", "set_4", "foreach_14", "while_54", "return_56"],

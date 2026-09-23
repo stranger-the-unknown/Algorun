@@ -76,6 +76,8 @@ ContentReport _referenced({
   String? referenceSource,
   bool withMetadata = true,
   List<ContentFile> extraReferences = const [],
+  String hidden = '[{ "id": "h1", "in": { "nums": [9] }, "out": 1 }]',
+  String extra = '',
 }) {
   final metadata = withMetadata ? ',\n  "reference": { "strategy": "count_items" }' : '';
   final budget = maxBlocks.isEmpty ? '' : ', "maxBlocks": $maxBlocks';
@@ -90,8 +92,8 @@ ContentReport _referenced({
   "hints": ["Count them."],
   "fixtures": {
     "visible": [{ "id": "v1", "in": { "nums": [1, 2, 3] }, "out": 3 }],
-    "hidden": [{ "id": "h1", "in": { "nums": [9] }, "out": 1 }]
-  }$metadata$variables
+    "hidden": $hidden
+  }$metadata$variables$extra
 }
 ''';
   final file = referenceSource ??
@@ -144,6 +146,38 @@ Map<String, Object?> _constantGraph(int value) => {
       'blocks': {
         'ret': _block('ret', 'ctrl.return', slots: {'value': 'n'}),
         'n': _block('n', 'lit.num', literals: {'value': value}),
+      },
+    };
+
+/// `c = 0; for i in 0..LENGTH: c = c + 1; return c` — right, but 2 + 4 + 5n + 2
+/// operations instead of 3. Needs "c" and "i" from the pool.
+Map<String, Object?> _countingGraph() => {
+      'variables': {'nums': 'array<num>', 'c': 'num', 'i': 'num'},
+      'entryIds': ['start', 'loop', 'ret'],
+      'blocks': {
+        'start': _block('start', 'var.set', slots: {'value': 'zero'}, literals: {'name': 'c'}),
+        'zero': _block('zero', 'lit.num', literals: {'value': 0}),
+        'loop': {
+          'id': 'loop',
+          'catalogId': 'ctrl.for_range',
+          'literals': {'name': 'i'},
+          'slots': {
+            'start': {'ref': 'from'},
+            'end': {'ref': 'len'},
+            'body': {
+              'list': ['step'],
+            },
+          },
+        },
+        'from': _block('from', 'lit.num', literals: {'value': 0}),
+        'len': _block('len', 'arr.len', slots: {'array': 'nums'}),
+        'nums': _block('nums', 'var.get', literals: {'name': 'nums'}),
+        'step': _block('step', 'var.set', slots: {'value': 'add'}, literals: {'name': 'c'}),
+        'add': _block('add', 'arith.add', slots: {'left': 'c1', 'right': 'one'}),
+        'c1': _block('c1', 'var.get', literals: {'name': 'c'}),
+        'one': _block('one', 'lit.num', literals: {'value': 1}),
+        'ret': _block('ret', 'ctrl.return', slots: {'value': 'c2'}),
+        'c2': _block('c2', 'var.get', literals: {'name': 'c'}),
       },
     };
 
@@ -469,6 +503,89 @@ void main() {
         {'name': 'x', 'expect': 'correct', 'graph': _constantGraph(3)},
       ]);
       expect(_has(report, Severity.error, file, 'rejects[0].expect', 'Must be one of'), isTrue);
+    });
+  });
+
+  group('reference performance (MS10)', () {
+    const file = 'references/world_01/p1.json';
+    const counting = '["ctrl.return", "arr.len", "var.get", "lit.num", "var.set", '
+        '"ctrl.for_range", "arith.add"]';
+    const pool = '[{ "name": "c", "type": "num" }, { "name": "i", "type": "num" }]';
+    // Twenty ones: counting needs 2 + 4 + 100 + 2 = 108 operations, 3.6 × a
+    // budget of 30, while the visible case (3 ones, 23 operations) fits.
+    final twenty = '[{ "id": "h1", "in": { "nums": [${List.filled(20, 1).join(', ')}] }, "out": 20 }]';
+
+    ContentReport perf(String performance, {List<Object?>? rejects}) => _referenced(
+          allow: counting,
+          pool: pool,
+          limits: '{ "maxOps": 30 }',
+          hidden: twenty,
+          extra: ',\n  "performance": $performance',
+          rejects: rejects,
+        );
+
+    final slowBaseline = {'name': 'count one by one', 'expect': 'operationLimit', 'graph': _countingGraph()};
+
+    test('the checker records what the reference costs', () {
+      final report = _referenced();
+      expect(
+        _has(report, Severity.info, file, 'solution',
+            'Reference needs 3 of 1000 operations (0%), 0 of 10000 memory cells, depth 1 of 256, 3 blocks.'),
+        isTrue,
+        reason: report.issues.join('\n'),
+      );
+      expect(
+        _has(report, Severity.warning, file, 'metrics',
+            'not recorded. Measured: {"ops":3,"peakAlloc":0,"peakDepth":1,"blocks":3}'),
+        isTrue,
+      );
+    });
+
+    test('recorded metrics must match what is measured', () {
+      Map<String, Object?> withMetrics(Map<String, Object?> metrics) => {
+            'puzzle': 'p1',
+            'metrics': metrics,
+            'solution': _lengthGraph(),
+          };
+      final same = _referenced(reference: withMetrics({'ops': 3, 'peakAlloc': 0, 'peakDepth': 1, 'blocks': 3}));
+      expect(same.errors, isEmpty, reason: same.issues.join('\n'));
+      expect(same.warnings.where((w) => w.path == 'metrics'), isEmpty);
+
+      final drifted = _referenced(reference: withMetrics({'ops': 4, 'peakAlloc': 0, 'peakDepth': 1, 'blocks': 3}));
+      expect(_has(drifted, Severity.error, file, 'metrics.ops', 'Recorded 4, measured 3'), isTrue);
+
+      final unknown = _referenced(
+        reference: withMetrics({'ops': 3, 'peakAlloc': 0, 'peakDepth': 1, 'blocks': 3, 'millis': 12}),
+      );
+      expect(_has(unknown, Severity.error, file, 'metrics.millis', 'Unknown field'), isTrue);
+    });
+
+    test('performance.required needs a correct-but-slow baseline', () {
+      final missing = perf('{ "required": true }');
+      expect(_has(missing, Severity.error, file, 'rejects', 'performance.required'), isTrue);
+
+      final proven = perf('{ "required": true }', rejects: [slowBaseline]);
+      expect(proven.errors, isEmpty, reason: proven.issues.join('\n'));
+    });
+
+    test('baselineFactor is checked against the measured baseline', () {
+      final met = perf('{ "required": true, "baselineFactor": 3 }', rejects: [slowBaseline]);
+      expect(met.errors, isEmpty, reason: met.issues.join('\n'));
+
+      final unmet = perf('{ "required": true, "baselineFactor": 5 }', rejects: [slowBaseline]);
+      expect(
+        _has(unmet, Severity.error, file, 'rejects[0].expect', 'needs at most 3.6x a case budget'),
+        isTrue,
+        reason: unmet.issues.join('\n'),
+      );
+    });
+
+    test('a baseline that is not slow cannot stand in for one', () {
+      final report = perf('{ "required": true }', rejects: [
+        {'name': 'not slow at all', 'expect': 'operationLimit', 'graph': _lengthGraph()},
+      ]);
+      expect(_has(report, Severity.error, file, 'rejects[0].expect', 'ended in Correct'), isTrue);
+      expect(_has(report, Severity.error, file, 'rejects', 'performance.required'), isTrue);
     });
   });
 

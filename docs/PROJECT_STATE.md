@@ -3,8 +3,8 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current milestone: 9 complete (progressive hints in the puzzle screen; `hintsUsed` is real).**
-**Next milestone: 10 (performance metrics) — see the roadmap for the planned language milestone L1.**
+**Current milestone: 10 complete (deterministic performance metrics; correct-but-too-slow is a real verdict with real numbers).**
+**Next milestone: L1 (nullable / NOTHING narrowing), then 11 — see the roadmap.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
 Do not change the architecture.
@@ -12,8 +12,9 @@ Do not change the architecture.
 Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`,
 MS6 `39956f967f8102f747be94bc3ad9de4c0703c674`,
 MS7 `7d689dca871b33e58de23c2879d296aff6e74553`,
-MS8 `9b005b88cc1953b9b629f890697746ffccca2939`, MS9 — see `git log` (the commit
-titled "Milestone 9: …").
+MS8 `9b005b88cc1953b9b629f890697746ffccca2939`,
+MS9 `2be68bde64fc537c9a8e211c52d355a6d0c31d52`, MS10 — see `git log` (the commit
+titled "Milestone 10: …").
 
 ---
 
@@ -87,13 +88,17 @@ algorun/                          Flutter app (repository root)
       lib/src/runner/             TestRunner, validator registry
       lib/src/runtime/            RuntimeValue, value_json.dart (fixture format), limits
       lib/src/types/              ValueType + parser
-      test/                       271 tests
+      lib/src/execution/performance.dart  BudgetOverrun, SuitePerformance (MS10)
+      lib/src/runner/benchmark.dart       measureCase, benchmark, PerformanceReport (MS10)
+      test/                       297 tests
     algorun_content/              offline validator, reference checker, editor replay, CLI
   docs/                           architecture + per-milestone notes
   test/widget_test.dart           Flutter editor / picker / RUN tests
   test/real_puzzles_test.dart     the five real puzzles through the bundle and RUN
   test/hint_session_test.dart     hint session, the five puzzles' hints, hintsUsed through RUN
   test/hint_ui_test.dart          the hint interaction on the real puzzle screen
+  test/performance_ui_test.dart   budget wording and the results screen (MS10)
+  lib/state/performance_text.dart player wording for budgets (MS10)
 ```
 
 App `pubspec.yaml` path-depends on `packages/algorun_engine` only.
@@ -321,28 +326,85 @@ file with no puzzle is an error. Nothing is keyed to puzzle ids.
 
 Details: [`MILESTONE_9.md`](MILESTONE_9.md).
 
+### Performance (MS10)
+
+**Operation model — unchanged since MS5, pinned by content.** Every executed
+block costs 1 operation; a loop header costs 1 per iteration; `seq` and call
+wrappers are free; a short-circuited AND / OR side is neither run nor charged;
+a budget is checked *before* the step it pays for (a program needing exactly
+`maxOps` passes, `maxOps + 1` fails). The five reference files record their
+measured cost (`metrics`), and the content validator refuses any drift, so a
+change to these rules can never slip in silently. If one is ever needed:
+document it, re-record the metrics, and state the compatibility impact.
+
+**Budgets.** `limits.maxOps` is the one authoritative operation budget, per
+case. A fixture case may declare `"maxOps"` only *tighter* (a larger value is a
+schema error). `limits.maxAlloc` (memory cells) and `limits.maxDepth` (frames)
+stop a run as before; `blocks.maxBlocks` refuses the program before it runs.
+No budget is wall-clock time.
+
+**Correct but too slow.** A case over its operation budget is
+`ResultKind.operationLimit`, exactly as in MS6 (same message, same
+`SuiteResult.metrics`). The runner then re-runs that case once with room up to
+`overrunCeiling(budget)` (5 budgets, at most +1,000,000 operations) purely to
+measure it: `CaseResult.overrun` (visible cases) and `SuiteResult.performance`
+(`SuitePerformance`: `opsBudget`, `worstOps`, `overBudgetCases`,
+`overBudgetFinished`, `correctWhereFinished`, `worstOverrun`,
+`correctButOverBudget`) — counts only, never a hidden case's name or data.
+
+**Puzzle side.** `"performance": {"required": true, "baselineFactor": k}` —
+closed data, no formulas. `required` makes the validator demand a
+correct-but-slow baseline (a reject that passes the visible cases and expects
+`operationLimit`); `baselineFactor` demands that baseline needs at least `k`
+times a case budget, so every passing solution beats it by `k`. Twin Beacons
+declares `required: true, baselineFactor: 10`.
+
+**Reference performance.** The checker prints an INFO line per reference
+(operations, memory, depth, blocks against the limits) and compares the
+recorded `metrics` with a fresh measurement.
+
+**Benchmark API** (content tooling / analytics, never the player UI — it names
+hidden cases): `benchmark(program, puzzle, {cases})` → `PerformanceReport` of
+`PerformanceSample` (`caseId`, `visible`, `inputSize`, `ops`, `peakAlloc`,
+`peakDepth`, `finished`) and `BudgetCheck`s. `inputSize` = total size of the
+collection inputs.
+
+**No Big-O.** The engine never proves, estimates or displays a complexity
+class and never infers one from sizes. Player text talks about operations and
+budgets only; a complexity statement exists only if a content author writes
+it into a story or hint.
+
+**UI.** The results screen explains an operation limit ("The result is
+correct, but this solution uses too many operations: 58 against a budget of
+30." / "Every case that finished came out right, but … still running after
+300,000 …" / "… and not every answer is right either."), shows the measured
+operations on the WHAT IT COST line (`300,000+` when still running), and adds
+a `Budget: … steps · … cells · depth … · … blocks` line.
+
+Details: [`MILESTONE_10.md`](MILESTONE_10.md).
+
 ### Editor (MS3) — do not regress
 
 Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
 
-## Test results at MS9 closeout
+## Test results at MS10 closeout
 
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **272 passed** |
+| `packages/algorun_engine` `dart test` | **297 passed** |
 | `packages/algorun_content` `dart analyze` | no issues |
-| `packages/algorun_content` `dart test` | **32 passed** |
-| Content validator (assets + worlds + references) | `OK 7 puzzle(s), 4 warning(s)` |
+| `packages/algorun_content` `dart test` | **37 passed** |
+| Content validator (assets + worlds + references) | `OK 7 puzzle(s), 4 warning(s)` + 5 INFO lines |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **35 passed** |
+| Flutter `test` | **44 passed** |
 
 Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (26), MS7 codec
-(40), schema (39), FLOOR DIVIDE (14), MS8 shipped puzzles (24), contract
-tests. Content: shipped set with references, every reference rule, hint leak
-warnings, CLI. App: editor, picker, RUN path, results, the five real puzzles
-through the bundle and RUN, "correct but too slow", and the hint session and
-hint interaction.
+(40), schema (41), FLOOR DIVIDE (14), MS8 shipped puzzles (30), MS10
+performance (17), contract tests. Content: shipped set with references, every
+reference rule, reference metrics and performance rules, hint leak warnings,
+CLI. App: editor, picker, RUN, results, the five real puzzles, hints, and
+budget wording on the results screen.
 
 The four warnings are known and deliberate: worlds 12 and 13 require
 `recursion` (no world teaches it yet), and the two dev probes are unlisted.
@@ -353,6 +415,7 @@ The four warnings are known and deliberate: worlds 12 and 13 require
 
 - **No null narrowing in the block language — a language-capability gap, not a content problem.** `tree.left/right` and `ll.next` return nullable nodes and `map.get` returns `V?`; no block narrows a nullable value after a NOTHING check, and every node/number hole needs a non-null value. So trees and linked lists cannot be traversed past their first node, and map values cannot be used in arithmetic. This is why MS8 has no tree puzzle. Planned as language milestone **L1** (see the roadmap), which must land before any large-scale tree, linked-list or advanced graph content.
 - **Hints are a metric only.** `hintsUsed` is shown but not scored or persisted, by design (MS9).
+- **Performance is counted, not scored.** No stars or scores read the budgets yet. A hopeless solution is only known to be "still running" at the measurement ceiling; its correctness beyond it is not claimed. Memory and depth have no overrun measurement. There is no fixture generator: size profiles are explicit fixtures with optional per-case `maxOps` (MS10).
 - **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale.
 - **No random test generation.** A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
 - **World prerequisites.** Worlds 12 and 13 require `recursion`, which no world teaches (warning).
@@ -373,7 +436,7 @@ The four warnings are known and deliberate: worlds 12 and 13 require
 
 ## Exact commands
 
-From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS8 closeout: Flutter 3.47.2, Dart 3.13.2.
+From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS10 closeout: Flutter 3.47.2, Dart 3.13.2.
 
 ```bash
 flutter pub get
@@ -402,15 +465,16 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 
 | Order | Milestone | Status |
 |---|---|---|
-| 1–9 | skeleton → typed blocks → editor → lowering → interpreter → test runner → schema → five puzzles → hints | complete |
-| 10 | Performance metrics (still budget-based) | **next** in the ARCHITECTURE plan |
-| **L1** | **Language: optional values / nullable narrowing** | **planned architecture milestone** — required before tree, linked-list, counting-map or advanced graph content |
-| 11 | Progression + local save | planned |
+| 1–10 | skeleton → typed blocks → editor → lowering → interpreter → test runner → schema → five puzzles → hints → performance metrics | complete |
+| **L1** | **Language: nullable / NOTHING narrowing** | **next** (the user's order: L1 comes after MS10) |
+| 11 | Progression + local save | planned, after L1 |
 | 12 | Large original content | planned — its tree / linked-list / advanced graph content is blocked on L1 |
 | 13 | Mobile UX polish | planned |
 
-The user decides whether L1 runs before or after 10 and 11; it must run before
-12 and before any puzzle that walks a tree or list or counts with a map.
+**L1 — Nullable / NOTHING narrowing** must be completed before any
+large-scale tree, linked-list or advanced graph content expansion (and before
+any puzzle that counts with a map). It is a language-capability gap, not a
+content problem.
 
 ### Language milestone L1 contract (when asked)
 
@@ -431,17 +495,21 @@ rewrite.
 - Do not add a general option type, pattern matching, or `any`. Do not change
   what existing blocks mean.
 
-## Milestone 10 contract (when asked)
+## Milestone 11 contract (when asked, after L1)
 
-Performance metrics, still budget-based (locked decision 5: no Big-O analyzer).
+Progression and local save — on the device only.
 
-- Present how a run used its budgets — operations, memory cells, depth, blocks —
-  against the puzzle's limits, in the results screen, from the metrics that
-  already exist.
-- Anything that looks at growth across input sizes must say it is an
-  empirical count, never a complexity proof.
-- Do not add scoring, stars, persistence or a backend. Keep the engine's
-  grading unchanged and every test green.
+- Remember, per puzzle, whether it was solved and the player's last graph
+  (as the editor's own `BlockGraph` JSON), plus the best result's operations
+  and hints used, so a player can return and keep improving.
+- Unlock worlds by the rules the content already declares (prerequisites),
+  not by hardcoded ids.
+- Local storage only: no backend, no accounts, no sync. Stored graphs must be
+  re-validated through the engine on load; a graph that no longer lowers
+  (content changed) is kept but shown as needing repair, never silently
+  dropped.
+- No scoring, stars or leaderboards unless asked. Keep every test green and
+  the content validator passing with references.
 
 ## Milestone docs
 
@@ -457,4 +525,5 @@ Performance metrics, still budget-based (locked decision 5: no Big-O analyzer).
 | [`MILESTONE_7.md`](MILESTONE_7.md) | complete — puzzle schema hardening |
 | [`MILESTONE_8.md`](MILESTONE_8.md) | complete — five real puzzles + reference solutions |
 | [`MILESTONE_9.md`](MILESTONE_9.md) | complete — hint system |
-| this file | MS9 handoff |
+| [`MILESTONE_10.md`](MILESTONE_10.md) | complete — deterministic performance metrics |
+| this file | MS10 handoff |

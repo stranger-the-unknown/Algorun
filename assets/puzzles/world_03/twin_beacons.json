@@ -22,6 +22,7 @@
   },
   "blocks": {"allow": ["ctrl.for_range", "ctrl.if", "ctrl.return", "var.set", "var.get", "lit.num", "arr.get", "arr.len", "arith.add", "arith.sub", "cmp.eq", "new.set", "set.add", "set.has"], "maxBlocks": 30},
   "limits": {"maxOps": 60000, "maxDepth": 32, "maxAlloc": 4000},
+  "performance": {"required": true, "baselineFactor": 10},
   "scoring": {"blockBudget": 30},
   "hints": ["Comparing every pair of beacons gives the right answer, but the long logs make it far too slow. Try to walk the log only once.", "At any beacon, only one strength could complete a pair with it: the tuning number minus its own strength. Keep a set of the strengths you have already passed.", "At each position, first ask the set whether the missing strength is already there; if it is, that position is your answer. Only after asking, add this beacon's strength. The order of those two steps matters."],
   "validators": {"output": "equal"},

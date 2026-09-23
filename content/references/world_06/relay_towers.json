@@ -1,6 +1,7 @@
 {
   "puzzle": "relay_towers",
   "notes": "One pass west to east with a stack of positions still waiting for a taller tower. The heights on the stack never increase from bottom to top, so a new tower settles waiting towers from the top until it meets one at least as tall. Each position is pushed and popped at most once. Looking east from every tower is correct but quadratic on a falling ridge.",
+  "metrics": {"ops": 85212, "peakAlloc": 4002, "peakDepth": 1, "blocks": 42},
   "solution": {
     "variables": {"heights": "array<num>", "i": "num", "j": "num", "result": "array<num>", "waiting": "stack<num>"},
     "entryIds": ["set_2", "for_range_9", "set_11", "for_range_40", "return_42"],

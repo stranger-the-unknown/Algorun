@@ -1,4 +1,5 @@
 import '../runtime/limits.dart';
+import 'performance.dart';
 import 'result_kind.dart';
 import 'run_result.dart';
 
@@ -12,6 +13,7 @@ final class CaseResult {
     this.input,
     this.expected,
     this.actual,
+    this.overrun,
   });
 
   final String id;
@@ -22,6 +24,10 @@ final class CaseResult {
   final Map<String, Object?>? input;
   final Object? expected;
   final Object? actual;
+
+  /// Set when this case needed more operations than its budget: how many it
+  /// really needed, and whether its answer would have been right (MS10).
+  final BudgetOverrun? overrun;
 
   bool get ok => run.kind == ResultKind.correct;
 }
@@ -46,6 +52,7 @@ final class SuiteResult {
     this.firstFailureBlockId,
     this.firstFailureOpIndex,
     this.firstFailureCaseId,
+    this.performance,
   });
 
   final ResultKind kind;
@@ -71,6 +78,10 @@ final class SuiteResult {
   final int? firstFailureOpIndex;
   final String? firstFailureCaseId;
 
+  /// Operation-budget summary over every case (MS10). Null only for a result
+  /// that never reached the runner, such as a program that could not lower.
+  final SuitePerformance? performance;
+
   bool get ok => kind == ResultKind.correct;
 
   /// The same result carrying the player's hint count. Grading never looks at
@@ -85,6 +96,7 @@ final class SuiteResult {
       firstFailureBlockId: firstFailureBlockId,
       firstFailureOpIndex: firstFailureOpIndex,
       firstFailureCaseId: firstFailureCaseId,
+      performance: performance,
     );
   }
 }

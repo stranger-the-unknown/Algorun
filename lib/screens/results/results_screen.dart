@@ -4,6 +4,7 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/theme/app_theme.dart';
+import '../../state/performance_text.dart';
 
 final class ResultsArgs {
   const ResultsArgs({
@@ -53,7 +54,8 @@ final class ResultsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpace.s3),
                     Text(
-                      suite.message ??
+                      performanceMessage(suite) ??
+                          suite.message ??
                           (args.validation.ok
                               ? 'No message.'
                               : args.validation.messages.first.message),
@@ -97,12 +99,15 @@ final class ResultsScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: AppSpace.s2),
                       child: Text(
-                        '${suite.metrics.ops} steps · '
-                        '${suite.metrics.peakAlloc} cells · '
-                        'depth ${suite.metrics.peakDepth} · '
-                        '${suite.metrics.blocks} blocks · '
-                        '${_hints(suite.metrics.hintsUsed)}',
+                        costLine(suite),
                         style: const TextStyle(color: AppColors.muted),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        budgetLine(args.puzzle),
+                        style: const TextStyle(color: AppColors.faint, fontSize: 13),
                       ),
                     ),
                     if (!suite.ok && suite.firstFailureOpIndex != null)
@@ -133,8 +138,6 @@ final class ResultsScreen extends StatelessWidget {
     );
   }
 }
-
-String _hints(int count) => count == 1 ? '1 hint' : '$count hints';
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel(this.text);

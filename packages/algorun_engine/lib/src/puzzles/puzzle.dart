@@ -84,6 +84,23 @@ final class PuzzleReference {
   final String strategy;
 }
 
+/// How a puzzle treats performance. The operation budget itself is
+/// `limits.maxOps` — the one authoritative number; this only says whether
+/// meeting it is the point of the puzzle.
+final class PerformanceSpec {
+  const PerformanceSpec({this.required = false, this.baselineFactor});
+
+  /// Performance is part of the goal: the content tooling requires the
+  /// reference file to prove that a correct but slow approach is turned away.
+  final bool required;
+
+  /// When set, that slow baseline must need at least this many times a case's
+  /// budget — so any passing solution beats it by at least this factor.
+  final int? baselineFactor;
+
+  static const none = PerformanceSpec();
+}
+
 /// One fixture, already decoded and type-checked against the puzzle's io by
 /// the schema. The runner hands [input] to the interpreter, which copies it on
 /// entry, so a run never changes these values.
@@ -93,6 +110,7 @@ final class TestCase {
     required this.input,
     required this.output,
     this.visible = true,
+    this.maxOps,
   });
 
   final String id;
@@ -104,6 +122,10 @@ final class TestCase {
   final RuntimeValue output;
 
   final bool visible;
+
+  /// A tighter operation budget for this case only, for example a small input
+  /// that must stay cheap. Never larger than the puzzle's `limits.maxOps`.
+  final int? maxOps;
 }
 
 final class Puzzle {
@@ -132,6 +154,7 @@ final class Puzzle {
     this.variablePool = const [],
     this.meta = const {},
     this.reference,
+    this.performance = PerformanceSpec.none,
   });
 
   final String id;
@@ -168,6 +191,11 @@ final class Puzzle {
   /// Reference-solution metadata, or null for a puzzle without one. Every
   /// puzzle a player can reach must have one (checked by the content tooling).
   final PuzzleReference? reference;
+
+  final PerformanceSpec performance;
+
+  /// The operation budget for [testCase]: its own, or the puzzle's.
+  int opsBudgetFor(TestCase testCase) => testCase.maxOps ?? limits.maxOps;
 
   /// Hidden tests are UI-hidden only. On a local APK they can be unpacked.
   /// Do not treat them as cryptographic secrets.
