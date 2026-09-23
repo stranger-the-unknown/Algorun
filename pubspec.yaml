@@ -23,3 +23,8 @@ flutter:
   assets:
     - assets/worlds.json
     - assets/puzzles/world_01/
+    - assets/puzzles/world_02/
+    - assets/puzzles/world_03/
+    - assets/puzzles/world_05/
+    - assets/puzzles/world_06/
+    - assets/puzzles/world_10/

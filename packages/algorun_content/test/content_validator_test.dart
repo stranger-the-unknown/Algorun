@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:algorun_content/algorun_content.dart';
+import 'package:algorun_engine/algorun_engine.dart' show readWorldsJson;
 import 'package:test/test.dart';
 
 const _validator = ContentValidator();
@@ -50,6 +51,115 @@ String _worlds(Map<String, List<String>> puzzles) => jsonEncode({
       ],
     });
 
+List<ContentFile> _files(String dir) {
+  final root = Directory(dir);
+  return [
+    for (final f in root.listSync(recursive: true).whereType<File>())
+      if (f.path.endsWith('.json'))
+        ContentFile(
+          f.absolute.uri.path.substring(root.absolute.uri.path.length),
+          f.readAsStringSync(),
+        ),
+  ];
+}
+
+/// A playable one-puzzle content set — `return LENGTH OF nums` — listed by a
+/// world, with a reference file built from [solution] and [rejects].
+ContentReport _referenced({
+  String allow = '["ctrl.return", "arr.len", "var.get", "lit.num", "var.set"]',
+  String limits = '{ "maxOps": 1000 }',
+  String maxBlocks = '',
+  String pool = '',
+  Map<String, Object?>? solution,
+  List<Object?>? rejects,
+  Map<String, Object?>? reference,
+  String? referenceSource,
+  bool withMetadata = true,
+  List<ContentFile> extraReferences = const [],
+}) {
+  final metadata = withMetadata ? ',\n  "reference": { "strategy": "count_items" }' : '';
+  final budget = maxBlocks.isEmpty ? '' : ', "maxBlocks": $maxBlocks';
+  final variables = pool.isEmpty ? '' : ',\n  "variables": { "pool": $pool }';
+  final source = '''
+{
+  "id": "p1", "title": "Probe", "world": "world_01", "tier": 1, "mode": "build",
+  "story": "Count the numbers.",
+  "io": { "inputs": [{ "name": "nums", "type": "array<num>" }], "output": { "type": "num" } },
+  "blocks": { "allow": $allow$budget },
+  "limits": $limits,
+  "hints": ["Count them."],
+  "fixtures": {
+    "visible": [{ "id": "v1", "in": { "nums": [1, 2, 3] }, "out": 3 }],
+    "hidden": [{ "id": "h1", "in": { "nums": [9] }, "out": 1 }]
+  }$metadata$variables
+}
+''';
+  final file = referenceSource ??
+      jsonEncode(reference ??
+          {
+            'puzzle': 'p1',
+            'notes': 'Count the list.',
+            'solution': solution ?? _lengthGraph(),
+            'rejects': ?rejects,
+          });
+  return _validator.validateContent(
+    puzzles: [ContentFile('world_01/p1.json', source)],
+    worldsSource: _worlds({
+      'world_01': ['p1'],
+    }),
+    references: withMetadata
+        ? [ContentFile('world_01/p1.json', file), ...extraReferences]
+        : extraReferences,
+  );
+}
+
+Map<String, Object?> _block(
+  String id,
+  String catalogId, {
+  Map<String, String> slots = const {},
+  Map<String, Object?> literals = const {},
+}) =>
+    {
+      'id': id,
+      'catalogId': catalogId,
+      'slots': {for (final e in slots.entries) e.key: {'ref': e.value}},
+      'literals': literals,
+    };
+
+/// `return LENGTH OF nums`, as the editor would save it.
+Map<String, Object?> _lengthGraph({Map<String, Object?> lenLiterals = const {}}) => {
+      'variables': {'nums': 'array<num>'},
+      'entryIds': ['ret'],
+      'blocks': {
+        'ret': _block('ret', 'ctrl.return', slots: {'value': 'len'}),
+        'len': _block('len', 'arr.len', slots: {'array': 'nums'}, literals: lenLiterals),
+        'nums': _block('nums', 'var.get', literals: {'name': 'nums'}),
+      },
+    };
+
+/// `return <value>`: right on the visible case when value is 3.
+Map<String, Object?> _constantGraph(int value) => {
+      'variables': {'nums': 'array<num>'},
+      'entryIds': ['ret'],
+      'blocks': {
+        'ret': _block('ret', 'ctrl.return', slots: {'value': 'n'}),
+        'n': _block('n', 'lit.num', literals: {'value': value}),
+      },
+    };
+
+/// `x = LENGTH OF nums; return x`: needs "x" from the variable pool.
+Map<String, Object?> _namedGraph() => {
+      'variables': {'nums': 'array<num>', 'x': 'num'},
+      'entryIds': ['set', 'ret'],
+      'blocks': {
+        'set': _block('set', 'var.set', slots: {'value': 'len'}, literals: {'name': 'x'}),
+        'len': _block('len', 'arr.len', slots: {'array': 'nums'}),
+        'nums': _block('nums', 'var.get', literals: {'name': 'nums'}),
+        'ret': _block('ret', 'ctrl.return', slots: {'value': 'x'}),
+        'x': _block('x', 'var.get', literals: {'name': 'x'}),
+      },
+    };
+
 bool _has(ContentReport report, Severity severity, String file, String path, String fragment) {
   return report.issues.any((i) =>
       i.severity == severity &&
@@ -73,9 +183,20 @@ void main() {
       final report = _validator.validateContent(
         puzzles: files,
         worldsSource: File('../../assets/worlds.json').readAsStringSync(),
+        references: _files('../../content/references'),
       );
       expect(report.errors, isEmpty, reason: report.issues.join('\n'));
-      expect(report.puzzleCount, 2);
+      expect(report.puzzleCount, 7);
+    });
+
+    test('every playable puzzle has a reference file', () {
+      final worlds = readWorldsJson(File('../../assets/worlds.json').readAsStringSync()).manifest!;
+      final playable = [
+        for (final w in worlds.worlds)
+          for (final id in w.puzzleIds) '${w.id}/$id.json',
+      ];
+      expect(playable, hasLength(5));
+      expect(_files('../../content/references').map((r) => r.path), containsAll(playable));
     });
   });
 
@@ -195,6 +316,153 @@ void main() {
     });
   });
 
+  group('reference solutions', () {
+    const file = 'references/world_01/p1.json';
+
+    test('a correct, buildable reference passes', () {
+      final report = _referenced();
+      expect(report.errors, isEmpty, reason: report.issues.join('\n'));
+    });
+
+    test('a playable puzzle without reference metadata is refused', () {
+      final report = _referenced(withMetadata: false);
+      expect(
+        _has(report, Severity.error, 'world_01/p1.json', 'reference', 'needs reference metadata'),
+        isTrue,
+      );
+    });
+
+    test('reference metadata without a reference file is refused', () {
+      final report = _validator.validateContent(
+        puzzles: [
+          ContentFile(
+            'world_01/p1.json',
+            _puzzle(extra: ',\n  "reference": { "strategy": "count_items" }'),
+          ),
+        ],
+        references: const [],
+      );
+      expect(
+        _has(report, Severity.error, 'world_01/p1.json', 'reference',
+            'No reference solution at references/world_01/p1.json'),
+        isTrue,
+      );
+    });
+
+    test('a reference with no puzzle is refused', () {
+      final report = _referenced(extraReferences: [const ContentFile('world_09/ghost.json', '{}')]);
+      expect(_has(report, Severity.error, 'references/world_09/ghost.json', '', 'No puzzle'), isTrue);
+    });
+
+    test('malformed reference files are refused', () {
+      expect(
+        _has(_referenced(referenceSource: '{"puzzle": '), Severity.error, file, '', 'Not valid JSON'),
+        isTrue,
+      );
+      expect(
+        _has(
+          _referenced(reference: {
+            'puzzle': 'p1',
+            'solution': {'blocks': 5},
+          }),
+          Severity.error,
+          file,
+          'solution',
+          'Not a block graph',
+        ),
+        isTrue,
+      );
+      expect(
+        _has(
+          _referenced(reference: {'puzzle': 'other', 'solution': _lengthGraph()}),
+          Severity.error,
+          file,
+          'puzzle',
+          'belongs to "p1"',
+        ),
+        isTrue,
+      );
+      expect(
+        _has(
+          _referenced(reference: {'puzzle': 'p1', 'solution': _lengthGraph(), 'source': 'x => x'}),
+          Severity.error,
+          file,
+          'source',
+          'Unknown field',
+        ),
+        isTrue,
+      );
+    });
+
+    test('a reference that uses a block the puzzle does not allow', () {
+      final report = _referenced(allow: '["ctrl.return", "lit.num", "var.get"]');
+      expect(
+        _has(report, Severity.error, file, 'solution.blocks.len', 'does not include that block'),
+        isTrue,
+      );
+    });
+
+    test('a reference over the block budget', () {
+      final report = _referenced(maxBlocks: '2');
+      expect(_has(report, Severity.error, file, 'solution', 'at most 2 blocks'), isTrue);
+    });
+
+    test('a reference over the operation budget', () {
+      final report = _referenced(limits: '{ "maxOps": 2 }');
+      expect(
+        _has(report, Severity.error, file, 'solution',
+            'The reference does not pass: Operation Limit on visible case "v1"'),
+        isTrue,
+      );
+    });
+
+    test('a reference that gives a wrong answer names the case', () {
+      final report = _referenced(solution: _constantGraph(3));
+      expect(_has(report, Severity.error, file, 'solution', 'Wrong Answer on hidden case "h1"'), isTrue);
+    });
+
+    test('a reference a player could not build', () {
+      final unset = _referenced(solution: _lengthGraph(lenLiterals: {'of': 'num'}));
+      expect(
+        _has(unset, Severity.error, file, 'solution.blocks.len.literals.of', 'cannot set "of"'),
+        isTrue,
+      );
+      final outsidePool = _referenced(solution: _namedGraph());
+      expect(
+        _has(outsidePool, Severity.error, file, 'solution.variables.x', "not in the puzzle's variable pool"),
+        isTrue,
+      );
+      final inPool = _referenced(solution: _namedGraph(), pool: '[{ "name": "x", "type": "num" }]');
+      expect(inPool.errors, isEmpty, reason: inPool.issues.join('\n'));
+    });
+
+    test('a reject must end the suite the way it says', () {
+      final right = _referenced(rejects: [
+        {'name': 'answer three', 'expect': 'wrongAnswer', 'graph': _constantGraph(3)},
+      ]);
+      expect(right.errors, isEmpty, reason: right.issues.join('\n'));
+
+      final wrongKind = _referenced(rejects: [
+        {'name': 'answer three', 'expect': 'operationLimit', 'graph': _constantGraph(3)},
+      ]);
+      expect(_has(wrongKind, Severity.error, file, 'rejects[0].expect', 'ended in Wrong Answer'), isTrue);
+    });
+
+    test('a reject has to look right on the visible cases', () {
+      final report = _referenced(rejects: [
+        {'name': 'answer zero', 'expect': 'wrongAnswer', 'graph': _constantGraph(0)},
+      ]);
+      expect(_has(report, Severity.error, file, 'rejects[0]', 'must pass every visible case'), isTrue);
+    });
+
+    test('a reject must name a real failure', () {
+      final report = _referenced(rejects: [
+        {'name': 'x', 'expect': 'correct', 'graph': _constantGraph(3)},
+      ]);
+      expect(_has(report, Severity.error, file, 'rejects[0].expect', 'Must be one of'), isTrue);
+    });
+  });
+
   group('command line', () {
     late Directory temp;
 
@@ -206,10 +474,21 @@ void main() {
           ['run', 'bin/validate.dart', ...args],
         );
 
-    test('the shipped assets pass', () async {
-      final result = await validate(['../../assets/puzzles', '../../assets/worlds.json']);
+    test('the shipped assets and references pass', () async {
+      final result = await validate([
+        '../../assets/puzzles',
+        '../../assets/worlds.json',
+        '../../content/references',
+      ]);
       expect(result.exitCode, 0, reason: '${result.stdout}${result.stderr}');
-      expect('${result.stdout}', contains('OK 2 puzzle(s)'));
+      expect('${result.stdout}', contains('OK 7 puzzle(s)'));
+      expect('${result.stdout}', isNot(contains('ERROR')));
+    });
+
+    test('leaving out the references is visible, not silent', () async {
+      final result = await validate(['../../assets/puzzles', '../../assets/worlds.json']);
+      expect(result.exitCode, 0);
+      expect('${result.stdout}', contains('Reference solutions were not checked'));
     });
 
     test('malformed temporary fixtures fail with useful errors', () async {

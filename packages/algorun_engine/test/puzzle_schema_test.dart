@@ -135,6 +135,15 @@ void main() {
       expect(read.puzzle!.hiddenTests.single.output, isA<NilValue>());
     });
 
+    test('reference metadata names the intended strategy', () {
+      final read = readPuzzleJson(jsonEncode(_with((m) {
+        m['reference'] = {'strategy': 'hash_set_complement'};
+      })));
+      expect(read.issues, isEmpty);
+      expect(read.puzzle!.reference!.strategy, 'hash_set_complement');
+      expect(readPuzzleJson(jsonEncode(_base())).puzzle!.reference, isNull);
+    });
+
     test('meta holds flat data the engine never reads', () {
       final read = readPuzzleJson(jsonEncode(_with((m) {
         m['meta'] = {'author': 'grok', 'revision': 3, 'reviewed': true};
@@ -252,6 +261,17 @@ void main() {
         _with((m) => m['validators'] = {'output': 'equal', 'predicate': 'a == b'}),
         'validators.predicate',
         'data only',
+      );
+    });
+
+    test('reference metadata is closed and never carries the solution', () {
+      _rejects(_with((m) => m['reference'] = {'strategy': 'Two Sum'}), 'reference.strategy',
+          'lower_snake_case');
+      _rejects(_with((m) => m['reference'] = {}), 'reference.strategy', 'Required');
+      _rejects(
+        _with((m) => m['reference'] = {'strategy': 'bfs', 'solution': {'blocks': {}}}),
+        'reference.solution',
+        'Unknown field',
       );
     });
 

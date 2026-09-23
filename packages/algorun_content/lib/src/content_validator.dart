@@ -1,55 +1,19 @@
 import 'package:algorun_engine/algorun_engine.dart';
 
-enum Severity { error, warning }
+import 'content_issue.dart';
+import 'reference_check.dart';
 
-/// One finding. [file] is relative to the puzzles root (`world_01/x.json`) or
-/// the manifest name; [path] points into the JSON, `''` for the whole file.
-final class ContentIssue {
-  const ContentIssue(this.severity, this.file, this.path, this.message);
-
-  final Severity severity;
-  final String file;
-  final String path;
-  final String message;
-
-  bool get isError => severity == Severity.error;
-
-  @override
-  String toString() {
-    final where = path.isEmpty ? file : '$file $path';
-    return '${severity.name.toUpperCase()} $where: $message';
-  }
-}
-
-final class ContentReport {
-  const ContentReport(this.issues, {this.puzzleCount = 0});
-
-  final List<ContentIssue> issues;
-
-  /// Puzzles that passed the schema.
-  final int puzzleCount;
-
-  bool get ok => !issues.any((i) => i.isError);
-
-  Iterable<ContentIssue> get errors => issues.where((i) => i.isError);
-  Iterable<ContentIssue> get warnings => issues.where((i) => !i.isError);
-}
-
-/// A puzzle file: its path relative to the puzzles root, and its text.
-final class ContentFile {
-  const ContentFile(this.path, this.source);
-
-  final String path;
-  final String source;
-}
-
-/// Offline content gate. Nothing it reads is executed.
+/// Offline content gate. No content is ever executed as code: reference
+/// solutions are block graphs, and they run only inside the engine's sandboxed
+/// interpreter.
 ///
 /// The single-puzzle rules are the engine's own schema
 /// (`algorun_engine` → `readPuzzleJson`), so the game and this tool can never
 /// disagree about what a valid puzzle is. On top of that it checks what only
 /// the whole content set can show: duplicate ids, file locations the game can
-/// load, and that worlds and puzzles point at each other.
+/// load, that worlds and puzzles point at each other, and — for every puzzle a
+/// player can reach — that a reference solution proves it solvable
+/// ([ReferenceChecker]).
 ///
 /// Errors block a commit. Warnings are advice.
 final class ContentValidator {
@@ -64,10 +28,16 @@ final class ContentValidator {
 
   /// The whole content set. Files are checked in path order, so the same set
   /// always produces the same report.
+  ///
+  /// [references] are reference files, each at `<world>/<id>.json` relative to
+  /// the references root ([referencesLabel] names that root in the report).
+  /// Leave it null to skip executing references; the report then says so.
   ContentReport validateContent({
     required List<ContentFile> puzzles,
     String? worldsSource,
     String worldsFile = 'worlds.json',
+    List<ContentFile>? references,
+    String referencesLabel = 'references',
   }) {
     final issues = <ContentIssue>[];
     final files = [...puzzles]..sort((a, b) => a.path.compareTo(b.path));
@@ -99,10 +69,80 @@ final class ContentValidator {
       }
     }
 
-    if (worldsSource != null) {
-      _checkWorlds(worldsSource, worldsFile, byId, issues);
-    }
+    final listed = worldsSource == null
+        ? null
+        : _checkWorlds(worldsSource, worldsFile, byId, issues);
+    _checkReferences(byId, listed, references, referencesLabel, issues);
     return ContentReport(issues, puzzleCount: byId.length);
+  }
+
+  /// Every puzzle a player can reach must declare reference metadata, and every
+  /// puzzle that declares it must be proven by its reference file.
+  void _checkReferences(
+    Map<String, ({String file, Puzzle puzzle})> puzzles,
+    Set<String>? listed,
+    List<ContentFile>? references,
+    String label,
+    List<ContentIssue> issues,
+  ) {
+    final ids = puzzles.keys.toList()..sort();
+    if (listed != null) {
+      for (final id in ids) {
+        final (:file, :puzzle) = puzzles[id]!;
+        if (listed.contains(id) && puzzle.reference == null) {
+          issues.add(ContentIssue(
+            Severity.error,
+            file,
+            'reference',
+            'A puzzle players can reach needs reference metadata and a reference solution.',
+          ));
+        }
+      }
+    }
+    final declared = [
+      for (final id in ids)
+        if (puzzles[id]!.puzzle.reference != null) puzzles[id]!,
+    ];
+    if (references == null) {
+      if (declared.isNotEmpty) {
+        issues.add(ContentIssue(
+          Severity.warning,
+          label,
+          '',
+          'Reference solutions were not checked: no references were given.',
+        ));
+      }
+      return;
+    }
+
+    final byPath = {
+      for (final ref in references) ref.path.replaceAll(r'\', '/'): ref.source,
+    };
+    final expected = <String>{};
+    for (final (:file, :puzzle) in declared) {
+      final path = '${puzzle.world}/${puzzle.id}.json';
+      expected.add(path);
+      final source = byPath[path];
+      if (source == null) {
+        issues.add(ContentIssue(
+          Severity.error,
+          file,
+          'reference',
+          'No reference solution at $label/$path.',
+        ));
+        continue;
+      }
+      const ReferenceChecker().check(puzzle, source, '$label/$path', issues);
+    }
+    final orphans = byPath.keys.where((p) => !expected.contains(p)).toList()..sort();
+    for (final path in orphans) {
+      issues.add(ContentIssue(
+        Severity.error,
+        '$label/$path',
+        '',
+        'No puzzle with reference metadata lives at $path.',
+      ));
+    }
   }
 
   Puzzle? _readPuzzle(String source, String file, List<ContentIssue> issues) {
@@ -112,6 +152,23 @@ final class ContentValidator {
     }
     final puzzle = read.puzzle;
     if (puzzle == null) return null;
+
+    for (final (list, cases) in [
+      ('visible', puzzle.visibleTests),
+      ('hidden', puzzle.hiddenTests),
+    ]) {
+      for (final (i, testCase) in cases.indexed) {
+        if (!compareOutputs(puzzle.outputValidator, testCase.output, testCase.output)) {
+          issues.add(ContentIssue(
+            Severity.error,
+            file,
+            'fixtures.$list[$i].out',
+            'This answer does not satisfy its own validator '
+            '"${puzzle.outputValidator.name}", so no program could match it.',
+          ));
+        }
+      }
+    }
 
     if (puzzle.hints.isEmpty) {
       issues.add(ContentIssue(Severity.warning, file, 'hints', 'No hints provided.'));
@@ -137,7 +194,8 @@ final class ContentValidator {
     return puzzle;
   }
 
-  void _checkWorlds(
+  /// Returns the ids the manifest lists, or null when it did not load.
+  Set<String>? _checkWorlds(
     String source,
     String file,
     Map<String, ({String file, Puzzle puzzle})> puzzles,
@@ -148,7 +206,7 @@ final class ContentValidator {
       issues.add(ContentIssue(Severity.error, file, issue.path, issue.message));
     }
     final manifest = read.manifest;
-    if (manifest == null) return;
+    if (manifest == null) return null;
 
     final concepts = {for (final w in manifest.worlds) ...w.concepts};
     final listedBy = <String, String>{};
@@ -213,5 +271,6 @@ final class ContentValidator {
         }
       }
     }
+    return listedBy.keys.toSet();
   }
 }

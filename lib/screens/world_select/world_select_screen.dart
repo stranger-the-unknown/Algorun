@@ -89,7 +89,7 @@ class _WorldCard extends StatelessWidget {
                     Text(
                       locked
                           ? 'Locked — content in later milestones'
-                          : '${world.puzzleIds.length} ${world.puzzleIds.length == 1 ? 'probe' : 'probes'}',
+                          : '${world.puzzleIds.length} ${world.puzzleIds.length == 1 ? 'puzzle' : 'puzzles'}',
                       style: const TextStyle(color: AppColors.muted, fontSize: 13),
                     ),
                   ],

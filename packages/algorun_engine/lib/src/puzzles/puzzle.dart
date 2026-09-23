@@ -72,6 +72,18 @@ final class ScoringSpec {
   final bool hintPenalty;
 }
 
+/// Declares that a puzzle is backed by a reference solution.
+///
+/// The solution itself is never part of the puzzle: it lives with the offline
+/// content tooling (`content/references/<world>/<id>.json`) and never ships in
+/// the app. [strategy] names the intended approach so tooling can reason about
+/// the content set (for example, spotting two puzzles that are the same idea).
+final class PuzzleReference {
+  const PuzzleReference({required this.strategy});
+
+  final String strategy;
+}
+
 /// One fixture, already decoded and type-checked against the puzzle's io by
 /// the schema. The runner hands [input] to the interpreter, which copies it on
 /// entry, so a run never changes these values.
@@ -119,6 +131,7 @@ final class Puzzle {
     this.verdictSource = VerdictSource.local,
     this.variablePool = const [],
     this.meta = const {},
+    this.reference,
   });
 
   final String id;
@@ -151,6 +164,10 @@ final class Puzzle {
   /// Reserved forward-compatible metadata: flat string / number / boolean
   /// values the engine never reads. Nothing in it is ever executed.
   final Map<String, Object> meta;
+
+  /// Reference-solution metadata, or null for a puzzle without one. Every
+  /// puzzle a player can reach must have one (checked by the content tooling).
+  final PuzzleReference? reference;
 
   /// Hidden tests are UI-hidden only. On a local APK they can be unpacked.
   /// Do not treat them as cryptographic secrets.

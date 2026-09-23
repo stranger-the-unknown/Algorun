@@ -1,0 +1,97 @@
+{
+  "id": "smallest_cart",
+  "version": 1,
+  "title": "The Smallest Cart",
+  "world": "world_02",
+  "chapter": "search_the_answer",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["binary_search", "binary_search_answer"],
+  "prerequisites": ["arrays"],
+  "story": "Parcels leave the warehouse on a conveyor in a fixed order, each with a whole-number weight. A single cart carries them away in trips. On each trip the cart takes the next parcels in line for as long as their total weight fits its capacity, then leaves; parcels are never reordered or split. You may make at most the given number of trips. What is the smallest whole-number capacity that clears the whole conveyor in time?",
+  "io": {
+    "inputs": [
+      {"name": "weights", "type": "array<num>"},
+      {"name": "trips", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 300},
+    "notes": ["Weights are whole numbers from 1 to 500.", "Trips is a whole number from 1 to the number of parcels."]
+  },
+  "blocks": {"allow": ["ctrl.foreach", "ctrl.while", "ctrl.if", "ctrl.else", "ctrl.return", "var.set", "var.get", "var.inc", "lit.num", "arith.add", "arith.max", "arith.div", "arith.floor_div", "cmp.lt", "cmp.le", "cmp.gt"], "maxBlocks": 70},
+  "limits": {"maxOps": 130000, "maxDepth": 32, "maxAlloc": 100},
+  "scoring": {"blockBudget": 70},
+  "hints": ["If a capacity clears the conveyor in time, every larger capacity does too. The answer sits at the point where 'too small' turns into 'big enough'.", "The answer is at least the heaviest parcel and at most the total weight. You can test any single capacity by walking the conveyor once and counting trips.", "Keep a low and a high bound and test the capacity halfway between them. Capacities are whole numbers, so the halfway point must be one too. Move the bound that the test rules out, and stop when the bounds meet."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"weights": [5, 1, 3, 2, 6, 2], "trips": 3},
+        "out": 8
+      },
+      {
+        "id": "v2",
+        "in": {"weights": [4, 4, 4, 4], "trips": 2},
+        "out": 8
+      }
+    ],
+    "hidden": [
+      {
+        "id": "single_parcel",
+        "in": {"weights": [5], "trips": 1},
+        "out": 5
+      },
+      {
+        "id": "one_trip_takes_all",
+        "in": {"weights": [2, 9, 4], "trips": 1},
+        "out": 15
+      },
+      {
+        "id": "a_trip_per_parcel",
+        "in": {"weights": [7, 1, 3], "trips": 3},
+        "out": 7
+      },
+      {
+        "id": "heavy_last_parcel",
+        "in": {"weights": [1, 1, 1, 1, 20], "trips": 2},
+        "out": 20
+      },
+      {
+        "id": "equal_parcels",
+        "in": {"weights": [3, 3, 3, 3, 3, 3], "trips": 4},
+        "out": 6
+      },
+      {
+        "id": "odd_midpoints",
+        "in": {"weights": [7, 2, 5, 10, 8], "trips": 2},
+        "out": 18
+      },
+      {
+        "id": "long_conveyor_few_trips",
+        "in": {"weights": [188, 130, 16, 213, 91, 338, 227, 205, 402, 350, 227, 488, 259, 133, 92, 61, 239, 340, 152, 419, 408, 381, 195, 472, 317, 58, 180, 109, 42, 221, 422, 292, 180, 245, 10, 244, 430, 432, 424, 81, 275, 4, 351, 137, 272, 277, 85, 474, 367, 378, 50, 135, 479, 229, 120, 131, 445, 243, 493, 394, 67, 255, 365, 370, 47, 77, 211, 103, 131, 160, 96, 51, 263, 392, 437, 341, 241, 220, 29, 91, 85, 188, 69, 65, 75, 187, 78, 23, 98, 142, 272, 456, 133, 290, 98, 136, 457, 369, 20, 133, 231, 479, 35, 119, 103, 387, 159, 88, 70, 91, 249, 464, 227, 384, 155, 231, 175, 74, 172, 467, 229, 16, 392, 253, 53, 367, 48, 396, 370, 323, 458, 41, 319, 79, 140, 105, 373, 20, 264, 295, 293, 276, 211, 162, 270, 285, 405, 111, 119, 87, 161, 376, 163, 480, 229, 333, 72, 423, 230, 267, 429, 90, 391, 235, 247, 410, 85, 21, 78, 340, 455, 446, 165, 88, 494, 215, 126, 41, 185, 304, 488, 497, 145, 161, 57, 57, 318, 279, 202, 290, 298, 265, 164, 427, 26, 35, 410, 96, 363, 163, 152, 68, 331, 241, 12, 220, 304, 61, 265, 484, 212, 378, 468, 24, 455, 365, 294, 94, 356, 129, 158, 376, 259, 191, 75, 305, 316, 165, 136, 416, 329, 127, 415, 66, 326, 307, 207, 420, 2, 377, 346, 39, 279, 392, 115, 450, 221, 395, 401, 256, 140, 277, 159, 430, 411, 322, 358, 304, 472, 192, 49, 28, 368, 143, 481, 426, 220, 344, 239, 453, 388, 180, 199, 222, 91, 443, 460, 191, 76, 260, 351, 378, 362, 446, 269, 5, 31, 63, 300, 189, 395, 126, 19, 144, 395, 62, 251, 64, 483, 195], "trips": 7},
+        "out": 10394
+      },
+      {
+        "id": "long_conveyor_many_trips",
+        "in": {"weights": [490, 392, 139, 165, 499, 3, 50, 5, 134, 349, 164, 417, 154, 228, 413, 423, 353, 46, 233, 225, 150, 433, 493, 279, 221, 368, 461, 423, 379, 34, 223, 143, 376, 351, 50, 74, 353, 380, 47, 38, 480, 202, 400, 303, 392, 452, 76, 196, 389, 152, 243, 232, 302, 62, 197, 3, 118, 440, 292, 43, 168, 458, 112, 372, 4, 137, 93, 220, 111, 114, 32, 370, 175, 409, 197, 393, 293, 364, 79, 109, 90, 480, 168, 101, 160, 127, 322, 362, 249, 301, 267, 445, 161, 223, 412, 50, 361, 79, 333, 455, 328, 453, 202, 149, 385, 434, 47, 205, 320, 9, 463, 381, 363, 32, 52, 241, 157, 369, 252, 434, 122, 461, 312, 222, 360, 292, 471, 213, 30, 14, 232, 362, 92, 304, 494, 204, 368, 101, 230, 111, 335, 484, 213, 36, 496, 247, 267, 114, 122, 436, 413, 332, 262, 274, 256, 57, 329, 494, 442, 291, 405, 168, 144, 158, 341, 119, 393, 165, 334, 117, 444, 20, 90, 360, 419, 24, 38, 76, 330, 392, 387, 386, 164, 447, 226, 91, 261, 342, 397, 353, 263, 339, 52, 388, 348, 162, 447, 360, 136, 125, 118, 151, 387, 163, 237, 302, 282, 38, 410, 398, 376, 167, 359, 319, 196, 387, 134, 58, 102, 412, 468, 466, 359, 342, 12, 484, 65, 12, 41, 45, 129, 467, 63, 204, 34, 48, 163, 451, 230, 363, 130, 459, 444, 249, 292, 486, 41, 166, 452, 478, 6, 247, 380, 208, 19, 235, 85, 53, 419, 487, 185, 337, 269, 172, 10, 44, 49, 104, 287, 257, 207, 152, 287, 49, 134, 213, 399, 36, 4, 167, 307, 426, 286, 213, 419, 112, 378, 9, 106, 438, 166, 82, 397, 123, 390, 380, 34, 383, 1, 421], "trips": 290},
+        "out": 499
+      }
+    ]
+  },
+  "edgeCases": ["a single parcel", "one trip for everything", "a trip for every parcel", "a very heavy last parcel", "midpoints that are not whole numbers", "long conveyors where trying capacities one by one runs out of steps"],
+  "verdictSource": "local",
+  "variables": {
+    "pool": [
+      {"name": "w", "type": "num"},
+      {"name": "lo", "type": "num"},
+      {"name": "hi", "type": "num"},
+      {"name": "mid", "type": "num"},
+      {"name": "used", "type": "num"},
+      {"name": "load", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "binary_search_on_answer"}
+}

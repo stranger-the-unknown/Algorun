@@ -6,15 +6,15 @@
       "index": 1,
       "concepts": ["variables", "control"],
       "prerequisites": [],
-      "puzzles": ["ms3_editor_probe", "ms1_contract_probe"]
+      "puzzles": []
     },
     {
       "id": "world_02",
       "title": "Arrays",
       "index": 2,
-      "concepts": ["arrays", "prefix_sum"],
+      "concepts": ["arrays", "prefix_sum", "binary_search"],
       "prerequisites": ["variables"],
-      "puzzles": []
+      "puzzles": ["smallest_cart"]
     },
     {
       "id": "world_03",
@@ -22,7 +22,7 @@
       "index": 3,
       "concepts": ["hash_map"],
       "prerequisites": ["arrays"],
-      "puzzles": []
+      "puzzles": ["twin_beacons"]
     },
     {
       "id": "world_04",
@@ -38,7 +38,7 @@
       "index": 5,
       "concepts": ["sliding_window"],
       "prerequisites": ["two_pointers"],
-      "puzzles": []
+      "puzzles": ["quota_hours"]
     },
     {
       "id": "world_06",
@@ -46,7 +46,7 @@
       "index": 6,
       "concepts": ["stack", "queue"],
       "prerequisites": ["arrays"],
-      "puzzles": []
+      "puzzles": ["relay_towers"]
     },
     {
       "id": "world_07",
@@ -78,7 +78,7 @@
       "index": 10,
       "concepts": ["graph", "bfs", "dfs"],
       "prerequisites": ["tree"],
-      "puzzles": []
+      "puzzles": ["fewest_rides"]
     },
     {
       "id": "world_11",

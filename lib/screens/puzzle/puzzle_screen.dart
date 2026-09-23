@@ -52,7 +52,7 @@ class _PuzzleEditor extends ConsumerStatefulWidget {
 
 class _PuzzleEditorState extends ConsumerState<_PuzzleEditor> {
   late final EditorController _controller;
-  bool _briefOpen = false;
+  bool _briefOpen = true;
 
   @override
   void initState() {

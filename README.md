@@ -4,15 +4,15 @@ Android-first algorithm puzzle game. Construct the algorithm with typed blocks. 
 
 Engine is pure Dart (`packages/algorun_engine`). Content validation is a separate package (`packages/algorun_content`) and is not shipped as app UI logic.
 
-**Status:** Milestone 7 complete. RUN is live end to end (block graph → validate → lower → interpreter → test runner → result), and puzzle content goes through a closed, typed schema with structured fixtures before it can reach gameplay. Next is Milestone 8 (first five real algorithm puzzles). See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing.
+**Status:** Milestone 8 complete. Five real algorithm puzzles (hash-set complement lookup, sliding window, monotonic stack, binary search on the answer, graph BFS) are playable end to end, and each is proven solvable by a reference solution that the content validator builds and runs through the real test runner. Next is Milestone 9 (hints). See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing.
 
 Validate content before committing it:
 
 ```bash
-dart run packages/algorun_content/bin/validate.dart assets/puzzles assets/worlds.json
+dart run packages/algorun_content/bin/validate.dart assets/puzzles assets/worlds.json content/references
 ```
 
-Primary target: Android (`com.algorun`). Flutter web is the same Dart app, used only when a host cannot run an APK.
+Reference solutions live in `content/references/` and are never bundled with the app.
 
 ## Run
 

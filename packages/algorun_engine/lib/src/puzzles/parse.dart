@@ -52,6 +52,7 @@ const puzzleFields = {
   'verdictSource',
   'variables',
   'meta',
+  'reference',
 };
 
 /// Budget ceilings. A puzzle past them could freeze a phone, so it is content
@@ -217,6 +218,7 @@ final class _PuzzleSchema {
         VerdictSource.local;
     final pool = _pool(m, io);
     final meta = _meta(m);
+    final reference = _reference(m);
 
     if (id == null ||
         title == null ||
@@ -256,7 +258,23 @@ final class _PuzzleSchema {
       verdictSource: verdict,
       variablePool: pool,
       meta: meta,
+      reference: reference,
     );
+  }
+
+  PuzzleReference? _reference(Map<String, Object?> m) {
+    final ref = r.object(m, 'reference', '');
+    if (ref == null) return null;
+    r.closed(ref, const {'strategy'}, 'reference');
+    final strategy = r.string(
+      ref,
+      'strategy',
+      'reference',
+      required: true,
+      pattern: _identifier,
+      hint: _identifierHint,
+    );
+    return strategy == null ? null : PuzzleReference(strategy: strategy);
   }
 
   IoSpec? _io(Map<String, Object?> m) {
