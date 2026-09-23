@@ -191,14 +191,14 @@ void main() {
       expect(read.save.puzzles.keys, containsAll(['retired_puzzle', 'twin_beacons', 'smallest_cart']));
       expect(read.save.puzzles.keys, isNot(contains('Not An Id!')));
       expect(read.save.puzzles.keys, isNot(contains('twin_beacons_draft')));
-      final progress = evaluateCampaign(shippedCampaign(), read.save);
+      final progress = evaluateCampaign(ms11Campaign(), read.save);
       expect(progress.puzzles.keys, isNot(contains('retired_puzzle')));
       expect(progress.puzzleCount, 5);
     });
 
     test('8. a deleted puzzle: its progress and session are ignored, everything else stands', () {
       // The campaign no longer lists twin_beacons (world 03 is emptied).
-      final full = shippedCampaign();
+      final full = ms11Campaign();
       final manifest = WorldsManifest([
         for (final w in full.manifest.worlds)
           w.id == 'world_03'
@@ -253,7 +253,7 @@ void main() {
     });
 
     test('a save holds only player state: no hidden cases, no references, no IR', () {
-      final campaign = shippedCampaign();
+      final campaign = ms11Campaign();
       final puzzle = campaign.puzzles['twin_beacons']!;
       final json = _json(encodeSave(_richSave()));
       expect(json.keys.toSet(), {'saveVersion', 'puzzles', 'settings', 'session'});

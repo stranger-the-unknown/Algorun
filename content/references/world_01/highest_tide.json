@@ -1,0 +1,68 @@
+{
+  "puzzle": "highest_tide",
+  "notes": "Track the position of the best so far; -1 means 'nothing yet' and OR stops before reading position -1. A strict comparison keeps the earliest of equal highs.",
+  "spec": {"family": "array_scan", "pattern": "first_position_of_maximum", "structure": "array", "secondary": [], "performance": "correctness", "traps": ["equal highest levels keep the earliest", "an empty day reports -1", "all levels negative"], "oracle": "highest_tide"},
+  "metrics": {"blocks": 22, "ops": 3915, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "variables": {"tides": "array<num>", "best": "num", "i": "num"},
+    "entryIds": ["set_2", "for_range_20", "return_22"],
+    "blocks": {
+      "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": -1}},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "best"}},
+      "num_3": {"id": "num_3", "catalogId": "lit.num", "literals": {"value": 0}},
+      "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "tides"}},
+      "len_5": {"id": "len_5", "catalogId": "arr.len", "slots": {"array": {"ref": "get_4"}}},
+      "get_6": {"id": "get_6", "catalogId": "var.get", "literals": {"name": "best"}},
+      "num_7": {"id": "num_7", "catalogId": "lit.num", "literals": {"value": -1}},
+      "eq_8": {"id": "eq_8", "catalogId": "cmp.eq", "slots": {"left": {"ref": "get_6"}, "right": {"ref": "num_7"}}},
+      "get_9": {"id": "get_9", "catalogId": "var.get", "literals": {"name": "i"}},
+      "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "tides"}},
+      "get_11": {"id": "get_11", "catalogId": "arr.get", "slots": {"array": {"ref": "get_10"}, "index": {"ref": "get_9"}}},
+      "get_12": {"id": "get_12", "catalogId": "var.get", "literals": {"name": "best"}},
+      "get_13": {"id": "get_13", "catalogId": "var.get", "literals": {"name": "tides"}},
+      "get_14": {"id": "get_14", "catalogId": "arr.get", "slots": {"array": {"ref": "get_13"}, "index": {"ref": "get_12"}}},
+      "gt_15": {"id": "gt_15", "catalogId": "cmp.gt", "slots": {"left": {"ref": "get_11"}, "right": {"ref": "get_14"}}},
+      "or_16": {"id": "or_16", "catalogId": "logic.or", "slots": {"left": {"ref": "eq_8"}, "right": {"ref": "gt_15"}}},
+      "get_17": {"id": "get_17", "catalogId": "var.get", "literals": {"name": "i"}},
+      "set_18": {"id": "set_18", "catalogId": "var.set", "slots": {"value": {"ref": "get_17"}}, "literals": {"name": "best"}},
+      "if_19": {"id": "if_19", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "or_16"}, "then": {"list": ["set_18"]}}},
+      "for_range_20": {"id": "for_range_20", "catalogId": "ctrl.for_range", "slots": {"start": {"ref": "num_3"}, "end": {"ref": "len_5"}, "body": {"list": ["if_19"]}}, "literals": {"name": "i"}},
+      "get_21": {"id": "get_21", "catalogId": "var.get", "literals": {"name": "best"}},
+      "return_22": {"id": "return_22", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_21"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "replace on equal levels",
+      "expect": "wrongAnswer",
+      "graph": {
+        "variables": {"tides": "array<num>", "best": "num", "i": "num"},
+        "entryIds": ["set_2", "for_range_20", "return_22"],
+        "blocks": {
+          "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": -1}},
+          "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "best"}},
+          "num_3": {"id": "num_3", "catalogId": "lit.num", "literals": {"value": 0}},
+          "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "tides"}},
+          "len_5": {"id": "len_5", "catalogId": "arr.len", "slots": {"array": {"ref": "get_4"}}},
+          "get_6": {"id": "get_6", "catalogId": "var.get", "literals": {"name": "best"}},
+          "num_7": {"id": "num_7", "catalogId": "lit.num", "literals": {"value": -1}},
+          "eq_8": {"id": "eq_8", "catalogId": "cmp.eq", "slots": {"left": {"ref": "get_6"}, "right": {"ref": "num_7"}}},
+          "get_9": {"id": "get_9", "catalogId": "var.get", "literals": {"name": "i"}},
+          "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "tides"}},
+          "get_11": {"id": "get_11", "catalogId": "arr.get", "slots": {"array": {"ref": "get_10"}, "index": {"ref": "get_9"}}},
+          "get_12": {"id": "get_12", "catalogId": "var.get", "literals": {"name": "best"}},
+          "get_13": {"id": "get_13", "catalogId": "var.get", "literals": {"name": "tides"}},
+          "get_14": {"id": "get_14", "catalogId": "arr.get", "slots": {"array": {"ref": "get_13"}, "index": {"ref": "get_12"}}},
+          "ge_15": {"id": "ge_15", "catalogId": "cmp.ge", "slots": {"left": {"ref": "get_11"}, "right": {"ref": "get_14"}}},
+          "or_16": {"id": "or_16", "catalogId": "logic.or", "slots": {"left": {"ref": "eq_8"}, "right": {"ref": "ge_15"}}},
+          "get_17": {"id": "get_17", "catalogId": "var.get", "literals": {"name": "i"}},
+          "set_18": {"id": "set_18", "catalogId": "var.set", "slots": {"value": {"ref": "get_17"}}, "literals": {"name": "best"}},
+          "if_19": {"id": "if_19", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "or_16"}, "then": {"list": ["set_18"]}}},
+          "for_range_20": {"id": "for_range_20", "catalogId": "ctrl.for_range", "slots": {"start": {"ref": "num_3"}, "end": {"ref": "len_5"}, "body": {"list": ["if_19"]}}, "literals": {"name": "i"}},
+          "get_21": {"id": "get_21", "catalogId": "var.get", "literals": {"name": "best"}},
+          "return_22": {"id": "return_22", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_21"}}}
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 {
   "puzzle": "fewest_rides",
   "notes": "Breadth-first search from the start. A queue hands out stations in the order they were discovered, so every station is discovered first along a shortest route and its ride count never needs to change. The same program with a stack still finds routes, but it follows the deepest branch first and reports a longer one.",
+  "spec": {"family": "graph_bfs", "pattern": "bfs_shortest_path", "structure": "graph", "secondary": ["queue"], "performance": "correctness", "traps": ["one-way rides", "an unreachable goal reports -1", "start equals goal", "a depth-first search reports a longer route"], "oracle": "fewest_rides"},
   "metrics": {"ops": 23467, "peakAlloc": 2215, "peakDepth": 1, "blocks": 58},
   "solution": {
     "variables": {"metro": "graph", "start": "num", "goal": "num", "dist": "array<num>", "here": "num", "next": "num", "k": "num", "line": "queue<num>"},

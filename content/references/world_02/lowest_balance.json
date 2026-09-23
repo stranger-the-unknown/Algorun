@@ -1,0 +1,56 @@
+{
+  "puzzle": "lowest_balance",
+  "notes": "A running prefix sum with a running minimum. The low starts at the opening balance 0; starting it 'very high' misses months that never dip.",
+  "spec": {"family": "prefix_sum", "pattern": "running_minimum_of_prefix", "structure": "array", "secondary": ["array_scan"], "performance": "correctness", "traps": ["the starting balance of 0 counts", "no transactions", "a second, deeper dip"], "oracle": "lowest_balance"},
+  "metrics": {"blocks": 16, "ops": 4508, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "variables": {"changes": "array<num>", "balance": "num", "low": "num", "c": "num"},
+    "entryIds": ["set_2", "set_4", "foreach_14", "return_16"],
+    "blocks": {
+      "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "balance"}},
+      "num_3": {"id": "num_3", "catalogId": "lit.num", "literals": {"value": 0}},
+      "set_4": {"id": "set_4", "catalogId": "var.set", "slots": {"value": {"ref": "num_3"}}, "literals": {"name": "low"}},
+      "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "changes"}},
+      "get_6": {"id": "get_6", "catalogId": "var.get", "literals": {"name": "balance"}},
+      "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "c"}},
+      "add_8": {"id": "add_8", "catalogId": "arith.add", "slots": {"left": {"ref": "get_6"}, "right": {"ref": "get_7"}}},
+      "set_9": {"id": "set_9", "catalogId": "var.set", "slots": {"value": {"ref": "add_8"}}, "literals": {"name": "balance"}},
+      "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "low"}},
+      "get_11": {"id": "get_11", "catalogId": "var.get", "literals": {"name": "balance"}},
+      "min_12": {"id": "min_12", "catalogId": "arith.min", "slots": {"left": {"ref": "get_10"}, "right": {"ref": "get_11"}}},
+      "set_13": {"id": "set_13", "catalogId": "var.set", "slots": {"value": {"ref": "min_12"}}, "literals": {"name": "low"}},
+      "foreach_14": {"id": "foreach_14", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_5"}, "body": {"list": ["set_9", "set_13"]}}, "literals": {"name": "c"}},
+      "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "low"}},
+      "return_16": {"id": "return_16", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_15"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "forget the opening balance",
+      "expect": "wrongAnswer",
+      "graph": {
+        "variables": {"changes": "array<num>", "balance": "num", "low": "num", "c": "num"},
+        "entryIds": ["set_2", "set_4", "foreach_14", "return_16"],
+        "blocks": {
+          "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+          "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "balance"}},
+          "num_3": {"id": "num_3", "catalogId": "lit.num", "literals": {"value": 999999}},
+          "set_4": {"id": "set_4", "catalogId": "var.set", "slots": {"value": {"ref": "num_3"}}, "literals": {"name": "low"}},
+          "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "changes"}},
+          "get_6": {"id": "get_6", "catalogId": "var.get", "literals": {"name": "balance"}},
+          "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "c"}},
+          "add_8": {"id": "add_8", "catalogId": "arith.add", "slots": {"left": {"ref": "get_6"}, "right": {"ref": "get_7"}}},
+          "set_9": {"id": "set_9", "catalogId": "var.set", "slots": {"value": {"ref": "add_8"}}, "literals": {"name": "balance"}},
+          "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "low"}},
+          "get_11": {"id": "get_11", "catalogId": "var.get", "literals": {"name": "balance"}},
+          "min_12": {"id": "min_12", "catalogId": "arith.min", "slots": {"left": {"ref": "get_10"}, "right": {"ref": "get_11"}}},
+          "set_13": {"id": "set_13", "catalogId": "var.set", "slots": {"value": {"ref": "min_12"}}, "literals": {"name": "low"}},
+          "foreach_14": {"id": "foreach_14", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_5"}, "body": {"list": ["set_9", "set_13"]}}, "literals": {"name": "c"}},
+          "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "low"}},
+          "return_16": {"id": "return_16", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_15"}}}
+        }
+      }
+    }
+  ]
+}

@@ -6,7 +6,7 @@
       "index": 1,
       "concepts": ["variables", "control"],
       "prerequisites": [],
-      "puzzles": []
+      "puzzles": ["warm_readings", "highest_tide"]
     },
     {
       "id": "world_02",
@@ -14,7 +14,7 @@
       "index": 2,
       "concepts": ["arrays", "prefix_sum", "binary_search"],
       "prerequisites": ["variables"],
-      "puzzles": ["smallest_cart"]
+      "puzzles": ["lowest_balance", "shelf_totals", "departure_board", "smallest_cart"]
     },
     {
       "id": "world_03",
@@ -22,7 +22,7 @@
       "index": 3,
       "concepts": ["hash_map"],
       "prerequisites": ["arrays"],
-      "puzzles": ["twin_beacons"]
+      "puzzles": ["loudest_echo", "twin_beacons", "level_stretches", "longest_streak"]
     },
     {
       "id": "world_04",
@@ -30,7 +30,7 @@
       "index": 4,
       "concepts": ["two_pointers"],
       "prerequisites": ["arrays"],
-      "puzzles": []
+      "puzzles": ["matched_pair", "widest_basin"]
     },
     {
       "id": "world_05",
@@ -38,7 +38,7 @@
       "index": 5,
       "concepts": ["sliding_window"],
       "prerequisites": ["two_pointers"],
-      "puzzles": ["quota_hours"]
+      "puzzles": ["rush_hour", "patchy_signal", "quota_hours", "market_variety"]
     },
     {
       "id": "world_06",
@@ -46,7 +46,7 @@
       "index": 6,
       "concepts": ["stack", "queue"],
       "prerequisites": ["arrays"],
-      "puzzles": ["relay_towers"]
+      "puzzles": ["sealed_crates", "undo_button", "relay_towers", "largest_billboard"]
     },
     {
       "id": "world_07",
@@ -54,7 +54,7 @@
       "index": 7,
       "concepts": ["linked_list"],
       "prerequisites": ["stack"],
-      "puzzles": []
+      "puzzles": ["middle_car", "reverse_train", "drop_faulty_cars", "loop_detector"]
     },
     {
       "id": "world_08",
@@ -62,7 +62,7 @@
       "index": 8,
       "concepts": ["tree", "bst"],
       "prerequisites": ["linked_list"],
-      "puzzles": []
+      "puzzles": ["canopy_height", "widest_level", "trail_sum", "sorted_grove"]
     },
     {
       "id": "world_09",
@@ -78,7 +78,7 @@
       "index": 10,
       "concepts": ["graph", "bfs", "dfs"],
       "prerequisites": ["tree"],
-      "puzzles": ["fewest_rides"]
+      "puzzles": ["island_count", "fewest_rides", "two_teams", "task_order", "nearest_depot"]
     },
     {
       "id": "world_11",
@@ -86,7 +86,7 @@
       "index": 11,
       "concepts": ["greedy"],
       "prerequisites": ["arrays"],
-      "puzzles": []
+      "puzzles": ["one_good_trade", "fuel_loop"]
     },
     {
       "id": "world_12",
@@ -101,8 +101,8 @@
       "title": "Dynamic Programming",
       "index": 13,
       "concepts": ["dp"],
-      "prerequisites": ["recursion"],
-      "puzzles": []
+      "prerequisites": ["greedy"],
+      "puzzles": ["quiet_street", "exact_change"]
     },
     {
       "id": "world_14",
@@ -110,7 +110,7 @@
       "index": 14,
       "concepts": ["multi_concept"],
       "prerequisites": ["dp", "graph"],
-      "puzzles": []
+      "puzzles": ["many_shortest_routes"]
     }
   ]
 }

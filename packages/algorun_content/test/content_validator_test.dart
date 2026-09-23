@@ -1,11 +1,30 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:algorun_content/algorun_content.dart';
 import 'package:algorun_engine/algorun_engine.dart' show readWorldsJson;
 import 'package:test/test.dart';
 
-const _validator = ContentValidator();
+/// The shipped oracles plus one for the test puzzle below (`return LENGTH OF nums`).
+const _validator = ContentValidator(checker: ReferenceChecker(oracles: {...oracleRegistry, 'count_items': _countOracle}));
+
+const _countOracle = Oracle(id: 'count_items', solve: _countItems, sample: _countSample);
+
+Object? _countItems(Map<String, Object?> input) => (input['nums']! as List).length;
+
+Map<String, Object?> _countSample(Random r) => {'nums': [for (var i = r.nextInt(6); i > 0; i--) r.nextInt(9)]};
+
+/// A campaign puzzle's spec, as the test reference files carry it.
+const _spec = {
+  'family': 'array_scan',
+  'pattern': 'count_items',
+  'structure': 'array',
+  'secondary': <String>[],
+  'performance': 'correctness',
+  'traps': ['an empty list'],
+  'oracle': 'count_items',
+};
 
 String _puzzle({
   String id = 'p1',
@@ -101,6 +120,7 @@ ContentReport _referenced({
           {
             'puzzle': 'p1',
             'notes': 'Count the list.',
+            'spec': _spec,
             'solution': solution ?? _lengthGraph(),
             'rejects': ?rejects,
           });
@@ -220,7 +240,7 @@ void main() {
         references: _files('../../content/references'),
       );
       expect(report.errors, isEmpty, reason: report.issues.join('\n'));
-      expect(report.puzzleCount, 9);
+      expect(report.puzzleCount, 42);
     });
 
     test('every playable puzzle has a reference file', () {
@@ -229,7 +249,7 @@ void main() {
         for (final w in worlds.worlds)
           for (final id in w.puzzleIds) '${w.id}/$id.json',
       ];
-      expect(playable, hasLength(5));
+      expect(playable, hasLength(38));
       expect(_files('../../content/references').map((r) => r.path), containsAll(playable));
     });
   });
@@ -544,6 +564,7 @@ void main() {
     test('recorded metrics must match what is measured', () {
       Map<String, Object?> withMetrics(Map<String, Object?> metrics) => {
             'puzzle': 'p1',
+            'spec': _spec,
             'metrics': metrics,
             'solution': _lengthGraph(),
           };
@@ -607,7 +628,7 @@ void main() {
         '../../content/references',
       ]);
       expect(result.exitCode, 0, reason: '${result.stdout}${result.stderr}');
-      expect('${result.stdout}', contains('OK 9 puzzle(s)'));
+      expect('${result.stdout}', contains('OK 42 puzzle(s)'));
       expect('${result.stdout}', isNot(contains('ERROR')));
     });
 
@@ -631,10 +652,11 @@ void main() {
       final result = await validate([temp.path, '${temp.path}/worlds.json']);
       final out = '${result.stdout}';
       expect(result.exitCode, 1, reason: out);
-      expect(out, contains('ERROR world_01/p1.json fixtures.visible[0].in.nums: Expected array<num>, got the text "hello".'));
-      expect(out, contains('ERROR world_01/p1.json generator: Puzzle JSON is data only'));
+      expect(out, contains('ERROR [L1 schema] world_01/p1.json fixtures.visible[0].in.nums: Expected array<num>, got the text "hello".'));
+      expect(out, contains('ERROR [L1 schema] world_01/p1.json generator: Puzzle JSON is data only'));
       // The world now points at a puzzle that did not load, which is its own error.
-      expect(out, contains('ERROR worlds.json worlds[0].puzzles[0]: Lists "p1", but no valid puzzle has that id.'));
+      expect(out, contains('ERROR [L1 schema] worlds.json worlds[0].puzzles[0]: Lists "p1", but no valid puzzle has that id.'));
+      expect(out, contains('REJECTED world_01/p1.json at L1 schema'));
       expect(out, contains('FAILED 3 error(s)'));
     });
   });

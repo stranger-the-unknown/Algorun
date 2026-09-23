@@ -1,0 +1,86 @@
+{
+  "id": "many_shortest_routes",
+  "version": 1,
+  "title": "Many Shortest Routes",
+  "world": "world_14",
+  "chapter": "bfs_path_counting",
+  "tier": 5,
+  "mode": "build",
+  "concepts": ["graph", "dp", "multi_concept"],
+  "prerequisites": ["graph", "dp"],
+  "story": "A courier crosses a city of numbered squares linked by one-way streets. Only the shortest routes — fewest streets — are fast enough. How many different shortest routes lead from the start square to the goal? Being at the goal already is one route; no route at all is 0.",
+  "io": {
+    "inputs": [
+      {"name": "city", "type": "graph"},
+      {"name": "start", "type": "num"},
+      {"name": "goal", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 300},
+    "notes": ["Squares are numbered 0 to n-1.", "A street is listed once."]
+  },
+  "blocks": {"allow": ["arith.add", "arr.append", "arr.get", "arr.set", "cmp.eq", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "graph.neighbors", "graph.node_count", "lit.num", "logic.not", "new.array", "new.queue", "queue.deq", "queue.empty", "queue.enq", "var.get", "var.set"], "maxBlocks": 110},
+  "limits": {"maxOps": 30000, "maxDepth": 32, "maxAlloc": 6000},
+  "hints": ["A breadth-first search finds how many streets the shortest route to every square needs.", "A shortest route to a square arrives from a square exactly one street closer. So its number of routes is the sum over those squares.", "During the search: the first time a square is reached it inherits the routes of the square it came from; reaching it again from a square at the same distance adds that square's routes too."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [1]}, {"id": 1, "neighbors": [2]}, {"id": 2, "neighbors": []}]}, "start": 0, "goal": 2},
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [1]}, {"id": 1, "neighbors": []}, {"id": 2, "neighbors": []}]}, "start": 0, "goal": 2},
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "diamond",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [1, 2]}, {"id": 1, "neighbors": [3]}, {"id": 2, "neighbors": [3]}, {"id": 3, "neighbors": []}]}, "start": 0, "goal": 3},
+        "out": 2
+      },
+      {
+        "id": "already_there",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [1]}, {"id": 1, "neighbors": [0]}]}, "start": 1, "goal": 1},
+        "out": 1
+      },
+      {
+        "id": "longer_route_does_not_count",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [1, 3]}, {"id": 1, "neighbors": [2]}, {"id": 2, "neighbors": [4]}, {"id": 3, "neighbors": [4]}, {"id": 4, "neighbors": []}]}, "start": 0, "goal": 4},
+        "out": 1
+      },
+      {
+        "id": "two_diamonds_in_a_row",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [1, 2]}, {"id": 1, "neighbors": [3]}, {"id": 2, "neighbors": [3]}, {"id": 3, "neighbors": [4, 5]}, {"id": 4, "neighbors": [6]}, {"id": 5, "neighbors": [6]}, {"id": 6, "neighbors": []}]}, "start": 0, "goal": 6},
+        "out": 4
+      },
+      {
+        "id": "loops_do_not_add_routes",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [1, 2]}, {"id": 1, "neighbors": [0, 3]}, {"id": 2, "neighbors": [3]}, {"id": 3, "neighbors": [0]}]}, "start": 0, "goal": 3},
+        "out": 2
+      },
+      {
+        "id": "big_layered_city",
+        "in": {"city": {"type": "graph", "nodes": [{"id": 0, "neighbors": [21, 34]}, {"id": 1, "neighbors": [25, 35]}, {"id": 2, "neighbors": [33, 38]}, {"id": 3, "neighbors": [25, 28]}, {"id": 4, "neighbors": [34, 35]}, {"id": 5, "neighbors": [28, 31]}, {"id": 6, "neighbors": [23, 36]}, {"id": 7, "neighbors": [27, 30]}, {"id": 8, "neighbors": [33, 36]}, {"id": 9, "neighbors": [33, 34]}, {"id": 10, "neighbors": [24, 30]}, {"id": 11, "neighbors": [31, 34]}, {"id": 12, "neighbors": [22, 36]}, {"id": 13, "neighbors": [22, 33]}, {"id": 14, "neighbors": [33, 37]}, {"id": 15, "neighbors": [31, 34]}, {"id": 16, "neighbors": [23, 36]}, {"id": 17, "neighbors": [22, 32]}, {"id": 18, "neighbors": [33, 35]}, {"id": 19, "neighbors": [21, 23]}, {"id": 20, "neighbors": [42, 57]}, {"id": 21, "neighbors": [45]}, {"id": 22, "neighbors": [50, 57]}, {"id": 23, "neighbors": [54, 58]}, {"id": 24, "neighbors": [45, 53]}, {"id": 25, "neighbors": [46, 49]}, {"id": 26, "neighbors": [44, 52]}, {"id": 27, "neighbors": [41, 53]}, {"id": 28, "neighbors": [40, 46]}, {"id": 29, "neighbors": [54, 55]}, {"id": 30, "neighbors": [43, 55]}, {"id": 31, "neighbors": [42, 58]}, {"id": 32, "neighbors": [43, 58]}, {"id": 33, "neighbors": [45, 52]}, {"id": 34, "neighbors": [43, 56]}, {"id": 35, "neighbors": [55, 56]}, {"id": 36, "neighbors": [43, 58]}, {"id": 37, "neighbors": [44, 51]}, {"id": 38, "neighbors": [44, 55]}, {"id": 39, "neighbors": [40, 41]}, {"id": 40, "neighbors": [64, 73]}, {"id": 41, "neighbors": [63, 70]}, {"id": 42, "neighbors": [67, 77]}, {"id": 43, "neighbors": [61, 68]}, {"id": 44, "neighbors": [66, 68]}, {"id": 45, "neighbors": [62, 68]}, {"id": 46, "neighbors": [62, 69]}, {"id": 47, "neighbors": [60]}, {"id": 48, "neighbors": [73, 79]}, {"id": 49, "neighbors": [64, 67]}, {"id": 50, "neighbors": [65, 70]}, {"id": 51, "neighbors": [65, 67]}, {"id": 52, "neighbors": [60, 71]}, {"id": 53, "neighbors": [68, 78]}, {"id": 54, "neighbors": [67, 76]}, {"id": 55, "neighbors": [71, 76]}, {"id": 56, "neighbors": [60, 64]}, {"id": 57, "neighbors": [68, 69]}, {"id": 58, "neighbors": [65]}, {"id": 59, "neighbors": [75, 79]}, {"id": 60, "neighbors": [85, 88]}, {"id": 61, "neighbors": [88, 97]}, {"id": 62, "neighbors": [85, 90]}, {"id": 63, "neighbors": [89, 92]}, {"id": 64, "neighbors": [83, 92]}, {"id": 65, "neighbors": [80, 85]}, {"id": 66, "neighbors": [87, 89]}, {"id": 67, "neighbors": [92, 98]}, {"id": 68, "neighbors": [82, 91]}, {"id": 69, "neighbors": [95, 99]}, {"id": 70, "neighbors": [91, 95]}, {"id": 71, "neighbors": [87, 91]}, {"id": 72, "neighbors": [81, 97]}, {"id": 73, "neighbors": [91, 93]}, {"id": 74, "neighbors": [92, 99]}, {"id": 75, "neighbors": [85, 88]}, {"id": 76, "neighbors": [84, 86]}, {"id": 77, "neighbors": [80, 97]}, {"id": 78, "neighbors": [89, 94]}, {"id": 79, "neighbors": [82, 89]}, {"id": 80, "neighbors": [100, 101]}, {"id": 81, "neighbors": [109, 119]}, {"id": 82, "neighbors": [107, 117]}, {"id": 83, "neighbors": [103, 109]}, {"id": 84, "neighbors": [101, 110]}, {"id": 85, "neighbors": [102, 110]}, {"id": 86, "neighbors": [101, 113]}, {"id": 87, "neighbors": [107, 116]}, {"id": 88, "neighbors": [103, 114]}, {"id": 89, "neighbors": [110, 115]}, {"id": 90, "neighbors": [102, 104]}, {"id": 91, "neighbors": [104, 106]}, {"id": 92, "neighbors": [105, 119]}, {"id": 93, "neighbors": [103, 114]}, {"id": 94, "neighbors": [103, 115]}, {"id": 95, "neighbors": [104, 105]}, {"id": 96, "neighbors": [107, 111]}, {"id": 97, "neighbors": [100, 117]}, {"id": 98, "neighbors": [101, 114]}, {"id": 99, "neighbors": [104, 107]}, {"id": 100, "neighbors": [121, 130]}, {"id": 101, "neighbors": [126, 132]}, {"id": 102, "neighbors": [126, 127]}, {"id": 103, "neighbors": [126, 131]}, {"id": 104, "neighbors": [125, 132]}, {"id": 105, "neighbors": [135, 138]}, {"id": 106, "neighbors": [121, 124]}, {"id": 107, "neighbors": [123, 127]}, {"id": 108, "neighbors": [121, 138]}, {"id": 109, "neighbors": [121, 124]}, {"id": 110, "neighbors": [130, 131]}, {"id": 111, "neighbors": [132, 135]}, {"id": 112, "neighbors": [129, 137]}, {"id": 113, "neighbors": [127, 134]}, {"id": 114, "neighbors": [124, 139]}, {"id": 115, "neighbors": [130, 138]}, {"id": 116, "neighbors": [130, 133]}, {"id": 117, "neighbors": [123, 135]}, {"id": 118, "neighbors": [128, 135]}, {"id": 119, "neighbors": [122, 131]}, {"id": 120, "neighbors": [142, 159]}, {"id": 121, "neighbors": [140, 159]}, {"id": 122, "neighbors": [154, 157]}, {"id": 123, "neighbors": [140, 152]}, {"id": 124, "neighbors": [147, 156]}, {"id": 125, "neighbors": [147, 151]}, {"id": 126, "neighbors": [147, 156]}, {"id": 127, "neighbors": [142, 158]}, {"id": 128, "neighbors": [142, 157]}, {"id": 129, "neighbors": [141, 148]}, {"id": 130, "neighbors": [151, 158]}, {"id": 131, "neighbors": [144, 157]}, {"id": 132, "neighbors": [144, 156]}, {"id": 133, "neighbors": [147, 159]}, {"id": 134, "neighbors": [146, 158]}, {"id": 135, "neighbors": [143, 150]}, {"id": 136, "neighbors": [145]}, {"id": 137, "neighbors": [147, 154]}, {"id": 138, "neighbors": [151, 158]}, {"id": 139, "neighbors": [150, 158]}, {"id": 140, "neighbors": [163, 164]}, {"id": 141, "neighbors": [163, 166]}, {"id": 142, "neighbors": [170, 179]}, {"id": 143, "neighbors": [165, 173]}, {"id": 144, "neighbors": [172, 178]}, {"id": 145, "neighbors": [173, 176]}, {"id": 146, "neighbors": [160, 164]}, {"id": 147, "neighbors": [170, 172]}, {"id": 148, "neighbors": [164, 173]}, {"id": 149, "neighbors": [165, 175]}, {"id": 150, "neighbors": [163, 177]}, {"id": 151, "neighbors": [162, 170]}, {"id": 152, "neighbors": [162, 169]}, {"id": 153, "neighbors": [170, 179]}, {"id": 154, "neighbors": [173, 176]}, {"id": 155, "neighbors": [160, 166]}, {"id": 156, "neighbors": [173, 179]}, {"id": 157, "neighbors": [160, 170]}, {"id": 158, "neighbors": [168, 169]}, {"id": 159, "neighbors": [174, 177]}, {"id": 160, "neighbors": [181, 192]}, {"id": 161, "neighbors": [182, 195]}, {"id": 162, "neighbors": [181, 186]}, {"id": 163, "neighbors": [183, 187]}, {"id": 164, "neighbors": [185, 187]}, {"id": 165, "neighbors": [190, 192]}, {"id": 166, "neighbors": [182, 189]}, {"id": 167, "neighbors": [181, 182]}, {"id": 168, "neighbors": [186, 196]}, {"id": 169, "neighbors": [181, 184]}, {"id": 170, "neighbors": [190, 198]}, {"id": 171, "neighbors": [192, 198]}, {"id": 172, "neighbors": [182, 192]}, {"id": 173, "neighbors": [194, 198]}, {"id": 174, "neighbors": [180, 198]}, {"id": 175, "neighbors": [191, 192]}, {"id": 176, "neighbors": [194, 195]}, {"id": 177, "neighbors": [185, 192]}, {"id": 178, "neighbors": [180, 193]}, {"id": 179, "neighbors": [189, 190]}, {"id": 180, "neighbors": [209, 210]}, {"id": 181, "neighbors": [214]}, {"id": 182, "neighbors": [207, 208]}, {"id": 183, "neighbors": [212, 219]}, {"id": 184, "neighbors": [212, 218]}, {"id": 185, "neighbors": [204, 213]}, {"id": 186, "neighbors": [206, 216]}, {"id": 187, "neighbors": [200, 214]}, {"id": 188, "neighbors": [207, 218]}, {"id": 189, "neighbors": [200, 216]}, {"id": 190, "neighbors": [203, 209]}, {"id": 191, "neighbors": [202, 203]}, {"id": 192, "neighbors": [200, 211]}, {"id": 193, "neighbors": [203, 211]}, {"id": 194, "neighbors": [201, 217]}, {"id": 195, "neighbors": [207, 208]}, {"id": 196, "neighbors": [204, 212]}, {"id": 197, "neighbors": [203, 204]}, {"id": 198, "neighbors": [216, 218]}, {"id": 199, "neighbors": [211, 219]}, {"id": 200, "neighbors": [228, 232]}, {"id": 201, "neighbors": [221, 235]}, {"id": 202, "neighbors": [224, 237]}, {"id": 203, "neighbors": [220, 236]}, {"id": 204, "neighbors": [220, 233]}, {"id": 205, "neighbors": [226, 229]}, {"id": 206, "neighbors": [230, 236]}, {"id": 207, "neighbors": [227, 237]}, {"id": 208, "neighbors": [230, 236]}, {"id": 209, "neighbors": [235, 239]}, {"id": 210, "neighbors": [228, 233]}, {"id": 211, "neighbors": [224, 237]}, {"id": 212, "neighbors": [224, 238]}, {"id": 213, "neighbors": [226, 228]}, {"id": 214, "neighbors": [225, 235]}, {"id": 215, "neighbors": [234, 238]}, {"id": 216, "neighbors": [228, 232]}, {"id": 217, "neighbors": [222]}, {"id": 218, "neighbors": [227, 239]}, {"id": 219, "neighbors": [224, 234]}, {"id": 220, "neighbors": [240]}, {"id": 221, "neighbors": [240]}, {"id": 222, "neighbors": [240]}, {"id": 223, "neighbors": [240]}, {"id": 224, "neighbors": [240]}, {"id": 225, "neighbors": [240]}, {"id": 226, "neighbors": [240]}, {"id": 227, "neighbors": [240]}, {"id": 228, "neighbors": [240]}, {"id": 229, "neighbors": [240]}, {"id": 230, "neighbors": [240]}, {"id": 231, "neighbors": [240]}, {"id": 232, "neighbors": [240]}, {"id": 233, "neighbors": [240]}, {"id": 234, "neighbors": [240]}, {"id": 235, "neighbors": [240]}, {"id": 236, "neighbors": [240]}, {"id": 237, "neighbors": [240]}, {"id": 238, "neighbors": [240]}, {"id": 239, "neighbors": [240]}, {"id": 240, "neighbors": []}, {"id": 241, "neighbors": [5, 6, 15, 17]}]}, "start": 241, "goal": 240},
+        "out": 6507
+      }
+    ]
+  },
+  "edgeCases": ["two equally short routes", "the start is the goal", "a longer route that must not count", "loops"],
+  "variables": {
+    "pool": [
+      {"name": "dist", "type": "array<num>"},
+      {"name": "ways", "type": "array<num>"},
+      {"name": "line", "type": "queue<num>"},
+      {"name": "k", "type": "num"},
+      {"name": "here", "type": "num"},
+      {"name": "next", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "bfs_route_counting"}
+}

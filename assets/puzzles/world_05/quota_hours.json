@@ -22,6 +22,7 @@
   },
   "blocks": {"allow": ["ctrl.for_range", "ctrl.while", "ctrl.if", "ctrl.return", "var.set", "var.get", "var.inc", "lit.num", "arr.get", "arr.len", "arith.add", "arith.sub", "arith.min", "cmp.ge", "cmp.gt", "cmp.lt", "cmp.eq"], "maxBlocks": 60},
   "limits": {"maxOps": 120000, "maxDepth": 32, "maxAlloc": 100},
+  "performance": {"required": true},
   "scoring": {"blockBudget": 60},
   "hints": ["Every run of hours has a first hour and a last hour. Trying every pair of them works, but long days make that slow.", "Keep a window with a left edge and a right edge, and a running total inside it. Move the right edge forward one hour at a time.", "Whenever the total reaches the quota, the window is a candidate: record its length, then shrink it from the left and check again. Decide what to report if no window ever reached the quota."],
   "validators": {"output": "equal"},

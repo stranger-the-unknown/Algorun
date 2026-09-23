@@ -91,75 +91,40 @@ final class CampaignProgress {
   int get puzzleCount => puzzles.length;
 }
 
-/// The unlock rules — data-driven, no puzzle or world id is special:
-///
-/// 1. A world is **open** when every concept in its `prerequisites` is
-///    mastered — or when the player has already solved one of its puzzles, so
-///    a content update can never lock a world the player has played.
-/// 2. A world is **complete** when it is open and every puzzle it lists is
-///    solved. A world with no puzzles yet is complete as soon as it opens, so
-///    a missing chapter never blocks the ones after it.
-/// 3. A concept is **mastered** when a complete world teaches it (lists it in
-///    `concepts`).
-/// 4. A puzzle is **open** when its world is open and each of its own
-///    `prerequisites` is mastered or taught by that same world (a world's
-///    first puzzle may practise the world's own concept).
-///
-/// Rules 1–3 feed each other, so they are applied until nothing changes. It
-/// settles quickly: mastered concepts only grow.
+/// Where the player stands, by the campaign unlock rules (`evaluateUnlocks`
+/// in the engine — the same function the content validator uses to prove
+/// every puzzle reachable): a world opens when its prerequisite concepts are
+/// mastered or one of its puzzles is solved; it completes when every puzzle it
+/// lists is solved (an empty world as soon as it opens); a complete world
+/// masters its concepts; a puzzle opens when its world is open and its own
+/// prerequisites are mastered or taught by that world.
 CampaignProgress evaluateCampaign(Campaign campaign, PlayerSave save) {
-  final worlds = campaign.manifest.worlds;
   final completed = {
     for (final id in campaign.puzzles.keys)
       if (save[id]?.completed ?? false) id,
   };
-
-  var mastered = <String>{};
-  var open = <String>{};
-  var done = <String>{};
-  while (true) {
-    open = {
-      for (final w in worlds)
-        if (w.prerequisites.every(mastered.contains) || w.puzzleIds.any(completed.contains)) w.id,
-    };
-    done = {
-      for (final w in worlds)
-        if (open.contains(w.id) && w.puzzleIds.every(completed.contains)) w.id,
-    };
-    final next = {
-      for (final w in worlds)
-        if (done.contains(w.id)) ...w.concepts,
-    };
-    if (next.length == mastered.length) break;
-    mastered = next;
-  }
+  final unlocks = evaluateUnlocks(
+    campaign.manifest,
+    {for (final e in campaign.puzzles.entries) e.key: e.value.prerequisites},
+    completed,
+  );
 
   final worldStatus = <String, WorldStatus>{};
   final puzzleStatus = <String, PuzzleStatus>{};
-  final missing = <String, List<String>>{};
-  for (final w in worlds) {
-    if (!open.contains(w.id)) {
+  for (final w in campaign.manifest.worlds) {
+    if (!unlocks.openWorlds.contains(w.id)) {
       worldStatus[w.id] = WorldStatus.locked;
-      missing[w.id] = [for (final c in w.prerequisites) if (!mastered.contains(c)) c];
     } else if (w.puzzleIds.isEmpty) {
       worldStatus[w.id] = WorldStatus.empty;
     } else {
-      worldStatus[w.id] = done.contains(w.id) ? WorldStatus.completed : WorldStatus.open;
+      worldStatus[w.id] = unlocks.completeWorlds.contains(w.id) ? WorldStatus.completed : WorldStatus.open;
     }
     for (final id in w.puzzleIds) {
-      final puzzle = campaign.puzzles[id]!;
-      final needs = open.contains(w.id)
-          ? [
-              for (final c in puzzle.prerequisites)
-                if (!mastered.contains(c) && !w.concepts.contains(c)) c,
-            ]
-          : missing[w.id]!;
       final progress = save[id];
       if (completed.contains(id)) {
         puzzleStatus[id] = PuzzleStatus.completed;
-      } else if (needs.isNotEmpty) {
+      } else if (!unlocks.openPuzzles.contains(id)) {
         puzzleStatus[id] = PuzzleStatus.locked;
-        missing[id] = needs;
       } else if (progress != null && (progress.draft != null || progress.lastRun != null)) {
         puzzleStatus[id] = PuzzleStatus.inProgress;
       } else {
@@ -175,10 +140,10 @@ CampaignProgress evaluateCampaign(Campaign campaign, PlayerSave save) {
       : null;
 
   return CampaignProgress._(
-    mastered: Set.unmodifiable(mastered),
+    mastered: unlocks.mastered,
     worlds: Map.unmodifiable(worldStatus),
     puzzles: Map.unmodifiable(puzzleStatus),
-    missing: Map.unmodifiable(missing),
+    missing: unlocks.missing,
     currentPuzzleId: current,
   );
 }

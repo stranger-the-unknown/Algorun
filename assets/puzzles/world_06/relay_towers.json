@@ -21,6 +21,7 @@
   },
   "blocks": {"allow": ["ctrl.for_range", "ctrl.while", "ctrl.if", "ctrl.break", "ctrl.return", "var.set", "var.get", "lit.num", "arr.get", "arr.set", "arr.len", "arr.append", "new.array", "new.stack", "stack.push", "stack.pop", "stack.peek", "stack.empty", "logic.and", "logic.not", "cmp.lt", "cmp.le", "cmp.gt", "arith.add", "arith.sub"], "maxBlocks": 55},
   "limits": {"maxOps": 170000, "maxDepth": 32, "maxAlloc": 8000},
+  "performance": {"required": true},
   "scoring": {"blockBudget": 55},
   "hints": ["Looking east from every tower until something taller appears is correct, but on a long ridge that keeps getting lower it repeats almost all of its work.", "Walk west to east once. Keep the towers that are still waiting for a taller neighbour, and remember them by position, not by height.", "When a new tower arrives, every waiting tower that is shorter than it has just found its answer, and those are always the most recently added ones. Only after settling them does the new tower start waiting."],
   "validators": {"output": "equal"},

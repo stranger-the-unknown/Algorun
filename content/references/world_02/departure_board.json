@@ -1,0 +1,109 @@
+{
+  "puzzle": "departure_board",
+  "notes": "Lower bound by binary search over positions [lo, hi): the middle train leaving before t moves lo past it, otherwise hi comes down to it. Comparing with 'at or before t' finds the position after the equal trains instead.",
+  "spec": {"family": "binary_search", "pattern": "lower_bound_sorted", "structure": "array", "secondary": [], "performance": "budget", "traps": ["several trains in the same minute: the first one counts", "every train already gone", "an empty board", "scanning a long board runs out of steps"], "oracle": "departure_board"},
+  "metrics": {"blocks": 29, "ops": 243, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "variables": {"times": "array<num>", "t": "num", "lo": "num", "hi": "num", "mid": "num"},
+    "entryIds": ["set_2", "set_5", "while_28", "return_30"],
+    "blocks": {
+      "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "lo"}},
+      "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "times"}},
+      "len_4": {"id": "len_4", "catalogId": "arr.len", "slots": {"array": {"ref": "get_3"}}},
+      "set_5": {"id": "set_5", "catalogId": "var.set", "slots": {"value": {"ref": "len_4"}}, "literals": {"name": "hi"}},
+      "get_6": {"id": "get_6", "catalogId": "var.get", "literals": {"name": "lo"}},
+      "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "hi"}},
+      "lt_8": {"id": "lt_8", "catalogId": "cmp.lt", "slots": {"left": {"ref": "get_6"}, "right": {"ref": "get_7"}}},
+      "get_9": {"id": "get_9", "catalogId": "var.get", "literals": {"name": "lo"}},
+      "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "hi"}},
+      "add_11": {"id": "add_11", "catalogId": "arith.add", "slots": {"left": {"ref": "get_9"}, "right": {"ref": "get_10"}}},
+      "num_12": {"id": "num_12", "catalogId": "lit.num", "literals": {"value": 2}},
+      "floor_div_13": {"id": "floor_div_13", "catalogId": "arith.floor_div", "slots": {"left": {"ref": "add_11"}, "right": {"ref": "num_12"}}},
+      "set_14": {"id": "set_14", "catalogId": "var.set", "slots": {"value": {"ref": "floor_div_13"}}, "literals": {"name": "mid"}},
+      "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "mid"}},
+      "get_16": {"id": "get_16", "catalogId": "var.get", "literals": {"name": "times"}},
+      "get_17": {"id": "get_17", "catalogId": "arr.get", "slots": {"array": {"ref": "get_16"}, "index": {"ref": "get_15"}}},
+      "get_18": {"id": "get_18", "catalogId": "var.get", "literals": {"name": "t"}},
+      "lt_19": {"id": "lt_19", "catalogId": "cmp.lt", "slots": {"left": {"ref": "get_17"}, "right": {"ref": "get_18"}}},
+      "get_20": {"id": "get_20", "catalogId": "var.get", "literals": {"name": "mid"}},
+      "num_21": {"id": "num_21", "catalogId": "lit.num", "literals": {"value": 1}},
+      "add_22": {"id": "add_22", "catalogId": "arith.add", "slots": {"left": {"ref": "get_20"}, "right": {"ref": "num_21"}}},
+      "set_23": {"id": "set_23", "catalogId": "var.set", "slots": {"value": {"ref": "add_22"}}, "literals": {"name": "lo"}},
+      "get_24": {"id": "get_24", "catalogId": "var.get", "literals": {"name": "mid"}},
+      "set_25": {"id": "set_25", "catalogId": "var.set", "slots": {"value": {"ref": "get_24"}}, "literals": {"name": "hi"}},
+      "else_26": {"id": "else_26", "catalogId": "ctrl.else", "slots": {"body": {"list": ["set_25"]}}},
+      "if_27": {"id": "if_27", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "lt_19"}, "then": {"list": ["set_23"]}, "else": {"ref": "else_26"}}},
+      "while_28": {"id": "while_28", "catalogId": "ctrl.while", "slots": {"condition": {"ref": "lt_8"}, "body": {"list": ["set_14", "if_27"]}}},
+      "get_29": {"id": "get_29", "catalogId": "var.get", "literals": {"name": "lo"}},
+      "return_30": {"id": "return_30", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_29"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "read the board from the top",
+      "expect": "operationLimit",
+      "graph": {
+        "variables": {"times": "array<num>", "t": "num", "i": "num"},
+        "entryIds": ["for_range_12", "return_15"],
+        "blocks": {
+          "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+          "get_2": {"id": "get_2", "catalogId": "var.get", "literals": {"name": "times"}},
+          "len_3": {"id": "len_3", "catalogId": "arr.len", "slots": {"array": {"ref": "get_2"}}},
+          "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "i"}},
+          "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "times"}},
+          "get_6": {"id": "get_6", "catalogId": "arr.get", "slots": {"array": {"ref": "get_5"}, "index": {"ref": "get_4"}}},
+          "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "t"}},
+          "ge_8": {"id": "ge_8", "catalogId": "cmp.ge", "slots": {"left": {"ref": "get_6"}, "right": {"ref": "get_7"}}},
+          "get_9": {"id": "get_9", "catalogId": "var.get", "literals": {"name": "i"}},
+          "return_10": {"id": "return_10", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_9"}}},
+          "if_11": {"id": "if_11", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "ge_8"}, "then": {"list": ["return_10"]}}},
+          "for_range_12": {"id": "for_range_12", "catalogId": "ctrl.for_range", "slots": {"start": {"ref": "num_1"}, "end": {"ref": "len_3"}, "body": {"list": ["if_11"]}}, "literals": {"name": "i"}},
+          "get_13": {"id": "get_13", "catalogId": "var.get", "literals": {"name": "times"}},
+          "len_14": {"id": "len_14", "catalogId": "arr.len", "slots": {"array": {"ref": "get_13"}}},
+          "return_15": {"id": "return_15", "catalogId": "ctrl.return", "slots": {"value": {"ref": "len_14"}}}
+        }
+      }
+    },
+    {
+      "name": "land after trains in the same minute",
+      "expect": "wrongAnswer",
+      "graph": {
+        "variables": {"times": "array<num>", "t": "num", "lo": "num", "hi": "num", "mid": "num"},
+        "entryIds": ["set_2", "set_5", "while_28", "return_30"],
+        "blocks": {
+          "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+          "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "lo"}},
+          "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "times"}},
+          "len_4": {"id": "len_4", "catalogId": "arr.len", "slots": {"array": {"ref": "get_3"}}},
+          "set_5": {"id": "set_5", "catalogId": "var.set", "slots": {"value": {"ref": "len_4"}}, "literals": {"name": "hi"}},
+          "get_6": {"id": "get_6", "catalogId": "var.get", "literals": {"name": "lo"}},
+          "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "hi"}},
+          "lt_8": {"id": "lt_8", "catalogId": "cmp.lt", "slots": {"left": {"ref": "get_6"}, "right": {"ref": "get_7"}}},
+          "get_9": {"id": "get_9", "catalogId": "var.get", "literals": {"name": "lo"}},
+          "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "hi"}},
+          "add_11": {"id": "add_11", "catalogId": "arith.add", "slots": {"left": {"ref": "get_9"}, "right": {"ref": "get_10"}}},
+          "num_12": {"id": "num_12", "catalogId": "lit.num", "literals": {"value": 2}},
+          "floor_div_13": {"id": "floor_div_13", "catalogId": "arith.floor_div", "slots": {"left": {"ref": "add_11"}, "right": {"ref": "num_12"}}},
+          "set_14": {"id": "set_14", "catalogId": "var.set", "slots": {"value": {"ref": "floor_div_13"}}, "literals": {"name": "mid"}},
+          "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "mid"}},
+          "get_16": {"id": "get_16", "catalogId": "var.get", "literals": {"name": "times"}},
+          "get_17": {"id": "get_17", "catalogId": "arr.get", "slots": {"array": {"ref": "get_16"}, "index": {"ref": "get_15"}}},
+          "get_18": {"id": "get_18", "catalogId": "var.get", "literals": {"name": "t"}},
+          "le_19": {"id": "le_19", "catalogId": "cmp.le", "slots": {"left": {"ref": "get_17"}, "right": {"ref": "get_18"}}},
+          "get_20": {"id": "get_20", "catalogId": "var.get", "literals": {"name": "mid"}},
+          "num_21": {"id": "num_21", "catalogId": "lit.num", "literals": {"value": 1}},
+          "add_22": {"id": "add_22", "catalogId": "arith.add", "slots": {"left": {"ref": "get_20"}, "right": {"ref": "num_21"}}},
+          "set_23": {"id": "set_23", "catalogId": "var.set", "slots": {"value": {"ref": "add_22"}}, "literals": {"name": "lo"}},
+          "get_24": {"id": "get_24", "catalogId": "var.get", "literals": {"name": "mid"}},
+          "set_25": {"id": "set_25", "catalogId": "var.set", "slots": {"value": {"ref": "get_24"}}, "literals": {"name": "hi"}},
+          "else_26": {"id": "else_26", "catalogId": "ctrl.else", "slots": {"body": {"list": ["set_25"]}}},
+          "if_27": {"id": "if_27", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "le_19"}, "then": {"list": ["set_23"]}, "else": {"ref": "else_26"}}},
+          "while_28": {"id": "while_28", "catalogId": "ctrl.while", "slots": {"condition": {"ref": "lt_8"}, "body": {"list": ["set_14", "if_27"]}}},
+          "get_29": {"id": "get_29", "catalogId": "var.get", "literals": {"name": "lo"}},
+          "return_30": {"id": "return_30", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_29"}}}
+        }
+      }
+    }
+  ]
+}

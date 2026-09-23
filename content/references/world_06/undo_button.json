@@ -1,0 +1,78 @@
+{
+  "puzzle": "undo_button",
+  "notes": "A stack of typed words and a running score. The edge is the empty note: popping an empty stack is a runtime error, which the hidden cases trigger.",
+  "spec": {"family": "stack", "pattern": "undo_history_stack", "structure": "stack", "secondary": [], "performance": "correctness", "traps": ["UNDO on an empty note does nothing", "more UNDOs than words", "an empty session"], "oracle": "undo_button"},
+  "metrics": {"blocks": 28, "ops": 7652, "peakAlloc": 157, "peakDepth": 1},
+  "solution": {
+    "variables": {"actions": "array<num>", "typed": "stack<num>", "total": "num", "a": "num"},
+    "entryIds": ["set_11", "set_13", "foreach_27", "return_29"],
+    "blocks": {
+      "get_1": {"id": "get_1", "catalogId": "var.get", "literals": {"name": "total"}},
+      "get_2": {"id": "get_2", "catalogId": "var.get", "literals": {"name": "typed"}},
+      "pop_3": {"id": "pop_3", "catalogId": "stack.pop", "slots": {"stack": {"ref": "get_2"}}},
+      "sub_4": {"id": "sub_4", "catalogId": "arith.sub", "slots": {"left": {"ref": "get_1"}, "right": {"ref": "pop_3"}}},
+      "set_5": {"id": "set_5", "catalogId": "var.set", "slots": {"value": {"ref": "sub_4"}}, "literals": {"name": "total"}},
+      "get_6": {"id": "get_6", "catalogId": "var.get", "literals": {"name": "typed"}},
+      "empty_7": {"id": "empty_7", "catalogId": "stack.empty", "slots": {"stack": {"ref": "get_6"}}},
+      "not_8": {"id": "not_8", "catalogId": "logic.not", "slots": {"arg": {"ref": "empty_7"}}},
+      "if_9": {"id": "if_9", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "not_8"}, "then": {"list": ["set_5"]}}},
+      "stack_10": {"id": "stack_10", "catalogId": "new.stack"},
+      "set_11": {"id": "set_11", "catalogId": "var.set", "slots": {"value": {"ref": "stack_10"}}, "literals": {"name": "typed"}},
+      "num_12": {"id": "num_12", "catalogId": "lit.num", "literals": {"value": 0}},
+      "set_13": {"id": "set_13", "catalogId": "var.set", "slots": {"value": {"ref": "num_12"}}, "literals": {"name": "total"}},
+      "get_14": {"id": "get_14", "catalogId": "var.get", "literals": {"name": "actions"}},
+      "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "a"}},
+      "num_16": {"id": "num_16", "catalogId": "lit.num", "literals": {"value": 0}},
+      "gt_17": {"id": "gt_17", "catalogId": "cmp.gt", "slots": {"left": {"ref": "get_15"}, "right": {"ref": "num_16"}}},
+      "get_18": {"id": "get_18", "catalogId": "var.get", "literals": {"name": "a"}},
+      "get_19": {"id": "get_19", "catalogId": "var.get", "literals": {"name": "typed"}},
+      "push_20": {"id": "push_20", "catalogId": "stack.push", "slots": {"stack": {"ref": "get_19"}, "value": {"ref": "get_18"}}},
+      "get_21": {"id": "get_21", "catalogId": "var.get", "literals": {"name": "total"}},
+      "get_22": {"id": "get_22", "catalogId": "var.get", "literals": {"name": "a"}},
+      "add_23": {"id": "add_23", "catalogId": "arith.add", "slots": {"left": {"ref": "get_21"}, "right": {"ref": "get_22"}}},
+      "set_24": {"id": "set_24", "catalogId": "var.set", "slots": {"value": {"ref": "add_23"}}, "literals": {"name": "total"}},
+      "else_25": {"id": "else_25", "catalogId": "ctrl.else", "slots": {"body": {"list": ["if_9"]}}},
+      "if_26": {"id": "if_26", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "gt_17"}, "then": {"list": ["push_20", "set_24"]}, "else": {"ref": "else_25"}}},
+      "foreach_27": {"id": "foreach_27", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_14"}, "body": {"list": ["if_26"]}}, "literals": {"name": "a"}},
+      "get_28": {"id": "get_28", "catalogId": "var.get", "literals": {"name": "total"}},
+      "return_29": {"id": "return_29", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_28"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "undo without checking for a word",
+      "expect": "runtimeError",
+      "graph": {
+        "variables": {"actions": "array<num>", "typed": "stack<num>", "total": "num", "a": "num"},
+        "entryIds": ["set_7", "set_9", "foreach_23", "return_25"],
+        "blocks": {
+          "get_1": {"id": "get_1", "catalogId": "var.get", "literals": {"name": "total"}},
+          "get_2": {"id": "get_2", "catalogId": "var.get", "literals": {"name": "typed"}},
+          "pop_3": {"id": "pop_3", "catalogId": "stack.pop", "slots": {"stack": {"ref": "get_2"}}},
+          "sub_4": {"id": "sub_4", "catalogId": "arith.sub", "slots": {"left": {"ref": "get_1"}, "right": {"ref": "pop_3"}}},
+          "set_5": {"id": "set_5", "catalogId": "var.set", "slots": {"value": {"ref": "sub_4"}}, "literals": {"name": "total"}},
+          "stack_6": {"id": "stack_6", "catalogId": "new.stack"},
+          "set_7": {"id": "set_7", "catalogId": "var.set", "slots": {"value": {"ref": "stack_6"}}, "literals": {"name": "typed"}},
+          "num_8": {"id": "num_8", "catalogId": "lit.num", "literals": {"value": 0}},
+          "set_9": {"id": "set_9", "catalogId": "var.set", "slots": {"value": {"ref": "num_8"}}, "literals": {"name": "total"}},
+          "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "actions"}},
+          "get_11": {"id": "get_11", "catalogId": "var.get", "literals": {"name": "a"}},
+          "num_12": {"id": "num_12", "catalogId": "lit.num", "literals": {"value": 0}},
+          "gt_13": {"id": "gt_13", "catalogId": "cmp.gt", "slots": {"left": {"ref": "get_11"}, "right": {"ref": "num_12"}}},
+          "get_14": {"id": "get_14", "catalogId": "var.get", "literals": {"name": "a"}},
+          "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "typed"}},
+          "push_16": {"id": "push_16", "catalogId": "stack.push", "slots": {"stack": {"ref": "get_15"}, "value": {"ref": "get_14"}}},
+          "get_17": {"id": "get_17", "catalogId": "var.get", "literals": {"name": "total"}},
+          "get_18": {"id": "get_18", "catalogId": "var.get", "literals": {"name": "a"}},
+          "add_19": {"id": "add_19", "catalogId": "arith.add", "slots": {"left": {"ref": "get_17"}, "right": {"ref": "get_18"}}},
+          "set_20": {"id": "set_20", "catalogId": "var.set", "slots": {"value": {"ref": "add_19"}}, "literals": {"name": "total"}},
+          "else_21": {"id": "else_21", "catalogId": "ctrl.else", "slots": {"body": {"list": ["set_5"]}}},
+          "if_22": {"id": "if_22", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "gt_13"}, "then": {"list": ["push_16", "set_20"]}, "else": {"ref": "else_21"}}},
+          "foreach_23": {"id": "foreach_23", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_10"}, "body": {"list": ["if_22"]}}, "literals": {"name": "a"}},
+          "get_24": {"id": "get_24", "catalogId": "var.get", "literals": {"name": "total"}},
+          "return_25": {"id": "return_25", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_24"}}}
+        }
+      }
+    }
+  ]
+}

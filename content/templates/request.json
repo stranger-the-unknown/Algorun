@@ -1,0 +1,21 @@
+{
+  "about": "A content request for one candidate puzzle. Fill it before drafting; see docs/CONTENT_AUTHORING.md.",
+  "family": "sliding_window",
+  "pattern": "longest_window_at_most_k_bad",
+  "world": "world_05",
+  "concepts": ["sliding_window", "two_pointers"],
+  "prerequisites": ["arrays"],
+  "tier": 3,
+  "mode": "build",
+  "structure": "array",
+  "blocks": ["ctrl.for_range", "ctrl.while", "arr.get", "arr.len", "arith.max"],
+  "scale": "up to 2,000 elements",
+  "performance": "budget",
+  "traps": [
+    "k of zero",
+    "more repairs than bad items",
+    "an input that is all bad",
+    "restarting the window at every position runs out of steps"
+  ],
+  "forbidden": ["recursion", "heap", "strings", "sorting_builtin"]
+}

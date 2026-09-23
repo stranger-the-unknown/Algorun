@@ -22,6 +22,7 @@
   },
   "blocks": {"allow": ["ctrl.foreach", "ctrl.while", "ctrl.if", "ctrl.else", "ctrl.return", "var.set", "var.get", "var.inc", "lit.num", "arith.add", "arith.max", "arith.div", "arith.floor_div", "cmp.lt", "cmp.le", "cmp.gt"], "maxBlocks": 70},
   "limits": {"maxOps": 130000, "maxDepth": 32, "maxAlloc": 100},
+  "performance": {"required": true},
   "scoring": {"blockBudget": 70},
   "hints": ["If a capacity clears the conveyor in time, every larger capacity does too. The answer sits at the point where 'too small' turns into 'big enough'.", "The answer is at least the heaviest parcel and at most the total weight. You can test any single capacity by walking the conveyor once and counting trips.", "Keep a low and a high bound and test the capacity halfway between them. Capacities are whole numbers, so the halfway point must be one too. Move the bound that the test rules out, and stop when the bounds meet."],
   "validators": {"output": "equal"},

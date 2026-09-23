@@ -1,6 +1,7 @@
 {
   "puzzle": "quota_hours",
   "notes": "A window grows on the right and shrinks on the left. Because every hour adds at least one unit, shrinking never has to look back, so each hour enters and leaves the window once. The best length starts one past the longest possible run so that 'never reached' can be told apart from a real answer.",
+  "spec": {"family": "sliding_window", "pattern": "variable_window_shortest", "structure": "array", "secondary": ["two_pointers"], "performance": "budget", "traps": ["a quota the whole day cannot reach reports 0", "a single hour that is enough", "trying every run runs out of steps"], "oracle": "quota_hours"},
   "metrics": {"ops": 59944, "peakAlloc": 0, "peakDepth": 1, "blocks": 47},
   "solution": {
     "variables": {"energy": "array<num>", "quota": "num", "left": "num", "right": "num", "total": "num", "best": "num"},

@@ -1,6 +1,7 @@
 {
   "puzzle": "twin_beacons",
   "notes": "One pass. A set remembers the strengths already passed; each beacon asks for its missing partner before adding itself, which is what stops a beacon pairing with itself. Checking every pair is correct but needs about n*n/2 steps, which the long logs turn away.",
+  "spec": {"family": "hash_set", "pattern": "complement_lookup_first_pair", "structure": "hash_set", "secondary": ["array_scan"], "performance": "budget", "traps": ["a beacon cannot pair with itself", "equal strengths pair", "negative strengths", "comparing every pair runs out of steps"], "oracle": "twin_beacons"},
   "metrics": {"ops": 28008, "peakAlloc": 2001, "peakDepth": 1, "blocks": 23},
   "solution": {
     "variables": {"strengths": "array<num>", "tuning": "num", "i": "num", "seen": "set<num>"},

@@ -1,0 +1,75 @@
+{
+  "puzzle": "matched_pair",
+  "notes": "Two pointers from the ends of a sorted rack: too light raises the light end, too heavy lowers the heavy end. No memory at all. The set of complements is correct but needs a cell per weight, which this rack does not have.",
+  "spec": {"family": "two_pointers", "pattern": "opposite_ends_pair_sum", "structure": "array", "secondary": [], "performance": "restricted", "traps": ["a weight cannot pair with itself", "two equal weights may pair", "an empty rack", "remembering weights in a set runs out of memory"], "oracle": "matched_pair"},
+  "metrics": {"blocks": 33, "ops": 2512, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "variables": {"values": "array<num>", "target": "num", "lo": "num", "hi": "num", "s": "num"},
+    "entryIds": ["set_2", "set_7", "while_32", "return_34"],
+    "blocks": {
+      "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "lo"}},
+      "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "values"}},
+      "len_4": {"id": "len_4", "catalogId": "arr.len", "slots": {"array": {"ref": "get_3"}}},
+      "num_5": {"id": "num_5", "catalogId": "lit.num", "literals": {"value": 1}},
+      "sub_6": {"id": "sub_6", "catalogId": "arith.sub", "slots": {"left": {"ref": "len_4"}, "right": {"ref": "num_5"}}},
+      "set_7": {"id": "set_7", "catalogId": "var.set", "slots": {"value": {"ref": "sub_6"}}, "literals": {"name": "hi"}},
+      "get_8": {"id": "get_8", "catalogId": "var.get", "literals": {"name": "lo"}},
+      "get_9": {"id": "get_9", "catalogId": "var.get", "literals": {"name": "hi"}},
+      "lt_10": {"id": "lt_10", "catalogId": "cmp.lt", "slots": {"left": {"ref": "get_8"}, "right": {"ref": "get_9"}}},
+      "get_11": {"id": "get_11", "catalogId": "var.get", "literals": {"name": "lo"}},
+      "get_12": {"id": "get_12", "catalogId": "var.get", "literals": {"name": "values"}},
+      "get_13": {"id": "get_13", "catalogId": "arr.get", "slots": {"array": {"ref": "get_12"}, "index": {"ref": "get_11"}}},
+      "get_14": {"id": "get_14", "catalogId": "var.get", "literals": {"name": "hi"}},
+      "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "values"}},
+      "get_16": {"id": "get_16", "catalogId": "arr.get", "slots": {"array": {"ref": "get_15"}, "index": {"ref": "get_14"}}},
+      "add_17": {"id": "add_17", "catalogId": "arith.add", "slots": {"left": {"ref": "get_13"}, "right": {"ref": "get_16"}}},
+      "set_18": {"id": "set_18", "catalogId": "var.set", "slots": {"value": {"ref": "add_17"}}, "literals": {"name": "s"}},
+      "get_19": {"id": "get_19", "catalogId": "var.get", "literals": {"name": "s"}},
+      "get_20": {"id": "get_20", "catalogId": "var.get", "literals": {"name": "target"}},
+      "eq_21": {"id": "eq_21", "catalogId": "cmp.eq", "slots": {"left": {"ref": "get_19"}, "right": {"ref": "get_20"}}},
+      "bool_22": {"id": "bool_22", "catalogId": "lit.bool", "literals": {"value": true}},
+      "return_23": {"id": "return_23", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_22"}}},
+      "if_24": {"id": "if_24", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "eq_21"}, "then": {"list": ["return_23"]}}},
+      "get_25": {"id": "get_25", "catalogId": "var.get", "literals": {"name": "s"}},
+      "get_26": {"id": "get_26", "catalogId": "var.get", "literals": {"name": "target"}},
+      "lt_27": {"id": "lt_27", "catalogId": "cmp.lt", "slots": {"left": {"ref": "get_25"}, "right": {"ref": "get_26"}}},
+      "inc_28": {"id": "inc_28", "catalogId": "var.inc", "literals": {"name": "lo"}},
+      "dec_29": {"id": "dec_29", "catalogId": "var.dec", "literals": {"name": "hi"}},
+      "else_30": {"id": "else_30", "catalogId": "ctrl.else", "slots": {"body": {"list": ["dec_29"]}}},
+      "if_31": {"id": "if_31", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "lt_27"}, "then": {"list": ["inc_28"]}, "else": {"ref": "else_30"}}},
+      "while_32": {"id": "while_32", "catalogId": "ctrl.while", "slots": {"condition": {"ref": "lt_10"}, "body": {"list": ["set_18", "if_24", "if_31"]}}},
+      "bool_33": {"id": "bool_33", "catalogId": "lit.bool", "literals": {"value": false}},
+      "return_34": {"id": "return_34", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_33"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "remember every weight in a set",
+      "expect": "memoryLimit",
+      "graph": {
+        "variables": {"values": "array<num>", "target": "num", "seen": "set<num>", "x": "num"},
+        "entryIds": ["set_2", "foreach_15", "return_17"],
+        "blocks": {
+          "set_1": {"id": "set_1", "catalogId": "new.set"},
+          "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "set_1"}}, "literals": {"name": "seen"}},
+          "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "values"}},
+          "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "target"}},
+          "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "x"}},
+          "sub_6": {"id": "sub_6", "catalogId": "arith.sub", "slots": {"left": {"ref": "get_4"}, "right": {"ref": "get_5"}}},
+          "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "seen"}},
+          "has_8": {"id": "has_8", "catalogId": "set.has", "slots": {"set": {"ref": "get_7"}, "value": {"ref": "sub_6"}}},
+          "bool_9": {"id": "bool_9", "catalogId": "lit.bool", "literals": {"value": true}},
+          "return_10": {"id": "return_10", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_9"}}},
+          "if_11": {"id": "if_11", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "has_8"}, "then": {"list": ["return_10"]}}},
+          "get_12": {"id": "get_12", "catalogId": "var.get", "literals": {"name": "x"}},
+          "get_13": {"id": "get_13", "catalogId": "var.get", "literals": {"name": "seen"}},
+          "add_14": {"id": "add_14", "catalogId": "set.add", "slots": {"set": {"ref": "get_13"}, "value": {"ref": "get_12"}}},
+          "foreach_15": {"id": "foreach_15", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_3"}, "body": {"list": ["if_11", "add_14"]}}, "literals": {"name": "x"}},
+          "bool_16": {"id": "bool_16", "catalogId": "lit.bool", "literals": {"value": false}},
+          "return_17": {"id": "return_17", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_16"}}}
+        }
+      }
+    }
+  ]
+}

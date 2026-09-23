@@ -22,6 +22,7 @@ export 'src/execution/result_kind.dart';
 export 'src/execution/run_result.dart';
 export 'src/execution/suite_result.dart';
 export 'src/puzzles/parse.dart';
+export 'src/puzzles/progression.dart';
 export 'src/puzzles/puzzle.dart';
 export 'src/puzzles/world.dart';
 export 'src/runner/benchmark.dart';

@@ -13,7 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'support/campaign_files.dart';
 import 'support/progress_fixtures.dart';
 
-final _campaign = shippedCampaign();
+final _campaign = ms11Campaign();
 final _cart = _campaign.puzzles['smallest_cart']!;
 final _solution = referenceSolution('world_02', 'smallest_cart');
 

@@ -26,6 +26,12 @@ flutter:
     - assets/puzzles/world_01/
     - assets/puzzles/world_02/
     - assets/puzzles/world_03/
+    - assets/puzzles/world_04/
     - assets/puzzles/world_05/
     - assets/puzzles/world_06/
+    - assets/puzzles/world_07/
+    - assets/puzzles/world_08/
     - assets/puzzles/world_10/
+    - assets/puzzles/world_11/
+    - assets/puzzles/world_13/
+    - assets/puzzles/world_14/

@@ -1,0 +1,73 @@
+{
+  "puzzle": "loop_detector",
+  "notes": "Floyd's two markers; nodes are compared by identity, never by their repeating values. Waiting for the head to reappear works only for full circles and runs forever on a lasso.",
+  "spec": {"family": "linked_list_traversal", "pattern": "floyd_cycle", "structure": "linked_list", "secondary": ["nullable_check", "two_pointers"], "performance": "correctness", "traps": ["a lasso whose loop does not include the first piece", "a piece pointing at itself", "an empty track", "piece numbers repeat, so values cannot identify pieces"], "oracle": "loop_detector"},
+  "metrics": {"blocks": 32, "ops": 17606, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "variables": {"head": "listNode?", "slow": "listNode?", "fast": "listNode?"},
+    "entryIds": ["set_2", "set_4", "while_31", "return_33"],
+    "blocks": {
+      "get_1": {"id": "get_1", "catalogId": "var.get", "literals": {"name": "head"}},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "get_1"}}, "literals": {"name": "slow"}},
+      "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "head"}},
+      "set_4": {"id": "set_4", "catalogId": "var.set", "slots": {"value": {"ref": "get_3"}}, "literals": {"name": "fast"}},
+      "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "fast"}},
+      "is_not_nothing_6": {"id": "is_not_nothing_6", "catalogId": "logic.is_not_nothing", "slots": {"value": {"ref": "get_5"}}},
+      "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "slow"}},
+      "is_not_nothing_8": {"id": "is_not_nothing_8", "catalogId": "logic.is_not_nothing", "slots": {"value": {"ref": "get_7"}}},
+      "and_9": {"id": "and_9", "catalogId": "logic.and", "slots": {"left": {"ref": "is_not_nothing_6"}, "right": {"ref": "is_not_nothing_8"}}},
+      "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "fast"}},
+      "next_11": {"id": "next_11", "catalogId": "ll.next", "slots": {"node": {"ref": "get_10"}}},
+      "set_12": {"id": "set_12", "catalogId": "var.set", "slots": {"value": {"ref": "next_11"}}, "literals": {"name": "fast"}},
+      "get_13": {"id": "get_13", "catalogId": "var.get", "literals": {"name": "fast"}},
+      "is_nothing_14": {"id": "is_nothing_14", "catalogId": "logic.is_nothing", "slots": {"value": {"ref": "get_13"}}},
+      "bool_15": {"id": "bool_15", "catalogId": "lit.bool", "literals": {"value": false}},
+      "return_16": {"id": "return_16", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_15"}}},
+      "get_17": {"id": "get_17", "catalogId": "var.get", "literals": {"name": "fast"}},
+      "next_18": {"id": "next_18", "catalogId": "ll.next", "slots": {"node": {"ref": "get_17"}}},
+      "set_19": {"id": "set_19", "catalogId": "var.set", "slots": {"value": {"ref": "next_18"}}, "literals": {"name": "fast"}},
+      "get_20": {"id": "get_20", "catalogId": "var.get", "literals": {"name": "slow"}},
+      "next_21": {"id": "next_21", "catalogId": "ll.next", "slots": {"node": {"ref": "get_20"}}},
+      "set_22": {"id": "set_22", "catalogId": "var.set", "slots": {"value": {"ref": "next_21"}}, "literals": {"name": "slow"}},
+      "get_23": {"id": "get_23", "catalogId": "var.get", "literals": {"name": "fast"}},
+      "get_24": {"id": "get_24", "catalogId": "var.get", "literals": {"name": "slow"}},
+      "eq_25": {"id": "eq_25", "catalogId": "cmp.eq", "slots": {"left": {"ref": "get_23"}, "right": {"ref": "get_24"}}},
+      "bool_26": {"id": "bool_26", "catalogId": "lit.bool", "literals": {"value": true}},
+      "return_27": {"id": "return_27", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_26"}}},
+      "if_28": {"id": "if_28", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "eq_25"}, "then": {"list": ["return_27"]}}},
+      "else_29": {"id": "else_29", "catalogId": "ctrl.else", "slots": {"body": {"list": ["set_19", "set_22", "if_28"]}}},
+      "if_30": {"id": "if_30", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "is_nothing_14"}, "then": {"list": ["return_16"]}, "else": {"ref": "else_29"}}},
+      "while_31": {"id": "while_31", "catalogId": "ctrl.while", "slots": {"condition": {"ref": "and_9"}, "body": {"list": ["set_12", "if_30"]}}},
+      "bool_32": {"id": "bool_32", "catalogId": "lit.bool", "literals": {"value": false}},
+      "return_33": {"id": "return_33", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_32"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "wait for the first piece to come round",
+      "expect": "operationLimit",
+      "graph": {
+        "variables": {"head": "listNode?", "node": "listNode?"},
+        "entryIds": ["set_2", "while_14", "return_16"],
+        "blocks": {
+          "get_1": {"id": "get_1", "catalogId": "var.get", "literals": {"name": "head"}},
+          "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "get_1"}}, "literals": {"name": "node"}},
+          "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "node"}},
+          "is_not_nothing_4": {"id": "is_not_nothing_4", "catalogId": "logic.is_not_nothing", "slots": {"value": {"ref": "get_3"}}},
+          "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "node"}},
+          "next_6": {"id": "next_6", "catalogId": "ll.next", "slots": {"node": {"ref": "get_5"}}},
+          "set_7": {"id": "set_7", "catalogId": "var.set", "slots": {"value": {"ref": "next_6"}}, "literals": {"name": "node"}},
+          "get_8": {"id": "get_8", "catalogId": "var.get", "literals": {"name": "node"}},
+          "get_9": {"id": "get_9", "catalogId": "var.get", "literals": {"name": "head"}},
+          "eq_10": {"id": "eq_10", "catalogId": "cmp.eq", "slots": {"left": {"ref": "get_8"}, "right": {"ref": "get_9"}}},
+          "bool_11": {"id": "bool_11", "catalogId": "lit.bool", "literals": {"value": true}},
+          "return_12": {"id": "return_12", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_11"}}},
+          "if_13": {"id": "if_13", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "eq_10"}, "then": {"list": ["return_12"]}}},
+          "while_14": {"id": "while_14", "catalogId": "ctrl.while", "slots": {"condition": {"ref": "is_not_nothing_4"}, "body": {"list": ["set_7", "if_13"]}}},
+          "bool_15": {"id": "bool_15", "catalogId": "lit.bool", "literals": {"value": false}},
+          "return_16": {"id": "return_16", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_15"}}}
+        }
+      }
+    }
+  ]
+}

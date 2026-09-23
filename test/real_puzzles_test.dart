@@ -36,14 +36,24 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const repo = AssetPuzzleRepository();
 
-  test('the worlds list exactly the five real puzzles', () async {
+  test('the five MS8 puzzles stay in their worlds, and no probe is listed', () async {
+    // Since MS12 the worlds list 38 puzzles (campaign_test.dart); the five
+    // from MS8 keep their places.
     final worlds = await repo.loadWorlds();
-    final listed = {
-      for (final w in worlds.worlds)
-        for (final id in w.puzzleIds) w.id: id,
-    };
-    expect(listed, _real);
-    expect(worlds.byId('world_01')!.puzzleIds, isEmpty, reason: 'probes are not player content');
+    for (final MapEntry(key: world, value: id) in _real.entries) {
+      expect(worlds.byId(world)!.puzzleIds, contains(id));
+    }
+    final listed = {for (final w in worlds.worlds) ...w.puzzleIds};
+    for (final probe in ['ms1_contract_probe', 'ms3_editor_probe', 'l1_list_probe', 'l1_tree_probe']) {
+      expect(listed, isNot(contains(probe)), reason: 'probes are not player content');
+    }
+    for (final w in worlds.worlds) {
+      for (final id in w.puzzleIds) {
+        final puzzle = await repo.loadPuzzle(w.id, id);
+        expect(puzzle.reference, isNotNull, reason: id);
+        expect(puzzle.hints.length, greaterThanOrEqualTo(2), reason: id);
+      }
+    }
   });
 
   test('each real puzzle loads from the app bundle as a real puzzle', () async {
@@ -126,7 +136,8 @@ void main() {
 
   testWidgets('world cards show progression, never the probes', (tester) async {
     // Since MS11 a world's card says where the player stands (see
-    // progression_ui_test.dart); a fresh install starts at Arrays.
+    // progression_ui_test.dart); since MS12 a fresh install starts at
+    // Foundations.
     await tester.pumpWidget(
       ProviderScope(
         overrides: campaignOverrides(MemoryProgressStore()),
@@ -136,8 +147,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('probe'), findsNothing);
-    expect(find.text('0 of 1 solved'), findsOneWidget);
+    expect(find.text('0 of 2 solved'), findsOneWidget);
     expect(find.text('Hash Maps'), findsOneWidget);
+    expect(find.text('Locked — learn variables first'), findsOneWidget);
     expect(find.text('Locked — learn arrays first'), findsWidgets);
   });
 }

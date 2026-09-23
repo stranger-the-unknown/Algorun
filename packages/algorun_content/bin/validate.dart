@@ -2,19 +2,37 @@ import 'dart:io';
 
 import 'package:algorun_content/algorun_content.dart';
 
-/// Offline CLI:
+/// Offline CLI — the content pipeline:
 ///
 ///     dart run packages/algorun_content/bin/validate.dart
-///         <puzzles_dir> [worlds.json] [references_dir]
+///         <puzzles_dir> [worlds.json] [references_dir] [--coverage <out.json>]
 ///
 /// Validates every `.json` file under `puzzles_dir` against the closed puzzle
 /// schema, then the set as a whole (duplicate ids, file locations, world
-/// membership), then runs every reference solution under `references_dir`
-/// through the real test runner. Exits 1 when there is any error. Output
-/// order is stable.
-void main(List<String> args) {
+/// membership), runs every reference solution under `references_dir` through
+/// the editor replay, the real test runner and its independent oracle, checks
+/// that every listed puzzle is reachable, and compares the corpus for
+/// redundancy and coverage. `capabilities.json` and `coverage_targets.json`
+/// are read from the directory that holds `references_dir` when they exist.
+///
+/// Prints every finding with its level, one ACCEPTED / REJECTED line per
+/// puzzle, and a summary. `--coverage` writes the coverage matrix. Exits 1
+/// when there is any error. Output order is stable.
+void main(List<String> arguments) {
+  final args = [...arguments];
+  String? coverageOut;
+  final flag = args.indexOf('--coverage');
+  if (flag >= 0) {
+    if (flag + 1 >= args.length) {
+      stderr.writeln('--coverage needs a file');
+      exitCode = 64;
+      return;
+    }
+    coverageOut = args[flag + 1];
+    args.removeRange(flag, flag + 2);
+  }
   if (args.isEmpty) {
-    stderr.writeln('usage: validate <puzzles_dir> [worlds.json] [references_dir]');
+    stderr.writeln('usage: validate <puzzles_dir> [worlds.json] [references_dir] [--coverage <out.json>]');
     exitCode = 64;
     return;
   }
@@ -54,6 +72,8 @@ void main(List<String> args) {
 
   List<ContentFile>? references;
   var referencesLabel = 'references';
+  String? capabilities;
+  String? targets;
   if (args.length >= 3) {
     final dir = Directory(args[2]);
     if (!dir.existsSync()) {
@@ -63,6 +83,14 @@ void main(List<String> args) {
     }
     referencesLabel = args[2].replaceAll(r'\', '/').replaceAll(RegExp(r'/+$'), '');
     references = _jsonFiles(dir);
+    final content = dir.absolute.parent;
+    String? sibling(String name) {
+      final file = File('${content.path}${Platform.pathSeparator}$name');
+      return file.existsSync() ? file.readAsStringSync() : null;
+    }
+
+    capabilities = sibling('capabilities.json');
+    targets = sibling('coverage_targets.json');
   }
 
   final report = const ContentValidator().validateContent(
@@ -71,9 +99,37 @@ void main(List<String> args) {
     worldsFile: worldsName,
     references: references,
     referencesLabel: referencesLabel,
+    capabilitiesSource: capabilities,
+    targetsSource: targets,
   );
   for (final issue in report.issues) {
     stdout.writeln(issue);
+  }
+  var accepted = 0;
+  var probes = 0;
+  for (final verdict in report.verdicts) {
+    if (!verdict.campaign) {
+      probes++;
+      if (verdict.accepted) continue;
+    }
+    if (verdict.accepted) {
+      accepted++;
+      stdout.writeln('ACCEPTED ${verdict.file}');
+    } else {
+      final levels = (verdict.failed.toList()..sort()).map((l) => 'L$l ${Level.names[l]}').join(', ');
+      stdout.writeln('REJECTED ${verdict.file} at $levels');
+    }
+  }
+  final campaign = report.verdicts.length - probes;
+  if (report.coverage != null) {
+    final tiers = (report.coverage!['tiers']! as Map<String, Object?>).entries.map((e) => '${e.key}:${e.value}');
+    final gaps = (report.coverage!['gaps']! as List).length;
+    stdout.writeln('PIPELINE $accepted of $campaign campaign puzzle(s) accepted, $probes probe(s) checked · '
+        'tiers ${tiers.join(' ')} · $gaps coverage gap(s)');
+  }
+  if (coverageOut != null && report.coverage != null) {
+    File(coverageOut).writeAsStringSync(coverageJson(report.coverage!));
+    stdout.writeln('COVERAGE written to $coverageOut');
   }
   final errors = report.errors.length;
   final warnings = report.warnings.length;

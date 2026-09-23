@@ -1,0 +1,1479 @@
+{
+  "total": 38,
+  "targetTotal": 300,
+  "tiers": {
+    "1": 2,
+    "2": 8,
+    "3": 13,
+    "4": 13,
+    "5": 2
+  },
+  "modes": {
+    "budget": 6,
+    "build": 28,
+    "edge": 2,
+    "optimize": 1,
+    "restricted": 1
+  },
+  "structures": {
+    "array": 15,
+    "graph": 6,
+    "hash_map": 3,
+    "hash_set": 2,
+    "linked_list": 4,
+    "stack": 4,
+    "tree": 4
+  },
+  "families": {
+    "array_scan": 2,
+    "binary_search": 2,
+    "dp_iterative": 2,
+    "graph_bfs": 2,
+    "graph_connectivity": 2,
+    "greedy": 2,
+    "hash_map": 2,
+    "hash_set": 2,
+    "linked_list_relink": 2,
+    "linked_list_traversal": 2,
+    "monotonic_stack": 2,
+    "multi_concept": 1,
+    "prefix_sum": 2,
+    "sliding_window": 4,
+    "stack": 2,
+    "topological_order": 1,
+    "tree_traversal": 4,
+    "two_pointers": 2
+  },
+  "performance": {
+    "budget": 15,
+    "correctness": 21,
+    "optimization": 1,
+    "restricted": 1
+  },
+  "concepts": {
+    "array_scan": 11,
+    "arrays": 3,
+    "bfs": 6,
+    "binary_search": 2,
+    "binary_search_answer": 1,
+    "bst": 1,
+    "complement_lookup": 1,
+    "control": 2,
+    "counting": 1,
+    "dfs": 1,
+    "dp": 3,
+    "dp_iterative": 1,
+    "fast_slow_pointers": 2,
+    "graph": 6,
+    "graph_bfs": 3,
+    "greedy": 4,
+    "greedy_choice": 1,
+    "hash_map": 4,
+    "hash_set": 2,
+    "linked_list": 4,
+    "monotonic_stack": 2,
+    "multi_concept": 1,
+    "nullable_check": 11,
+    "prefix_sum": 4,
+    "queue": 8,
+    "relinking": 2,
+    "shortest_path": 1,
+    "sliding_window": 4,
+    "stack": 6,
+    "topological_order": 1,
+    "tree": 4,
+    "two_pointers": 6,
+    "variables": 2
+  },
+  "worlds": [
+    {
+      "id": "world_01",
+      "title": "Foundations",
+      "concepts": [
+        "variables",
+        "control"
+      ],
+      "count": 2,
+      "tiers": {
+        "1": 2,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "families": {
+        "array_scan": 2
+      },
+      "patterns": {
+        "count_above_threshold": 1,
+        "first_position_of_maximum": 1
+      },
+      "target": 12
+    },
+    {
+      "id": "world_02",
+      "title": "Arrays",
+      "concepts": [
+        "arrays",
+        "prefix_sum",
+        "binary_search"
+      ],
+      "count": 4,
+      "tiers": {
+        "1": 0,
+        "2": 1,
+        "3": 3,
+        "4": 0,
+        "5": 0
+      },
+      "families": {
+        "binary_search": 2,
+        "prefix_sum": 2
+      },
+      "patterns": {
+        "binary_search_on_answer": 1,
+        "lower_bound_sorted": 1,
+        "prefix_sum_range_queries": 1,
+        "running_minimum_of_prefix": 1
+      },
+      "target": 30
+    },
+    {
+      "id": "world_03",
+      "title": "Hash Maps",
+      "concepts": [
+        "hash_map"
+      ],
+      "count": 4,
+      "tiers": {
+        "1": 0,
+        "2": 2,
+        "3": 0,
+        "4": 2,
+        "5": 0
+      },
+      "families": {
+        "hash_map": 2,
+        "hash_set": 2
+      },
+      "patterns": {
+        "complement_lookup_first_pair": 1,
+        "consecutive_run_from_starts": 1,
+        "frequency_mode_smallest_tie": 1,
+        "prefix_sum_count_map": 1
+      },
+      "target": 25
+    },
+    {
+      "id": "world_04",
+      "title": "Two Pointers",
+      "concepts": [
+        "two_pointers"
+      ],
+      "count": 2,
+      "tiers": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 1,
+        "5": 0
+      },
+      "families": {
+        "two_pointers": 2
+      },
+      "patterns": {
+        "opposite_ends_pair_sum": 1,
+        "shrink_shorter_side": 1
+      },
+      "target": 20
+    },
+    {
+      "id": "world_05",
+      "title": "Sliding Window",
+      "concepts": [
+        "sliding_window"
+      ],
+      "count": 4,
+      "tiers": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 1,
+        "5": 0
+      },
+      "families": {
+        "sliding_window": 4
+      },
+      "patterns": {
+        "fixed_window_max_sum": 1,
+        "longest_window_at_most_k_bad": 1,
+        "longest_window_k_distinct": 1,
+        "variable_window_shortest": 1
+      },
+      "target": 20
+    },
+    {
+      "id": "world_06",
+      "title": "Stack & Queue",
+      "concepts": [
+        "stack",
+        "queue"
+      ],
+      "count": 4,
+      "tiers": {
+        "1": 0,
+        "2": 2,
+        "3": 1,
+        "4": 0,
+        "5": 1
+      },
+      "families": {
+        "monotonic_stack": 2,
+        "stack": 2
+      },
+      "patterns": {
+        "matching_pairs_stack": 1,
+        "next_greater_distance": 1,
+        "stack_largest_rectangle": 1,
+        "undo_history_stack": 1
+      },
+      "target": 25
+    },
+    {
+      "id": "world_07",
+      "title": "Linked Lists",
+      "concepts": [
+        "linked_list"
+      ],
+      "count": 4,
+      "tiers": {
+        "1": 0,
+        "2": 0,
+        "3": 3,
+        "4": 1,
+        "5": 0
+      },
+      "families": {
+        "linked_list_relink": 2,
+        "linked_list_traversal": 2
+      },
+      "patterns": {
+        "fast_slow_middle": 1,
+        "floyd_cycle": 1,
+        "relink_filter": 1,
+        "reverse_in_place": 1
+      },
+      "target": 20
+    },
+    {
+      "id": "world_08",
+      "title": "Trees",
+      "concepts": [
+        "tree",
+        "bst"
+      ],
+      "count": 4,
+      "tiers": {
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 3,
+        "5": 0
+      },
+      "families": {
+        "tree_traversal": 4
+      },
+      "patterns": {
+        "bfs_depth_levels": 1,
+        "bfs_level_width": 1,
+        "inorder_stack_check": 1,
+        "root_to_leaf_state": 1
+      },
+      "target": 30
+    },
+    {
+      "id": "world_09",
+      "title": "Heaps",
+      "concepts": [
+        "heap"
+      ],
+      "count": 0,
+      "tiers": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "families": {},
+      "patterns": {},
+      "target": 15
+    },
+    {
+      "id": "world_10",
+      "title": "Graphs",
+      "concepts": [
+        "graph",
+        "bfs",
+        "dfs"
+      ],
+      "count": 5,
+      "tiers": {
+        "1": 0,
+        "2": 0,
+        "3": 2,
+        "4": 3,
+        "5": 0
+      },
+      "families": {
+        "graph_bfs": 2,
+        "graph_connectivity": 2,
+        "topological_order": 1
+      },
+      "patterns": {
+        "bfs_shortest_path": 1,
+        "bfs_two_coloring": 1,
+        "count_components": 1,
+        "kahn_cycle_check": 1,
+        "multi_source_bfs": 1
+      },
+      "target": 30
+    },
+    {
+      "id": "world_11",
+      "title": "Greedy",
+      "concepts": [
+        "greedy"
+      ],
+      "count": 2,
+      "tiers": {
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 1,
+        "5": 0
+      },
+      "families": {
+        "greedy": 2
+      },
+      "patterns": {
+        "circuit_start_reset": 1,
+        "running_min_profit": 1
+      },
+      "target": 20
+    },
+    {
+      "id": "world_12",
+      "title": "Backtracking",
+      "concepts": [
+        "backtracking"
+      ],
+      "count": 0,
+      "tiers": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "families": {},
+      "patterns": {},
+      "target": 15
+    },
+    {
+      "id": "world_13",
+      "title": "Dynamic Programming",
+      "concepts": [
+        "dp"
+      ],
+      "count": 2,
+      "tiers": {
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 1,
+        "5": 0
+      },
+      "families": {
+        "dp_iterative": 2
+      },
+      "patterns": {
+        "min_coins_table": 1,
+        "take_or_skip": 1
+      },
+      "target": 30
+    },
+    {
+      "id": "world_14",
+      "title": "Advanced Algorithms",
+      "concepts": [
+        "multi_concept"
+      ],
+      "count": 1,
+      "tiers": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 1
+      },
+      "families": {
+        "multi_concept": 1
+      },
+      "patterns": {
+        "bfs_path_counting": 1
+      },
+      "target": 8
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "canopy_height",
+      "world": "world_08",
+      "tier": 3,
+      "mode": "build",
+      "family": "tree_traversal",
+      "pattern": "bfs_depth_levels",
+      "structure": "tree",
+      "secondary": [
+        "queue",
+        "nullable_check"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "tree",
+        "bfs"
+      ]
+    },
+    {
+      "id": "departure_board",
+      "world": "world_02",
+      "tier": 3,
+      "mode": "budget",
+      "family": "binary_search",
+      "pattern": "lower_bound_sorted",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "arrays",
+        "binary_search"
+      ]
+    },
+    {
+      "id": "drop_faulty_cars",
+      "world": "world_07",
+      "tier": 3,
+      "mode": "build",
+      "family": "linked_list_relink",
+      "pattern": "relink_filter",
+      "structure": "linked_list",
+      "secondary": [
+        "nullable_check"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "linked_list",
+        "relinking"
+      ]
+    },
+    {
+      "id": "exact_change",
+      "world": "world_13",
+      "tier": 4,
+      "mode": "build",
+      "family": "dp_iterative",
+      "pattern": "min_coins_table",
+      "structure": "array",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "dp"
+      ]
+    },
+    {
+      "id": "fewest_rides",
+      "world": "world_10",
+      "tier": 3,
+      "mode": "build",
+      "family": "graph_bfs",
+      "pattern": "bfs_shortest_path",
+      "structure": "graph",
+      "secondary": [
+        "queue"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "bfs",
+        "shortest_path"
+      ]
+    },
+    {
+      "id": "fuel_loop",
+      "world": "world_11",
+      "tier": 4,
+      "mode": "build",
+      "family": "greedy",
+      "pattern": "circuit_start_reset",
+      "structure": "array",
+      "secondary": [
+        "prefix_sum"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "greedy"
+      ]
+    },
+    {
+      "id": "highest_tide",
+      "world": "world_01",
+      "tier": 1,
+      "mode": "build",
+      "family": "array_scan",
+      "pattern": "first_position_of_maximum",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
+      "id": "island_count",
+      "world": "world_10",
+      "tier": 3,
+      "mode": "build",
+      "family": "graph_connectivity",
+      "pattern": "count_components",
+      "structure": "graph",
+      "secondary": [
+        "graph_bfs",
+        "queue"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "bfs"
+      ]
+    },
+    {
+      "id": "largest_billboard",
+      "world": "world_06",
+      "tier": 5,
+      "mode": "build",
+      "family": "monotonic_stack",
+      "pattern": "stack_largest_rectangle",
+      "structure": "stack",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "stack",
+        "monotonic_stack"
+      ]
+    },
+    {
+      "id": "level_stretches",
+      "world": "world_03",
+      "tier": 4,
+      "mode": "build",
+      "family": "hash_map",
+      "pattern": "prefix_sum_count_map",
+      "structure": "hash_map",
+      "secondary": [
+        "prefix_sum",
+        "nullable_check"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "hash_map",
+        "prefix_sum"
+      ]
+    },
+    {
+      "id": "longest_streak",
+      "world": "world_03",
+      "tier": 4,
+      "mode": "build",
+      "family": "hash_set",
+      "pattern": "consecutive_run_from_starts",
+      "structure": "hash_set",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "hash_set",
+        "hash_map"
+      ]
+    },
+    {
+      "id": "loop_detector",
+      "world": "world_07",
+      "tier": 4,
+      "mode": "edge",
+      "family": "linked_list_traversal",
+      "pattern": "floyd_cycle",
+      "structure": "linked_list",
+      "secondary": [
+        "nullable_check",
+        "two_pointers"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "linked_list",
+        "fast_slow_pointers"
+      ]
+    },
+    {
+      "id": "loudest_echo",
+      "world": "world_03",
+      "tier": 2,
+      "mode": "build",
+      "family": "hash_map",
+      "pattern": "frequency_mode_smallest_tie",
+      "structure": "hash_map",
+      "secondary": [
+        "nullable_check"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "hash_map",
+        "counting"
+      ]
+    },
+    {
+      "id": "lowest_balance",
+      "world": "world_02",
+      "tier": 2,
+      "mode": "build",
+      "family": "prefix_sum",
+      "pattern": "running_minimum_of_prefix",
+      "structure": "array",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "arrays",
+        "prefix_sum"
+      ]
+    },
+    {
+      "id": "many_shortest_routes",
+      "world": "world_14",
+      "tier": 5,
+      "mode": "build",
+      "family": "multi_concept",
+      "pattern": "bfs_path_counting",
+      "structure": "graph",
+      "secondary": [
+        "graph_bfs",
+        "dp_iterative",
+        "queue"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "dp",
+        "multi_concept"
+      ]
+    },
+    {
+      "id": "market_variety",
+      "world": "world_05",
+      "tier": 4,
+      "mode": "build",
+      "family": "sliding_window",
+      "pattern": "longest_window_k_distinct",
+      "structure": "hash_map",
+      "secondary": [
+        "hash_map",
+        "nullable_check"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "sliding_window",
+        "hash_map"
+      ]
+    },
+    {
+      "id": "matched_pair",
+      "world": "world_04",
+      "tier": 2,
+      "mode": "restricted",
+      "family": "two_pointers",
+      "pattern": "opposite_ends_pair_sum",
+      "structure": "array",
+      "secondary": [],
+      "performance": "restricted",
+      "concepts": [
+        "two_pointers"
+      ]
+    },
+    {
+      "id": "middle_car",
+      "world": "world_07",
+      "tier": 3,
+      "mode": "build",
+      "family": "linked_list_traversal",
+      "pattern": "fast_slow_middle",
+      "structure": "linked_list",
+      "secondary": [
+        "nullable_check",
+        "two_pointers"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "linked_list",
+        "fast_slow_pointers"
+      ]
+    },
+    {
+      "id": "nearest_depot",
+      "world": "world_10",
+      "tier": 4,
+      "mode": "budget",
+      "family": "graph_bfs",
+      "pattern": "multi_source_bfs",
+      "structure": "graph",
+      "secondary": [
+        "queue"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "graph",
+        "bfs"
+      ]
+    },
+    {
+      "id": "one_good_trade",
+      "world": "world_11",
+      "tier": 2,
+      "mode": "budget",
+      "family": "greedy",
+      "pattern": "running_min_profit",
+      "structure": "array",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "greedy"
+      ]
+    },
+    {
+      "id": "patchy_signal",
+      "world": "world_05",
+      "tier": 3,
+      "mode": "build",
+      "family": "sliding_window",
+      "pattern": "longest_window_at_most_k_bad",
+      "structure": "array",
+      "secondary": [
+        "two_pointers"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "sliding_window",
+        "two_pointers"
+      ]
+    },
+    {
+      "id": "quiet_street",
+      "world": "world_13",
+      "tier": 3,
+      "mode": "build",
+      "family": "dp_iterative",
+      "pattern": "take_or_skip",
+      "structure": "array",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "dp"
+      ]
+    },
+    {
+      "id": "quota_hours",
+      "world": "world_05",
+      "tier": 3,
+      "mode": "build",
+      "family": "sliding_window",
+      "pattern": "variable_window_shortest",
+      "structure": "array",
+      "secondary": [
+        "two_pointers"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "sliding_window",
+        "two_pointers"
+      ]
+    },
+    {
+      "id": "relay_towers",
+      "world": "world_06",
+      "tier": 3,
+      "mode": "build",
+      "family": "monotonic_stack",
+      "pattern": "next_greater_distance",
+      "structure": "stack",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "stack",
+        "monotonic_stack"
+      ]
+    },
+    {
+      "id": "reverse_train",
+      "world": "world_07",
+      "tier": 3,
+      "mode": "build",
+      "family": "linked_list_relink",
+      "pattern": "reverse_in_place",
+      "structure": "linked_list",
+      "secondary": [
+        "nullable_check"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "linked_list",
+        "relinking"
+      ]
+    },
+    {
+      "id": "rush_hour",
+      "world": "world_05",
+      "tier": 2,
+      "mode": "budget",
+      "family": "sliding_window",
+      "pattern": "fixed_window_max_sum",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "sliding_window"
+      ]
+    },
+    {
+      "id": "sealed_crates",
+      "world": "world_06",
+      "tier": 2,
+      "mode": "build",
+      "family": "stack",
+      "pattern": "matching_pairs_stack",
+      "structure": "stack",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "stack"
+      ]
+    },
+    {
+      "id": "shelf_totals",
+      "world": "world_02",
+      "tier": 3,
+      "mode": "budget",
+      "family": "prefix_sum",
+      "pattern": "prefix_sum_range_queries",
+      "structure": "array",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "arrays",
+        "prefix_sum"
+      ]
+    },
+    {
+      "id": "smallest_cart",
+      "world": "world_02",
+      "tier": 3,
+      "mode": "build",
+      "family": "binary_search",
+      "pattern": "binary_search_on_answer",
+      "structure": "array",
+      "secondary": [
+        "greedy"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "binary_search",
+        "binary_search_answer"
+      ]
+    },
+    {
+      "id": "sorted_grove",
+      "world": "world_08",
+      "tier": 4,
+      "mode": "build",
+      "family": "tree_traversal",
+      "pattern": "inorder_stack_check",
+      "structure": "tree",
+      "secondary": [
+        "stack",
+        "bst",
+        "nullable_check"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "tree",
+        "bst"
+      ]
+    },
+    {
+      "id": "task_order",
+      "world": "world_10",
+      "tier": 4,
+      "mode": "build",
+      "family": "topological_order",
+      "pattern": "kahn_cycle_check",
+      "structure": "graph",
+      "secondary": [
+        "queue",
+        "array_scan"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "topological_order"
+      ]
+    },
+    {
+      "id": "trail_sum",
+      "world": "world_08",
+      "tier": 4,
+      "mode": "build",
+      "family": "tree_traversal",
+      "pattern": "root_to_leaf_state",
+      "structure": "tree",
+      "secondary": [
+        "stack",
+        "nullable_check"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "tree",
+        "dfs"
+      ]
+    },
+    {
+      "id": "twin_beacons",
+      "world": "world_03",
+      "tier": 2,
+      "mode": "budget",
+      "family": "hash_set",
+      "pattern": "complement_lookup_first_pair",
+      "structure": "hash_set",
+      "secondary": [
+        "array_scan"
+      ],
+      "performance": "budget",
+      "concepts": [
+        "hash_set",
+        "complement_lookup"
+      ]
+    },
+    {
+      "id": "two_teams",
+      "world": "world_10",
+      "tier": 4,
+      "mode": "build",
+      "family": "graph_connectivity",
+      "pattern": "bfs_two_coloring",
+      "structure": "graph",
+      "secondary": [
+        "graph_bfs",
+        "queue"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "bfs"
+      ]
+    },
+    {
+      "id": "undo_button",
+      "world": "world_06",
+      "tier": 2,
+      "mode": "edge",
+      "family": "stack",
+      "pattern": "undo_history_stack",
+      "structure": "stack",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "stack"
+      ]
+    },
+    {
+      "id": "warm_readings",
+      "world": "world_01",
+      "tier": 1,
+      "mode": "build",
+      "family": "array_scan",
+      "pattern": "count_above_threshold",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
+      "id": "widest_basin",
+      "world": "world_04",
+      "tier": 4,
+      "mode": "optimize",
+      "family": "two_pointers",
+      "pattern": "shrink_shorter_side",
+      "structure": "array",
+      "secondary": [
+        "greedy"
+      ],
+      "performance": "optimization",
+      "concepts": [
+        "two_pointers",
+        "greedy_choice"
+      ]
+    },
+    {
+      "id": "widest_level",
+      "world": "world_08",
+      "tier": 4,
+      "mode": "build",
+      "family": "tree_traversal",
+      "pattern": "bfs_level_width",
+      "structure": "tree",
+      "secondary": [
+        "queue",
+        "array_scan",
+        "nullable_check"
+      ],
+      "performance": "correctness",
+      "concepts": [
+        "tree",
+        "bfs"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "area": "world",
+      "id": "world_01",
+      "have": 2,
+      "want": 12
+    },
+    {
+      "area": "tiers",
+      "id": "world_01",
+      "missing": [
+        2
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_02",
+      "have": 4,
+      "want": 30
+    },
+    {
+      "area": "tiers",
+      "id": "world_02",
+      "missing": [
+        1,
+        4
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_03",
+      "have": 4,
+      "want": 25
+    },
+    {
+      "area": "tiers",
+      "id": "world_03",
+      "missing": [
+        3
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_04",
+      "have": 2,
+      "want": 20
+    },
+    {
+      "area": "tiers",
+      "id": "world_04",
+      "missing": [
+        3
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_05",
+      "have": 4,
+      "want": 20
+    },
+    {
+      "area": "tiers",
+      "id": "world_05",
+      "missing": [
+        5
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_06",
+      "have": 4,
+      "want": 25
+    },
+    {
+      "area": "tiers",
+      "id": "world_06",
+      "missing": [
+        4
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_07",
+      "have": 4,
+      "want": 20
+    },
+    {
+      "area": "tiers",
+      "id": "world_07",
+      "missing": [
+        2
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_08",
+      "have": 4,
+      "want": 30
+    },
+    {
+      "area": "tiers",
+      "id": "world_08",
+      "missing": [
+        2,
+        5
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_09",
+      "have": 0,
+      "want": 15,
+      "note": "blocked by the language: heap"
+    },
+    {
+      "area": "tiers",
+      "id": "world_09",
+      "missing": [
+        3,
+        4,
+        5
+      ],
+      "note": "blocked by the language: heap"
+    },
+    {
+      "area": "world",
+      "id": "world_10",
+      "have": 5,
+      "want": 30
+    },
+    {
+      "area": "tiers",
+      "id": "world_10",
+      "missing": [
+        2,
+        5
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_11",
+      "have": 2,
+      "want": 20
+    },
+    {
+      "area": "tiers",
+      "id": "world_11",
+      "missing": [
+        3
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_12",
+      "have": 0,
+      "want": 15,
+      "note": "blocked by the language: backtracking"
+    },
+    {
+      "area": "tiers",
+      "id": "world_12",
+      "missing": [
+        3,
+        4,
+        5
+      ],
+      "note": "blocked by the language: backtracking"
+    },
+    {
+      "area": "world",
+      "id": "world_13",
+      "have": 2,
+      "want": 30
+    },
+    {
+      "area": "tiers",
+      "id": "world_13",
+      "missing": [
+        2,
+        5
+      ]
+    },
+    {
+      "area": "world",
+      "id": "world_14",
+      "have": 1,
+      "want": 8
+    },
+    {
+      "area": "tiers",
+      "id": "world_14",
+      "missing": [
+        4
+      ]
+    },
+    {
+      "area": "family",
+      "id": "array_scan",
+      "have": 2,
+      "want": 12
+    },
+    {
+      "area": "family",
+      "id": "prefix_sum",
+      "have": 2,
+      "want": 8
+    },
+    {
+      "area": "family",
+      "id": "binary_search",
+      "have": 2,
+      "want": 10
+    },
+    {
+      "area": "family",
+      "id": "hash_map",
+      "have": 2,
+      "want": 12
+    },
+    {
+      "area": "family",
+      "id": "hash_set",
+      "have": 2,
+      "want": 8
+    },
+    {
+      "area": "family",
+      "id": "two_pointers",
+      "have": 2,
+      "want": 15
+    },
+    {
+      "area": "family",
+      "id": "sliding_window",
+      "have": 4,
+      "want": 15
+    },
+    {
+      "area": "family",
+      "id": "stack",
+      "have": 2,
+      "want": 10
+    },
+    {
+      "area": "family",
+      "id": "monotonic_stack",
+      "have": 2,
+      "want": 8
+    },
+    {
+      "area": "family",
+      "id": "queue",
+      "have": 0,
+      "want": 6
+    },
+    {
+      "area": "family",
+      "id": "monotonic_deque",
+      "have": 0,
+      "want": 4
+    },
+    {
+      "area": "family",
+      "id": "linked_list_traversal",
+      "have": 2,
+      "want": 10
+    },
+    {
+      "area": "family",
+      "id": "linked_list_relink",
+      "have": 2,
+      "want": 10
+    },
+    {
+      "area": "family",
+      "id": "tree_traversal",
+      "have": 4,
+      "want": 25
+    },
+    {
+      "area": "family",
+      "id": "graph_bfs",
+      "have": 2,
+      "want": 10
+    },
+    {
+      "area": "family",
+      "id": "graph_dfs_iterative",
+      "have": 0,
+      "want": 6
+    },
+    {
+      "area": "family",
+      "id": "graph_connectivity",
+      "have": 2,
+      "want": 8
+    },
+    {
+      "area": "family",
+      "id": "topological_order",
+      "have": 1,
+      "want": 4
+    },
+    {
+      "area": "family",
+      "id": "greedy",
+      "have": 2,
+      "want": 20
+    },
+    {
+      "area": "family",
+      "id": "dp_iterative",
+      "have": 2,
+      "want": 20
+    },
+    {
+      "area": "family",
+      "id": "dp_grid",
+      "have": 0,
+      "want": 8
+    },
+    {
+      "area": "family",
+      "id": "multi_concept",
+      "have": 1,
+      "want": 8
+    },
+    {
+      "area": "family",
+      "id": "heap",
+      "have": 0,
+      "want": 15,
+      "note": "blocked by the language"
+    },
+    {
+      "area": "family",
+      "id": "backtracking",
+      "have": 0,
+      "want": 15,
+      "note": "blocked by the language"
+    },
+    {
+      "area": "family",
+      "id": "weighted_shortest_path",
+      "have": 0,
+      "want": 5,
+      "note": "blocked by the language"
+    },
+    {
+      "area": "mode",
+      "id": "build",
+      "have": 28,
+      "want": 150
+    },
+    {
+      "area": "mode",
+      "id": "budget",
+      "have": 6,
+      "want": 30
+    },
+    {
+      "area": "mode",
+      "id": "optimize",
+      "have": 1,
+      "want": 20
+    },
+    {
+      "area": "mode",
+      "id": "restricted",
+      "have": 1,
+      "want": 15
+    },
+    {
+      "area": "mode",
+      "id": "edge",
+      "have": 2,
+      "want": 20
+    },
+    {
+      "area": "mode",
+      "id": "complete",
+      "have": 0,
+      "want": 20,
+      "note": "blocked: Needs a starter program: the schema and the editor have none yet."
+    },
+    {
+      "area": "mode",
+      "id": "repair",
+      "have": 0,
+      "want": 20,
+      "note": "blocked: Needs a starter (buggy) program: the schema and the editor have none yet."
+    },
+    {
+      "area": "mode",
+      "id": "trace",
+      "have": 0,
+      "want": 10,
+      "note": "blocked: Needs a step-through view of a given program; there is no player trace UI."
+    },
+    {
+      "area": "mode",
+      "id": "predict",
+      "have": 0,
+      "want": 10,
+      "note": "blocked: Needs a given program and an answer input; there is no predict UI."
+    }
+  ]
+}

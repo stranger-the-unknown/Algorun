@@ -1,0 +1,46 @@
+{
+  "puzzle": "warm_readings",
+  "notes": "One pass with a counter. The hidden cases hold readings exactly at the limit, which a 'greater or equal' test miscounts.",
+  "spec": {"family": "array_scan", "pattern": "count_above_threshold", "structure": "array", "secondary": [], "performance": "correctness", "traps": ["readings equal to the limit do not count", "an empty log", "negative readings"], "oracle": "warm_readings"},
+  "metrics": {"blocks": 11, "ops": 1080, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "variables": {"readings": "array<num>", "limit": "num", "count": "num", "r": "num"},
+    "entryIds": ["set_2", "foreach_9", "return_11"],
+    "blocks": {
+      "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "count"}},
+      "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "readings"}},
+      "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "r"}},
+      "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "limit"}},
+      "gt_6": {"id": "gt_6", "catalogId": "cmp.gt", "slots": {"left": {"ref": "get_4"}, "right": {"ref": "get_5"}}},
+      "inc_7": {"id": "inc_7", "catalogId": "var.inc", "literals": {"name": "count"}},
+      "if_8": {"id": "if_8", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "gt_6"}, "then": {"list": ["inc_7"]}}},
+      "foreach_9": {"id": "foreach_9", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_3"}, "body": {"list": ["if_8"]}}, "literals": {"name": "r"}},
+      "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "count"}},
+      "return_11": {"id": "return_11", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_10"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "count readings at the limit too",
+      "expect": "wrongAnswer",
+      "graph": {
+        "variables": {"readings": "array<num>", "limit": "num", "count": "num", "r": "num"},
+        "entryIds": ["set_2", "foreach_9", "return_11"],
+        "blocks": {
+          "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+          "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "count"}},
+          "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "readings"}},
+          "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "r"}},
+          "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "limit"}},
+          "ge_6": {"id": "ge_6", "catalogId": "cmp.ge", "slots": {"left": {"ref": "get_4"}, "right": {"ref": "get_5"}}},
+          "inc_7": {"id": "inc_7", "catalogId": "var.inc", "literals": {"name": "count"}},
+          "if_8": {"id": "if_8", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "ge_6"}, "then": {"list": ["inc_7"]}}},
+          "foreach_9": {"id": "foreach_9", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_3"}, "body": {"list": ["if_8"]}}, "literals": {"name": "r"}},
+          "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "count"}},
+          "return_11": {"id": "return_11", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_10"}}}
+        }
+      }
+    }
+  ]
+}

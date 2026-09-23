@@ -1,0 +1,116 @@
+{
+  "worlds": [
+    {
+      "id": "world_01",
+      "title": "Foundations",
+      "index": 1,
+      "concepts": ["variables", "control"],
+      "prerequisites": [],
+      "puzzles": []
+    },
+    {
+      "id": "world_02",
+      "title": "Arrays",
+      "index": 2,
+      "concepts": ["arrays", "prefix_sum", "binary_search"],
+      "prerequisites": ["variables"],
+      "puzzles": ["smallest_cart"]
+    },
+    {
+      "id": "world_03",
+      "title": "Hash Maps",
+      "index": 3,
+      "concepts": ["hash_map"],
+      "prerequisites": ["arrays"],
+      "puzzles": ["twin_beacons"]
+    },
+    {
+      "id": "world_04",
+      "title": "Two Pointers",
+      "index": 4,
+      "concepts": ["two_pointers"],
+      "prerequisites": ["arrays"],
+      "puzzles": []
+    },
+    {
+      "id": "world_05",
+      "title": "Sliding Window",
+      "index": 5,
+      "concepts": ["sliding_window"],
+      "prerequisites": ["two_pointers"],
+      "puzzles": ["quota_hours"]
+    },
+    {
+      "id": "world_06",
+      "title": "Stack & Queue",
+      "index": 6,
+      "concepts": ["stack", "queue"],
+      "prerequisites": ["arrays"],
+      "puzzles": ["relay_towers"]
+    },
+    {
+      "id": "world_07",
+      "title": "Linked Lists",
+      "index": 7,
+      "concepts": ["linked_list"],
+      "prerequisites": ["stack"],
+      "puzzles": []
+    },
+    {
+      "id": "world_08",
+      "title": "Trees",
+      "index": 8,
+      "concepts": ["tree", "bst"],
+      "prerequisites": ["linked_list"],
+      "puzzles": []
+    },
+    {
+      "id": "world_09",
+      "title": "Heaps",
+      "index": 9,
+      "concepts": ["heap"],
+      "prerequisites": ["tree"],
+      "puzzles": []
+    },
+    {
+      "id": "world_10",
+      "title": "Graphs",
+      "index": 10,
+      "concepts": ["graph", "bfs", "dfs"],
+      "prerequisites": ["tree"],
+      "puzzles": ["fewest_rides"]
+    },
+    {
+      "id": "world_11",
+      "title": "Greedy",
+      "index": 11,
+      "concepts": ["greedy"],
+      "prerequisites": ["arrays"],
+      "puzzles": []
+    },
+    {
+      "id": "world_12",
+      "title": "Backtracking",
+      "index": 12,
+      "concepts": ["backtracking"],
+      "prerequisites": ["recursion"],
+      "puzzles": []
+    },
+    {
+      "id": "world_13",
+      "title": "Dynamic Programming",
+      "index": 13,
+      "concepts": ["dp"],
+      "prerequisites": ["recursion"],
+      "puzzles": []
+    },
+    {
+      "id": "world_14",
+      "title": "Advanced Algorithms",
+      "index": 14,
+      "concepts": ["multi_concept"],
+      "prerequisites": ["dp", "graph"],
+      "puzzles": []
+    }
+  ]
+}

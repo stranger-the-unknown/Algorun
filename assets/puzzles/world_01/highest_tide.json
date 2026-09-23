@@ -1,0 +1,80 @@
+{
+  "id": "highest_tide",
+  "version": 1,
+  "title": "Highest Tide",
+  "world": "world_01",
+  "chapter": "first_position_of_maximum",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "A harbour gauge measures the tide at regular intervals through the day. Report the position, counting from 0, of the highest measurement. If the highest level was reached more than once, the harbour wants the earliest time. With no measurements at all, report -1.",
+  "io": {
+    "inputs": [
+      {"name": "tides", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 300},
+    "notes": ["Levels are whole numbers from -300 to 300."]
+  },
+  "blocks": {"allow": ["arr.get", "arr.len", "cmp.eq", "cmp.ge", "cmp.gt", "ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "logic.and", "logic.or", "var.get", "var.set"], "maxBlocks": 30},
+  "limits": {"maxOps": 5000, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Keep the position of the best measurement seen so far, and compare each new one with it.", "Before anything has been seen there is no best yet; -1 can stand for that, and it is also the answer for an empty day.", "Only replace the best when a measurement is strictly higher, so the earliest of equal highs stays."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"tides": [3, 8, 5, 1]},
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {"tides": [-4, -2, -7]},
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "no_measurements",
+        "in": {"tides": []},
+        "out": -1
+      },
+      {
+        "id": "one_measurement",
+        "in": {"tides": [12]},
+        "out": 0
+      },
+      {
+        "id": "tied_highs",
+        "in": {"tides": [5, 9, 2, 9, 9]},
+        "out": 1
+      },
+      {
+        "id": "highest_last",
+        "in": {"tides": [1, 2, 3, 4]},
+        "out": 3
+      },
+      {
+        "id": "all_equal",
+        "in": {"tides": [6, 6, 6]},
+        "out": 0
+      },
+      {
+        "id": "long_day",
+        "in": {"tides": [-149, 66, -127, 267, -114, 93, -1, 139, 279, 295, -256, 242, 256, 232, -111, 86, 152, -68, 222, -169, -214, -246, -112, 289, 152, 213, -73, 243, 238, -152, 202, 121, 190, -230, -48, -206, 40, 86, -101, 222, 137, 141, 107, -164, -129, 72, -88, -227, -58, 1, 143, -170, 271, 151, -27, 23, 181, 249, 157, 223, -88, 100, -50, -91, 255, -134, 246, 78, 240, -251, 107, -178, 185, -124, 14, -226, 235, 93, -40, 125, -124, -82, 22, 158, -105, -140, -74, 228, 124, -160, -154, 191, 244, -65, -290, -218, -53, 98, -18, -147, -182, -179, -146, -296, 127, -20, 25, -27, 155, 124, -51, 140, -108, 4, -94, -278, 176, -108, 173, 285, -88, -68, -35, -205, -126, 99, 180, -158, -293, -40, -18, 116, -76, -111, 137, -59, -138, -226, -175, 186, -185, -140, -20, -133, -109, -239, -107, -155, -161, 162, 112, 193, -224, 49, 256, -163, 179, 164, -46, -159, -291, -33, 296, -13, 269, -146, 195, -100, -232, -208, 271, -93, 155, -269, -37, 218, 192, 269, 293, -134, 182, -41, -21, -199, -112, -35, 266, -219, -193, -176, -89, -144, -231, -119, 106, -67, 131, -163, 46, 183, -19, 66, -33, 157, -55, -87, 195, -90, 102, -189, -259, 47, 55, 198, 249, -210, -245, 166, -84, -282, 163, -274, -185, 7, 241, -278, -243, 183, 100, -239, 151, -99, 159, 88, -64, -40, 30, -113, -17, -98, -186, -93, -10, -213, -184, 266, -29, -4, 226, -103, -89, -218, -276, -122, 257, -76, -57, -22, -298, -90, 149, 111, -50, 299, -126, 109, 202, 224, -290, 249, -277, 146, -11, 215, -234, 235, -57, 41, 129, -201, 111, -219, 133, -215, 211, 181, -61, 75, -285, -197, 1, -289, 32, 205, 222, -260, -114, -104, -90, 93]},
+        "out": 263
+      }
+    ]
+  },
+  "edgeCases": ["no measurements", "several equal highest levels", "negative levels"],
+  "variables": {
+    "pool": [
+      {"name": "best", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "first_argmax"}
+}

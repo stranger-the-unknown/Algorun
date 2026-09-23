@@ -3,8 +3,8 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current milestone: 11 COMPLETE (progression, local persistence, save and resume — on the device only).**
-**Next milestone: 12 — MS12 is next (large original content), see the roadmap.**
+**Current milestone: 12 COMPLETE (content pipeline with independent oracles, progression reachability, coverage and redundancy checks; 33 new puzzles — 38 in the campaign).**
+**Next milestone: 13 — Mobile UX polish per the roadmap, or a further content batch through the MS12 pipeline; the user decides.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
 Do not change the architecture.
@@ -15,8 +15,9 @@ MS7 `7d689dca871b33e58de23c2879d296aff6e74553`,
 MS8 `9b005b88cc1953b9b629f890697746ffccca2939`,
 MS9 `2be68bde64fc537c9a8e211c52d355a6d0c31d52`,
 MS10 `c192118c079e73c8ff78b7fa71d00adf0285959a`,
-L1 `d850525b2869271381356b27227e42648476192f`, MS11 — see `git log` (the commit
-titled "Milestone 11: progression and local persistence").
+L1 `d850525b2869271381356b27227e42648476192f`,
+MS11 `033f3ec63dc137e1b74a7b2b20d2233da0fe3da8`, MS12 — see `git log` (the
+commit titled "Milestone 12: scalable puzzle content pipeline and expansion").
 
 ---
 
@@ -25,8 +26,9 @@ titled "Milestone 11: progression and local persistence").
 Working title: **Algorun**. Android-first Flutter/Dart algorithm puzzle game.
 
 The player constructs algorithms with Scratch-style typed visual blocks. No
-syntax. No eval of generated Dart/JS/Kotlin. The game ships five real Medium-level
-puzzles (MS8); campaign difficulty rises to Medium/Hard later.
+syntax. No eval of generated Dart/JS/Kotlin. The game ships 38 campaign puzzles
+in 12 worlds (five from MS8, 33 from MS12), tiers 1–5; the campaign keeps
+growing through the MS12 content pipeline.
 
 There is **no TypeScript / React / web product codebase**. Flutter web exists
 only as a host preview of the same Dart app.
@@ -43,6 +45,7 @@ only as a host preview of the same Dart app.
 8. Stay on Flutter/Dart.
 9. *(MS7)* Puzzle JSON is data only. Validators are registry names; fixtures are canonical values; nothing in content is ever executed.
 10. *(MS8)* Every puzzle a player can reach is proven solvable by a reference solution: a `BlockGraph` stored as data in `content/references/`, never bundled and never shown in the UI, which the content validator builds, lowers and runs through the real `TestRunner`.
+11. *(MS12)* Content is an untrusted candidate until the pipeline accepts it at all seven levels. Every campaign puzzle has a `spec` and an independent oracle in the offline tooling; a disagreement between oracle, fixtures and reference fails the puzzle, and an expected answer is never changed to match a reference.
 
 Full lock text: [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
@@ -82,14 +85,15 @@ algorun/                          Flutter app (repository root)
     state/progress_providers.dart progressStoreProvider, campaignProvider, progressProvider (autosave), campaignViewProvider
     state/progress_text.dart      player wording for locks and statuses
   assets/                         bundled with the app
-    worlds.json                   14 worlds; 02, 03, 05, 06 and 10 have puzzles
-    puzzles/world_01/             ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe (unlisted dev probes)
-    puzzles/world_02/             smallest_cart
-    puzzles/world_03/             twin_beacons
-    puzzles/world_05/             quota_hours
-    puzzles/world_06/             relay_towers
-    puzzles/world_10/             fewest_rides
-  content/references/<world>/<id>.json   reference solutions: offline only, NOT bundled
+    worlds.json                   14 worlds, 38 puzzles; 09 (heaps) and 12 (backtracking) have none
+    puzzles/world_01/             warm_readings, highest_tide + ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe (unlisted dev probes)
+    puzzles/world_02 … world_14/  the campaign puzzles (list: "Content backlog and coverage")
+  content/                        offline only, NOT bundled
+    references/<world>/<id>.json  reference solutions + spec + metrics + rejects
+    capabilities.json             language capability audit: families and modes (MS12)
+    coverage_targets.json         planning targets (~300 puzzles) per world, family, mode (MS12)
+    coverage.json                 generated coverage matrix and gaps (MS12, committed)
+    templates/                    authoring request + a worked candidate (MS12)
   packages/
     algorun_engine/               pure Dart, no Flutter
       lib/src/ast/                ir.dart (typed IR), lower.dart
@@ -97,13 +101,25 @@ algorun/                          Flutter app (repository root)
       lib/src/blocks/narrowing.dart       Narrowing: where a value that may be empty is known to hold something (L1)
       lib/src/execution/          AlgorunEngine, DefaultEngine, Interpreter, results
       lib/src/puzzles/            parse.dart (THE schema), puzzle.dart, world.dart
+      lib/src/puzzles/progression.dart    evaluateUnlocks: THE unlock rules (MS11 rules, moved here in MS12)
       lib/src/runner/             TestRunner, validator registry
       lib/src/runtime/            RuntimeValue, value_json.dart (fixture format), limits
       lib/src/types/              ValueType + parser
       lib/src/execution/performance.dart  BudgetOverrun, SuitePerformance (MS10)
       lib/src/runner/benchmark.dart       measureCase, benchmark, PerformanceReport (MS10)
-      test/                       341 tests
-    algorun_content/              offline validator, reference checker, editor replay, CLI
+      test/                       347 tests
+    algorun_content/              offline content pipeline (MS12), CLI bin/validate.dart
+      lib/src/content_validator.dart      orchestration, per-puzzle verdicts
+      lib/src/reference_check.dart        levels 1–5 per reference (spec, capabilities, replay, runs, oracle, budgets)
+      lib/src/editor_replay.dart          reference rebuilt with the editor's commands
+      lib/src/content_spec.dart           spec, performance classes, capability audit
+      lib/src/oracles/                    Oracle framework + one independent oracle per campaign puzzle
+      lib/src/progression_check.dart      level 6: reachability, cycles, unlearnable prerequisites
+      lib/src/redundancy.dart             level 7: fingerprints, near duplicates
+      lib/src/coverage.dart               level 7: coverage matrix and gaps
+      lib/src/difficulty.dart             level 7: difficulty signals and advice
+      lib/src/content_issue.dart          ContentIssue, Level, PuzzleVerdict, ContentReport
+      test/                       82 tests
   docs/                           architecture + per-milestone notes
   test/widget_test.dart           Flutter editor / picker / RUN tests
   test/real_puzzles_test.dart     the five real puzzles through the bundle and RUN
@@ -113,6 +129,8 @@ algorun/                          Flutter app (repository root)
   test/nullable_editor_test.dart  IS NOT NOTHING in the editor, the picker and RUN (L1)
   test/progress/                  save format, progression, best results, sessions (MS11, no widgets)
   test/progression_ui_test.dart   fresh install, locks, CONTINUE, restore, RUN completing a puzzle, settings (MS11)
+  test/campaign_test.dart         the shipped campaign: every puzzle reachable, the unlock order (MS12)
+  test/fixtures/ms11_worlds.json  the MS11 manifest, frozen: the MS11 rule tests run against it
   test/support/                   shared test helpers (campaign from files, progress fixtures)
   lib/state/performance_text.dart player wording for budgets (MS10)
 ```
@@ -457,10 +475,14 @@ mastered or the player already solved one of its puzzles; it completes when
 open and every listed puzzle is solved (a world with no puzzles completes as
 it opens); a complete world masters its concepts; a puzzle opens when its
 world is open and its own prerequisites are mastered or taught by its world.
-Applied to a fixpoint. Fresh install: Arrays (The Smallest Cart) is open;
-solving it opens Hash Maps, Sliding Window (via the empty Two Pointers) and
-Stack & Queue; Relay Towers opens Graphs (via the empty Linked Lists and
-Trees).
+Applied to a fixpoint. Since MS12 the rules are one pure engine function,
+`evaluateUnlocks` (`packages/algorun_engine/lib/src/puzzles/progression.dart`),
+which the app's `evaluateCampaign` and the content validator (level 6) both
+call. Fresh install (MS12 campaign): Foundations is open; completing it opens
+Arrays; Arrays opens Hash Maps, Two Pointers, Stack & Queue and Greedy; Two
+Pointers opens Sliding Window; Stack & Queue → Linked Lists → Trees → Heaps
+(empty) and Graphs; Greedy → Dynamic Programming; DP + Graphs → Advanced.
+Backtracking waits for `recursion`, which nothing teaches.
 
 **Completion rule.** A RUN completes its puzzle exactly when
 `suite.kind == ResultKind.correct` — every case right within every budget.
@@ -506,34 +528,82 @@ brief preference, Reset progress (confirmed).
 
 Details: [`MILESTONE_11.md`](MILESTONE_11.md).
 
+### Content pipeline (MS12)
+
+Every candidate puzzle (hand-written or AI-drafted) is untrusted until
+`bin/validate.dart` accepts it at all seven levels — **L1 schema** (closed
+schema, manifest, reference file, `spec`), **L2 blocks** (allowlist, budget,
+capability audit of family and mode), **L3 replay** (rebuilt through the
+editor's commands, lowered), **L4 execution** (every case through the real
+`TestRunner`; rejects in their verdicts; oracle ↔ every fixture; oracle ↔
+reference on 40 seeded random inputs; hidden cases not copies of visible
+ones), **L5 performance** (budgets, recorded metrics, baselines, performance
+class), **L6 progression** (reachability under `evaluateUnlocks`, cycles,
+unlearnable prerequisites, order), **L7 corpus** (near duplicates, difficulty
+advice, coverage gaps). The CLI prints a level on every finding, `ACCEPTED` /
+`REJECTED … at L# name` per puzzle and a `PIPELINE` summary line.
+
+- **Spec** (in the reference file): `family`, `pattern`, `structure`,
+  `secondary`, `performance` (`correctness | budget | optimization |
+  restricted`, must match the puzzle), `traps`, `oracle`. Required for every
+  listed puzzle.
+- **Oracles** (`packages/algorun_content/lib/src/oracles/`, registry in
+  `registry.dart`): Dart `solve(input JSON) → output JSON` + `sample(Random)`,
+  deliberately not the reference's algorithm (brute force, Bellman-Ford,
+  union-find, recursion, the fixture's own `cycleTo`). The validator never
+  changes an expected answer.
+- **Redundancy**: fingerprint = pattern, io signature, concepts, statement
+  skeleton, block histogram. Near duplicate (error on the later puzzle):
+  same io and (same pattern with same skeleton or ≥ 80 % similar, or same
+  skeleton + concepts and ≥ 90 % similar under any pattern name). Related
+  (info): same pattern or skeleton or ≥ 80 %.
+- **Difficulty**: half-point signals (blocks, loop nesting, structures the
+  program builds, state variables, concepts, a budget); warns only on a
+  two-tier mismatch or a trivial tier 4–5.
+- **Capability audit**: `content/capabilities.json` — families and modes as
+  supported / partial / blocked, enforced at L2.
+- **Coverage**: `--coverage content/coverage.json` writes the matrix
+  (by world, tier, mode, structure, family, performance class, concept, and
+  every puzzle's metadata) and gaps against `content/coverage_targets.json`;
+  a test fails when the committed file is stale.
+
+Authoring contract for people and AI sessions:
+[`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md). Details:
+[`MILESTONE_12.md`](MILESTONE_12.md).
+
 ### Editor (MS3) — do not regress
 
 Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
 
-## Test results at MS11 closeout
+## Test results at MS12 closeout
 
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **341 passed** |
+| `packages/algorun_engine` `dart test` | **347 passed** |
 | `packages/algorun_content` `dart analyze` | no issues |
-| `packages/algorun_content` `dart test` | **46 passed** |
-| Content validator (assets + worlds + references) | `OK 9 puzzle(s), 6 warning(s)` + 7 INFO lines |
+| `packages/algorun_content` `dart test` | **82 passed** |
+| Content validator (assets + worlds + references) | `PIPELINE 38 of 38 campaign puzzle(s) accepted, 4 probe(s) checked` · `OK 42 puzzle(s), 6 warning(s)` |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **111 passed** |
+| Flutter `test` | **114 passed** |
+| `flutter build apk --debug` | built |
 
 Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (26), MS7 codec
 (40), schema (41), FLOOR DIVIDE (14), MS8 shipped puzzles (30), MS10
-performance (17), L1 values that may be empty (44), contract tests. Content:
-shipped set with references, every reference rule, reference metrics and
-performance rules, hint leak warnings, CLI, the two L1 probes end to end. App:
-editor, picker, RUN, results, the five real puzzles, hints, budget wording,
-IS NOT NOTHING in the editor; MS11 save format (22), progression and best
+performance (17), L1 values that may be empty (44), MS12 unlock rules (6),
+contract tests. Content: shipped set with references, every reference rule,
+reference metrics and performance rules, hint leak warnings, CLI, the two L1
+probes end to end; MS12 pipeline (36: every level's failure modes, the
+shipped corpus accepted, coverage file up to date, one oracle per puzzle).
+App: editor, picker, RUN, results, the MS8 puzzles, hints, budget wording, IS
+NOT NOTHING in the editor; MS11 save format (22), progression and best
 results (18), sessions and autosave (9), purity guards (2), progression UI
-(10).
+(10) — against the frozen MS11 manifest; the MS12 campaign (3).
 
-The six warnings are known and deliberate: worlds 12 and 13 require
-`recursion` (no world teaches it yet), and the four dev probes are unlisted.
+The six warnings are known and deliberate: Backtracking (world 12) requires
+`recursion`, which no world teaches (the world has no puzzles; two warnings:
+it never opens, and the prerequisite is untaught), and the four dev probes
+are unlisted.
 
 **Widget tests and assets:** load the campaign from the repository files
 (`test/support/campaign_files.dart`), never through `rootBundle` inside a
@@ -546,11 +616,13 @@ test waits on it forever.
 
 - **Narrowing is deliberately small (L1).** No narrowing through OR / NOT or after an IF whose THEN always returns (use IF / ELSE); assigning a real value does not narrow (check again); only plain variables narrow. The editor checks each drop where it is made, so an edit elsewhere can invalidate an earlier drop — lowering reports it before RUN. RETURN is still not checked against the puzzle's output type. Tree traversal beyond one path needs a queue or stack of nodes until recursion exists.
 - **Hints are a metric only.** `hintsUsed` is shown and kept per run (`lastRun`, `best`) but never scored and never blocks anything; revealed hints are not persisted (MS9, MS11).
-- **Progression is deliberately simple (MS11).** A world completes only when every listed puzzle is solved (no mastery threshold yet); inconsistent content (a puzzle needing a concept only a later world teaches) can deadlock and is not yet caught by the validator; an edit less than 800 ms before a kill without a lifecycle event is lost; one save slot, no export, no per-puzzle reset; the campaign loads every listed puzzle at start-up; unreadable-save copies are never cleaned up; web does not persist.
+- **Progression is deliberately simple (MS11).** A world completes only when every listed puzzle is solved (no mastery threshold yet — worlds with 20–30 puzzles will want one); inconsistent content that would deadlock is caught by the validator since MS12 (level 6); an edit less than 800 ms before a kill without a lifecycle event is lost; one save slot, no export, no per-puzzle reset; the campaign loads every listed puzzle at start-up; unreadable-save copies are never cleaned up; web does not persist.
 - **Performance is counted, not scored.** No stars or scores read the budgets yet. A hopeless solution is only known to be "still running" at the measurement ceiling; its correctness beyond it is not claimed. Memory and depth have no overrun measurement. There is no fixture generator: size profiles are explicit fixtures with optional per-case `maxOps` (MS10).
-- **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale.
-- **No random test generation.** A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
-- **World prerequisites.** Worlds 12 and 13 require `recursion`, which no world teaches (warning).
+- **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale. MS12 authoring used scratch scripts outside the repository.
+- **Random inputs are for checking only (MS12).** Oracles sample small inputs to compare with the reference; nothing generates shipped fixtures. A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
+- **Content pipeline limits (MS12).** Redundancy relies on an honest `pattern` plus program structure — a differently programmed restatement can pass as "related". Oracles are hand-written per puzzle and only as independent as their author made them; sampled inputs are small. Coverage targets are a plan; difficulty advice is a heuristic.
+- **Modes without a UI.** complete, repair, trace, predict, structure and ops need a starter program or an answer input the schema and editor do not have; every shipped puzzle is build-style in its mode (build, budget, optimize, restricted, edge).
+- **World prerequisites.** Backtracking (world 12) requires `recursion`, which no world teaches (warning). Dynamic Programming now requires `greedy` (MS12; its puzzles are iterative).
 
 ### Other
 
@@ -568,7 +640,7 @@ test waits on it forever.
 
 ## Exact commands
 
-From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS11 closeout: Flutter 3.47.2, Dart 3.13.2.
+From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS12 closeout: Flutter 3.47.2, Dart 3.13.2.
 
 ```bash
 flutter pub get
@@ -578,7 +650,7 @@ cd packages/algorun_engine && dart analyze && dart test && cd ../..
 
 # Content
 cd packages/algorun_content && dart analyze && dart test && cd ../..
-dart run packages/algorun_content/bin/validate.dart assets/puzzles assets/worlds.json content/references
+dart run packages/algorun_content/bin/validate.dart assets/puzzles assets/worlds.json content/references --coverage content/coverage.json
 
 # App
 flutter analyze
@@ -588,8 +660,11 @@ flutter run          # Android device/emulator
 
 Every new or edited puzzle must pass the content validator — with the
 references directory — before it is committed under `assets/puzzles`. A new
-playable puzzle needs a reference file in `content/references/` and a world
-listing it; its folder must be in `pubspec.yaml` to ship.
+playable puzzle needs a reference file with a `spec` in `content/references/`,
+an oracle registered in `packages/algorun_content/lib/src/oracles/registry.dart`
+and a world listing it; its folder must be in `pubspec.yaml` to ship. Commit
+`content/coverage.json` regenerated (`--coverage`). Full procedure:
+[`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md).
 
 Do not add a TypeScript app. Do not eval generated source. Do not start one milestone from another milestone's request.
 
@@ -600,25 +675,72 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | 1–10 | skeleton → typed blocks → editor → lowering → interpreter → test runner → schema → five puzzles → hints → performance metrics | complete |
 | L1 | Language: values that may be empty, IS NOTHING / IS NOT NOTHING, narrowing | complete |
 | 11 | Progression + local save | complete |
-| **12** | **Large original content** | **next** — tree / linked-list / counting-map content is expressible (L1) and progression is live (MS11) |
-| 13 | Mobile UX polish | planned |
+| 12 | Content pipeline (oracles, reachability, coverage, redundancy) + 33 new puzzles | complete |
+| **13** | **Mobile UX polish** | **next per the roadmap** — or first another content batch through the MS12 pipeline, as the user decides |
+| later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content (see the backlog) |
 
-## Milestone 12 contract (next — when asked)
+## Content backlog and coverage (MS12)
 
-Large original content, through the existing pipeline only.
+Accepted: **38 campaign puzzles** (+ 4 unlisted probes) against a planning
+target of ~300 (`content/coverage_targets.json`). Source of truth:
+`content/coverage.json` (regenerate with `--coverage`).
 
-- New puzzles are data: each passes the content validator with a reference
-  solution (editor replay, lowering, every case within budget) and its
-  rejects, and is listed by exactly one world. No engine change unless a
-  puzzle genuinely needs one, documented as its own step.
-- Fill the chapters that have no puzzles yet (two pointers, linked lists,
-  trees, heaps, greedy …) in the order the manifest's prerequisites define;
-  progression then unlocks them with no code change. Keep `concepts` /
-  `prerequisites` consistent so every puzzle stays reachable (consider a
-  validator check for it, and a per-world mastery threshold if worlds grow
-  large).
+| World | Puzzles (tier) | Have / target | Missing tiers |
+|---|---|---|---|
+| 01 Foundations | Warm Readings (1), Highest Tide (1) | 2 / 12 | 2 |
+| 02 Arrays | Lowest Balance (2), Shelf Totals (3), Departure Board (3), The Smallest Cart (3) | 4 / 30 | 1, 4 |
+| 03 Hash Maps | Twin Beacons (2), Loudest Echo (2), Level Stretches (4), Longest Streak (4) | 4 / 25 | 3 |
+| 04 Two Pointers | Matched Pair (2), Widest Basin (4) | 2 / 20 | 3 |
+| 05 Sliding Window | Rush Hour (2), Quota Hours (3), Patchy Signal (3), Market Variety (4) | 4 / 20 | 5 |
+| 06 Stack & Queue | Sealed Crates (2), Undo Button (2), Relay Towers (3), Largest Billboard (5) | 4 / 25 | 4 |
+| 07 Linked Lists | Middle Car (3), Reverse the Train (3), Drop the Faulty Cars (3), Loop Detector (4) | 4 / 20 | 2 |
+| 08 Trees | Canopy Height (3), Busiest Level (4), Trail Sum (4), Sorted Grove (4) | 4 / 30 | 2, 5 |
+| 09 Heaps | — | 0 / 15 | blocked by the language (heap) |
+| 10 Graphs | Fewest Rides (3), Island Count (3), Two Teams (4), Task Order (4), Nearest Depot (4) | 5 / 30 | 2, 5 |
+| 11 Greedy | One Good Trade (2), Fuel Loop (4) | 2 / 20 | 3 |
+| 12 Backtracking | — | 0 / 15 | blocked by the language (recursion) |
+| 13 Dynamic Programming | Quiet Street (3), Exact Change (4) | 2 / 30 | 2, 5 |
+| 14 Advanced | Many Shortest Routes (5) | 1 / 8 | 4 |
+
+By tier: 1: 2 · 2: 8 · 3: 13 · 4: 13 · 5: 2. By mode: build 28 · budget 6 ·
+edge 2 · optimize 1 · restricted 1. By performance class: correctness 21 ·
+budget 15 · optimization 1 · restricted 1. By structure: array 15 · graph 6 ·
+linked list 4 · stack 4 · tree 4 · hash map 3 · hash set 2. 38 distinct
+reasoning patterns; no near duplicates; two related pairs (Two Teams and
+Nearest Depot vs Fewest Rides).
+
+**Families with no puzzle yet (expressible today):** plain queue simulation,
+monotonic deque (partial: a list with a head index), iterative graph DFS,
+grid DP. Thin (1–2): topological order, multi-concept, prefix sum, binary
+search, hash set, two pointers, greedy, iterative DP, linked-list families.
+**Modes thin:** optimize (1 / 20), restricted (1 / 15), edge (2 / 20).
+
+**Blocked by the language (record ideas, do not fake them):** heaps / priority
+queues (world 09), recursion and backtracking (world 12), weighted shortest
+paths, building new list or tree nodes, strings, built-in sorting, bit
+manipulation, pairs / tuples. **Blocked by the product:** complete, repair,
+trace, predict, structure and ops modes (no starter program or answer UI);
+complexity mode by design.
+
+**Recommended next batches:** tier 2 entries for Linked Lists, Trees, Graphs
+and DP (the curve jumps from Foundations to tier 3 there); tier 3 for Hash
+Maps, Two Pointers and Greedy; iterative DFS, grid DP, queue simulation and
+a deque window; more optimize / restricted / edge puzzles; tier 5 capstones
+for Sliding Window, Trees, Graphs and DP.
+
+## Milestone 13 contract (next — when asked)
+
+Mobile UX polish, per the roadmap — or, if the user asks for content first, a
+further batch through the MS12 pipeline:
+
+- Content: every candidate goes through `CONTENT_AUTHORING.md` and must be
+  `ACCEPTED` at all seven levels, with an independent oracle; regenerate and
+  commit `content/coverage.json`; aim at the backlog's gaps; never weaken a
+  check or edit an expected answer to make a candidate pass.
 - Bump a puzzle's `version` for any incompatible change to a shipped puzzle
   (saved best results for it are then cleared, completion kept).
+- Do not change the unlock rules to make content pass; keep the MS11 rule
+  tests on the frozen manifest.
 - Keep every test green and the validator passing with references.
 
 ## Milestone docs
@@ -638,4 +760,6 @@ Large original content, through the existing pipeline only.
 | [`MILESTONE_10.md`](MILESTONE_10.md) | complete — deterministic performance metrics |
 | [`MILESTONE_L1.md`](MILESTONE_L1.md) | complete — values that may be empty and narrowing |
 | [`MILESTONE_11.md`](MILESTONE_11.md) | complete — progression and local persistence |
-| this file | MS11 handoff |
+| [`MILESTONE_12.md`](MILESTONE_12.md) | complete — content pipeline and first expansion batch |
+| [`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md) | the authoring contract (people and AI sessions) |
+| this file | MS12 handoff |

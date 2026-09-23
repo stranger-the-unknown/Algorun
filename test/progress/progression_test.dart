@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../support/campaign_files.dart';
 import '../support/progress_fixtures.dart';
 
-final _campaign = shippedCampaign();
+final _campaign = ms11Campaign();
 
 Puzzle _puzzle(String id) => _campaign.puzzles[id]!;
 

@@ -1,0 +1,90 @@
+{
+  "id": "exact_change",
+  "version": 1,
+  "title": "Exact Change",
+  "world": "world_13",
+  "chapter": "min_coins_table",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["dp"],
+  "prerequisites": ["greedy"],
+  "story": "A vending machine pays change using coins of a few values, listed from smallest to largest, with as many of each as it needs. What is the fewest number of coins that make exactly the amount? If the amount cannot be made at all, report -1. Grabbing the biggest coin first is tempting, and not always right.",
+  "io": {
+    "inputs": [
+      {"name": "coins", "type": "array<num>"},
+      {"name": "amount", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 6},
+    "notes": ["Coin values are different whole numbers from 1 to 100, smallest first.", "The amount is a whole number from 0 to 500."]
+  },
+  "blocks": {"allow": ["arith.add", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.or", "new.array", "var.get", "var.set"], "maxBlocks": 76},
+  "limits": {"maxOps": 150000, "maxDepth": 32, "maxAlloc": 2000},
+  "hints": ["Taking the biggest coin that fits, again and again, fails for some coin sets: with 1, 3 and 4, it pays 6 as 4+1+1 instead of 3+3.", "Work out the answer for every amount from 0 upwards. The amount 0 needs 0 coins.", "For an amount a, try each coin c that fits: one coin plus the best answer for a - c. Amounts that cannot be made stay -1 and are skipped."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"coins": [1, 5, 10], "amount": 27},
+        "out": 5
+      },
+      {
+        "id": "v2",
+        "in": {"coins": [2, 5], "amount": 3},
+        "out": -1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "greedy_takes_too_many",
+        "in": {"coins": [1, 3, 4], "amount": 6},
+        "out": 2
+      },
+      {
+        "id": "greedy_gets_stuck",
+        "in": {"coins": [2, 5], "amount": 6},
+        "out": 3
+      },
+      {
+        "id": "nothing_to_pay",
+        "in": {"coins": [3, 7], "amount": 0},
+        "out": 0
+      },
+      {
+        "id": "impossible",
+        "in": {"coins": [4, 6], "amount": 7},
+        "out": -1
+      },
+      {
+        "id": "single_coin",
+        "in": {"coins": [7], "amount": 49},
+        "out": 7
+      },
+      {
+        "id": "big_amount",
+        "in": {"coins": [1, 7, 23, 37, 41], "amount": 500},
+        "out": 14
+      },
+      {
+        "id": "big_amount_odd_coins",
+        "in": {"coins": [9, 14, 25], "amount": 499},
+        "out": 23
+      }
+    ]
+  },
+  "edgeCases": ["coin sets where the biggest coin first is wrong", "an amount of 0", "impossible amounts"],
+  "variables": {
+    "pool": [
+      {"name": "best", "type": "array<num>"},
+      {"name": "a", "type": "num"},
+      {"name": "c", "type": "num"},
+      {"name": "left", "type": "num"},
+      {"name": "used", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "min_coins_table"}
+}

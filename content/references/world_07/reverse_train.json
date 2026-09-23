@@ -1,0 +1,31 @@
+{
+  "puzzle": "reverse_train",
+  "notes": "Three names walk the chain: prev (the reversed part), node, after. SET NEXT through a checked node re-links it; nothing is copied because nothing can be.",
+  "spec": {"family": "linked_list_relink", "pattern": "reverse_in_place", "structure": "linked_list", "secondary": ["nullable_check"], "performance": "correctness", "traps": ["an empty track returns NOTHING", "the old front car must point to NOTHING", "remember the next car before recoupling"], "oracle": "reverse_train"},
+  "metrics": {"blocks": 19, "ops": 13009, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "variables": {"head": "listNode?", "prev": "listNode?", "node": "listNode?", "after": "listNode?"},
+    "entryIds": ["set_2", "set_4", "while_17", "return_19"],
+    "blocks": {
+      "null_1": {"id": "null_1", "catalogId": "lit.null"},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "null_1"}}, "literals": {"name": "prev"}},
+      "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "head"}},
+      "set_4": {"id": "set_4", "catalogId": "var.set", "slots": {"value": {"ref": "get_3"}}, "literals": {"name": "node"}},
+      "get_5": {"id": "get_5", "catalogId": "var.get", "literals": {"name": "node"}},
+      "is_not_nothing_6": {"id": "is_not_nothing_6", "catalogId": "logic.is_not_nothing", "slots": {"value": {"ref": "get_5"}}},
+      "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "node"}},
+      "next_8": {"id": "next_8", "catalogId": "ll.next", "slots": {"node": {"ref": "get_7"}}},
+      "set_9": {"id": "set_9", "catalogId": "var.set", "slots": {"value": {"ref": "next_8"}}, "literals": {"name": "after"}},
+      "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "node"}},
+      "get_11": {"id": "get_11", "catalogId": "var.get", "literals": {"name": "prev"}},
+      "set_next_12": {"id": "set_next_12", "catalogId": "ll.set_next", "slots": {"node": {"ref": "get_10"}, "next": {"ref": "get_11"}}},
+      "get_13": {"id": "get_13", "catalogId": "var.get", "literals": {"name": "node"}},
+      "set_14": {"id": "set_14", "catalogId": "var.set", "slots": {"value": {"ref": "get_13"}}, "literals": {"name": "prev"}},
+      "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "after"}},
+      "set_16": {"id": "set_16", "catalogId": "var.set", "slots": {"value": {"ref": "get_15"}}, "literals": {"name": "node"}},
+      "while_17": {"id": "while_17", "catalogId": "ctrl.while", "slots": {"condition": {"ref": "is_not_nothing_6"}, "body": {"list": ["set_9", "set_next_12", "set_14", "set_16"]}}},
+      "get_18": {"id": "get_18", "catalogId": "var.get", "literals": {"name": "prev"}},
+      "return_19": {"id": "return_19", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_18"}}}
+    }
+  }
+}

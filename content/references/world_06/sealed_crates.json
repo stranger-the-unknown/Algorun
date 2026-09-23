@@ -1,0 +1,74 @@
+{
+  "puzzle": "sealed_crates",
+  "notes": "A stack of open kinds: a seal must match the top. A depth counter passes the visible logs but accepts crossed seals, which the hidden cases hold.",
+  "spec": {"family": "stack", "pattern": "matching_pairs_stack", "structure": "stack", "secondary": [], "performance": "correctness", "traps": ["crossed seals of different kinds", "sealing with nothing open", "a crate left open", "counting depth alone ignores the kinds"], "oracle": "sealed_crates"},
+  "metrics": {"blocks": 28, "ops": 7321, "peakAlloc": 42, "peakDepth": 1},
+  "solution": {
+    "variables": {"codes": "array<num>", "open": "stack<num>", "c": "num"},
+    "entryIds": ["set_2", "foreach_26", "return_29"],
+    "blocks": {
+      "stack_1": {"id": "stack_1", "catalogId": "new.stack"},
+      "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "stack_1"}}, "literals": {"name": "open"}},
+      "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "codes"}},
+      "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "c"}},
+      "num_5": {"id": "num_5", "catalogId": "lit.num", "literals": {"value": 0}},
+      "gt_6": {"id": "gt_6", "catalogId": "cmp.gt", "slots": {"left": {"ref": "get_4"}, "right": {"ref": "num_5"}}},
+      "get_7": {"id": "get_7", "catalogId": "var.get", "literals": {"name": "c"}},
+      "get_8": {"id": "get_8", "catalogId": "var.get", "literals": {"name": "open"}},
+      "push_9": {"id": "push_9", "catalogId": "stack.push", "slots": {"stack": {"ref": "get_8"}, "value": {"ref": "get_7"}}},
+      "get_10": {"id": "get_10", "catalogId": "var.get", "literals": {"name": "open"}},
+      "empty_11": {"id": "empty_11", "catalogId": "stack.empty", "slots": {"stack": {"ref": "get_10"}}},
+      "bool_12": {"id": "bool_12", "catalogId": "lit.bool", "literals": {"value": false}},
+      "return_13": {"id": "return_13", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_12"}}},
+      "if_14": {"id": "if_14", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "empty_11"}, "then": {"list": ["return_13"]}}},
+      "get_15": {"id": "get_15", "catalogId": "var.get", "literals": {"name": "open"}},
+      "pop_16": {"id": "pop_16", "catalogId": "stack.pop", "slots": {"stack": {"ref": "get_15"}}},
+      "num_17": {"id": "num_17", "catalogId": "lit.num", "literals": {"value": 0}},
+      "get_18": {"id": "get_18", "catalogId": "var.get", "literals": {"name": "c"}},
+      "sub_19": {"id": "sub_19", "catalogId": "arith.sub", "slots": {"left": {"ref": "num_17"}, "right": {"ref": "get_18"}}},
+      "ne_20": {"id": "ne_20", "catalogId": "cmp.ne", "slots": {"left": {"ref": "pop_16"}, "right": {"ref": "sub_19"}}},
+      "bool_21": {"id": "bool_21", "catalogId": "lit.bool", "literals": {"value": false}},
+      "return_22": {"id": "return_22", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_21"}}},
+      "if_23": {"id": "if_23", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "ne_20"}, "then": {"list": ["return_22"]}}},
+      "else_24": {"id": "else_24", "catalogId": "ctrl.else", "slots": {"body": {"list": ["if_14", "if_23"]}}},
+      "if_25": {"id": "if_25", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "gt_6"}, "then": {"list": ["push_9"]}, "else": {"ref": "else_24"}}},
+      "foreach_26": {"id": "foreach_26", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_3"}, "body": {"list": ["if_25"]}}, "literals": {"name": "c"}},
+      "get_27": {"id": "get_27", "catalogId": "var.get", "literals": {"name": "open"}},
+      "empty_28": {"id": "empty_28", "catalogId": "stack.empty", "slots": {"stack": {"ref": "get_27"}}},
+      "return_29": {"id": "return_29", "catalogId": "ctrl.return", "slots": {"value": {"ref": "empty_28"}}}
+    }
+  },
+  "rejects": [
+    {
+      "name": "count opens and seals",
+      "expect": "wrongAnswer",
+      "graph": {
+        "variables": {"codes": "array<num>", "depth": "num", "c": "num"},
+        "entryIds": ["set_2", "foreach_17", "return_21"],
+        "blocks": {
+          "num_1": {"id": "num_1", "catalogId": "lit.num", "literals": {"value": 0}},
+          "set_2": {"id": "set_2", "catalogId": "var.set", "slots": {"value": {"ref": "num_1"}}, "literals": {"name": "depth"}},
+          "get_3": {"id": "get_3", "catalogId": "var.get", "literals": {"name": "codes"}},
+          "get_4": {"id": "get_4", "catalogId": "var.get", "literals": {"name": "c"}},
+          "num_5": {"id": "num_5", "catalogId": "lit.num", "literals": {"value": 0}},
+          "gt_6": {"id": "gt_6", "catalogId": "cmp.gt", "slots": {"left": {"ref": "get_4"}, "right": {"ref": "num_5"}}},
+          "inc_7": {"id": "inc_7", "catalogId": "var.inc", "literals": {"name": "depth"}},
+          "dec_8": {"id": "dec_8", "catalogId": "var.dec", "literals": {"name": "depth"}},
+          "else_9": {"id": "else_9", "catalogId": "ctrl.else", "slots": {"body": {"list": ["dec_8"]}}},
+          "if_10": {"id": "if_10", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "gt_6"}, "then": {"list": ["inc_7"]}, "else": {"ref": "else_9"}}},
+          "get_11": {"id": "get_11", "catalogId": "var.get", "literals": {"name": "depth"}},
+          "num_12": {"id": "num_12", "catalogId": "lit.num", "literals": {"value": 0}},
+          "lt_13": {"id": "lt_13", "catalogId": "cmp.lt", "slots": {"left": {"ref": "get_11"}, "right": {"ref": "num_12"}}},
+          "bool_14": {"id": "bool_14", "catalogId": "lit.bool", "literals": {"value": false}},
+          "return_15": {"id": "return_15", "catalogId": "ctrl.return", "slots": {"value": {"ref": "bool_14"}}},
+          "if_16": {"id": "if_16", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "lt_13"}, "then": {"list": ["return_15"]}}},
+          "foreach_17": {"id": "foreach_17", "catalogId": "ctrl.foreach", "slots": {"collection": {"ref": "get_3"}, "body": {"list": ["if_10", "if_16"]}}, "literals": {"name": "c"}},
+          "get_18": {"id": "get_18", "catalogId": "var.get", "literals": {"name": "depth"}},
+          "num_19": {"id": "num_19", "catalogId": "lit.num", "literals": {"value": 0}},
+          "eq_20": {"id": "eq_20", "catalogId": "cmp.eq", "slots": {"left": {"ref": "get_18"}, "right": {"ref": "num_19"}}},
+          "return_21": {"id": "return_21", "catalogId": "ctrl.return", "slots": {"value": {"ref": "eq_20"}}}
+        }
+      }
+    }
+  ]
+}
