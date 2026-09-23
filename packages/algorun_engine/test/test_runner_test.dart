@@ -251,6 +251,27 @@ void main() {
     });
   });
 
+  group('hint count', () {
+    test('the runner reports 0 hints; the app stamps the real count', () {
+      final suite = runner.run(_readOutOfRange(), _puzzle());
+      expect(suite.metrics.hintsUsed, 0);
+      final hinted = suite.withHintsUsed(2);
+      expect(hinted.metrics.hintsUsed, 2);
+      // Everything else is untouched.
+      expect(hinted.kind, suite.kind);
+      expect(hinted.message, suite.message);
+      expect(hinted.visible, same(suite.visible));
+      expect(hinted.hiddenSummary, same(suite.hiddenSummary));
+      expect(hinted.metrics.ops, suite.metrics.ops);
+      expect(hinted.metrics.peakAlloc, suite.metrics.peakAlloc);
+      expect(hinted.metrics.peakDepth, suite.metrics.peakDepth);
+      expect(hinted.metrics.blocks, suite.metrics.blocks);
+      expect(hinted.firstFailureBlockId, suite.firstFailureBlockId);
+      expect(hinted.firstFailureOpIndex, suite.firstFailureOpIndex);
+      expect(hinted.firstFailureCaseId, suite.firstFailureCaseId);
+    });
+  });
+
   group('failures come from the interpreter', () {
     test('a runtime failure carries its message, block and op index', () {
       final suite = runner.run(_readOutOfRange(), _puzzle());

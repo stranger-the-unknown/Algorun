@@ -13,7 +13,16 @@ final class RunOutcome {
 ///
 /// A graph that cannot be lowered never reaches the runner; the player gets
 /// the lowering's own game-facing message instead.
-RunOutcome runPuzzle(AlgorunEngine engine, BlockGraph graph, Puzzle puzzle) {
+///
+/// [hintsUsed] is the player's hint count for this visit (`HintSession.used`).
+/// It never affects grading; it is carried into `SuiteResult.metrics` so the
+/// results screen shows it.
+RunOutcome runPuzzle(
+  AlgorunEngine engine,
+  BlockGraph graph,
+  Puzzle puzzle, {
+  int hintsUsed = 0,
+}) {
   final lowered = engine.lower(graph, puzzle);
   final validation = ValidationReport(messages: lowered.errors);
   final program = lowered.program;
@@ -27,11 +36,11 @@ RunOutcome runPuzzle(AlgorunEngine engine, BlockGraph graph, Puzzle puzzle) {
         metrics: RunMetrics.zero,
         message: first?.message ?? 'This program is not ready to run.',
         firstFailureBlockId: first?.blockId,
-      ),
+      ).withHintsUsed(hintsUsed),
     );
   }
   return RunOutcome(
     validation: validation,
-    suite: engine.runTests(program, puzzle),
+    suite: engine.runTests(program, puzzle).withHintsUsed(hintsUsed),
   );
 }

@@ -173,6 +173,30 @@ final class ContentValidator {
     if (puzzle.hints.isEmpty) {
       issues.add(ContentIssue(Severity.warning, file, 'hints', 'No hints provided.'));
     }
+    // Hints are shown to players as written, so they must speak in the game's
+    // words and must not quote a hidden case.
+    for (final (i, hint) in puzzle.hints.indexed) {
+      for (final id in BlockIds.all) {
+        if (hint.contains(id)) {
+          issues.add(ContentIssue(
+            Severity.warning,
+            file,
+            'hints[$i]',
+            'Mentions the internal block id "$id"; say ${BlockChrome.labelOf(id)} instead.',
+          ));
+        }
+      }
+      for (final hidden in puzzle.hiddenTests) {
+        if (hidden.id.length >= 4 && hint.contains(hidden.id)) {
+          issues.add(ContentIssue(
+            Severity.warning,
+            file,
+            'hints[$i]',
+            'Mentions the hidden case "${hidden.id}", which players must not see.',
+          ));
+        }
+      }
+    }
     for (final id in const [BlockIds.fnDef, BlockIds.fnCall]) {
       if (puzzle.blocks.allow.contains(id)) {
         issues.add(ContentIssue(

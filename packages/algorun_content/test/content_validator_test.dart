@@ -223,6 +223,15 @@ void main() {
       expect(_has(report, Severity.warning, 'puzzle.json', 'hints', 'No hints'), isTrue);
     });
 
+    test('hints that leak internals are flagged', () {
+      final report = _validator.validatePuzzleSource(_puzzle(
+        hints: '["Use arr.len on the list.", "Think about hidden_edge first."]',
+      ).replaceFirst('"id": "h1"', '"id": "hidden_edge"'));
+      expect(report.ok, isTrue, reason: 'advice, not an error');
+      expect(_has(report, Severity.warning, 'puzzle.json', 'hints[0]', 'say LENGTH instead'), isTrue);
+      expect(_has(report, Severity.warning, 'puzzle.json', 'hints[1]', 'hidden case "hidden_edge"'), isTrue);
+    });
+
     test('unplayable function blocks are flagged', () {
       final report = _validator.validatePuzzleSource(
         _puzzle(allow: '["ctrl.return", "fn.call"]'),

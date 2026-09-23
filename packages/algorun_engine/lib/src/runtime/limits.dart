@@ -31,9 +31,28 @@ final class RunMetrics {
   final int peakAlloc;
   final int peakDepth;
   final int blocks;
+
+  /// Hints the player revealed before this run. Session state: the engine
+  /// never sets it; the app's RUN path does.
   final int hintsUsed;
 
   static const zero = RunMetrics();
+
+  RunMetrics copyWith({
+    int? ops,
+    int? peakAlloc,
+    int? peakDepth,
+    int? blocks,
+    int? hintsUsed,
+  }) {
+    return RunMetrics(
+      ops: ops ?? this.ops,
+      peakAlloc: peakAlloc ?? this.peakAlloc,
+      peakDepth: peakDepth ?? this.peakDepth,
+      blocks: blocks ?? this.blocks,
+      hintsUsed: hintsUsed ?? this.hintsUsed,
+    );
+  }
 }
 
 /// Performance target stored on a puzzle. Grading in v1 uses [maxOps] /

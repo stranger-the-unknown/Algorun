@@ -4,7 +4,7 @@ Android-first algorithm puzzle game. Construct the algorithm with typed blocks. 
 
 Engine is pure Dart (`packages/algorun_engine`). Content validation is a separate package (`packages/algorun_content`) and is not shipped as app UI logic.
 
-**Status:** Milestone 8 complete. Five real algorithm puzzles (hash-set complement lookup, sliding window, monotonic stack, binary search on the answer, graph BFS) are playable end to end, and each is proven solvable by a reference solution that the content validator builds and runs through the real test runner. Next is Milestone 9 (hints). See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing.
+**Status:** Milestone 9 complete. Five real algorithm puzzles (hash-set complement lookup, sliding window, monotonic stack, binary search on the answer, graph BFS) are playable end to end, each proven solvable by a reference solution the content validator runs through the real test runner, and each offers three progressive hints (under the brief; the count shows on the results screen). Next is Milestone 10 (performance metrics); the planned language milestone L1 (nullable narrowing) must come before tree or linked-list content. See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing.
 
 Validate content before committing it:
 

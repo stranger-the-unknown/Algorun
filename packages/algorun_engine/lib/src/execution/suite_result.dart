@@ -57,7 +57,9 @@ final class SuiteResult {
 
   /// Worst run across the suite: `ops`, `peakAlloc` and `peakDepth` are the
   /// maximum any single case needed, `blocks` counts the blocks the program
-  /// is made of, and `hintsUsed` is session state the engine does not hold.
+  /// is made of, and `hintsUsed` is session state the engine does not hold:
+  /// the runner reports 0 and the app fills in the real count
+  /// ([withHintsUsed]).
   final RunMetrics metrics;
 
   final String? message;
@@ -70,4 +72,19 @@ final class SuiteResult {
   final String? firstFailureCaseId;
 
   bool get ok => kind == ResultKind.correct;
+
+  /// The same result carrying the player's hint count. Grading never looks at
+  /// hints; the app stamps the count here on the way to the results screen.
+  SuiteResult withHintsUsed(int count) {
+    return SuiteResult(
+      kind: kind,
+      visible: visible,
+      metrics: metrics.copyWith(hintsUsed: count),
+      hiddenSummary: hiddenSummary,
+      message: message,
+      firstFailureBlockId: firstFailureBlockId,
+      firstFailureOpIndex: firstFailureOpIndex,
+      firstFailureCaseId: firstFailureCaseId,
+    );
+  }
 }

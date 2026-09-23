@@ -3,16 +3,17 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current milestone: 8 complete (five real puzzles, each proven by a reference solution).**
-**Next milestone: 9 (hints). Not started.**
+**Current milestone: 9 complete (progressive hints in the puzzle screen; `hintsUsed` is real).**
+**Next milestone: 10 (performance metrics) — see the roadmap for the planned language milestone L1.**
 
-Do not implement Milestone 9 from this file unless the user explicitly asks.
+Do not implement the next milestone from this file unless the user explicitly asks.
 Do not change the architecture.
 
 Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`,
 MS6 `39956f967f8102f747be94bc3ad9de4c0703c674`,
-MS7 `7d689dca871b33e58de23c2879d296aff6e74553`, MS8 — see `git log` (the commit
-titled "Milestone 8: …").
+MS7 `7d689dca871b33e58de23c2879d296aff6e74553`,
+MS8 `9b005b88cc1953b9b629f890697746ffccca2939`, MS9 — see `git log` (the commit
+titled "Milestone 9: …").
 
 ---
 
@@ -66,7 +67,8 @@ algorun/                          Flutter app (repository root)
     screens/                      home, worlds, puzzle, results, settings
     puzzles/asset_repository.dart loads assets through the engine schema
     state/providers.dart          engineProvider → DefaultEngine
-    state/run_puzzle.dart         the RUN path: graph → lower → runTests
+    state/run_puzzle.dart         the RUN path: graph → lower → runTests (+ hintsUsed)
+    state/hint_session.dart       HintSession: hints revealed in this visit (MS9)
   assets/                         bundled with the app
     worlds.json                   14 worlds; 02, 03, 05, 06 and 10 have puzzles
     puzzles/world_01/             ms1_contract_probe, ms3_editor_probe (unlisted dev probes)
@@ -90,6 +92,8 @@ algorun/                          Flutter app (repository root)
   docs/                           architecture + per-milestone notes
   test/widget_test.dart           Flutter editor / picker / RUN tests
   test/real_puzzles_test.dart     the five real puzzles through the bundle and RUN
+  test/hint_session_test.dart     hint session, the five puzzles' hints, hintsUsed through RUN
+  test/hint_ui_test.dart          the hint interaction on the real puzzle screen
 ```
 
 App `pubspec.yaml` path-depends on `packages/algorun_engine` only.
@@ -294,27 +298,51 @@ Rules: every puzzle a world lists must declare reference metadata, every
 puzzle that declares it must have a passing reference file, and a reference
 file with no puzzle is an error. Nothing is keyed to puzzle ids.
 
+### Hints (MS9)
+
+- Data: `Puzzle.hints`, a plain list of text in the author's order (idea →
+  approach → stronger guidance). Every real puzzle has three. Nothing is
+  generated or derived from the reference solution.
+- UI: puzzle screen, directly under the BRIEF. **SHOW HINT n** reveals the next
+  hint and becomes **NO MORE HINTS** (disabled) after the last. The
+  **HINTS used/total** row opens and closes the revealed list. A puzzle without
+  hints shows no hint row. Hints are never revealed automatically.
+- `HintSession` (`lib/state/hint_session.dart`, pure Dart) is the only thing
+  that counts. Only revealing a *new* hint counts; opening, closing, re-running
+  or tapping the disabled button does not. The session lives as long as the
+  puzzle screen; nothing is persisted.
+- `hintsUsed`: RUN passes `HintSession.used` to `runPuzzle(..., hintsUsed:)`,
+  which stamps it with `SuiteResult.withHintsUsed` (both the graded and the
+  "cannot run yet" path). The `TestRunner` itself always reports 0 and grading
+  never reads hints. The results screen shows it on the WHAT IT COST line.
+  It is a metric only: no scoring, stars or penalties read it.
+- The content validator warns when a hint quotes an internal block id or a
+  hidden case id.
+
+Details: [`MILESTONE_9.md`](MILESTONE_9.md).
+
 ### Editor (MS3) — do not regress
 
 Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
 
-## Test results at MS8 closeout
+## Test results at MS9 closeout
 
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **271 passed** |
+| `packages/algorun_engine` `dart test` | **272 passed** |
 | `packages/algorun_content` `dart analyze` | no issues |
-| `packages/algorun_content` `dart test` | **31 passed** |
+| `packages/algorun_content` `dart test` | **32 passed** |
 | Content validator (assets + worlds + references) | `OK 7 puzzle(s), 4 warning(s)` |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **20 passed** |
+| Flutter `test` | **35 passed** |
 
-Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (25), MS7 codec
+Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (26), MS7 codec
 (40), schema (39), FLOOR DIVIDE (14), MS8 shipped puzzles (24), contract
-tests. Content: shipped set with references, every reference rule, CLI.
-App: editor, picker, RUN path, results, the five real puzzles through the
-bundle and RUN, "correct but too slow" on the results screen.
+tests. Content: shipped set with references, every reference rule, hint leak
+warnings, CLI. App: editor, picker, RUN path, results, the five real puzzles
+through the bundle and RUN, "correct but too slow", and the hint session and
+hint interaction.
 
 The four warnings are known and deliberate: worlds 12 and 13 require
 `recursion` (no world teaches it yet), and the two dev probes are unlisted.
@@ -323,8 +351,8 @@ The four warnings are known and deliberate: worlds 12 and 13 require
 
 ### Open follow-ups
 
-- **No null narrowing in the block language.** `tree.left/right` and `ll.next` return nullable nodes and `map.get` returns `V?`; no block narrows a nullable value after a NOTHING check, and every node/number hole needs a non-null value. So trees and linked lists cannot be traversed past their first node, and map values cannot be used in arithmetic. This is why MS8 has no tree puzzle. A typed "if not NOTHING" / unwrap block is the smallest fix and must come before tree, linked-list or counting-map content.
-- **Hints are content only.** Every real puzzle has three progressive hints; the UI does not show them (MS9).
+- **No null narrowing in the block language — a language-capability gap, not a content problem.** `tree.left/right` and `ll.next` return nullable nodes and `map.get` returns `V?`; no block narrows a nullable value after a NOTHING check, and every node/number hole needs a non-null value. So trees and linked lists cannot be traversed past their first node, and map values cannot be used in arithmetic. This is why MS8 has no tree puzzle. Planned as language milestone **L1** (see the roadmap), which must land before any large-scale tree, linked-list or advanced graph content.
+- **Hints are a metric only.** `hintsUsed` is shown but not scored or persisted, by design (MS9).
 - **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale.
 - **No random test generation.** A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
 - **World prerequisites.** Worlds 12 and 13 require `recursion`, which no world teaches (warning).
@@ -368,18 +396,52 @@ references directory — before it is committed under `assets/puzzles`. A new
 playable puzzle needs a reference file in `content/references/` and a world
 listing it; its folder must be in `pubspec.yaml` to ship.
 
-Do not add a TypeScript app. Do not eval generated source. Do not start MS10–13 from a MS9 request.
+Do not add a TypeScript app. Do not eval generated source. Do not start one milestone from another milestone's request.
 
-## Milestone 9 contract (when asked)
+## Roadmap
 
-Hints — the content already exists; show it.
+| Order | Milestone | Status |
+|---|---|---|
+| 1–9 | skeleton → typed blocks → editor → lowering → interpreter → test runner → schema → five puzzles → hints | complete |
+| 10 | Performance metrics (still budget-based) | **next** in the ARCHITECTURE plan |
+| **L1** | **Language: optional values / nullable narrowing** | **planned architecture milestone** — required before tree, linked-list, counting-map or advanced graph content |
+| 11 | Progression + local save | planned |
+| 12 | Large original content | planned — its tree / linked-list / advanced graph content is blocked on L1 |
+| 13 | Mobile UX polish | planned |
 
-- Show a puzzle's `hints` progressively in the puzzle screen, one at a time, in order. Never show the reference solution or any hidden case.
-- Count hints used per attempt and report it in `SuiteResult.metrics.hintsUsed` (the field exists and is 0 today) through the RUN path.
-- Respect `scoring.hintPenalty` only as data for later scoring; do not build scoring.
-- Keep hints as data. Do not generate hints from the reference solution.
-- Consider adding a null-narrowing block before any tree / linked-list / counting-map content, but only if the user asks; it is a language change, not a hints change.
-- Do not change the MS2–MS8 contracts; keep all engine, content and app tests green, and keep the content validator passing with references.
+The user decides whether L1 runs before or after 10 and 11; it must run before
+12 and before any puzzle that walks a tree or list or counts with a map.
+
+### Language milestone L1 contract (when asked)
+
+Close the nullable gap with the smallest typed construct, not a type-system
+rewrite.
+
+- One block that tests a nullable value and, inside its body, gives the player
+  a non-null name for it — for example IF *x* IS SOMETHING AS *node*. The
+  narrowing is scoped to that body only; outside it the value stays nullable.
+- Update, together: block catalog + chrome label, `GraphTyping` (the body sees
+  the narrowed type, so the editor picker offers node blocks), lowering (a
+  typed IR form; keep existing IR JSON readable), interpreter, content schema
+  (the block is allowlistable), reference replay, and tests.
+- Unlocks: walking a tree (`tree.left/right`), walking a linked list
+  (`ll.next`), and using `map.get` values in arithmetic (counting maps).
+- Prove it with reference solutions in the content test suite (tree BFS, list
+  traversal, a counting map) — not with new shipped puzzles unless asked.
+- Do not add a general option type, pattern matching, or `any`. Do not change
+  what existing blocks mean.
+
+## Milestone 10 contract (when asked)
+
+Performance metrics, still budget-based (locked decision 5: no Big-O analyzer).
+
+- Present how a run used its budgets — operations, memory cells, depth, blocks —
+  against the puzzle's limits, in the results screen, from the metrics that
+  already exist.
+- Anything that looks at growth across input sizes must say it is an
+  empirical count, never a complexity proof.
+- Do not add scoring, stars, persistence or a backend. Keep the engine's
+  grading unchanged and every test green.
 
 ## Milestone docs
 
@@ -394,4 +456,5 @@ Hints — the content already exists; show it.
 | [`MILESTONE_6.md`](MILESTONE_6.md) | complete — test runner |
 | [`MILESTONE_7.md`](MILESTONE_7.md) | complete — puzzle schema hardening |
 | [`MILESTONE_8.md`](MILESTONE_8.md) | complete — five real puzzles + reference solutions |
-| this file | MS8 handoff |
+| [`MILESTONE_9.md`](MILESTONE_9.md) | complete — hint system |
+| this file | MS9 handoff |

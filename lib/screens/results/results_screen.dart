@@ -100,7 +100,8 @@ final class ResultsScreen extends StatelessWidget {
                         '${suite.metrics.ops} steps · '
                         '${suite.metrics.peakAlloc} cells · '
                         'depth ${suite.metrics.peakDepth} · '
-                        '${suite.metrics.blocks} blocks',
+                        '${suite.metrics.blocks} blocks · '
+                        '${_hints(suite.metrics.hintsUsed)}',
                         style: const TextStyle(color: AppColors.muted),
                       ),
                     ),
@@ -132,6 +133,8 @@ final class ResultsScreen extends StatelessWidget {
     );
   }
 }
+
+String _hints(int count) => count == 1 ? '1 hint' : '$count hints';
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel(this.text);
