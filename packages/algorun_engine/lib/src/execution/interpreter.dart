@@ -447,6 +447,9 @@ final class Interpreter {
       UnaryOp.not => BoolValue(!_bool(arg, id)),
       UnaryOp.neg => NumValue(-_num(arg, id)),
       UnaryOp.abs => NumValue(_num(arg, id).abs()),
+      // A real check on the value: never an error, whatever it holds.
+      UnaryOp.isNothing => BoolValue(arg is NilValue),
+      UnaryOp.isNotNothing => BoolValue(arg is! NilValue),
     };
   }
 

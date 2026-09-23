@@ -110,6 +110,8 @@ final Map<String, BlockChrome> _all = {
   BlockIds.logicAnd: _ch('AND', _l, BlockLayout.infixBinary),
   BlockIds.logicOr: _ch('OR', _l, BlockLayout.infixBinary),
   BlockIds.logicNot: _ch('NOT', _l, BlockLayout.prefix),
+  BlockIds.logicIsNothing: _ch('IS NOTHING', _l, BlockLayout.verbObject),
+  BlockIds.logicIsNotNothing: _ch('IS NOT NOTHING', _l, BlockLayout.verbObject),
   BlockIds.arithAdd: _ch('PLUS', _m, BlockLayout.infixBinary),
   BlockIds.arithSub: _ch('MINUS', _m, BlockLayout.infixBinary),
   BlockIds.arithMul: _ch('TIMES', _m, BlockLayout.infixBinary),

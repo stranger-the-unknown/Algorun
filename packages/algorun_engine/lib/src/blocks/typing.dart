@@ -3,6 +3,7 @@ import '../types/value_type.dart';
 import 'block_graph.dart';
 import 'catalog.dart';
 import 'definition.dart';
+import 'narrowing.dart';
 import 'ports.dart';
 
 /// Game-facing snap decision. Milestone 3 must call this — never reimplement.
@@ -324,7 +325,7 @@ ConnectDecision _expressionRules(
       'This piece does not fit here.',
     );
   }
-  final plug = _outputType(graph, from.blockId, {});
+  final plug = _plugType(graph, from.blockId, to);
   if (plug == null) {
     return const ConnectDecision.deny(
       'unknown_port',
@@ -338,9 +339,38 @@ ConnectDecision _expressionRules(
   final hole2 = hole.subst(env);
   final plug2 = plug.subst(env);
   if (!hole2.accepts(plug2)) {
+    if (Narrowing.onlyMayBeEmpty(plug2, hole2.accepts)) {
+      return const ConnectDecision.deny(
+        'may_be_empty',
+        Narrowing.mayBeEmptyMessage,
+      );
+    }
     return ConnectDecision.deny('type_mismatch', _typeMessage(toPort, hole));
   }
+  final owner = graph.blocks[to.blockId];
+  if (owner != null && BlockIds.isNothingCheck(owner.catalogId)) {
+    final problem = Narrowing.checkProblem(plug2);
+    if (problem != null) return ConnectDecision.deny('type_mismatch', problem);
+  }
   return const ConnectDecision.allow();
+}
+
+/// The type [blockId] would have once plugged into [to]. A GET reads its
+/// variable as narrowed where the hole is, not where the block sits now.
+ValueType? _plugType(BlockGraph graph, String blockId, PortRef to) {
+  final block = graph.blocks[blockId];
+  if (block != null && block.catalogId == BlockIds.varGet) {
+    final name = block.literals['name'];
+    if (name is! String) return null;
+    final declared = graph.variables[name];
+    if (declared == null) return null;
+    return Narrowing.read(
+      declared,
+      name,
+      Narrowing.of(graph).atInput(graph, to),
+    );
+  }
+  return _outputType(graph, blockId, {});
 }
 
 bool _isVarValueHole(BlockGraph graph, PortRef to) {
@@ -377,7 +407,9 @@ ValueType? _outputType(
   if (block.catalogId == BlockIds.varGet) {
     final name = block.literals['name'] as String?;
     if (name == null) return null;
-    return graph.variables[name];
+    final declared = graph.variables[name];
+    if (declared == null) return null;
+    return Narrowing.read(declared, name, Narrowing.of(graph).at(blockId));
   }
   if (block.catalogId == BlockIds.newArray) {
     final of = block.literals['of'] as String?;

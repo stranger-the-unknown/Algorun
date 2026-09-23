@@ -3,8 +3,8 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current milestone: 10 complete (deterministic performance metrics; correct-but-too-slow is a real verdict with real numbers).**
-**Next milestone: L1 (nullable / NOTHING narrowing), then 11 — see the roadmap.**
+**Current milestone: L1 COMPLETE (language: values that may be empty, IS NOTHING / IS NOT NOTHING, safe branch-local narrowing).**
+**Next milestone: 11 — MS11 is next (progression + local save), see the roadmap.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
 Do not change the architecture.
@@ -13,8 +13,9 @@ Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`,
 MS6 `39956f967f8102f747be94bc3ad9de4c0703c674`,
 MS7 `7d689dca871b33e58de23c2879d296aff6e74553`,
 MS8 `9b005b88cc1953b9b629f890697746ffccca2939`,
-MS9 `2be68bde64fc537c9a8e211c52d355a6d0c31d52`, MS10 — see `git log` (the commit
-titled "Milestone 10: …").
+MS9 `2be68bde64fc537c9a8e211c52d355a6d0c31d52`,
+MS10 `c192118c079e73c8ff78b7fa71d00adf0285959a`, L1 — see `git log` (the commit
+titled "Milestone L1: nullable narrowing").
 
 ---
 
@@ -72,7 +73,7 @@ algorun/                          Flutter app (repository root)
     state/hint_session.dart       HintSession: hints revealed in this visit (MS9)
   assets/                         bundled with the app
     worlds.json                   14 worlds; 02, 03, 05, 06 and 10 have puzzles
-    puzzles/world_01/             ms1_contract_probe, ms3_editor_probe (unlisted dev probes)
+    puzzles/world_01/             ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe (unlisted dev probes)
     puzzles/world_02/             smallest_cart
     puzzles/world_03/             twin_beacons
     puzzles/world_05/             quota_hours
@@ -83,6 +84,7 @@ algorun/                          Flutter app (repository root)
     algorun_engine/               pure Dart, no Flutter
       lib/src/ast/                ir.dart (typed IR), lower.dart
       lib/src/blocks/             catalog, graph, typing, commands, chrome
+      lib/src/blocks/narrowing.dart       Narrowing: where a value that may be empty is known to hold something (L1)
       lib/src/execution/          AlgorunEngine, DefaultEngine, Interpreter, results
       lib/src/puzzles/            parse.dart (THE schema), puzzle.dart, world.dart
       lib/src/runner/             TestRunner, validator registry
@@ -90,7 +92,7 @@ algorun/                          Flutter app (repository root)
       lib/src/types/              ValueType + parser
       lib/src/execution/performance.dart  BudgetOverrun, SuitePerformance (MS10)
       lib/src/runner/benchmark.dart       measureCase, benchmark, PerformanceReport (MS10)
-      test/                       297 tests
+      test/                       341 tests
     algorun_content/              offline validator, reference checker, editor replay, CLI
   docs/                           architecture + per-milestone notes
   test/widget_test.dart           Flutter editor / picker / RUN tests
@@ -98,6 +100,7 @@ algorun/                          Flutter app (repository root)
   test/hint_session_test.dart     hint session, the five puzzles' hints, hintsUsed through RUN
   test/hint_ui_test.dart          the hint interaction on the real puzzle screen
   test/performance_ui_test.dart   budget wording and the results screen (MS10)
+  test/nullable_editor_test.dart  IS NOT NOTHING in the editor, the picker and RUN (L1)
   lib/state/performance_text.dart player wording for budgets (MS10)
 ```
 
@@ -124,6 +127,7 @@ first, `run` is the MS5 interpreter, `runTests` is the MS6 runner.
 - `PortKind` = `{statement, expression, elseClause}`.
 - `GraphTyping.canConnect` is the snap/picker source of truth.
 - `GraphTyping.compatiblePlacements` filters the hole picker.
+- *(L1)* `GraphTyping` types a GET where it is (or is being dropped) through `Narrowing` — see "Values that may be empty".
 - `GraphHistory` + reversible commands. Failed connects do not push undo.
 - Top-level stack is `@main.body`.
 - Variables live on `BlockGraph.variables`. GIVENS = `puzzle.io.inputs`. CREATE names come from `puzzle.variablePool` (chips only).
@@ -148,7 +152,7 @@ Closed, typed, JSON-serializable (`Program.toJson` / `fromJson`). No callbacks, 
 | `ctrl.if` + optional `ctrl.else` | **one** `IfStmt` |
 | `ctrl.while` / `ctrl.for_range` / `ctrl.foreach` | `WhileStmt` / `ForRangeStmt` / `ForEachStmt` |
 | `ctrl.break` / `continue` / `return` | matching stmts |
-| `arith.*` / `cmp.*` / `logic.*` | `BinaryExpr` / `UnaryExpr` (`arith.floor_div` → `BinaryOp.floorDiv`, MS7) |
+| `arith.*` / `cmp.*` / `logic.*` | `BinaryExpr` / `UnaryExpr` (`arith.floor_div` → `BinaryOp.floorDiv`, MS7; `logic.is_nothing` / `logic.is_not_nothing` → `UnaryOp.isNothing` / `isNotNothing`, L1) |
 | `arr.get` / `arr.set` | `IndexExpr` / `AssignStmt` + `IndexLValue` |
 | `ll.*` / `tree.*` | `FieldExpr` / `FieldLValue` |
 | other catalog ops (`arr.len`, `map.get`, mutators, …) | `CallExpr` / `ExprStmt` with the catalog id as callee |
@@ -269,9 +273,9 @@ Errors: every schema rule; an expected answer that fails its own validator; dupl
 | The Smallest Cart | `smallest_cart` / 02 | binary search on the answer, FLOOR DIVIDE | build, 3 | one-unit steps (op budget); a DIVIDE midpoint |
 | Fewest Rides | `fewest_rides` / 10 | BFS shortest path on a `graph` fixture | build, 3 | depth-first with a stack (hidden trap) |
 
-Tree BFS was not chosen because the language cannot traverse a tree (see the
-limitations below). Per-puzzle rationale, budgets and cases are in
-[`MILESTONE_8.md`](MILESTONE_8.md).
+Tree BFS was not chosen because at MS8 the language could not traverse a tree;
+L1 closed that gap (see "Values that may be empty"). Per-puzzle rationale,
+budgets and cases are in [`MILESTONE_8.md`](MILESTONE_8.md).
 
 ### Reference solutions (MS8)
 
@@ -383,37 +387,75 @@ a `Budget: … steps · … cells · depth … · … blocks` line.
 
 Details: [`MILESTONE_10.md`](MILESTONE_10.md).
 
+### Values that may be empty (L1)
+
+**Model.** `ValueType.nullable` as it always was: `NEXT NODE` → `listNode?`,
+`LEFT` / `RIGHT` → `treeNode?`, a map lookup → `V?`; givens and pool variables
+may be declared `listNode?` / `treeNode?` / `num?` (fixture `null`). Storing
+such a value in a variable that may be empty is fine. Putting it where a real
+value is needed (a node or number hole, a plain variable, SWAP / COPY) is
+refused by the editor and by lowering with *This value may be empty here.
+Check that it is not empty first.* (code `may_be_empty`).
+
+**Blocks.** `logic.is_nothing` IS NOTHING and `logic.is_not_nothing` IS NOT
+NOTHING — LOGIC, `verbObject` layout (`[node] IS NOT NOTHING`), `T? → bool`.
+Only a value that may be empty fits; a plain value / an already-checked
+variable ("never empty here") and NOTHING itself are refused. There is no
+unwrap / cast / force block, by design.
+
+**Narrowing** (`lib/src/blocks/narrowing.dart`, the one implementation, read by
+`GraphTyping` and the lowerer): a plain variable reads as its plain type in
+THEN of `IF x IS NOT NOTHING`, ELSE of `IF x IS NOTHING`, the body of
+`WHILE x IS NOT NOTHING`, and across AND (right side and branch). OR, NOT,
+EQUAL NOTHING and checks on anything but a plain variable narrow nothing.
+Branch-local: after the IF or loop the variable may be empty again. Any write
+(SET, INCREMENT, DECREMENT, SWAP, COPY, a FOR counter) ends the narrowing for
+the rest of that flow; a loop keeps an outer fact only if the loop never
+writes that variable.
+
+**IR / runtime.** Two appended `UnaryOp`s (old IR JSON reads unchanged); the
+interpreter returns `BoolValue(value is NilValue)` (or its negation), never
+errors, one operation per block as always. No narrowing metadata in the IR.
+
+**Probes.** `l1_list_probe` (count a chain, `WHILE node IS NOT NOTHING … node =
+NEXT NODE node`, 109 ops) and `l1_tree_probe` (LEFT of the root, IS NOTHING /
+ELSE, 9 ops): unlisted, bundled, with reference files the validator replays,
+lowers and runs.
+
+Details: [`MILESTONE_L1.md`](MILESTONE_L1.md).
+
 ### Editor (MS3) — do not regress
 
 Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
 
-## Test results at MS10 closeout
+## Test results at L1 closeout
 
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **297 passed** |
+| `packages/algorun_engine` `dart test` | **341 passed** |
 | `packages/algorun_content` `dart analyze` | no issues |
-| `packages/algorun_content` `dart test` | **37 passed** |
-| Content validator (assets + worlds + references) | `OK 7 puzzle(s), 4 warning(s)` + 5 INFO lines |
+| `packages/algorun_content` `dart test` | **46 passed** |
+| Content validator (assets + worlds + references) | `OK 9 puzzle(s), 6 warning(s)` + 7 INFO lines |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **44 passed** |
+| Flutter `test` | **50 passed** |
 
 Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (26), MS7 codec
 (40), schema (41), FLOOR DIVIDE (14), MS8 shipped puzzles (30), MS10
-performance (17), contract tests. Content: shipped set with references, every
-reference rule, reference metrics and performance rules, hint leak warnings,
-CLI. App: editor, picker, RUN, results, the five real puzzles, hints, and
-budget wording on the results screen.
+performance (17), L1 values that may be empty (44), contract tests. Content:
+shipped set with references, every reference rule, reference metrics and
+performance rules, hint leak warnings, CLI, the two L1 probes end to end. App:
+editor, picker, RUN, results, the five real puzzles, hints, budget wording,
+and IS NOT NOTHING in the editor.
 
-The four warnings are known and deliberate: worlds 12 and 13 require
-`recursion` (no world teaches it yet), and the two dev probes are unlisted.
+The six warnings are known and deliberate: worlds 12 and 13 require
+`recursion` (no world teaches it yet), and the four dev probes are unlisted.
 
 ## Known limitations
 
 ### Open follow-ups
 
-- **No null narrowing in the block language — a language-capability gap, not a content problem.** `tree.left/right` and `ll.next` return nullable nodes and `map.get` returns `V?`; no block narrows a nullable value after a NOTHING check, and every node/number hole needs a non-null value. So trees and linked lists cannot be traversed past their first node, and map values cannot be used in arithmetic. This is why MS8 has no tree puzzle. Planned as language milestone **L1** (see the roadmap), which must land before any large-scale tree, linked-list or advanced graph content.
+- **Narrowing is deliberately small (L1).** No narrowing through OR / NOT or after an IF whose THEN always returns (use IF / ELSE); assigning a real value does not narrow (check again); only plain variables narrow. The editor checks each drop where it is made, so an edit elsewhere can invalidate an earlier drop — lowering reports it before RUN. RETURN is still not checked against the puzzle's output type. Tree traversal beyond one path needs a queue or stack of nodes until recursion exists.
 - **Hints are a metric only.** `hintsUsed` is shown but not scored or persisted, by design (MS9).
 - **Performance is counted, not scored.** No stars or scores read the budgets yet. A hopeless solution is only known to be "still running" at the measurement ceiling; its correctness beyond it is not claimed. Memory and depth have no overrun measurement. There is no fixture generator: size profiles are explicit fixtures with optional per-case `maxOps` (MS10).
 - **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale.
@@ -427,7 +469,7 @@ The four warnings are known and deliberate: worlds 12 and 13 require
 - `constraints.n` is recorded but not checked against fixture sizes.
 - `hintsUsed` is 0 until hints ship (MS9). The suite runs every case even after a failure.
 - The `PuzzleScreen` → `ResultsScreen` navigation is not pumped in a test; `runPuzzle` covers the logic.
-- The two MS1/MS3 probes stay bundled (tests, the editor seed, the screen's default route) but no world lists them.
+- The two MS1/MS3 probes stay bundled (tests, the editor seed, the screen's default route) but no world lists them; neither do the two L1 probes.
 - Graph fixtures do not enforce "stations are numbered 0 to n-1"; `fewest_rides` states it and its fixtures follow it.
 - `maxDepth` stays at 1 until player-defined functions ship; `fn.def` / `fn.call` remain unsupported and hidden.
 - Allocation has no collector: an unreachable container keeps its cells for the rest of the run.
@@ -436,7 +478,7 @@ The four warnings are known and deliberate: worlds 12 and 13 require
 
 ## Exact commands
 
-From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS10 closeout: Flutter 3.47.2, Dart 3.13.2.
+From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at L1 closeout: Flutter 3.47.2, Dart 3.13.2.
 
 ```bash
 flutter pub get
@@ -466,36 +508,12 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | Order | Milestone | Status |
 |---|---|---|
 | 1–10 | skeleton → typed blocks → editor → lowering → interpreter → test runner → schema → five puzzles → hints → performance metrics | complete |
-| **L1** | **Language: nullable / NOTHING narrowing** | **next** (the user's order: L1 comes after MS10) |
-| 11 | Progression + local save | planned, after L1 |
-| 12 | Large original content | planned — its tree / linked-list / advanced graph content is blocked on L1 |
+| L1 | Language: values that may be empty, IS NOTHING / IS NOT NOTHING, narrowing | **complete** |
+| **11** | **Progression + local save** | **next** |
+| 12 | Large original content | planned — tree / linked-list / counting-map content is now expressible (L1) |
 | 13 | Mobile UX polish | planned |
 
-**L1 — Nullable / NOTHING narrowing** must be completed before any
-large-scale tree, linked-list or advanced graph content expansion (and before
-any puzzle that counts with a map). It is a language-capability gap, not a
-content problem.
-
-### Language milestone L1 contract (when asked)
-
-Close the nullable gap with the smallest typed construct, not a type-system
-rewrite.
-
-- One block that tests a nullable value and, inside its body, gives the player
-  a non-null name for it — for example IF *x* IS SOMETHING AS *node*. The
-  narrowing is scoped to that body only; outside it the value stays nullable.
-- Update, together: block catalog + chrome label, `GraphTyping` (the body sees
-  the narrowed type, so the editor picker offers node blocks), lowering (a
-  typed IR form; keep existing IR JSON readable), interpreter, content schema
-  (the block is allowlistable), reference replay, and tests.
-- Unlocks: walking a tree (`tree.left/right`), walking a linked list
-  (`ll.next`), and using `map.get` values in arithmetic (counting maps).
-- Prove it with reference solutions in the content test suite (tree BFS, list
-  traversal, a counting map) — not with new shipped puzzles unless asked.
-- Do not add a general option type, pattern matching, or `any`. Do not change
-  what existing blocks mean.
-
-## Milestone 11 contract (when asked, after L1)
+## Milestone 11 contract (next — when asked)
 
 Progression and local save — on the device only.
 
@@ -526,4 +544,5 @@ Progression and local save — on the device only.
 | [`MILESTONE_8.md`](MILESTONE_8.md) | complete — five real puzzles + reference solutions |
 | [`MILESTONE_9.md`](MILESTONE_9.md) | complete — hint system |
 | [`MILESTONE_10.md`](MILESTONE_10.md) | complete — deterministic performance metrics |
-| this file | MS10 handoff |
+| [`MILESTONE_L1.md`](MILESTONE_L1.md) | complete — values that may be empty and narrowing |
+| this file | L1 handoff |

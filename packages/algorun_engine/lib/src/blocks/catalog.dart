@@ -38,6 +38,17 @@ abstract final class BlockIds {
   static const logicOr = 'logic.or';
   static const logicNot = 'logic.not';
 
+  /// L1: whether a value that may be empty is empty. Only a value that may be
+  /// empty fits (a node from LEFT / RIGHT / NEXT NODE, a map lookup, a
+  /// variable that may hold NOTHING). A check on a plain variable is what
+  /// lets the branch it guards use that variable as a plain value (see
+  /// `Narrowing`).
+  static const logicIsNothing = 'logic.is_nothing';
+  static const logicIsNotNothing = 'logic.is_not_nothing';
+
+  static bool isNothingCheck(String id) =>
+      id == logicIsNothing || id == logicIsNotNothing;
+
   static const arithAdd = 'arith.add';
   static const arithSub = 'arith.sub';
   static const arithMul = 'arith.mul';
@@ -107,7 +118,7 @@ abstract final class BlockIds {
     varSet, varGet, varInc, varDec, varSwap, varCopy,
     litNum, litBool, litStr, litNull,
     cmpEq, cmpNe, cmpLt, cmpLe, cmpGt, cmpGe,
-    logicAnd, logicOr, logicNot,
+    logicAnd, logicOr, logicNot, logicIsNothing, logicIsNotNothing,
     arithAdd, arithSub, arithMul, arithDiv, arithFloorDiv, arithMod,
     arithMin, arithMax, arithAbs,
     arrGet, arrSet, arrLen, arrAppend, arrRemove, arrSwap,
@@ -195,6 +206,8 @@ abstract final class BlockCatalog {
     BlockIds.logicNot: reporter(BlockIds.logicNot, ValueType.boolean, [
       exprIn('arg', ValueType.boolean),
     ]),
+    BlockIds.logicIsNothing: _nothingCheck(BlockIds.logicIsNothing),
+    BlockIds.logicIsNotNothing: _nothingCheck(BlockIds.logicIsNotNothing),
     BlockIds.arithAdd: _numBin(BlockIds.arithAdd),
     BlockIds.arithSub: _numBin(BlockIds.arithSub),
     BlockIds.arithMul: _numBin(BlockIds.arithMul),
@@ -484,5 +497,14 @@ BlockDefinition _eq(String id) => reporter(
         exprIn('left', ValueType.t),
         exprIn('right', ValueType.t),
       ],
+      typeParams: const ['T'],
+    );
+
+/// IS NOTHING / IS NOT NOTHING. The hole is `T?`; typing additionally requires
+/// the plugged value itself to be one that may be empty.
+BlockDefinition _nothingCheck(String id) => reporter(
+      id,
+      ValueType.boolean,
+      [exprIn('value', ValueType.generic('T', nullable: true))],
       typeParams: const ['T'],
     );

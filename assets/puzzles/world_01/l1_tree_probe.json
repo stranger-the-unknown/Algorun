@@ -1,0 +1,141 @@
+{
+  "id": "l1_tree_probe",
+  "version": 1,
+  "title": "Branch Probe",
+  "world": "world_01",
+  "chapter": "engine",
+  "tier": 1,
+  "mode": "build",
+  "concepts": [
+    "nullable"
+  ],
+  "prerequisites": [],
+  "story": "Report the value on the left branch of the root, or 0 when there is no left branch. Probe for values that may be empty: LEFT may give nothing, so check before reading. Not a campaign puzzle.",
+  "io": {
+    "inputs": [
+      {
+        "name": "root",
+        "type": "treeNode"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "Editor probe for L1 (values that may be empty). Unlisted on purpose."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.if",
+      "ctrl.else",
+      "ctrl.return",
+      "var.set",
+      "var.get",
+      "lit.num",
+      "tree.value",
+      "tree.left",
+      "tree.right",
+      "logic.is_nothing",
+      "logic.is_not_nothing"
+    ],
+    "forbid": [],
+    "maxBlocks": 15
+  },
+  "limits": {
+    "maxOps": 2000,
+    "maxDepth": 32,
+    "maxAlloc": 100
+  },
+  "hints": [
+    "Keep LEFT of the root in a name first; it may be nothing.",
+    "IF child IS NOTHING has two answers: 0, or ELSE the value of child."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "has_left",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 3
+            }
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "no_children",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5
+          }
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "only_right",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "right": {
+              "type": "treeNode",
+              "value": 8
+            }
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "deeper_left",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 1
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 4
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 9
+            }
+          }
+        },
+        "out": 2
+      }
+    ]
+  },
+  "verdictSource": "local",
+  "variables": {
+    "pool": [
+      {
+        "name": "child",
+        "type": "treeNode?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "check_then_read"
+  }
+}

@@ -1,6 +1,7 @@
 import '../blocks/block_graph.dart';
 import '../blocks/catalog.dart';
 import '../blocks/definition.dart';
+import '../blocks/narrowing.dart';
 import '../blocks/ports.dart';
 import '../blocks/structure.dart';
 import '../blocks/typing.dart';
@@ -50,6 +51,15 @@ final class _Session {
   final Puzzle puzzle;
   final Map<String, ValueType> env;
   final List<ValidationMessage> errors = [];
+  late final Narrowing narrowing = Narrowing.of(graph);
+
+  /// [name] as a GET at [blockId] reads it: narrowed where a check proved it
+  /// holds something (L1).
+  ValueType? _read(String name, String blockId) {
+    final declared = env[name];
+    if (declared == null) return null;
+    return Narrowing.read(declared, name, narrowing.at(blockId));
+  }
 
   LowerResult run() {
     final structure = GraphStructure.validate(graph);
@@ -323,12 +333,18 @@ final class _Session {
         return null;
       }
     }
+    final aType = _read(a, block.id)!;
+    final bType = _read(b, block.id)!;
+    if (!_fitsVariable(env[a]!, bType, block.id) ||
+        !_fitsVariable(env[b]!, aType, block.id)) {
+      return null;
+    }
     return ExprStmt(
       CallExpr(
         BlockIds.varSwap,
         [
-          VarExpr(a, type: env[a]!, srcBlockId: block.id),
-          VarExpr(b, type: env[b]!, srcBlockId: block.id),
+          VarExpr(a, type: aType, srcBlockId: block.id),
+          VarExpr(b, type: bType, srcBlockId: block.id),
         ],
         type: ValueType.voidType,
         srcBlockId: block.id,
@@ -348,11 +364,25 @@ final class _Session {
       _err('undefined_variable', 'This variable is not defined.', block.id);
       return null;
     }
+    final fromType = _read(from, block.id)!;
+    if (!_fitsVariable(env[dest]!, fromType, block.id)) return null;
     return AssignStmt(
       target: VarLValue(dest, srcBlockId: block.id),
-      value: VarExpr(from, type: env[from]!, srcBlockId: block.id),
+      value: VarExpr(from, type: fromType, srcBlockId: block.id),
       srcBlockId: block.id,
     );
+  }
+
+  /// SWAP / COPY write a variable without a value hole: the value must still
+  /// fit the variable, and one that may be empty needs a check first.
+  bool _fitsVariable(ValueType declared, ValueType value, String blockId) {
+    if (_fitsHole(declared, value)) return true;
+    if (Narrowing.onlyMayBeEmpty(value, (t) => _fitsHole(declared, t))) {
+      _err('may_be_empty', Narrowing.mayBeEmptyMessage, blockId);
+    } else {
+      _err('type_mismatch', 'This piece does not fit here.', blockId);
+    }
+    return false;
   }
 
   AssignStmt? _arrSet(BlockInstance block) {
@@ -442,7 +472,11 @@ final class _Session {
     final hole = expect ??
         GraphTyping.resolveInput(graph, PortRef(parentId, port));
     if (hole != null && !_fitsHole(hole, expr.type)) {
-      _err('type_mismatch', _holeMessage(port), parentId, port);
+      if (Narrowing.onlyMayBeEmpty(expr.type, (t) => _fitsHole(hole, t))) {
+        _err('may_be_empty', Narrowing.mayBeEmptyMessage, parentId, port);
+      } else {
+        _err('type_mismatch', _holeMessage(port), parentId, port);
+      }
       return null;
     }
     return expr;
@@ -489,6 +523,9 @@ final class _Session {
         BlockIds.logicAnd => _binary(block, BinaryOp.and, ValueType.boolean),
         BlockIds.logicOr => _binary(block, BinaryOp.or, ValueType.boolean),
         BlockIds.logicNot => _unary(block, UnaryOp.not, 'arg', ValueType.boolean),
+        BlockIds.logicIsNothing => _nothingCheck(block, UnaryOp.isNothing),
+        BlockIds.logicIsNotNothing =>
+          _nothingCheck(block, UnaryOp.isNotNothing),
         BlockIds.arithAdd => _binary(block, BinaryOp.add, ValueType.number),
         BlockIds.arithSub => _binary(block, BinaryOp.sub, ValueType.number),
         BlockIds.arithMul => _binary(block, BinaryOp.mul, ValueType.number),
@@ -557,12 +594,25 @@ final class _Session {
       _err('undefined_variable', 'Choose a name.', block.id);
       return null;
     }
-    final type = env[name];
+    final type = _read(name, block.id);
     if (type == null) {
       _err('undefined_variable', 'This variable is not defined.', block.id);
       return null;
     }
     return VarExpr(name, type: type, srcBlockId: block.id);
+  }
+
+  /// IS NOTHING / IS NOT NOTHING: a real check at runtime. Only a value that
+  /// may be empty can be checked.
+  UnaryExpr? _nothingCheck(BlockInstance block, UnaryOp op) {
+    final arg = _reqExpr(block.id, 'value');
+    if (arg == null) return null;
+    final problem = Narrowing.checkProblem(arg.type);
+    if (problem != null) {
+      _err('type_mismatch', problem, block.id, 'value');
+      return null;
+    }
+    return UnaryExpr(op, arg, type: ValueType.boolean, srcBlockId: block.id);
   }
 
   BinaryExpr? _binary(BlockInstance block, BinaryOp op, ValueType type) {

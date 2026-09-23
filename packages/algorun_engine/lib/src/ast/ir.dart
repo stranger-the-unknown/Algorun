@@ -525,7 +525,16 @@ enum BinaryOp {
   floorDiv,
 }
 
-enum UnaryOp { not, abs, neg }
+enum UnaryOp {
+  not,
+  abs,
+  neg,
+
+  /// L1: IS NOTHING / IS NOT NOTHING. Appended, so existing IR JSON (which
+  /// names operators) reads unchanged.
+  isNothing,
+  isNotNothing,
+}
 
 final class BinaryExpr extends Expr {
   const BinaryExpr(

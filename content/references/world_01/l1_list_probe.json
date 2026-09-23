@@ -1,0 +1,27 @@
+{
+  "puzzle": "l1_list_probe",
+  "notes": "count = 0; node = head; WHILE node IS NOT NOTHING { count = count + 1; node = NEXT NODE node }; RETURN count. Inside the loop node is a real link, so NEXT NODE accepts it; the new value may be empty and is checked again before the next round.",
+  "metrics": {"ops": 109, "peakAlloc": 0, "peakDepth": 1, "blocks": 16},
+  "solution": {
+    "variables": {"head": "listNode?", "node": "listNode?", "count": "num"},
+    "entryIds": ["set_count_2", "set_node_4", "while_14", "return_16"],
+    "blocks": {
+      "zero_1": {"id": "zero_1", "catalogId": "lit.num", "literals": {"value": 0}},
+      "set_count_2": {"id": "set_count_2", "catalogId": "var.set", "slots": {"value": {"ref": "zero_1"}}, "literals": {"name": "count"}},
+      "get_head_3": {"id": "get_head_3", "catalogId": "var.get", "literals": {"name": "head"}},
+      "set_node_4": {"id": "set_node_4", "catalogId": "var.set", "slots": {"value": {"ref": "get_head_3"}}, "literals": {"name": "node"}},
+      "get_node_5": {"id": "get_node_5", "catalogId": "var.get", "literals": {"name": "node"}},
+      "check_6": {"id": "check_6", "catalogId": "logic.is_not_nothing", "slots": {"value": {"ref": "get_node_5"}}},
+      "get_count_7": {"id": "get_count_7", "catalogId": "var.get", "literals": {"name": "count"}},
+      "one_8": {"id": "one_8", "catalogId": "lit.num", "literals": {"value": 1}},
+      "add_9": {"id": "add_9", "catalogId": "arith.add", "slots": {"left": {"ref": "get_count_7"}, "right": {"ref": "one_8"}}},
+      "set_count_10": {"id": "set_count_10", "catalogId": "var.set", "slots": {"value": {"ref": "add_9"}}, "literals": {"name": "count"}},
+      "get_node_11": {"id": "get_node_11", "catalogId": "var.get", "literals": {"name": "node"}},
+      "next_12": {"id": "next_12", "catalogId": "ll.next", "slots": {"node": {"ref": "get_node_11"}}},
+      "set_node_13": {"id": "set_node_13", "catalogId": "var.set", "slots": {"value": {"ref": "next_12"}}, "literals": {"name": "node"}},
+      "while_14": {"id": "while_14", "catalogId": "ctrl.while", "slots": {"condition": {"ref": "check_6"}, "body": {"list": ["set_count_10", "set_node_13"]}}},
+      "get_count_15": {"id": "get_count_15", "catalogId": "var.get", "literals": {"name": "count"}},
+      "return_16": {"id": "return_16", "catalogId": "ctrl.return", "slots": {"value": {"ref": "get_count_15"}}}
+    }
+  }
+}

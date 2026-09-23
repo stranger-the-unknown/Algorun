@@ -102,6 +102,17 @@ final class ValueType {
           genericName: genericName,
         );
 
+  /// The same type without NOTHING: what a value that may be empty is known to
+  /// hold once a check proved it is not empty (L1 narrowing).
+  ValueType get asNonNullable => nullable
+      ? ValueType(
+          atom,
+          param: param,
+          param2: param2,
+          genericName: genericName,
+        )
+      : this;
+
   ValueType subst(Map<String, ValueType> env) {
     if (atom == TypeAtom.generic) {
       final hit = env[genericName];

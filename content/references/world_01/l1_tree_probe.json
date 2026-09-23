@@ -1,0 +1,23 @@
+{
+  "puzzle": "l1_tree_probe",
+  "notes": "child = LEFT root; IF child IS NOTHING { RETURN 0 } ELSE { RETURN NODE VALUE child }. The ELSE of IS NOTHING is where child is known to be a real node.",
+  "metrics": {"ops": 9, "peakAlloc": 0, "peakDepth": 1, "blocks": 11},
+  "solution": {
+    "variables": {"root": "treeNode", "child": "treeNode?"},
+    "entryIds": ["set_child_3", "if_12"],
+    "blocks": {
+      "get_root_1": {"id": "get_root_1", "catalogId": "var.get", "literals": {"name": "root"}},
+      "left_2": {"id": "left_2", "catalogId": "tree.left", "slots": {"node": {"ref": "get_root_1"}}},
+      "set_child_3": {"id": "set_child_3", "catalogId": "var.set", "slots": {"value": {"ref": "left_2"}}, "literals": {"name": "child"}},
+      "get_child_4": {"id": "get_child_4", "catalogId": "var.get", "literals": {"name": "child"}},
+      "check_5": {"id": "check_5", "catalogId": "logic.is_nothing", "slots": {"value": {"ref": "get_child_4"}}},
+      "zero_6": {"id": "zero_6", "catalogId": "lit.num", "literals": {"value": 0}},
+      "return_7": {"id": "return_7", "catalogId": "ctrl.return", "slots": {"value": {"ref": "zero_6"}}},
+      "get_child_8": {"id": "get_child_8", "catalogId": "var.get", "literals": {"name": "child"}},
+      "value_9": {"id": "value_9", "catalogId": "tree.value", "slots": {"node": {"ref": "get_child_8"}}},
+      "return_10": {"id": "return_10", "catalogId": "ctrl.return", "slots": {"value": {"ref": "value_9"}}},
+      "else_11": {"id": "else_11", "catalogId": "ctrl.else", "slots": {"body": {"list": ["return_10"]}}},
+      "if_12": {"id": "if_12", "catalogId": "ctrl.if", "slots": {"condition": {"ref": "check_5"}, "then": {"list": ["return_7"]}, "else": {"ref": "else_11"}}}
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "id": "l1_list_probe",
+  "version": 1,
+  "title": "Chain Probe",
+  "world": "world_01",
+  "chapter": "engine",
+  "tier": 1,
+  "mode": "build",
+  "concepts": [
+    "nullable"
+  ],
+  "prerequisites": [],
+  "story": "Count the links in a chain. The chain may be empty, and the last link has nothing after it. Probe for values that may be empty: a link is only read after IS NOT NOTHING says it is there. Not a campaign puzzle.",
+  "io": {
+    "inputs": [
+      {
+        "name": "head",
+        "type": "listNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "Editor probe for L1 (values that may be empty). Unlisted on purpose."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.while",
+      "ctrl.return",
+      "var.set",
+      "var.get",
+      "lit.num",
+      "arith.add",
+      "ll.value",
+      "ll.next",
+      "logic.is_nothing",
+      "logic.is_not_nothing"
+    ],
+    "forbid": [],
+    "maxBlocks": 20
+  },
+  "limits": {
+    "maxOps": 2000,
+    "maxDepth": 32,
+    "maxAlloc": 100
+  },
+  "hints": [
+    "Start at the head and step to the NEXT NODE until there is nothing left.",
+    "WHILE node IS NOT NOTHING lets the loop body use node as a real link.",
+    "Setting node to its NEXT NODE may make it empty again; the loop checks it before the next round."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "three_links",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              1,
+              4
+            ]
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "empty_chain",
+        "in": {
+          "head": null
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "one_link",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              7
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "ten_links",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ]
+          }
+        },
+        "out": 10
+      }
+    ]
+  },
+  "verdictSource": "local",
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "listNode?"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "iterative_walk"
+  }
+}
