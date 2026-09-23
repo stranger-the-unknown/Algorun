@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:algorun/progress/progress_store.dart';
 import 'package:algorun/puzzles/asset_repository.dart';
 import 'package:algorun/screens/results/results_screen.dart';
 import 'package:algorun/screens/world_select/world_select_screen.dart';
-import 'package:algorun/state/providers.dart';
 import 'package:algorun/state/run_puzzle.dart';
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/campaign_files.dart';
 
 /// The five MS8 puzzles as the app sees them: loaded from the bundle, played
 /// through the same RUN path as the button.
@@ -122,19 +124,20 @@ void main() {
     }
   });
 
-  testWidgets('world cards count puzzles and open only worlds that have them', (tester) async {
-    final manifest = parseWorldsJson(File('assets/worlds.json').readAsStringSync());
+  testWidgets('world cards show progression, never the probes', (tester) async {
+    // Since MS11 a world's card says where the player stands (see
+    // progression_ui_test.dart); a fresh install starts at Arrays.
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [worldsProvider.overrideWith((ref) async => manifest)],
+        overrides: campaignOverrides(MemoryProgressStore()),
         child: const MaterialApp(home: WorldSelectScreen()),
       ),
     );
     await tester.pumpAndSettle();
 
     expect(find.textContaining('probe'), findsNothing);
-    expect(find.text('1 puzzle'), findsWidgets);
+    expect(find.text('0 of 1 solved'), findsOneWidget);
     expect(find.text('Hash Maps'), findsOneWidget);
-    expect(find.text('Locked — content in later milestones'), findsWidgets);
+    expect(find.text('Locked — learn arrays first'), findsWidgets);
   });
 }

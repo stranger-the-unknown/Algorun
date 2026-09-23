@@ -3,8 +3,8 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current milestone: L1 COMPLETE (language: values that may be empty, IS NOTHING / IS NOT NOTHING, safe branch-local narrowing).**
-**Next milestone: 11 — MS11 is next (progression + local save), see the roadmap.**
+**Current milestone: 11 COMPLETE (progression, local persistence, save and resume — on the device only).**
+**Next milestone: 12 — MS12 is next (large original content), see the roadmap.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
 Do not change the architecture.
@@ -14,8 +14,9 @@ MS6 `39956f967f8102f747be94bc3ad9de4c0703c674`,
 MS7 `7d689dca871b33e58de23c2879d296aff6e74553`,
 MS8 `9b005b88cc1953b9b629f890697746ffccca2939`,
 MS9 `2be68bde64fc537c9a8e211c52d355a6d0c31d52`,
-MS10 `c192118c079e73c8ff78b7fa71d00adf0285959a`, L1 — see `git log` (the commit
-titled "Milestone L1: nullable narrowing").
+MS10 `c192118c079e73c8ff78b7fa71d00adf0285959a`,
+L1 `d850525b2869271381356b27227e42648476192f`, MS11 — see `git log` (the commit
+titled "Milestone 11: progression and local persistence").
 
 ---
 
@@ -71,6 +72,15 @@ algorun/                          Flutter app (repository root)
     state/providers.dart          engineProvider → DefaultEngine
     state/run_puzzle.dart         the RUN path: graph → lower → runTests (+ hintsUsed)
     state/hint_session.dart       HintSession: hints revealed in this visit (MS9)
+    progress/                     MS11, pure Dart except file_progress_store.dart:
+      save_data.dart              PlayerSave, PuzzleProgress, RunNumbers, RunRecord, PlayerSettings, CurrentSession
+      save_codec.dart             encodeSave / decodeSave: the versioned save format
+      campaign.dart               Campaign, evaluateCampaign → CampaignProgress (unlock rules)
+      progress_ledger.dart        completes(), openPuzzle, saveDraft, recordRun (pure updates)
+      progress_store.dart         ProgressStore interface, MemoryProgressStore
+      file_progress_store.dart    FileProgressStore: one JSON file in the app support directory
+    state/progress_providers.dart progressStoreProvider, campaignProvider, progressProvider (autosave), campaignViewProvider
+    state/progress_text.dart      player wording for locks and statuses
   assets/                         bundled with the app
     worlds.json                   14 worlds; 02, 03, 05, 06 and 10 have puzzles
     puzzles/world_01/             ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe (unlisted dev probes)
@@ -101,10 +111,15 @@ algorun/                          Flutter app (repository root)
   test/hint_ui_test.dart          the hint interaction on the real puzzle screen
   test/performance_ui_test.dart   budget wording and the results screen (MS10)
   test/nullable_editor_test.dart  IS NOT NOTHING in the editor, the picker and RUN (L1)
+  test/progress/                  save format, progression, best results, sessions (MS11, no widgets)
+  test/progression_ui_test.dart   fresh install, locks, CONTINUE, restore, RUN completing a puzzle, settings (MS11)
+  test/support/                   shared test helpers (campaign from files, progress fixtures)
   lib/state/performance_text.dart player wording for budgets (MS10)
 ```
 
-App `pubspec.yaml` path-depends on `packages/algorun_engine` only.
+App `pubspec.yaml` path-depends on `packages/algorun_engine` only; its one
+package dependency beyond Flutter and Riverpod is `path_provider` (MS11, to
+find the save directory).
 
 ## Important APIs
 
@@ -319,7 +334,8 @@ file with no puzzle is an error. Nothing is keyed to puzzle ids.
 - `HintSession` (`lib/state/hint_session.dart`, pure Dart) is the only thing
   that counts. Only revealing a *new* hint counts; opening, closing, re-running
   or tapping the disabled button does not. The session lives as long as the
-  puzzle screen; nothing is persisted.
+  puzzle screen; revealed hints are never persisted (only a run's hint count
+  is kept as a metric since MS11).
 - `hintsUsed`: RUN passes `HintSession.used` to `runPuzzle(..., hintsUsed:)`,
   which stamps it with `SuiteResult.withHintsUsed` (both the graded and the
   "cannot run yet" path). The `TestRunner` itself always reports 0 and grading
@@ -424,11 +440,77 @@ lowers and runs.
 
 Details: [`MILESTONE_L1.md`](MILESTONE_L1.md).
 
+### Progression and local save (MS11)
+
+**State.** `PlayerSave` (stored) = `puzzles` (per puzzle `PuzzleProgress`:
+`puzzleVersion`, `completed`, `best`, `solution`, `draft`, `lastRun`,
+`editedSinceRun`) + `settings` (`PlayerSettings.showBriefOnOpen`) + `session`
+(`CurrentSession`: last world and puzzle). `CampaignProgress` (unlocked
+worlds, mastered concepts, statuses, what a lock waits for, the current
+puzzle) is **derived** by `evaluateCampaign(campaign, save)` every time and
+never stored. `Campaign` = the worlds manifest + every puzzle a world lists;
+the dev probes are not in it, are never recorded and never affect anything.
+
+**Unlock rules** (data only — world `concepts` / `prerequisites`, puzzle
+`prerequisites`; no id is special): a world opens when its prerequisites are
+mastered or the player already solved one of its puzzles; it completes when
+open and every listed puzzle is solved (a world with no puzzles completes as
+it opens); a complete world masters its concepts; a puzzle opens when its
+world is open and its own prerequisites are mastered or taught by its world.
+Applied to a fixpoint. Fresh install: Arrays (The Smallest Cart) is open;
+solving it opens Hash Maps, Sliding Window (via the empty Two Pointers) and
+Stack & Queue; Relay Towers opens Graphs (via the empty Linked Lists and
+Trees).
+
+**Completion rule.** A RUN completes its puzzle exactly when
+`suite.kind == ResultKind.correct` — every case right within every budget.
+Correct but over the operation budget (`operationLimit`) does not complete.
+Hints never matter. Completion is never taken back.
+
+**Best results.** Five independent minima over completing runs (`ops`,
+`peakAlloc`, `peakDepth`, `blocks`, `hintsUsed`), each replaced only when
+strictly better; no combined score. A failing run changes only `lastRun`.
+`solution` = the program of the completing run with the fewest operations
+(first wins a tie); the puzzle screen can load it back (undoable).
+
+**Save format** (`save_codec.dart`, `saveVersion: 1`): deterministic JSON
+(sorted keys); programs are `BlockGraph` JSON, never IR; only player state.
+Reading never throws and never invents a completion: unusable text (not JSON,
+no / bad / newer version) is kept aside and play starts fresh; a damaged
+section (one puzzle entry, one program, the settings, the session) is dropped
+on its own with a `SaveIssue`; a program must pass `GraphStructure.validate`
+(unfinished holes are fine). Unknown fields are ignored and not written back.
+Older versions go through a migration table (empty for v1). A puzzle with a
+different `version` keeps `completed` and `draft`, and clears `best`,
+`solution` and `lastRun` (the editor says the puzzle changed).
+
+**Storage.** `FileProgressStore`: `algorun_save.json` in
+`getApplicationSupportDirectory`, written to `.tmp` then renamed; an unusable
+save is copied to `algorun_save.unreadable-<millis>.json`. `main.dart`
+installs it; the provider default is `MemoryProgressStore`, so tests never
+touch the device. Web (preview) keeps progress in memory.
+
+**Autosave** (`ProgressNotifier`): a new editor `BlockGraph` updates the draft
+in memory and is written after 800 ms of quiet; opening a puzzle, RUN, a
+settings change, leaving the puzzle and the app being hidden / paused /
+detached (`AppLifecycleListener` in `AlgorunApp`) write at once. Writes never
+overlap; nothing is recorded before the save has loaded; failures are
+reported (`ProgressNotifier.issues`, debug log), never thrown.
+
+**UI.** Home: PROGRESS card, CONTINUE (last puzzle) or ENTER on a fresh
+install. Worlds / Puzzles: open, solved, locked (*Locked — learn arrays
+first*), no puzzles yet, CURRENT. Puzzle: restores `draft` → `solution` →
+empty; solved check; Load best solution; locked by route shows why. Results:
+PROGRESS lines (*Puzzle solved.* / *New best: …* / *Now open: …*). Settings:
+brief preference, Reset progress (confirmed).
+
+Details: [`MILESTONE_11.md`](MILESTONE_11.md).
+
 ### Editor (MS3) — do not regress
 
 Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bottom `PaletteTray`. Width ≥ 840: palette as a left rail. IF+ELSE draw as one card. Picker = `allowlist ∩ compatiblePlacements`. No TextField for names/numbers (chips + pad). Labels via `BlockChrome` (GREATER THAN, never `cmp.gt`).
 
-## Test results at L1 closeout
+## Test results at MS11 closeout
 
 | Suite | Result |
 |---|---|
@@ -438,7 +520,7 @@ Scratch-style vertical stacks + typed holes. Phone: GIVENS + `ScriptView` + bott
 | `packages/algorun_content` `dart test` | **46 passed** |
 | Content validator (assets + worlds + references) | `OK 9 puzzle(s), 6 warning(s)` + 7 INFO lines |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **50 passed** |
+| Flutter `test` | **111 passed** |
 
 Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (26), MS7 codec
 (40), schema (41), FLOOR DIVIDE (14), MS8 shipped puzzles (30), MS10
@@ -446,17 +528,25 @@ performance (17), L1 values that may be empty (44), contract tests. Content:
 shipped set with references, every reference rule, reference metrics and
 performance rules, hint leak warnings, CLI, the two L1 probes end to end. App:
 editor, picker, RUN, results, the five real puzzles, hints, budget wording,
-and IS NOT NOTHING in the editor.
+IS NOT NOTHING in the editor; MS11 save format (22), progression and best
+results (18), sessions and autosave (9), purity guards (2), progression UI
+(10).
 
 The six warnings are known and deliberate: worlds 12 and 13 require
 `recursion` (no world teaches it yet), and the four dev probes are unlisted.
+
+**Widget tests and assets:** load the campaign from the repository files
+(`test/support/campaign_files.dart`), never through `rootBundle` inside a
+widget test — the bundle caches a pending load made in fake async and the next
+test waits on it forever.
 
 ## Known limitations
 
 ### Open follow-ups
 
 - **Narrowing is deliberately small (L1).** No narrowing through OR / NOT or after an IF whose THEN always returns (use IF / ELSE); assigning a real value does not narrow (check again); only plain variables narrow. The editor checks each drop where it is made, so an edit elsewhere can invalidate an earlier drop — lowering reports it before RUN. RETURN is still not checked against the puzzle's output type. Tree traversal beyond one path needs a queue or stack of nodes until recursion exists.
-- **Hints are a metric only.** `hintsUsed` is shown but not scored or persisted, by design (MS9).
+- **Hints are a metric only.** `hintsUsed` is shown and kept per run (`lastRun`, `best`) but never scored and never blocks anything; revealed hints are not persisted (MS9, MS11).
+- **Progression is deliberately simple (MS11).** A world completes only when every listed puzzle is solved (no mastery threshold yet); inconsistent content (a puzzle needing a concept only a later world teaches) can deadlock and is not yet caught by the validator; an edit less than 800 ms before a kill without a lifecycle event is lost; one save slot, no export, no per-puzzle reset; the campaign loads every listed puzzle at start-up; unreadable-save copies are never cleaned up; web does not persist.
 - **Performance is counted, not scored.** No stars or scores read the budgets yet. A hopeless solution is only known to be "still running" at the measurement ceiling; its correctness beyond it is not claimed. Memory and depth have no overrun measurement. There is no fixture generator: size profiles are explicit fixtures with optional per-case `maxOps` (MS10).
 - **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale.
 - **No random test generation.** A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
@@ -478,7 +568,7 @@ The six warnings are known and deliberate: worlds 12 and 13 require
 
 ## Exact commands
 
-From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at L1 closeout: Flutter 3.47.2, Dart 3.13.2.
+From the **repository root**. Requires Flutter 3.47+ / Dart 3.13+ (app pubspec: `sdk: ^3.13.0`). SDK at MS11 closeout: Flutter 3.47.2, Dart 3.13.2.
 
 ```bash
 flutter pub get
@@ -508,26 +598,28 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | Order | Milestone | Status |
 |---|---|---|
 | 1–10 | skeleton → typed blocks → editor → lowering → interpreter → test runner → schema → five puzzles → hints → performance metrics | complete |
-| L1 | Language: values that may be empty, IS NOTHING / IS NOT NOTHING, narrowing | **complete** |
-| **11** | **Progression + local save** | **next** |
-| 12 | Large original content | planned — tree / linked-list / counting-map content is now expressible (L1) |
+| L1 | Language: values that may be empty, IS NOTHING / IS NOT NOTHING, narrowing | complete |
+| 11 | Progression + local save | complete |
+| **12** | **Large original content** | **next** — tree / linked-list / counting-map content is expressible (L1) and progression is live (MS11) |
 | 13 | Mobile UX polish | planned |
 
-## Milestone 11 contract (next — when asked)
+## Milestone 12 contract (next — when asked)
 
-Progression and local save — on the device only.
+Large original content, through the existing pipeline only.
 
-- Remember, per puzzle, whether it was solved and the player's last graph
-  (as the editor's own `BlockGraph` JSON), plus the best result's operations
-  and hints used, so a player can return and keep improving.
-- Unlock worlds by the rules the content already declares (prerequisites),
-  not by hardcoded ids.
-- Local storage only: no backend, no accounts, no sync. Stored graphs must be
-  re-validated through the engine on load; a graph that no longer lowers
-  (content changed) is kept but shown as needing repair, never silently
-  dropped.
-- No scoring, stars or leaderboards unless asked. Keep every test green and
-  the content validator passing with references.
+- New puzzles are data: each passes the content validator with a reference
+  solution (editor replay, lowering, every case within budget) and its
+  rejects, and is listed by exactly one world. No engine change unless a
+  puzzle genuinely needs one, documented as its own step.
+- Fill the chapters that have no puzzles yet (two pointers, linked lists,
+  trees, heaps, greedy …) in the order the manifest's prerequisites define;
+  progression then unlocks them with no code change. Keep `concepts` /
+  `prerequisites` consistent so every puzzle stays reachable (consider a
+  validator check for it, and a per-world mastery threshold if worlds grow
+  large).
+- Bump a puzzle's `version` for any incompatible change to a shipped puzzle
+  (saved best results for it are then cleared, completion kept).
+- Keep every test green and the validator passing with references.
 
 ## Milestone docs
 
@@ -545,4 +637,5 @@ Progression and local save — on the device only.
 | [`MILESTONE_9.md`](MILESTONE_9.md) | complete — hint system |
 | [`MILESTONE_10.md`](MILESTONE_10.md) | complete — deterministic performance metrics |
 | [`MILESTONE_L1.md`](MILESTONE_L1.md) | complete — values that may be empty and narrowing |
-| this file | L1 handoff |
+| [`MILESTONE_11.md`](MILESTONE_11.md) | complete — progression and local persistence |
+| this file | MS11 handoff |

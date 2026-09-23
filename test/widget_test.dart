@@ -1,6 +1,7 @@
 import 'package:algorun/app.dart';
 import 'package:algorun/editor/editor_controller.dart';
 import 'package:algorun/editor/script_view.dart';
+import 'package:algorun/progress/progress_store.dart';
 import 'package:algorun/puzzles/asset_repository.dart';
 import 'package:algorun/screens/results/results_screen.dart';
 import 'package:algorun/state/run_puzzle.dart';
@@ -8,6 +9,8 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/campaign_files.dart';
 
 Puzzle _editorPuzzle() => parsePuzzleJson(r'''
 {
@@ -52,7 +55,10 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('home shows wordmark and enter', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: AlgorunApp()));
+    await tester.pumpWidget(
+      ProviderScope(overrides: campaignOverrides(MemoryProgressStore()), child: const AlgorunApp()),
+    );
+    await tester.pump();
     expect(find.text('ALGORUN'), findsOneWidget);
     expect(find.text('ENTER'), findsOneWidget);
   });

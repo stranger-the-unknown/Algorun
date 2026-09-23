@@ -3,22 +3,28 @@ import 'package:flutter/foundation.dart';
 
 /// Owns [GraphHistory]. Pointer / sheet UI does not go through Riverpod.
 final class EditorController extends ChangeNotifier {
+  /// [initialGraph] restores a saved program; the puzzle's givens are always
+  /// declared with their current types on top of it.
   EditorController({
     required this.puzzle,
     bool seedExample = false,
+    BlockGraph? initialGraph,
   }) : _history = GraphHistory(
-          BlockGraph(
-            blocks: const {},
-            variables: {
-              for (final input in puzzle.io.inputs) input.name: input.type,
-            },
-          ),
+          initialGraph == null
+              ? BlockGraph(blocks: const {}, variables: _givens(puzzle))
+              : initialGraph.copyWith(
+                  variables: {...initialGraph.variables, ..._givens(puzzle)},
+                ),
         ) {
-    if (seedExample) {
+    if (seedExample && initialGraph == null) {
       seedWorkingExample();
       _history.markBaseline();
     }
   }
+
+  static Map<String, ValueType> _givens(Puzzle puzzle) => {
+        for (final input in puzzle.io.inputs) input.name: input.type,
+      };
 
   final Puzzle puzzle;
   final GraphHistory _history;
@@ -196,6 +202,16 @@ final class EditorController extends ChangeNotifier {
     selectedBlockId = null;
   }
 
+  /// Replace the whole program (e.g. with the saved best solution). One undo
+  /// step brings the previous program back.
+  void replaceGraph(BlockGraph graph) {
+    apply(_ReplaceGraphCommand(
+      graph.copyWith(variables: {...graph.variables, ..._givens(puzzle)}),
+    ));
+    _clearSelection();
+    collapsedIds.clear();
+  }
+
   void setLiteral(String blockId, String key, Object? value) {
     apply(SetLiteralsCommand(blockId, {key: value}));
   }
@@ -312,4 +328,20 @@ final class EditorController extends ChangeNotifier {
       to: PortRef(plus, 'right'),
     );
   }
+}
+
+final class _ReplaceGraphCommand implements GraphCommand {
+  _ReplaceGraphCommand(this.graph);
+
+  final BlockGraph graph;
+  BlockGraph? _before;
+
+  @override
+  GraphMutationResult execute(BlockGraph current) {
+    _before = current;
+    return GraphMutationResult.ok(graph);
+  }
+
+  @override
+  BlockGraph undo(BlockGraph current) => _before ?? current;
 }

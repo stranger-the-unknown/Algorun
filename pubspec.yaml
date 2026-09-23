@@ -12,6 +12,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   algorun_engine:
     path: packages/algorun_engine
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:

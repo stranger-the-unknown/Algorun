@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 
+import '../../progress/progress_ledger.dart';
+import '../../progress/save_data.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../state/performance_text.dart';
 
@@ -11,12 +13,36 @@ final class ResultsArgs {
     required this.puzzle,
     required this.validation,
     required this.suite,
+    this.progress,
   });
 
   final Puzzle puzzle;
   final ValidationReport validation;
   final SuiteResult suite;
+
+  /// What the run changed in saved progress; null for an unsaved puzzle.
+  final RunRecordOutcome? progress;
 }
+
+/// Player words for what a RUN changed in their progress; empty when nothing
+/// did.
+List<String> progressLines(RunRecordOutcome? outcome) {
+  if (outcome == null) return const [];
+  return [
+    if (outcome.firstCompletion) 'Puzzle solved.',
+    if (outcome.improved.isNotEmpty)
+      'New best: ${[for (final m in BestMetric.values) if (outcome.improved.contains(m)) _metricWords(m)].join(', ')}.',
+    if (outcome.opened.isNotEmpty) 'Now open: ${outcome.opened.map((w) => w.title).join(', ')}.',
+  ];
+}
+
+String _metricWords(BestMetric metric) => switch (metric) {
+      BestMetric.ops => 'fewest steps',
+      BestMetric.peakAlloc => 'least memory',
+      BestMetric.peakDepth => 'least depth',
+      BestMetric.blocks => 'fewest blocks',
+      BestMetric.hintsUsed => 'fewest hints',
+    };
 
 final class ResultsScreen extends StatelessWidget {
   const ResultsScreen({super.key});
@@ -29,6 +55,7 @@ final class ResultsScreen extends StatelessWidget {
     }
     final suite = args.suite;
     final kind = suite.kind;
+    final progress = progressLines(args.progress);
     return Scaffold(
       appBar: AppBar(title: const Text('Result')),
       body: Padding(
@@ -64,6 +91,15 @@ final class ResultsScreen extends StatelessWidget {
                         height: 1.45,
                       ),
                     ),
+                    if (progress.isNotEmpty) ...[
+                      const SizedBox(height: AppSpace.s4),
+                      const _SectionLabel('PROGRESS'),
+                      for (final line in progress)
+                        Padding(
+                          padding: const EdgeInsets.only(top: AppSpace.s2),
+                          child: Text(line, style: const TextStyle(color: AppColors.ok)),
+                        ),
+                    ],
                     if (args.validation.messages.isNotEmpty) ...[
                       const SizedBox(height: AppSpace.s4),
                       const _SectionLabel('WHAT TO FIX'),

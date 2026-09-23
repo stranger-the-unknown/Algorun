@@ -6,22 +6,76 @@ import '../../editor/editor_controller.dart';
 import '../../editor/givens_bar.dart';
 import '../../editor/palette_tray.dart';
 import '../../editor/script_view.dart';
+import '../../progress/campaign.dart';
+import '../../progress/progress_ledger.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../state/hint_session.dart';
+import '../../state/progress_providers.dart';
 import '../../state/providers.dart';
 import '../../state/run_puzzle.dart';
 import '../results/results_screen.dart';
 
-final class PuzzleScreen extends ConsumerWidget {
+/// Route `/puzzle`, arguments `{'worldId': …, 'puzzleId': …}`.
+///
+/// A campaign puzzle opens only when progression has unlocked it; it restores
+/// the saved program and saves as the player works. A puzzle no world lists
+/// (a dev probe) opens as before and is never saved.
+final class PuzzleScreen extends ConsumerStatefulWidget {
   const PuzzleScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PuzzleScreen> createState() => _PuzzleScreenState();
+}
+
+final class _Opening {
+  const _Opening(this.puzzle, {this.locked, this.opened, this.save, this.briefOpen = true});
+
+  final Puzzle puzzle;
+
+  /// Concepts still needed, when the puzzle is locked.
+  final List<String>? locked;
+  final OpenedPuzzle? opened;
+  final PuzzleSaveHooks? save;
+  final bool briefOpen;
+}
+
+class _PuzzleScreenState extends ConsumerState<PuzzleScreen> {
+  Future<_Opening>? _opening;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
-    final worldId = args?['worldId'] as String? ?? 'world_01';
-    final puzzleId = args?['puzzleId'] as String? ?? 'ms3_editor_probe';
-    return FutureBuilder<Puzzle>(
-      future: ref.read(puzzleRepositoryProvider).loadPuzzle(worldId, puzzleId),
+    _opening ??= _open(
+      args?['worldId'] as String? ?? 'world_01',
+      args?['puzzleId'] as String? ?? 'ms3_editor_probe',
+    );
+  }
+
+  Future<_Opening> _open(String worldId, String puzzleId) async {
+    final campaign = await ref.read(campaignProvider.future);
+    final save = await ref.read(progressProvider.future);
+    final puzzle = campaign.puzzles[puzzleId];
+    if (puzzle == null) {
+      return _Opening(await ref.read(puzzleRepositoryProvider).loadPuzzle(worldId, puzzleId));
+    }
+    final progress = evaluateCampaign(campaign, save);
+    if (!progress.isPuzzleOpen(puzzleId)) {
+      return _Opening(puzzle, locked: progress.missingFor(puzzleId));
+    }
+    final notifier = ref.read(progressProvider.notifier);
+    return _Opening(
+      puzzle,
+      opened: notifier.openPuzzle(campaign, puzzle),
+      save: _SavedPuzzle(notifier, campaign, puzzle),
+      briefOpen: save.settings.showBriefOnOpen,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<_Opening>(
+      future: _opening,
       builder: (context, snap) {
         if (snap.hasError) {
           return Scaffold(
@@ -34,19 +88,119 @@ final class PuzzleScreen extends ConsumerWidget {
             ),
           );
         }
-        if (!snap.hasData) {
+        final opening = snap.data;
+        if (opening == null) {
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
-        return PuzzleEditor(puzzle: snap.data!);
+        if (opening.locked case final missing?) {
+          return _LockedPuzzle(puzzle: opening.puzzle, missing: missing);
+        }
+        return PuzzleEditor(
+          puzzle: opening.puzzle,
+          initialGraph: opening.opened?.graph,
+          save: opening.save,
+          briefOpen: opening.briefOpen,
+          notice: (opening.opened?.puzzleChanged ?? false)
+              ? 'This puzzle changed since you last played it. Your program was kept; RUN shows what to update.'
+              : null,
+        );
       },
     );
   }
 }
 
+class _LockedPuzzle extends StatelessWidget {
+  const _LockedPuzzle({required this.puzzle, required this.missing});
+
+  final Puzzle puzzle;
+  final List<String> missing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(puzzle.title)),
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpace.s5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.lock_outline, color: AppColors.faint),
+            const SizedBox(height: AppSpace.s3),
+            Text(
+              missing.isEmpty
+                  ? 'This puzzle is locked.'
+                  : 'This puzzle is locked. It opens once you have learned ${missing.map(conceptWords).join(', ')}.',
+              style: const TextStyle(color: AppColors.muted, height: 1.45),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// How a puzzle screen talks to saved progress. A puzzle without it (a probe,
+/// or a test) plays exactly the same and saves nothing.
+abstract interface class PuzzleSaveHooks {
+  /// The program changed (autosave; written after a short pause).
+  void graphChanged(BlockGraph graph);
+
+  /// A RUN finished. Returns what it changed in the player's progress.
+  RunRecordOutcome runFinished(BlockGraph graph, SuiteResult suite);
+
+  /// The player is leaving the puzzle: write now.
+  void leaving();
+
+  /// The saved best solution, if the puzzle has been solved.
+  BlockGraph? bestSolution();
+
+  bool get solved;
+}
+
+final class _SavedPuzzle implements PuzzleSaveHooks {
+  _SavedPuzzle(this.notifier, this.campaign, this.puzzle);
+
+  final ProgressNotifier notifier;
+  final Campaign campaign;
+  final Puzzle puzzle;
+
+  @override
+  void graphChanged(BlockGraph graph) => notifier.saveDraft(campaign, puzzle, graph);
+
+  @override
+  RunRecordOutcome runFinished(BlockGraph graph, SuiteResult suite) =>
+      notifier.recordRun(campaign, puzzle, graph, suite);
+
+  @override
+  void leaving() => notifier.flush();
+
+  @override
+  BlockGraph? bestSolution() => notifier.progressOf(puzzle.id)?.solution;
+
+  @override
+  bool get solved => notifier.progressOf(puzzle.id)?.completed ?? false;
+}
+
 /// One puzzle being played: brief, hints, editor and RUN.
 final class PuzzleEditor extends ConsumerStatefulWidget {
-  const PuzzleEditor({super.key, required this.puzzle});
+  const PuzzleEditor({
+    super.key,
+    required this.puzzle,
+    this.initialGraph,
+    this.save,
+    this.briefOpen = true,
+    this.notice,
+  });
+
   final Puzzle puzzle;
+
+  /// A saved program to restore.
+  final BlockGraph? initialGraph;
+  final PuzzleSaveHooks? save;
+  final bool briefOpen;
+
+  /// Shown once above the brief.
+  final String? notice;
 
   @override
   ConsumerState<PuzzleEditor> createState() => _PuzzleEditorState();
@@ -55,8 +209,9 @@ final class PuzzleEditor extends ConsumerStatefulWidget {
 class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
   late final EditorController _controller;
   late final HintSession _hints = HintSession(widget.puzzle.hints);
-  bool _briefOpen = true;
+  late bool _briefOpen = widget.briefOpen;
   bool _hintsOpen = false;
+  late BlockGraph _saved;
 
   @override
   void initState() {
@@ -64,31 +219,55 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
     _controller = EditorController(
       puzzle: widget.puzzle,
       seedExample: widget.puzzle.id == 'ms3_editor_probe',
+      initialGraph: widget.initialGraph,
     );
+    _controller.flash = widget.notice;
+    _saved = _controller.graph;
+    _controller.addListener(_autosave);
+  }
+
+  /// Only a new program counts as a change: selection, the picker and the
+  /// hint panel never write.
+  void _autosave() {
+    if (identical(_controller.graph, _saved)) return;
+    _saved = _controller.graph;
+    widget.save?.graphChanged(_saved);
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_autosave);
+    widget.save?.leaving();
     _controller.dispose();
     super.dispose();
   }
 
-  void _run() {
+  Future<void> _run() async {
     final outcome = runPuzzle(
       ref.read(engineProvider),
       _controller.graph,
       widget.puzzle,
       hintsUsed: _hints.used,
     );
-    Navigator.pushNamed(
+    final progress = widget.save?.runFinished(_controller.graph, outcome.suite);
+    await Navigator.pushNamed(
       context,
       '/results',
       arguments: ResultsArgs(
         puzzle: widget.puzzle,
         validation: outcome.validation,
         suite: outcome.suite,
+        progress: progress,
       ),
     );
+    if (mounted) setState(() {});
+  }
+
+  void _loadBest() {
+    final best = widget.save?.bestSolution();
+    if (best == null) return;
+    _controller.replaceGraph(best);
+    _controller.showFlash('Your best solution is loaded. UNDO brings back the program you had.');
   }
 
   @override
@@ -97,10 +276,27 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
       listenable: _controller,
       builder: (context, _) {
         final wide = MediaQuery.sizeOf(context).width >= 840;
+        final solved = widget.save?.solved ?? false;
+        final best = widget.save?.bestSolution();
         return Scaffold(
           appBar: AppBar(
-            title: Text(widget.puzzle.title),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(child: Text(widget.puzzle.title, overflow: TextOverflow.ellipsis)),
+                if (solved) ...[
+                  const SizedBox(width: 8),
+                  const Icon(Icons.check_circle, size: 18, color: AppColors.ok, semanticLabel: 'Solved'),
+                ],
+              ],
+            ),
             actions: [
+              if (best != null)
+                IconButton(
+                  tooltip: 'Load best solution',
+                  onPressed: _loadBest,
+                  icon: const Icon(Icons.emoji_events_outlined),
+                ),
               IconButton(
                 tooltip: 'Undo',
                 onPressed: _controller.canUndo ? _controller.undo : null,
