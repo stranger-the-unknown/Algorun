@@ -7,6 +7,8 @@ anything. It is written so you can continue without any previous conversation.
 **Next milestone: 14 — the user decides: a second content batch through the MS12 pipeline (recommended first), or a language milestone (player functions / recursion) that unblocks Backtracking.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
+
+**Also complete (UX/playtest):** editor scroll-follows a block moved with UP/DOWN (MS13 reveal path + visibility check); debug/assert builds unlock all campaign puzzles via PlaytestFlags.unlockAllPuzzles set in main (stripped from release). Does not change unlock rules, validators, or budgets.
 Do not change the architecture.
 
 Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`,

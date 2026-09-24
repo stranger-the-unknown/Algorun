@@ -1,5 +1,6 @@
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../l10n/l10n.dart';
@@ -51,18 +52,38 @@ final class StatementTile extends StatelessWidget {
 
 /// Scrolls this tile into view the first time it is built after the
 /// controller asked for it (a placement, a move, a copy).
+///
+/// Only adjusts scroll when the block is not already fully visible, so a
+/// short UP/DOWN inside the viewport does not jump the camera.
 void revealWhenBuilt(BuildContext context, EditorController controller, String blockId) {
   if (controller.revealId != blockId) return;
+  final epoch = controller.revealEpoch;
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (!context.mounted || !controller.takeReveal(blockId)) return;
+    if (!context.mounted || !controller.takeReveal(blockId, epoch)) return;
+    if (blockFullyVisible(context)) return;
     Scrollable.ensureVisible(
       context,
       alignment: 0.3,
-      duration: const Duration(milliseconds: 220),
-      curve: Curves.easeOutCubic,
+      duration: Duration.zero,
       alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
     );
   });
+}
+
+/// Whether [context]'s render box already sits fully inside its scroll viewport.
+@visibleForTesting
+bool blockFullyVisible(BuildContext context, {double slack = 4}) {
+  final object = context.findRenderObject();
+  if (object is! RenderBox || !object.hasSize) return false;
+  final viewport = RenderAbstractViewport.maybeOf(object);
+  if (viewport == null) return true;
+  final scrollable = Scrollable.maybeOf(context);
+  if (scrollable == null) return true;
+  final pixels = scrollable.position.pixels;
+  final viewBottom = pixels + scrollable.position.viewportDimension;
+  final top = viewport.getOffsetToReveal(object, 0.0).offset;
+  final bottom = viewport.getOffsetToReveal(object, 1.0).offset;
+  return top >= pixels - slack && bottom <= viewBottom + slack;
 }
 
 void _select(EditorController controller, String id) {

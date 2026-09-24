@@ -21,8 +21,12 @@ final class ScriptView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ids = controller.graph.entryIds;
+    // While a reveal is pending, build far past the viewport so a moved
+    // block that left the lazy window still mounts and can scroll-into-view.
     return CustomScrollView(
       key: const PageStorageKey('script'),
+      // ignore: deprecated_member_use
+      cacheExtent: controller.revealId != null ? 100000 : null,
       slivers: [
         if (header.isNotEmpty) SliverList.list(children: header),
         if (ids.isEmpty)

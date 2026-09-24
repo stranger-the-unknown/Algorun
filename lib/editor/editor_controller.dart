@@ -112,6 +112,10 @@ final class EditorController extends ChangeNotifier {
   /// A block the script should scroll into view once it is built.
   String? revealId;
 
+  /// Bumped on every [_reveal], so a stale post-frame callback cannot steal
+  /// a newer reveal (rapid UP/DOWN taps).
+  int revealEpoch = 0;
+
   BlockGraph get graph => _history.current;
   bool get canUndo => _history.canUndo;
   bool get canRedo => _history.canRedo;
@@ -249,6 +253,7 @@ final class EditorController extends ChangeNotifier {
   void _clearSelection() {
     activeHole = null;
     selectedBlockId = null;
+    revealId = null;
   }
 
   void _dropStaleFolds() {
@@ -397,6 +402,7 @@ final class EditorController extends ChangeNotifier {
   /// Scroll [id] into view once built, unfolding what hides it.
   void _reveal(String id) {
     revealId = id;
+    revealEpoch++;
     var unfolded = false;
     for (final a in ancestorsOf(id)) {
       unfolded = collapsedIds.remove(a) || unfolded;
@@ -405,8 +411,9 @@ final class EditorController extends ChangeNotifier {
   }
 
   /// A tile calls this once it is on screen; true means scroll to it.
-  bool takeReveal(String id) {
-    if (revealId != id) return false;
+  /// [epoch] must match the [_reveal] that asked for this id.
+  bool takeReveal(String id, int epoch) {
+    if (revealId != id || revealEpoch != epoch) return false;
     revealId = null;
     return true;
   }

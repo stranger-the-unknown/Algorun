@@ -1,5 +1,6 @@
 import 'package:algorun_engine/algorun_engine.dart';
 
+import 'playtest_flags.dart';
 import 'save_data.dart';
 
 /// The playable campaign: the worlds manifest and every puzzle a world lists,
@@ -129,6 +130,20 @@ CampaignProgress evaluateCampaign(Campaign campaign, PlayerSave save) {
         puzzleStatus[id] = PuzzleStatus.inProgress;
       } else {
         puzzleStatus[id] = PuzzleStatus.open;
+      }
+    }
+  }
+
+  if (PlaytestFlags.unlockAllPuzzles) {
+    for (final w in campaign.manifest.worlds) {
+      if (worldStatus[w.id] == WorldStatus.locked) {
+        worldStatus[w.id] =
+            w.puzzleIds.isEmpty ? WorldStatus.empty : WorldStatus.open;
+      }
+      for (final id in w.puzzleIds) {
+        if (puzzleStatus[id] == PuzzleStatus.locked) {
+          puzzleStatus[id] = PuzzleStatus.open;
+        }
       }
     }
   }
