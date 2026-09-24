@@ -127,12 +127,23 @@ final class PuzzleProgress {
 
 /// Player preferences.
 final class PlayerSettings {
-  const PlayerSettings({this.showBriefOnOpen = true});
+  const PlayerSettings({this.showBriefOnOpen = true, this.language = 'en'});
 
   /// Whether a puzzle opens with its BRIEF expanded.
   final bool showBriefOnOpen;
 
+  /// The language of every player-facing text: `en` or `tr`. Block names
+  /// (IF, WHILE, RETURN…) stay English in every language.
+  final String language;
+
+  static const languages = ['en', 'tr'];
+
   static const defaults = PlayerSettings();
+
+  PlayerSettings copyWith({bool? showBriefOnOpen, String? language}) => PlayerSettings(
+        showBriefOnOpen: showBriefOnOpen ?? this.showBriefOnOpen,
+        language: language ?? this.language,
+      );
 }
 
 /// The puzzle the player was last in, for CONTINUE. The editable program is

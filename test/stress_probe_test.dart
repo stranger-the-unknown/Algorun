@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:algorun/dev/stress_probe.dart';
 import 'package:algorun/editor/editor_controller.dart';
 import 'package:algorun/editor/script_view.dart';
+import 'package:algorun/l10n/content_text.dart';
 import 'package:algorun/progress/progress_ledger.dart';
 import 'package:algorun/progress/save_data.dart';
 import 'package:algorun/screens/puzzle/puzzle_screen.dart';
@@ -47,7 +48,7 @@ final class _Hooks implements PuzzleSaveHooks {
   @override
   bool get solved => false;
   @override
-  NextPuzzle? next() => null;
+  NextPuzzle? next(ContentText text) => null;
 }
 
 Future<void> _open(WidgetTester tester, {BlockGraph? initial, PuzzleSaveHooks? hooks}) async {

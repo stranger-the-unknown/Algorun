@@ -1,6 +1,7 @@
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 import 'hole_picker.dart';
@@ -30,6 +31,7 @@ final class ScriptView extends StatelessWidget {
             sliver: SliverToBoxAdapter(
               child: Builder(
                 builder: (context) => _EmptyProgram(
+                  l: context.l10n,
                   active: controller.activeHole == PortRef.mainBody,
                   onTap: () => HolePicker.open(context, controller, PortRef.mainBody),
                 ),
@@ -82,7 +84,8 @@ final class ScriptView extends StatelessWidget {
 
 /// An empty program is one big "add step": the first thing to tap.
 class _EmptyProgram extends StatelessWidget {
-  const _EmptyProgram({required this.active, required this.onTap});
+  const _EmptyProgram({required this.l, required this.active, required this.onTap});
+  final AppLocalizations l;
   final bool active;
   final VoidCallback onTap;
 
@@ -91,7 +94,7 @@ class _EmptyProgram extends StatelessWidget {
     return Semantics(
       container: true,
       button: true,
-      label: 'add step',
+      label: l.addStep,
       excludeSemantics: true,
       child: Material(
         color: AppColors.elevated,
@@ -105,21 +108,23 @@ class _EmptyProgram extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: active ? AppColors.accent : AppColors.holeOutline),
             ),
-            child: const Column(
+            child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add, size: 20, color: AppColors.fg),
-                    SizedBox(width: 8),
-                    Text('add step', style: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.6)),
+                    const Icon(Icons.add, size: 20, color: AppColors.fg),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(l.addStep, style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.6)),
+                    ),
                   ],
                 ),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text(
-                  'Your program is empty. Tap to place the first instruction.',
+                  l.emptyProgram,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.muted, height: 1.4),
+                  style: const TextStyle(color: AppColors.muted, height: 1.4),
                 ),
               ],
             ),

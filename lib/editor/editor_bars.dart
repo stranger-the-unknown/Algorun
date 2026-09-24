@@ -2,6 +2,8 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/terms.dart';
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 import 'hole_picker.dart';
@@ -14,8 +16,10 @@ final class FlashBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = controller.flash;
-    if (text == null) return const SizedBox.shrink();
+    final notice = controller.flash;
+    if (notice == null) return const SizedBox.shrink();
+    final l = context.l10n;
+    final text = notice.render(l);
     return Semantics(
       liveRegion: true,
       child: Material(
@@ -33,7 +37,7 @@ final class FlashBanner extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: 'Dismiss',
+                tooltip: l.dismiss,
                 onPressed: controller.dismissFlash,
                 icon: const Icon(Icons.close, size: 18, color: AppColors.muted),
               ),
@@ -65,53 +69,54 @@ final class BlockActionsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final size = info.size;
-    final title = size > 1 ? '${info.label} · ${blocksWord(size)}' : info.label;
+    final title = size > 1 ? l.selectionTitle(info.label, blocksText(size, l)) : info.label;
     final actions = <Widget>[
       if (info.isStatement) ...[
         _BarAction(
           icon: Icons.arrow_upward,
-          label: 'UP',
-          tooltip: 'Move up',
+          label: l.actionUp,
+          tooltip: l.moveUp,
           onPressed: info.moves.contains(MoveDirection.up) ? () => controller.moveSelected(MoveDirection.up) : null,
         ),
         _BarAction(
           icon: Icons.arrow_downward,
-          label: 'DOWN',
-          tooltip: 'Move down',
+          label: l.actionDown,
+          tooltip: l.moveDown,
           onPressed:
               info.moves.contains(MoveDirection.down) ? () => controller.moveSelected(MoveDirection.down) : null,
         ),
         _BarAction(
           icon: Icons.format_indent_decrease,
-          label: 'OUT',
-          tooltip: 'Move out of the block around it',
+          label: l.actionOut,
+          tooltip: l.moveOut,
           onPressed: info.moves.contains(MoveDirection.out) ? () => controller.moveSelected(MoveDirection.out) : null,
         ),
         _BarAction(
           icon: Icons.format_indent_increase,
-          label: 'IN',
-          tooltip: 'Move into the block above',
+          label: l.actionIn,
+          tooltip: l.moveIn,
           onPressed:
               info.moves.contains(MoveDirection.into) ? () => controller.moveSelected(MoveDirection.into) : null,
         ),
         _BarAction(
           icon: Icons.content_copy,
-          label: 'COPY',
-          tooltip: 'Duplicate',
+          label: l.actionCopy,
+          tooltip: l.duplicate,
           onPressed: info.canDuplicate ? controller.duplicateSelected : null,
         ),
       ] else
         _BarAction(
           icon: Icons.swap_horiz,
-          label: 'REPLACE',
-          tooltip: 'Replace this value',
+          label: l.actionReplace,
+          tooltip: l.replaceValue,
           onPressed: () => _replace(context),
         ),
       _BarAction(
         icon: Icons.delete_outline,
-        label: 'DELETE',
-        tooltip: size > 1 ? 'Delete it and the ${blocksWord(size - 1)} inside' : 'Delete',
+        label: l.actionDelete,
+        tooltip: size > 1 ? l.deleteWithInside(blocksText(size - 1, l)) : l.delete,
         onPressed: () {
           HapticFeedback.mediumImpact();
           controller.deleteSelected();
@@ -130,7 +135,7 @@ final class BlockActionsBar extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Text('SELECTED', style: AppText.label),
+                  Text(l.selected, style: AppText.label),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -141,7 +146,7 @@ final class BlockActionsBar extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Done',
+                    tooltip: l.done,
                     onPressed: controller.clearSelection,
                     icon: const Icon(Icons.close, color: AppColors.muted),
                   ),
@@ -225,6 +230,7 @@ final class RunBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final count = controller.blockCount;
     final max = controller.puzzle.blocks.maxBlocks;
     final over = max != null && count > max;
@@ -239,12 +245,12 @@ final class RunBar extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  tooltip: 'Undo',
+                  tooltip: l.undo,
                   onPressed: controller.canUndo ? controller.undo : null,
                   icon: const Icon(Icons.undo),
                 ),
                 IconButton(
-                  tooltip: 'Redo',
+                  tooltip: l.redo,
                   onPressed: controller.canRedo ? controller.redo : null,
                   icon: const Icon(Icons.redo),
                 ),
@@ -252,8 +258,8 @@ final class RunBar extends StatelessWidget {
                 Expanded(
                   child: Semantics(
                     label: max == null
-                        ? '$count blocks'
-                        : '$count of $max blocks${over ? ', over the budget' : ''}',
+                        ? blocksText(count, l)
+                        : '${l.blockCountSemantics(count, max)}${over ? l.overBudgetSuffix : ''}',
                     excludeSemantics: true,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -267,7 +273,7 @@ final class RunBar extends StatelessWidget {
                             ],
                             Flexible(
                               child: Text(
-                                max == null ? '$count blocks' : '$count / $max blocks',
+                                max == null ? blocksText(count, l) : l.blockCountWithMax(count, max),
                                 key: const Key('block-count'),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -282,7 +288,7 @@ final class RunBar extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          saved ? 'Saved on this device' : 'Practice · not saved',
+                          saved ? l.savedOnDevice : l.practiceNotSaved,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(color: AppColors.muted, fontSize: 12),
@@ -301,7 +307,7 @@ final class RunBar extends StatelessWidget {
                           child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.muted),
                         )
                       : const Icon(Icons.play_arrow_rounded),
-                  label: Text(running ? 'RUNNING' : 'RUN'),
+                  label: Text(running ? l.running : l.run),
                 ),
               ],
             ),

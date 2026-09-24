@@ -2,6 +2,8 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/terms.dart';
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 import 'editor_theme.dart';
@@ -148,7 +150,7 @@ class _Hat extends StatelessWidget {
       // INCREMENT / DECREMENT only take numbers; SET takes any variable.
       final numbersOnly = block.catalogId != BlockIds.varSet;
       children.add(NameChip(
-        name: name ?? 'name',
+        name: name ?? context.l10n.namePlaceholder,
         onTap: () {
           controller.selectBlock(block.id);
           LiteralSheet.showVariable(
@@ -160,7 +162,6 @@ class _Hat extends StatelessWidget {
               for (final e in controller.graph.variables.entries)
                 if (!numbersOnly || e.value.atom == TypeAtom.number) e.key,
             ],
-            allowCreate: !numbersOnly,
           );
         },
       ));
@@ -256,7 +257,7 @@ class _CBlock extends StatelessWidget {
                     Align(
                       alignment: Alignment.topCenter,
                       child: IconButton(
-                        tooltip: collapsed ? 'Expand' : 'Collapse',
+                        tooltip: collapsed ? context.l10n.expand : context.l10n.collapse,
                         onPressed: () => controller.toggleCollapsed(block.id),
                         icon: Icon(
                           collapsed ? Icons.unfold_more : Icons.unfold_less,
@@ -308,7 +309,7 @@ class _CBlock extends StatelessWidget {
     if (block.catalogId == BlockIds.ctrlForRange ||
         block.catalogId == BlockIds.ctrlForEach) {
       children.add(NameChip(
-        name: name ?? 'item',
+        name: name ?? context.l10n.itemPlaceholder,
         onTap: () {
           controller.selectBlock(block.id);
           LiteralSheet.showVariable(
@@ -317,7 +318,6 @@ class _CBlock extends StatelessWidget {
             blockId: block.id,
             key: 'name',
             names: controller.graph.variables.keys.toList(),
-            allowCreate: true,
           );
         },
       ));
@@ -366,7 +366,8 @@ class _FoldedSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = count == 0 ? 'Folded · empty' : 'Folded · ${blocksWord(count)} inside';
+    final l = context.l10n;
+    final text = count == 0 ? l.foldedEmpty : l.foldedInside(blocksText(count, l));
     return InkWell(
       onTap: onOpen,
       child: Container(
@@ -430,7 +431,7 @@ class _Well extends StatelessWidget {
               const Spacer(),
               if (onRemove != null)
                 IconButton(
-                  tooltip: 'Remove ELSE',
+                  tooltip: context.l10n.removeElse,
                   onPressed: onRemove,
                   icon: const Icon(Icons.close, size: 18, color: AppColors.muted),
                 ),
@@ -478,7 +479,7 @@ class _AddElse extends StatelessWidget {
         child: TextButton.icon(
           onPressed: () => HolePicker.open(context, controller, PortRef(ifId, 'else')),
           icon: const Icon(Icons.add, size: 18),
-          label: const Text('ADD ELSE'),
+          label: Text(context.l10n.addElse),
         ),
       ),
     );
@@ -498,7 +499,7 @@ final class AddStepButton extends StatelessWidget {
     return Semantics(
       container: true,
       button: true,
-      label: 'add step',
+      label: context.l10n.addStep,
       excludeSemantics: true,
       child: Material(
         color: Colors.transparent,
@@ -510,13 +511,13 @@ final class AddStepButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
               mainAxisAlignment: compact ? MainAxisAlignment.start : MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.add, size: 18, color: AppColors.muted),
-                SizedBox(width: 6),
+              children: [
+                const Icon(Icons.add, size: 18, color: AppColors.muted),
+                const SizedBox(width: 6),
                 Flexible(
                   child: Text(
-                    'add step',
-                    style: TextStyle(
+                    context.l10n.addStep,
+                    style: const TextStyle(
                       color: AppColors.muted,
                       letterSpacing: 0.6,
                       fontSize: 13,
@@ -576,7 +577,7 @@ final class NameChip extends StatelessWidget {
     return Semantics(
       container: true,
       button: true,
-      label: 'Variable $name, change',
+      label: context.l10n.variableChange(name),
       excludeSemantics: true,
       child: Material(
         color: AppColors.subtle,

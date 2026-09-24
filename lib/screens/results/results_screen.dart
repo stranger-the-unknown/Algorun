@@ -3,6 +3,10 @@ import 'dart:convert';
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 
+import '../../l10n/content_text.dart';
+import '../../l10n/engine_text.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/terms.dart';
 import '../../progress/progress_ledger.dart';
 import '../../progress/save_data.dart';
 import '../../shared/theme/app_theme.dart';
@@ -33,9 +37,13 @@ final class ResultsArgs {
     required this.suite,
     this.progress,
     this.next,
+    this.text = ContentText.english,
   });
 
   final Puzzle puzzle;
+
+  /// Puzzle content (world titles) in the player's language.
+  final ContentText text;
   final ValidationReport validation;
   final SuiteResult suite;
 
@@ -48,88 +56,99 @@ final class ResultsArgs {
 
 /// Player words for what a RUN changed in their progress; empty when nothing
 /// did.
-List<String> progressLines(RunRecordOutcome? outcome) {
+List<String> progressLines(
+  RunRecordOutcome? outcome, [
+  AppLocalizations? strings,
+  ContentText text = ContentText.english,
+]) {
   if (outcome == null) return const [];
+  final l = strings ?? englishStrings;
   return [
-    if (outcome.firstCompletion) 'Puzzle solved.',
+    if (outcome.firstCompletion) l.progressSolved,
     if (outcome.improved.isNotEmpty)
-      'New best: ${[for (final m in BestMetric.values) if (outcome.improved.contains(m)) _metricWords(m)].join(', ')}.',
-    if (outcome.opened.isNotEmpty) 'Now open: ${outcome.opened.map((w) => w.title).join(', ')}.',
+      l.progressNewBest([
+        for (final m in BestMetric.values)
+          if (outcome.improved.contains(m)) _metricWords(m, l),
+      ].join(', ')),
+    if (outcome.opened.isNotEmpty) l.progressNowOpen(outcome.opened.map(text.worldTitle).join(', ')),
   ];
 }
 
-String _metricWords(BestMetric metric) => switch (metric) {
-      BestMetric.ops => 'fewest steps',
-      BestMetric.peakAlloc => 'least memory',
-      BestMetric.peakDepth => 'least depth',
-      BestMetric.blocks => 'fewest blocks',
-      BestMetric.hintsUsed => 'fewest hints',
+String _metricWords(BestMetric metric, AppLocalizations l) => switch (metric) {
+      BestMetric.ops => l.bestSteps,
+      BestMetric.peakAlloc => l.bestMemory,
+      BestMetric.peakDepth => l.bestDepth,
+      BestMetric.blocks => l.bestBlocks,
+      BestMetric.hintsUsed => l.bestHints,
     };
 
 /// How each verdict looks: an icon and a sentence, so nothing depends on
-/// colour alone.
-({IconData icon, Color color, String meaning}) verdictStyle(ResultKind kind) => switch (kind) {
+/// colour alone. [strings] sets the sentence's language (English if none).
+({IconData icon, Color color, String meaning}) verdictStyle(ResultKind kind, [AppLocalizations? strings]) {
+  final meaning = verdictMeaning(kind, strings ?? englishStrings);
+  return switch (kind) {
       ResultKind.correct => (
           icon: Icons.check_circle,
           color: AppColors.ok,
-          meaning: 'Every case came out right, within every budget.',
+          meaning: meaning,
         ),
       ResultKind.wrongAnswer => (
           icon: Icons.cancel_outlined,
           color: AppColors.danger,
-          meaning: 'The program finished, but at least one answer is not the expected one.',
+          meaning: meaning,
         ),
       ResultKind.runtimeError => (
           icon: Icons.error_outline,
           color: AppColors.danger,
-          meaning: 'The program stopped on an instruction it could not carry out.',
+          meaning: meaning,
         ),
       ResultKind.operationLimit => (
           icon: Icons.speed,
           color: AppColors.warn,
-          meaning: 'The program needed more steps than the budget allows.',
+          meaning: meaning,
         ),
       ResultKind.timeLimit => (
           icon: Icons.hourglass_bottom,
           color: AppColors.warn,
-          meaning: 'The program ran out of time.',
+          meaning: meaning,
         ),
       ResultKind.memoryLimit => (
           icon: Icons.memory,
           color: AppColors.warn,
-          meaning: 'The program kept more values in its lists and maps than the budget allows.',
+          meaning: meaning,
         ),
       ResultKind.depthLimit => (
           icon: Icons.layers_outlined,
           color: AppColors.warn,
-          meaning: 'The program went deeper than the budget allows.',
+          meaning: meaning,
         ),
       ResultKind.invalidProgram => (
           icon: Icons.build_outlined,
           color: AppColors.warn,
-          meaning: 'The program cannot run yet. Fix what is listed below.',
+          meaning: meaning,
         ),
     };
+}
 
 final class ResultsScreen extends StatelessWidget {
   const ResultsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final args = ModalRoute.of(context)?.settings.arguments as ResultsArgs?;
     if (args == null) {
-      return const Scaffold(body: Center(child: Text('No result.')));
+      return Scaffold(body: Center(child: Text(l.noResult)));
     }
     final suite = args.suite;
     final kind = suite.kind;
-    final style = verdictStyle(kind);
-    final progress = progressLines(args.progress);
-    final detail = performanceMessage(suite) ??
-        suite.message ??
-        (args.validation.ok ? null : args.validation.messages.first.message);
+    final style = verdictStyle(kind, l);
+    final progress = progressLines(args.progress, l, args.text);
+    final engineDetail = suite.message ?? (args.validation.ok ? null : args.validation.messages.first.message);
+    final detail = performanceMessage(suite, l) ?? (engineDetail == null ? null : engineText(engineDetail, l));
     final next = kind == ResultKind.correct ? args.next : null;
     return Scaffold(
-      appBar: AppBar(title: const Text('Result')),
+      appBar: AppBar(title: Text(l.resultTitle)),
       body: SafeArea(
         top: false,
         child: Column(
@@ -156,7 +175,7 @@ final class ResultsScreen extends StatelessWidget {
                             const SizedBox(width: AppSpace.s3),
                             Expanded(
                               child: Text(
-                                kind.label.toUpperCase(),
+                                verdictText(kind, l),
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
@@ -179,7 +198,7 @@ final class ResultsScreen extends StatelessWidget {
                   ),
                   if (progress.isNotEmpty) ...[
                     const SizedBox(height: AppSpace.s5),
-                    const _SectionLabel('PROGRESS'),
+                    _SectionLabel(l.progressSection),
                     for (final line in progress)
                       Padding(
                         padding: const EdgeInsets.only(top: AppSpace.s2),
@@ -198,50 +217,49 @@ final class ResultsScreen extends StatelessWidget {
                   ],
                   if (args.validation.messages.isNotEmpty) ...[
                     const SizedBox(height: AppSpace.s5),
-                    const _SectionLabel('WHAT TO FIX'),
+                    _SectionLabel(l.whatToFix),
                     for (final m in args.validation.messages)
                       Padding(
                         padding: const EdgeInsets.only(top: AppSpace.s2),
                         child: Text(
-                          m.message,
+                          engineText(m.message, l),
                           style: const TextStyle(color: AppColors.fg, height: 1.4),
                         ),
                       ),
                   ],
                   if (suite.visible.isNotEmpty) ...[
                     const SizedBox(height: AppSpace.s5),
-                    const _SectionLabel('CASES'),
+                    _SectionLabel(l.cases),
                     for (final result in suite.visible)
                       _CaseRow(result: result),
                   ],
                   if (suite.hiddenSummary != null) ...[
                     const SizedBox(height: AppSpace.s5),
-                    const _SectionLabel('HIDDEN'),
+                    _SectionLabel(l.hidden),
                     Padding(
                       padding: const EdgeInsets.only(top: AppSpace.s2),
                       child: Text(
-                        '${suite.hiddenSummary!.passed} of '
-                        '${suite.hiddenSummary!.total} hidden cases passed.',
+                        l.hiddenPassed(suite.hiddenSummary!.passed, suite.hiddenSummary!.total),
                         style: const TextStyle(color: AppColors.fg),
                       ),
                     ),
                   ],
                   const SizedBox(height: AppSpace.s5),
-                  const _SectionLabel('WHAT IT COST'),
+                  _SectionLabel(l.whatItCost),
                   const SizedBox(height: AppSpace.s2),
                   _CostTable(suite: suite, puzzle: args.puzzle),
                   if (!suite.ok && suite.firstFailureOpIndex != null)
                     Padding(
                       padding: const EdgeInsets.only(top: AppSpace.s2),
                       child: Text(
-                        'Stopped after step ${suite.firstFailureOpIndex}.',
+                        l.stoppedAfterStep(suite.firstFailureOpIndex!),
                         style: const TextStyle(color: AppColors.muted),
                       ),
                     ),
                   const SizedBox(height: AppSpace.s4),
-                  const Text(
-                    'Hidden test inputs and answers are not shown.',
-                    style: TextStyle(color: AppColors.muted, fontSize: 13),
+                  Text(
+                    l.hiddenNotShown,
+                    style: const TextStyle(color: AppColors.muted, fontSize: 13),
                   ),
                 ],
               ),
@@ -255,17 +273,17 @@ final class ResultsScreen extends StatelessWidget {
                     FilledButton(
                       key: const Key('results-next'),
                       onPressed: () => Navigator.pop(context, ResultsAction.next),
-                      child: Text('NEXT: ${next.title.toUpperCase()}', overflow: TextOverflow.ellipsis),
+                      child: Text(l.nextPuzzle(l.upper(next.title)), overflow: TextOverflow.ellipsis),
                     ),
                     const SizedBox(height: AppSpace.s2),
                     OutlinedButton(
                       onPressed: () => Navigator.pop(context, ResultsAction.back),
-                      child: const Text('BACK TO PUZZLE'),
+                      child: Text(l.backToPuzzle),
                     ),
                   ] else
                     FilledButton(
                       onPressed: () => Navigator.pop(context, ResultsAction.back),
-                      child: const Text('BACK TO PUZZLE'),
+                      child: Text(l.backToPuzzle),
                     ),
                 ],
               ),
@@ -294,9 +312,11 @@ class _CostTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
+    String count(int n) => formatCount(n, l.localeName);
     final m = suite.metrics;
     final perf = suite.performance;
-    final ops = perf == null ? formatCount(m.ops) : '${formatCount(perf.worstOps)}${perf.overBudgetFinished ? '' : '+'}';
+    final ops = perf == null ? count(m.ops) : '${count(perf.worstOps)}${perf.overBudgetFinished ? '' : '+'}';
     final opsOver = suite.kind == ResultKind.operationLimit;
     final limits = puzzle.limits;
     final maxBlocks = puzzle.blocks.maxBlocks;
@@ -310,38 +330,38 @@ class _CostTable extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpace.s3, vertical: AppSpace.s1),
       child: Column(
         children: [
-          const _CostRow(label: '', used: 'USED', budget: 'BUDGET', header: true),
+          _CostRow(label: '', used: l.costUsed, budget: l.costBudget, header: true),
           _CostRow(
             key: const Key('cost-steps'),
-            label: 'Steps',
+            label: l.costSteps,
             used: ops,
-            budget: formatCount(limits.maxOps),
+            budget: count(limits.maxOps),
             over: opsOver,
           ),
           _CostRow(
             key: const Key('cost-memory'),
-            label: 'Memory cells',
-            used: formatCount(m.peakAlloc),
-            budget: formatCount(limits.maxAlloc),
+            label: l.costMemory,
+            used: count(m.peakAlloc),
+            budget: count(limits.maxAlloc),
             over: suite.kind == ResultKind.memoryLimit,
           ),
           _CostRow(
             key: const Key('cost-depth'),
-            label: 'Depth',
+            label: l.costDepth,
             used: '${m.peakDepth}',
             budget: '${limits.maxDepth}',
             over: suite.kind == ResultKind.depthLimit,
           ),
           _CostRow(
             key: const Key('cost-blocks'),
-            label: 'Blocks',
+            label: l.costBlocks,
             used: '${m.blocks}',
             budget: maxBlocks == null ? '—' : '$maxBlocks',
           ),
           _CostRow(
             key: const Key('cost-hints'),
-            label: 'Hints',
-            used: hints == 1 ? '1 hint' : '$hints hints',
+            label: l.costHints,
+            used: l.hintsCount(hints),
             budget: '—',
           ),
         ],
@@ -376,7 +396,7 @@ class _CostRow extends StatelessWidget {
             fontFeatures: const [FontFeature.tabularFigures()],
           );
     return Semantics(
-      label: header ? null : '$label: $used used, budget $budget${over ? ', over the budget' : ''}',
+      label: header ? null : '${context.l10n.costRowSemantics(label, used, budget)}${over ? context.l10n.overBudgetSuffix : ''}',
       excludeSemantics: !header,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
@@ -422,6 +442,7 @@ class _CaseRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ok = result.ok;
+    final l = context.l10n;
     return Padding(
       padding: const EdgeInsets.only(top: AppSpace.s3),
       child: Column(
@@ -445,7 +466,7 @@ class _CaseRow extends StatelessWidget {
               const SizedBox(width: AppSpace.s2),
               Flexible(
                 child: Text(
-                  ok ? 'passed' : result.run.kind.label.toLowerCase(),
+                  ok ? l.casePassed : kindText(result.run.kind, l),
                   style: TextStyle(
                     color: ok ? AppColors.muted : AppColors.warn,
                   ),
@@ -454,9 +475,9 @@ class _CaseRow extends StatelessWidget {
             ],
           ),
           if (!ok) ...[
-            _detail('given', result.input),
-            _detail('expected', result.expected),
-            _detail('you gave', result.actual),
+            _detail(l.caseGiven, result.input),
+            _detail(l.caseExpected, result.expected),
+            _detail(l.caseYouGave, result.actual),
           ],
         ],
       ),

@@ -1,0 +1,97 @@
+import 'l10n.dart';
+
+/// The engine (pure Dart) speaks English: its messages are fixed sentences,
+/// and they are the keys here. A message the table does not know is shown
+/// as the engine wrote it.
+String engineText(String message, AppLocalizations l) {
+  final exact = _exact[message];
+  if (exact != null) return exact(l);
+  for (final (pattern, render) in _patterns) {
+    final match = pattern.firstMatch(message);
+    if (match != null) return render(l, match.group(1)!);
+  }
+  return message;
+}
+
+final _patterns = <(RegExp, String Function(AppLocalizations, String))>[
+  (RegExp(r'^This puzzle allows at most (\d+) blocks\.$'), (l, n) => l.engineMaxBlocks(n)),
+  (RegExp(r'^This program did not get a value for (.+)\.$'), (l, name) => l.engineNoValueFor(name)),
+  (RegExp(r'^Case (.+) did not come out the way the puzzle expects\.$'), (l, id) => l.engineCaseFailed(id)),
+];
+
+final _exact = <String, String Function(AppLocalizations)>{
+  'The canvas is empty.': (l) => l.engineTheCanvasIsEmpty,
+  'This program is not ready to run.': (l) => l.engineNotReadyToRun,
+  'Unknown block.': (l) => l.engineUnknownBlock,
+  'A stack points at a missing block.': (l) => l.engineAStackPointsAtAMissingBlock,
+  'This program is not put together correctly.': (l) => l.engineThisProgramIsNotPutTogetherCorrectly,
+  'Only an else branch fits here.': (l) => l.engineOnlyAnElseBranchFitsHere,
+  'This piece cannot be used yet.': (l) => l.engineThisPieceCannotBeUsedYet,
+  'This spot needs an instruction, not a value.': (l) => l.engineThisSpotNeedsAnInstructionNotA,
+  'A connection points at a missing block.': (l) => l.engineAConnectionPointsAtAMissingBlock,
+  'Choose a name.': (l) => l.engineChooseAName,
+  'This block needs a list.': (l) => l.engineThisBlockNeedsAList,
+  'This variable is not defined.': (l) => l.engineThisVariableIsNotDefined,
+  'This variable is not a number.': (l) => l.engineThisVariableIsNotANumber,
+  'This piece does not fit here.': (l) => l.engineThisPieceDoesNotFitHere,
+  'This block needs a number.': (l) => l.engineThisBlockNeedsANumber,
+  'This spot needs a value, not a full instruction.': (l) => l.engineThisSpotNeedsAValueNotA,
+  'This block needs a condition.': (l) => l.engineThisBlockNeedsACondition,
+  'This block needs a map.': (l) => l.engineThisBlockNeedsAMap,
+  'This block needs a set.': (l) => l.engineThisBlockNeedsASet,
+  'This block needs a stack.': (l) => l.engineThisBlockNeedsAStack,
+  'This block needs a queue.': (l) => l.engineThisBlockNeedsAQueue,
+  'This block needs a value.': (l) => l.engineThisBlockNeedsAValue,
+  'This block needs a key.': (l) => l.engineThisBlockNeedsAKey,
+  'This block needs a node.': (l) => l.engineThisBlockNeedsANode,
+  'This block needs a graph.': (l) => l.engineThisBlockNeedsAGraph,
+  'That block already exists.': (l) => l.engineThatBlockAlreadyExists,
+  'That block is gone.': (l) => l.engineThatBlockIsGone,
+  'This block is not attached.': (l) => l.engineThisBlockIsNotAttached,
+  'That name is already in use.': (l) => l.engineThatNameIsAlreadyInUse,
+  'This value may be empty here. Check that it is not empty first.': (l) => l.engineThisValueMayBeEmptyHereCheck,
+  'Check a value that may be empty, not NOTHING itself.': (l) => l.engineCheckAValueThatMayBeEmpty,
+  'This value is never empty here, so there is nothing to check.': (l) => l.engineThisValueIsNeverEmptyHereSo,
+  'Something is already plugged in here.': (l) => l.engineSomethingIsAlreadyPluggedInHere,
+  'This block is attached in two places.': (l) => l.engineThisBlockIsAttachedInTwoPlaces,
+  'This would loop back on itself.': (l) => l.engineThisWouldLoopBackOnItself,
+  'These pieces do not attach that way.': (l) => l.engineThesePiecesDoNotAttachThatWay,
+  'This block is already attached somewhere else.': (l) => l.engineThisBlockIsAlreadyAttachedSomewhereElse,
+  'This block is already in that stack.': (l) => l.engineThisBlockIsAlreadyInThatStack,
+  'That stack position does not exist.': (l) => l.engineThatStackPositionDoesNotExist,
+  'Break and continue only work inside a loop.': (l) => l.engineBreakAndContinueOnlyWorkInsideA,
+  'This puzzle does not expose any blocks.': (l) => l.engineThisPuzzleDoesNotExposeAnyBlocks,
+  'This puzzle does not include that block.': (l) => l.engineThisPuzzleDoesNotIncludeThatBlock,
+  'This program has no starting point.': (l) => l.engineThisProgramHasNoStartingPoint,
+  'This program went too many levels deep.': (l) => l.engineThisProgramWentTooManyLevelsDeep,
+  'This block only works inside a loop.': (l) => l.engineThisBlockOnlyWorksInsideALoop,
+  'This loop would never finish.': (l) => l.engineThisLoopWouldNeverFinish,
+  'This value cannot be used here.': (l) => l.engineThisValueCannotBeUsedHere,
+  'This name has no value yet.': (l) => l.engineThisNameHasNoValueYet,
+  'You cannot divide by zero.': (l) => l.engineYouCannotDivideByZero,
+  'This number is too big.': (l) => l.engineThisNumberIsTooBig,
+  'This call is missing a value.': (l) => l.engineThisCallIsMissingAValue,
+  'This block is missing a value.': (l) => l.engineThisBlockIsMissingAValue,
+  'This list got too big.': (l) => l.engineThisListGotTooBig,
+  'This map got too big.': (l) => l.engineThisMapGotTooBig,
+  'This set got too big.': (l) => l.engineThisSetGotTooBig,
+  'This stack got too big.': (l) => l.engineThisStackGotTooBig,
+  'This stack is empty.': (l) => l.engineThisStackIsEmpty,
+  'This queue got too big.': (l) => l.engineThisQueueGotTooBig,
+  'This queue is empty.': (l) => l.engineThisQueueIsEmpty,
+  'This block cannot run yet.': (l) => l.engineThisBlockCannotRunYet,
+  'This block is missing a name.': (l) => l.engineThisBlockIsMissingAName,
+  'This block can only swap two names.': (l) => l.engineThisBlockCanOnlySwapTwoNames,
+  'There is nothing here.': (l) => l.engineThereIsNothingHere,
+  'This block needs a yes or no value.': (l) => l.engineThisBlockNeedsAYesOrNo,
+  'This block needs a number, some text, or a yes or no value as the key.': (l) => l.engineThisBlockNeedsANumberSomeText,
+  'A position has to be a whole number.': (l) => l.engineAPositionHasToBeAWhole,
+  'That position is outside the list.': (l) => l.engineThatPositionIsOutsideTheList,
+  'This program is nested too deeply.': (l) => l.engineThisProgramIsNestedTooDeeply,
+  'This program took too many steps.': (l) => l.engineThisProgramTookTooManySteps,
+  'This program used too much memory.': (l) => l.engineThisProgramUsedTooMuchMemory,
+  'This puzzle has no test cases.': (l) => l.engineThisPuzzleHasNoTestCases,
+  'Every case passed.': (l) => l.engineEveryCasePassed,
+  'This case did not come out the way the puzzle expects.': (l) => l.engineThisCaseDidNotComeOutThe,
+  'A hidden case did not come out the way the puzzle expects.': (l) => l.engineAHiddenCaseDidNotComeOut,
+};

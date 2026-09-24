@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.3
   flutter_riverpod: ^2.6.1
   algorun_engine:
     path: packages/algorun_engine
@@ -21,7 +24,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # UI strings: lib/l10n/app_<lang>.arb → AppLocalizations (l10n.yaml).
+  generate: true
   assets:
+    - assets/l10n/
     - assets/worlds.json
     - assets/puzzles/world_01/
     - assets/puzzles/world_02/

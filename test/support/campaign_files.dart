@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:algorun/l10n/content_text.dart';
 import 'package:algorun/progress/campaign.dart';
 import 'package:algorun/progress/progress_store.dart';
+import 'package:algorun/state/l10n_providers.dart';
 import 'package:algorun/state/progress_providers.dart';
 import 'package:algorun/state/providers.dart';
 import 'package:algorun_engine/algorun_engine.dart';
@@ -31,13 +33,19 @@ Campaign ms11Campaign() => campaignFrom('test/fixtures/ms11_worlds.json');
 Puzzle shippedPuzzle(String worldId, String id) =>
     parsePuzzleJson(File('assets/puzzles/$worldId/$id.json').readAsStringSync());
 
-/// Overrides that give a widget test the shipped campaign (no asset IO) and
-/// [store] as the device.
+/// The Turkish puzzle content, read from the repository.
+ContentTranslations turkishContent() =>
+    ContentTranslations.parse(File('assets/l10n/content_tr.json').readAsStringSync());
+
+/// Overrides that give a widget test the shipped campaign and the Turkish
+/// content (no asset IO) and [store] as the device.
 List<Override> campaignOverrides(ProgressStore store, {Campaign? campaign}) {
   final c = campaign ?? shippedCampaign();
+  final tr = turkishContent();
   return [
     worldsProvider.overrideWith((ref) async => c.manifest),
     campaignProvider.overrideWith((ref) async => c),
     progressStoreProvider.overrideWithValue(store),
+    turkishContentProvider.overrideWith((ref) async => tr),
   ];
 }

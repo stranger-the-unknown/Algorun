@@ -58,6 +58,15 @@ under the id the spec names.
 Then list the puzzle in its world in `assets/worlds.json`, and add the
 world's folder to `pubspec.yaml` if it is new.
 
+**Turkish text (U1).** The puzzle JSON is English and stays the source of
+truth. Add the puzzle's Turkish `title`, `story` and `hints` (same number,
+same order) to `assets/l10n/content_tr.json` — and a new world's title and
+any new concept word there too. Block names in stories and hints stay
+English in Turkish (`IS NOT NOTHING`, `LEFT`, `RETURN` …).
+`test/localization_test.dart` fails until every listed puzzle has its
+Turkish entry and every block name is kept. The validator and the engine
+never read translations.
+
 ## 3. Rules for authors (and for AI output)
 
 - **Original statements only.** Do not copy or lightly reword a problem

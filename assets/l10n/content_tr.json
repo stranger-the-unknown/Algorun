@@ -1,0 +1,397 @@
+{
+  "language": "tr",
+  "worlds": {
+    "world_01": "Temeller",
+    "world_02": "Diziler",
+    "world_03": "Eşlemeler",
+    "world_04": "İki İşaretçi",
+    "world_05": "Kayan Pencere",
+    "world_06": "Yığın ve Kuyruk",
+    "world_07": "Bağlı Listeler",
+    "world_08": "Ağaçlar",
+    "world_09": "Öbekler (Heap)",
+    "world_10": "Çizgeler",
+    "world_11": "Açgözlü Yöntemler",
+    "world_12": "Geri İzleme",
+    "world_13": "Dinamik Programlama",
+    "world_14": "İleri Algoritmalar"
+  },
+  "concepts": {
+    "variables": "değişkenler",
+    "control": "kontrol akışı",
+    "arrays": "diziler",
+    "prefix_sum": "önek toplamları",
+    "binary_search": "ikili arama",
+    "binary_search_answer": "cevap üzerinde ikili arama",
+    "hash_map": "eşlemeler",
+    "hash_set": "kümeler",
+    "complement_lookup": "tümleyen arama",
+    "counting": "sayma",
+    "two_pointers": "iki işaretçi",
+    "sliding_window": "kayan pencere",
+    "stack": "yığın",
+    "queue": "kuyruk",
+    "monotonic_stack": "monoton yığın",
+    "linked_list": "bağlı liste",
+    "fast_slow_pointers": "hızlı ve yavaş işaretçi",
+    "relinking": "yeniden bağlama",
+    "tree": "ağaç",
+    "bst": "ikili arama ağacı",
+    "heap": "öbek (heap)",
+    "graph": "çizge",
+    "bfs": "genişlik öncelikli arama",
+    "dfs": "derinlik öncelikli arama",
+    "shortest_path": "en kısa yol",
+    "topological_order": "topolojik sıra",
+    "greedy": "açgözlü seçim",
+    "greedy_choice": "açgözlü seçim",
+    "backtracking": "geri izleme",
+    "recursion": "özyineleme",
+    "dp": "dinamik programlama",
+    "multi_concept": "birleşik kavramlar"
+  },
+  "puzzles": {
+    "warm_readings": {
+      "title": "Sıcak Ölçümler",
+      "story": "Bir sera sensörü sıcaklık ölçümlerini art arda kaydediyor. Bahçıvan, konfor sınırından kesinlikle daha sıcak olan kaç ölçüm olduğunu öğrenmek istiyor. Tam sınırda olan bir ölçüm hâlâ konforlu sayılır.",
+      "hints": [
+        "Ölçümleri tek tek dolaş ve 0'dan başlayan bir sayaç tut.",
+        "Sayaca yalnızca sınırın kesinlikle üstündeki bir ölçüm eklenir; bunu hangi karşılaştırmanın söylediğine karar ver.",
+        "Sınıra eşit bir ölçüm sayılmamalı; boş bir kayıt 0 döndürür."
+      ]
+    },
+    "highest_tide": {
+      "title": "En Yüksek Gelgit",
+      "story": "Bir liman göstergesi gün boyunca belirli aralıklarla gelgiti ölçüyor. En yüksek ölçümün konumunu (0'dan sayarak) bildir. En yüksek seviyeye birden fazla kez ulaşıldıysa liman en erken zamanı istiyor. Hiç ölçüm yoksa -1 bildir.",
+      "hints": [
+        "Şimdiye kadar görülen en iyi ölçümün konumunu tut ve her yeni ölçümü onunla karşılaştır.",
+        "Henüz hiçbir şey görülmeden bir en iyi yoktur; bunu -1 temsil edebilir ve boş bir günün cevabı da budur.",
+        "En iyiyi yalnızca bir ölçüm kesinlikle daha yüksekse değiştir; böylece eşit en yüksekler arasında en erkeni kalır."
+      ]
+    },
+    "lowest_balance": {
+      "title": "En Düşük Bakiye",
+      "story": "Ortak bir hesap aya 0 ile başlıyor. Her yatırma pozitif, her çekme negatif bir sayı; hepsi gerçekleştikleri sırayla listeleniyor. Başlangıçtaki 0 dahil, hesabın gösterdiği en düşük bakiye neydi?",
+      "hints": [
+        "Her işlemden sonraki bakiye, önceki bakiye artı değişimdir.",
+        "Süregelen bakiyenin yanında şimdiye kadar görülen en düşük bakiyeyi tut.",
+        "Ay 0 ile başlar ve bu başlangıç da sayılır: yalnızca yatırma olan bir ayın en düşük bakiyesi 0'dır."
+      ]
+    },
+    "shelf_totals": {
+      "title": "Raf Toplamları",
+      "story": "Bir depo koridoru bir sıra raftan oluşuyor; her rafta bir miktar ürün var (hasarlı ürün rafı negatif sayılır). Görevliler 'a rafından b rafına kadar, ikisi de dahil, kaç ürün var?' biçiminde çok sayıda soru soruyor. k. soru starts[k]'den ends[k]'ye kadar gider. Her soruyu sırayla cevapla. Koridor uzun, sorular bitmiyor ve depo bilgisayarı her adımı sayıyor.",
+      "hints": [
+        "Her soru için rafları yeniden toplamak doğrudur, ama uzun bir koridorda uzun sorular çok fazla adım tutar.",
+        "Koridoru bir kez dolaş ve her raftan önceki süregelen toplamı yaz: ilk 0 rafın toplamı, ilk 1 rafın, ilk 2 rafın ve böyle devam.",
+        "a rafından b rafına kadarki ürünler, b'ye kadarki süregelen toplam eksi a'dan önceki süregelen toplamdır. Listenin başında 0 varken bu list[b + 1] - list[a] olur."
+      ]
+    },
+    "departure_board": {
+      "title": "Kalkış Panosu",
+      "story": "Bir istasyonun kalkış panosu günün trenlerini kalkış dakikasına göre, en erken olan başta olmak üzere listeliyor; aynı dakikada birden fazla tren kalkabilir. Bir yolcu t dakikasında geliyor ve t'de ya da daha sonra kalkan herhangi bir trene binebilir. Hâlâ yetişebileceği ilk trenin konumunu (0'dan sayarak) bildir. Tüm trenler kalktıysa tren sayısını bildir. Pano uzun ve bilet makinesi yalnızca birkaç yüz adım atabilir.",
+      "hints": [
+        "Panoyu yeterince geç bir tren bulana kadar yukarıdan okumak işe yarar, ama geç gelen bir yolcu için uzun bir pano binlerce adım tutar.",
+        "Pano sıralı, yani ortadaki bir trene bakmak panonun yarısını bir anda eler.",
+        "Bir alt ve bir üst konum tut. Ortadaki tren t'den önce kalkıyorsa cevap ondan sonradır; değilse ortadaki trenin kendisi cevap olabilir. Aynı dakikadaki trenler: ilkinde durduğundan emin ol."
+      ]
+    },
+    "smallest_cart": {
+      "title": "En Küçük Araba",
+      "story": "Koliler depodan sabit bir sırayla bir bantla çıkıyor; her birinin tam sayı bir ağırlığı var. Tek bir araba onları seferlerle taşıyor. Her seferde araba sıradaki kolileri toplam ağırlıkları kapasitesine sığdığı sürece alır, sonra yola çıkar; koliler asla yeniden sıralanmaz ya da bölünmez. En fazla verilen sayıda sefer yapabilirsin. Tüm bandı zamanında boşaltan en küçük tam sayı kapasite nedir?",
+      "hints": [
+        "Bir kapasite bandı zamanında boşaltıyorsa ondan büyük her kapasite de boşaltır. Cevap, 'çok küçük'ün 'yeterince büyük'e dönüştüğü noktadadır.",
+        "Cevap en az en ağır koli, en fazla toplam ağırlıktır. Tek bir kapasiteyi, bandı bir kez dolaşıp seferleri sayarak deneyebilirsin.",
+        "Bir alt ve bir üst sınır tut ve aralarındaki orta kapasiteyi dene. Kapasiteler tam sayı, yani orta nokta da tam sayı olmalı. Denemenin elediği sınırı kaydır ve sınırlar buluşunca dur."
+      ]
+    },
+    "loudest_echo": {
+      "title": "En Güçlü Yankı",
+      "story": "Bir mağaradaki yarasalar birbirlerine seslerle cevap veriyor; her ses bir sayı. Bu gece en sık duyulan ses hangisiydi? Birkaç ses en yüksek sayıyı paylaşıyorsa en küçüğünü bildir. Her zaman en az bir ses vardır.",
+      "hints": [
+        "Her sesi şimdiye kadar kaç kez duyulduğuna eşleyen bir eşleme (map) tut.",
+        "Bir sesi eşlemede aramak ilk seferde NOTHING verebilir; bir eklemeden önce IS NOTHING ile kontrol et.",
+        "İlerlerken en iyi sesi ve sayısını tut. Aynı sayıya sahip sonraki bir ses ancak daha küçükse kazanır."
+      ]
+    },
+    "twin_beacons": {
+      "title": "İkiz Fenerler",
+      "story": "Limanın fenerleri güçlerini art arda bildiriyor. İki fenerin güçleri toplamı tam olarak ayar sayısına eşitse rezonansa girerler; bir fener asla kendisiyle rezonansa giremez. Liman amiri, kendisinden önce kaydedilmiş herhangi bir fenerle rezonanslı bir çift tamamlayan ilk fenerin konumunu (0'dan sayarak) istiyor. Hiçbir fener bunu yapmazsa -1 bildir. Kayıt uzun olabilir ve liman bilgisayarı her adımı sayıyor.",
+      "hints": [
+        "Her fener çiftini karşılaştırmak doğru cevabı verir, ama uzun kayıtlarda çok yavaştır. Kaydı yalnızca bir kez dolaşmayı dene.",
+        "Bir fenerde, onunla çift tamamlayabilecek tek bir güç vardır: ayar sayısı eksi kendi gücü. Geçtiğin güçlerden bir küme tut.",
+        "Her konumda önce kümeye eksik gücün zaten orada olup olmadığını sor; varsa o konum cevabındır. Bu fenerin gücünü ancak sorduktan sonra ekle. Bu iki adımın sırası önemlidir."
+      ]
+    },
+    "level_stretches": {
+      "title": "Denk Bölümler",
+      "story": "Bir yürüyüşçünün saati her adımda kaç metre tırmanıldığını (pozitif) ya da inildiğini (negatif) kaydediyor. Bir bölüm, ardışık adımlardan oluşan herhangi bir dizidir. Toplam değişimi tam olarak hedef olan kaç bölüm var? Farklı bölümler üst üste binebilir. Uzun yürüyüşleri, her bölümü denemeye gücü yetmeyen bir saat sayıyor.",
+      "hints": [
+        "Her başlangıcı ve her bitişi denemek işe yarar, ama uzun bir yürüyüşte milyonlarca bölüm vardır.",
+        "Baştan itibaren süregelen toplamı tut. Burada biten bir bölümün toplamı tam olarak hedeftir, ancak ve ancak daha önceki bir süregelen toplam şu ankinin hedef eksiği ise.",
+        "Her süregelen toplamın kaç kez göründüğünü say; ilk adımdan önce 0 bir kez görülmüş olarak başla. Bir arama NOTHING olabilir, kullanmadan önce kontrol et."
+      ]
+    },
+    "longest_streak": {
+      "title": "En Uzun Seri",
+      "story": "Numaralı jetonlardan oluşan bir kutu belirli bir sıra olmadan geliyor; bazı sayılar birden fazla kez var. Bir seri, aralarında boşluk olmadan birbirini izleyen sayılardır, örneğin 4, 5, 6, 7. Kutudaki sayılardan yapabileceğin en uzun seri ne kadar uzun? Tekrarlanan sayılar bir seriyi uzatmaz. Büyük bir kutu hızlıca kontrol edilmeli.",
+      "hints": [
+        "Her sayıyı bir kümeye koy; böylece '7 kutuda mı?' diye sormak tek adım tutar.",
+        "Her sayıdan yukarı doğru yürümek her seriyi bulur, ama uzun bir seri o zaman her üyesinden yeniden yürünür.",
+        "Yalnızca bir önceki sayısı kutuda olmayan bir sayıdan yürümeye başla: o, serisinin ilkidir."
+      ]
+    },
+    "matched_pair": {
+      "title": "Eşleşen Çift",
+      "story": "Bir ağırlık rafı hafiften ağıra sıralı; karşı ağırlıklar için terazi negatif gösteriyor. Rafta toplamı tam olarak hedefe eşit iki farklı ağırlıktan oluşan bir çift var mı? Terazinin bilgisayarının neredeyse hiç belleği yok: gördüğü ağırlıkları not edemez.",
+      "hints": [
+        "Her ağırlığı bir kümede hatırlamak işe yarardı, ama bu terazi yalnızca bir avuç bellek hücresi tutabiliyor.",
+        "En hafif ve en ağır ağırlığa birlikte bak. Çok hafiflerse, ikisinden hangisi asla bir cevabın parçası olamaz?",
+        "Her seferinde bir ucu içeri kaydır: çok hafifse hafif ucu yukarı, çok ağırsa ağır ucu aşağı kaydır ve iki uç buluşunca dur."
+      ]
+    },
+    "widest_basin": {
+      "title": "En Geniş Havza",
+      "story": "Deniz duvarları kıyı boyunca bir metre arayla bir sıra hâlinde duruyor; her birinin bir yüksekliği var. Herhangi iki duvar seç: aralarında tutabilecekleri su, alçak olan duvar kadar yüksek ve aralarındaki mesafe kadar geniştir. İki duvarın tutabileceği en fazla su nedir? Her çifti karşılaştırmak cevabı verir, ama liman uzun bir kıyıda bunu en az on kat daha hızlı istiyor.",
+      "hints": [
+        "Her duvar çifti bir aday ve yaklaşık n*n/2 çift var. Uzun kıyı çok daha az adım gerektiriyor.",
+        "En dıştaki iki duvarla başla: en geniş havza. Daha dar her havza kazanmak için daha yüksek olmalı.",
+        "İki duvardan alçak olanı suyu sınırlar ve yüksek duvarı içeri kaydırmak asla işe yaramaz. Alçak duvarı içeri kaydır ve şimdiye kadarki en iyi havzayı hatırla."
+      ]
+    },
+    "rush_hour": {
+      "title": "Yoğun Saat",
+      "story": "Turnikeler günün her dakikasında kaç yolcunun geçtiğini sayıyor. İstasyon müdürü tam olarak k ardışık dakikalık en yoğun bölümü istiyor: o bölümde kaç yolcu geçtiğini bildir. Uzun bir gün ve uzun bir bölüm bütçe içinde sayılmalı.",
+      "hints": [
+        "Her olası bölüm için k dakikayı yeniden toplamak doğrudur, ama uzun bir günde uzun bir bölüm için çok yavaştır.",
+        "Komşu iki bölüm, iki dakika dışında her şeyi paylaşır.",
+        "İlk k dakikayı bir kez topla. Sağa doğru her adım, giren dakikayı ekler ve çıkanı çıkarır."
+      ]
+    },
+    "patchy_signal": {
+      "title": "Kesik Sinyal",
+      "story": "Bir radyo kaydı her saniyeyi sinyal netse 1, kesildiyse 0 olarak işaretliyor. Bir mühendis en fazla k kesintiyi yamayabilir. Yamadan sonra elde edebileceği en uzun net saniye dizisi ne kadar? Uzun kayıtlar adım bütçesi içinde kontrol edilmeli.",
+      "hints": [
+        "Her saniyede yeni bir sayım başlatmak işe yarar, ama çoğunlukla net bir kayıtta her sayım neredeyse sona kadar gider.",
+        "Sol ve sağ kenarı olan bir pencere tut ve içindeki kesintileri say.",
+        "Pencereyi her seferinde bir saniye sağa büyüt. İçinde k'den fazla kesinti olduğunda, yeniden k tane olana kadar sol kenarı sağa kaydır. En iyi pencere cevaptır."
+      ]
+    },
+    "quota_hours": {
+      "title": "Kota Saatleri",
+      "story": "Bir güneş tarlası günün her saatinde ne kadar enerji ürettiğini kaydediyor; her zaman en az bir birim. Şebeke, toplamı kotaya ulaşan kesintisiz bir saat dizisine ihtiyaç duyuyor. Böyle en kısa dizinin uzunluğunu bildir. Günün tamamı bile yetmiyorsa 0 bildir.",
+      "hints": [
+        "Her saat dizisinin bir ilk ve bir son saati vardır. Bunların her çiftini denemek işe yarar, ama uzun günlerde yavaştır.",
+        "Sol ve sağ kenarı olan bir pencere ve içindeki süregelen toplamı tut. Sağ kenarı her seferinde bir saat ilerlet.",
+        "Toplam kotaya ulaştığında pencere bir adaydır: uzunluğunu kaydet, sonra soldan daralt ve yeniden kontrol et. Hiçbir pencere kotaya ulaşmazsa ne bildireceğine karar ver."
+      ]
+    },
+    "market_variety": {
+      "title": "Pazar Çeşitliliği",
+      "story": "Bir pazar sokağı boyunca tezgâhlar dizili; her biri bir sayıyla yazılan tek bir çeşit ürün satıyor. Küçük sepetli bir alışverişçi en fazla k farklı çeşit taşıyabilir. Ürünleri bu kurala uyan en uzun kesintisiz tezgâh dizisi hangisi? Uzun sokaklar bütçe içinde kontrol edilmeli.",
+      "hints": [
+        "Her tezgâhta baştan başlayıp yeni bir çeşit kuralı bozana kadar yürümek doğrudur, ama az çeşitli uzun bir sokak her yürüyüşü uzatır.",
+        "Bir pencere ve içindeki her çeşidi penceredeki tezgâh sayısına eşleyen bir eşleme tut.",
+        "Pencereyi sağa büyüt. Eşlemede k'den fazla çeşit olduğu sürece en soldaki tezgâhı çıkar: sayısını azalt ve sayısı sıfıra inince çeşidi kaldır."
+      ]
+    },
+    "sealed_crates": {
+      "title": "Mühürlü Sandıklar",
+      "story": "Bir sevkiyat alanında sandıklar iç içe yerleştiriliyor. Paketleme kaydı her işlemi listeliyor: pozitif bir k sayısı k türünde bir sandık açar, -k ise hâlâ açık olan en son açılmış sandığı mühürler ve bu sandık k türünde olmalıdır. Kayıt doğru bir paketleme mi; her sandık doğru sırayla mühürlenmiş ve açık bir şey kalmamış mı?",
+      "hints": [
+        "Sıradaki mühürlenecek sandık yalnızca en son açılan sandık olabilir.",
+        "Açık sandıkları bir yığında tut. Açmak yığına koyar (PUSH); mühürlemek en üstteki türle eşleşmelidir.",
+        "Hiçbir şey açık değilken mühürlemek yanlıştır, sonda açık kalan bir sandık da öyle. Açma ve mühürleri saymak yetmez: türler önemlidir."
+      ]
+    },
+    "undo_button": {
+      "title": "Geri Al Tuşu",
+      "story": "Bir not uygulaması bir notu, içindeki kelimelerin uzunluklarını toplayarak puanlıyor. Kayıttaki her işlem ya pozitif bir sayıdır, yani sona o uzunlukta bir kelime yazmak, ya da 0'dır, yani notta hâlâ duran en son kelimeyi silen GERİ AL tuşuna basmak. Boş bir notta GERİ AL'a basmak hiçbir şey yapmaz. Son işlemden sonra notun puanı nedir?",
+      "hints": [
+        "GERİ AL her zaman hâlâ orada olan en son kelimeyi siler; yani kelimeler bir yığın gibi davranır.",
+        "Süregelen bir puan tut: bir kelime yazıldığında ekle, GERİ AL'ın geri aldığı kelimeyi çıkar.",
+        "Bir kelimeyi geri almadan önce bir kelime olduğundan emin ol. Boş bir notta GERİ AL hiçbir şeyi değiştirmemeli."
+      ]
+    },
+    "relay_towers": {
+      "title": "Röle Kuleleri",
+      "story": "Radyo kuleleri bir sırt boyunca bir sıra hâlinde duruyor; batıdan doğuya yükseklikleriyle listeleniyor. Her kule sinyalini doğuda kendisinden kesinlikle daha yüksek olan en yakın kuleye iletiyor. Her kule için o kulenin kaç konum doğuda olduğunu bildir. Doğusunda daha yüksek bir şey olmayan bir kule 0 bildirir.",
+      "hints": [
+        "Her kuleden daha yüksek bir şey görünene kadar doğuya bakmak doğrudur, ama giderek alçalan uzun bir sırtta neredeyse tüm işini tekrarlar.",
+        "Batıdan doğuya bir kez yürü. Hâlâ daha yüksek bir komşu bekleyen kuleleri tut ve onları yükseklikle değil konumla hatırla.",
+        "Yeni bir kule geldiğinde, ondan daha alçak bekleyen her kule cevabını bulmuş olur ve bunlar her zaman en son eklenenlerdir. Yeni kule ancak onları çözdükten sonra beklemeye başlar."
+      ]
+    },
+    "largest_billboard": {
+      "title": "En Büyük Reklam Panosu",
+      "story": "Bir sokak boyunca binalar yan yana duruyor; her biri bir metre genişliğinde ve yükseklikleriyle listeleniyor. Bir reklamcı komşu binaların önlerine tek bir dikdörtgen pano boyamak istiyor; pano kapladığı en alçak binadan daha yüksek olamaz. Böyle bir panonun alanı en fazla ne olabilir? Uzun bir sokak bütçe içinde ölçülmeli.",
+      "hints": [
+        "Her bina için, o bina kadar yüksek en iyi pano daha alçak bir binaya kadar sola ve sağa yayılır. Bu sınırları adım adım bulmak uzun ve düz bir sokakta çok yavaştır.",
+        "Soldan sağa yürürken yükseklikleri yalnızca artan konumlardan bir yığın tut. Yığının tepesinden daha alçak bir bina, üzerindeki daha yüksek binaların panolarını bitirir.",
+        "Bir konum yığından çıktığında, panosu yığının yeni tepesinin hemen sonrasından mevcut konumun hemen öncesine kadar uzanır. Sonuncudan sonra 0 yüksekliğinde hayalî bir bina yığını boşaltır."
+      ]
+    },
+    "middle_car": {
+      "title": "Ortadaki Vagon",
+      "story": "Bir tren vagonlardan oluşan bir zincirdir; her vagon yalnızca arkasındaki vagonu bilir. Ortadaki vagonun üzerine boyanmış sayıyı bildir. Trenin vagon sayısı çiftse iki ortadaki vagon vardır: daha arkada olanı bildir. Vagonları saymak ve yeniden yürümek işe yarar, ama iki işaretçi onu tek bir yürüyüşte bulabilir.",
+      "hints": [
+        "Sona kadar yürümek, yeniden yürüyene kadar sana ortayla ilgili hiçbir şey söylemez; iki işaretçi bunu tek yürüyüşte yapabilir.",
+        "Bir işaretçiyi her seferinde iki vagon, diğerini bir vagon ilerlet. Hızlı olan trenin sonuna varınca yavaş olan ortadadır.",
+        "Sonraki vagon NOTHING olabilir: adım atmadan önce IS NOT NOTHING ile kontrol et. Çift sayıda vagonda yavaş işaretçinin daha arkadaki vagonda durduğundan emin ol."
+      ]
+    },
+    "reverse_train": {
+      "title": "Treni Ters Çevir",
+      "story": "Bir tren depodan geldiği şekilde çıkmalı: son vagon ilk olur. Vagonlar kopyalanamaz ya da yeniden yapılamaz, yalnızca yeniden bağlanabilir: her vagonun hangi vagonu gösterdiğini değiştir. Yeni öndeki vagonu, boş bir hat için NOTHING döndür.",
+      "hints": [
+        "Treni bir kez dolaş. Her vagon sonunda önündeki vagonu göstermelidir.",
+        "Bir vagonu yeniden bağlamadan önce arkasındaki vagonu hatırla, yoksa trenin geri kalanı kaybolur.",
+        "Üç ad tut: şimdiye kadar ters çevrilmiş kısım, mevcut vagon ve ondan sonraki vagon. Ters çevrilmiş kısım NOTHING olarak başlar."
+      ]
+    },
+    "drop_faulty_cars": {
+      "title": "Arızalı Vagonları Çıkar",
+      "story": "Müfettişler belirli bir seri numarasını taşıyan her vagonun arızalı olduğunu buldu. Hepsini trenden ayır, diğer vagonları sıralarını koruyarak tut ve yeni öndeki vagonu döndür; hiç vagon kalmazsa NOTHING döndür. Arızalı vagonlar her yerde olabilir, hatta önde ve art arda birkaç tane.",
+      "hints": [
+        "Öndeki arızalı vagonların önünde bir vagon yoktur: önce baş vagonu onları geçecek şekilde ilerlet.",
+        "Geri kalanlar için bir vagon ileriye bak. Sonraki vagon arızalıysa mevcut vagonu ondan sonraki vagona bağla.",
+        "Arızalı bir vagonu atladıktan sonra, ilerlemeden önce yeni sonraki vagona bak: arızalı vagonlar art arda gelebilir. Sonraki vagon NOTHING olabilir, önce kontrol et."
+      ]
+    },
+    "loop_detector": {
+      "title": "Döngü Dedektörü",
+      "story": "Minyatür bir demiryolu, her biri bir sonrakini gösteren ray parçalarından oluşan bir zincir. Dikkatsiz bir yapımcı son parçayı daha önceki bir parçaya yöneltmiş olabilir; bu, treni sonsuza dek döndürür (mutlaka başlangıca dönmesi gerekmez). Hatta bir döngü var mı? Kontrol kutusunun gördüğü parçaları işaretleyecek belleği yok ve parçalardaki numaralar tekrar ediyor.",
+      "hints": [
+        "Hat bitene kadar yürümek döngülü bir hatta hiç bitmez; ilk parçanın yeniden gelmesini beklemek ise döngü daha sonra başladığında başarısız olur.",
+        "Hat boyunca iki işaretçi gönder: biri her adımda iki parça, diğeri bir parça ilerlesin.",
+        "Düz bir hatta hızlı işaretçi NOTHING'e ulaşır. Döngülü bir hatta hızlı işaretçi yavaş olana tur bindirir: aynı parçaya gelirler."
+      ]
+    },
+    "canopy_height": {
+      "title": "Taç Yüksekliği",
+      "story": "Bir botanikçi bir ağacı dal dal haritalıyor: her dallanma noktasının en fazla bir sol ve bir sağ dalı var. Gövdeyi 1. seviye sayarak ağacın kaç seviyesi var? Boş bir arsanın 0 seviyesi vardır. En yüksek kısım her iki tarafta da olabilir.",
+      "hints": [
+        "Ağacın bir tarafını aşağı doğru izlemek bir yükseklik bulur, ama en yüksek kısım diğer tarafta olabilir.",
+        "Dalları bir kuyrukla seviye seviye, turlar hâlinde ziyaret et. Her dalın seviyesini ikinci bir kuyrukta yanında tut.",
+        "Bir çocuk ancak LEFT ya da RIGHT, IS NOT NOTHING ise vardır. Cevap, kuyruktan çıkardığın en büyük seviyedir."
+      ]
+    },
+    "widest_level": {
+      "title": "En Kalabalık Seviye",
+      "story": "Bir ofis kulesinin organizasyon şeması bir ağaçtır: müdür 1. seviyede ve herkesin en fazla iki doğrudan çalışanı var. En çok kişi hangi seviyede? Birkaç seviye eşitse en üste en yakın olanı bildir.",
+      "hints": [
+        "Şemayı bir kuyrukla seviye seviye dolaş ve her kişinin seviyesini yanında tut.",
+        "Her seviye için bir sayaç olan bir liste tut; bir seviye ilk kez göründüğünde onun için bir sayaç ekle.",
+        "Sonra en büyük sayaca sahip seviyeyi bul. En iyiyi yalnızca kesinlikle daha büyük bir sayaç değiştirir; böylece eşit iki seviyeden daha yukarıdaki kalır."
+      ]
+    },
+    "trail_sum": {
+      "title": "Patika Toplamı",
+      "story": "Yürüyüş patikaları patika başından bir ağaç gibi dallanıyor. Her kavşak ve her patikanın sonu bir puanla işaretli ve bazı işaretler negatif. Tam bir patika, patika başından hiçbir şeyin dallanmadığı bir çıkmaza kadar uzanır. İşaretleri toplamı tam olarak hedefe eşit olan tam bir patika var mı? Yarıda durmak sayılmaz.",
+      "hints": [
+        "Ağacı bir yığınla dolaş ve her kavşağın yanında o ana kadarki patika toplamını ikinci bir yığında taşı.",
+        "Negatif işaretler, bir toplam çok büyüdü diye erken duramayacağın anlamına gelir.",
+        "Bir patikayı yalnızca bir çıkmaz (LEFT ve RIGHT yok) bitirebilir. Süregelen toplamı hedefe ulaşan bir kavşak tek başına bir cevap değildir."
+      ]
+    },
+    "sorted_grove": {
+      "title": "Düzenli Koru",
+      "story": "Bakımlı bir koruda her ağaç etiketi tek bir kurala uyar: bir ağacın sol tarafındaki her şey ondan kesinlikle küçük, sağ tarafındaki her şey kesinlikle büyük etiketlidir; yalnızca kendi iki dalı değil, altlarındaki her etiket. Bu koru bakımlı mı?",
+      "hints": [
+        "Her ağacı yalnızca kendi iki dalıyla karşılaştırmak yetmez: solda derinlerdeki bir etiket, daha yukarıdaki bir ağaçtan büyük olabilir.",
+        "Bakımlı bir koruyu önce sol taraf, sonra ağaç, sonra sağ taraf şeklinde okumak etiketleri kesinlikle artan sırada verir.",
+        "Bu okumayı bir yığınla yap: ağaçları yığına koyarak olabildiğince sola git, birini çıkar, önceki etiketle karşılaştır, sonra onun sağ dalından devam et."
+      ]
+    },
+    "island_count": {
+      "title": "Ada Sayısı",
+      "story": "Bir keşif uçağı bir takımadayı haritalıyor: numaralı kara parçaları ve hangi parçaların birbirine değdiği (değmek iki yönlüdür). Doğrudan ya da başka parçalar üzerinden bağlı parçalar tek bir ada oluşturur. Kaç ada var?",
+      "hints": [
+        "Bir parçadan başlayıp ulaşabildiğin her şeyi işaretlemek bütün bir adayı bulur.",
+        "Her parçayı sırayla dene; henüz işaretlenmemiş bir parça yeni bir adaya aittir.",
+        "Her yeni ada, ilk parçasından başlayan bir arama daha demektir; ilerlerken işaretle ki hiçbir parça iki kez aranmasın."
+      ]
+    },
+    "fewest_rides": {
+      "title": "En Az Yolculuk",
+      "story": "Bir şehrin raylı sistem haritası her istasyon için tek bir doğrudan yolculukla ulaşılabilen istasyonları listeliyor. Bazı yolculuklar tek yönlü, bazı hatlar kendi üzerine dönüyor ve bazı istasyonlar geri kalanından kopuk. İstasyonlar 0'dan numaralanıyor. Bir istasyondan başlayarak hedefe varmak için gereken en az yolculuk sayısı nedir? Olduğun yerde kalmak 0 yolculuktur. Hedefe hiç ulaşılamıyorsa -1 bildir.",
+      "hints": [
+        "Başlangıçtan herhangi bir sırayla yolculukları izlemek bir yol bulur, ama mutlaka en kısasını değil.",
+        "Turlar hâlinde keşfet: önce bir yolculuk uzaktaki her istasyon, sonra iki yolculuk uzaktakiler ve böyle devam. Bir kuyruk istasyonları keşfettiğin sırayla tutar.",
+        "Her istasyonun yolculuk sayısını ilk keşfettiğinde, ondan ulaştığın istasyonunkinden bir fazla olarak kaydet ve sonra asla değiştirme. Hiç keşfedilmeyen bir istasyonun ne bildireceğine karar ver."
+      ]
+    },
+    "two_teams": {
+      "title": "İki Takım",
+      "story": "Bir kulüp oyuncularını iki takıma ayırmalı ve bazı oyuncu çiftleri aynı takımda oynamayı reddediyor (reddetmek iki yönlüdür). Her oyuncu, iki rakip aynı takımda olmayacak şekilde iki takımdan birine yerleştirilebilir mi? Bazı oyuncuların hiç rakibi yok ve bazı oyuncu grupları diğerleriyle hiç karşılaşmıyor.",
+      "hints": [
+        "Bir oyuncuyu 0 takımına koy; onun her rakibi 1 takımına, onların her rakibi 0 takımına gitmeli ve böyle devam.",
+        "Takımları genişlik öncelikli bir aramayla yay ve her oyuncunun takımını bir listede tut (henüz yerleşmemiş için -1). Aynı takımdaki iki rakip, bunun olamayacağı anlamına gelir.",
+        "Hiç karşılaşmayan oyuncu gruplarının kendi aramasına ihtiyacı var: hâlâ yerleşmemiş her oyuncudan bir arama başlat."
+      ]
+    },
+    "task_order": {
+      "title": "Görev Sırası",
+      "story": "Bir proje planı numaralı görevleri ve her görev için ancak o bittikten sonra başlayabilecek görevleri listeliyor. Tüm kurallara uyan bir sırayla her görev yapılabilir mi? Görevlerin bir çember içinde birbirini beklediği bir plan asla bitirilemez.",
+      "hints": [
+        "Her görev için ondan önce gelmesi gereken kaç görev olduğunu say.",
+        "Önünde hiçbir şey olmayan görevler hemen başlayabilir. Birini yapmak, ondan sonraki her görevin sayısını azaltır; sayısı 0'a inen görev de başlayabilir.",
+        "Her görevi bu şekilde yapmayı başarırsan plan işler. Bir çembere takılmış görevler asla 0'a ulaşmaz; diğer görevler başlayabilse bile."
+      ]
+    },
+    "nearest_depot": {
+      "title": "En Yakın Depo",
+      "story": "Teslimat kamyonetleri birkaç depodan çıkıp numaralı köyler arasındaki tek yönlü yollarda ilerliyor. Her köy için, ona ulaşabilen en yakın depodan bir kamyonetin kaç yola ihtiyacı var? Bir deponun kendi köyü 0 ister ve hiçbir kamyonetin ulaşamadığı bir köy -1 bildirir. Yüzlerce depo varken planlayıcı her birinden ayrı bir arama yapamaz.",
+      "hints": [
+        "Her köy için en küçük mesafeyi tutarak her depodan bir arama yapmak doğrudur, ama neredeyse tüm işini tekrarlar.",
+        "Başlamadan önce her depoyu aynı kuyruğa 0 mesafesiyle koy: tek bir genişlik öncelikli arama sonra hepsinden birden büyür.",
+        "Bir köye ilk kez ulaşıldığında, en yakın deposundan ulaşılmıştır; sonra asla değiştirme."
+      ]
+    },
+    "one_good_trade": {
+      "title": "Tek İyi Alım Satım",
+      "story": "Bir tüccar her gün bir sandık baharatın fiyatını kaydediyor. Bir gün bir sandık alıp daha sonraki bir gün bir kez satabilir. En fazla ne kazanabilir? Hiçbir alım satım kazandırmıyorsa cevap 0'dır. Uzun bir sezon bütçe içinde kontrol edilmeli.",
+      "hints": [
+        "Her alış günü ve daha sonraki satış günü çifti cevabı verir, ama uzun bir sezonda milyonlarca çift vardır.",
+        "Bugün satıyorsan, almak için en iyi gün şimdiye kadarki en ucuz gündür.",
+        "Bir kez yürü; şimdiye kadarki en ucuz fiyatı ve en iyi kazancı tut."
+      ]
+    },
+    "fuel_loop": {
+      "title": "Yakıt Turu",
+      "story": "Dairesel bir yol çevresinde yakıt istasyonları var. i istasyonunda bir araba fuel[i] birim yakıt alabilir ve sonraki istasyona gitmek cost[i] birim yakar. Depo boş başlar ve asla sıfırın altına inemez. Araba hangi istasyondan tam bir tur tamamlayabilir? Birkaçı işe yarıyorsa en küçük numaralıyı, hiçbiri yaramıyorsa -1 bildir. Uzun bir yol bütçe içinde kontrol edilmeli.",
+      "hints": [
+        "Her istasyondan bir tur simüle etmek doğrudur, ama uzun bir yolda çok yavaştır.",
+        "Toplam yakıt toplam maliyetten azsa hiçbir başlangıç işe yaramaz. Aksi hâlde bir başlangıç işe yarar.",
+        "Depoyu tutarak 0. istasyondan bir kez sür. i istasyonundan sonra hiç sıfırın altına düşerse, başlangıçtan i'ye kadar hiçbir istasyon cevap olamaz: boş depoyla i + 1'den yeniden başla."
+      ]
+    },
+    "quiet_street": {
+      "title": "Sessiz Sokak",
+      "story": "Bir hayır kurumu bir sokaktaki evlerden bağış topluyor; her evin vereceği miktar belli. Komşular konuşuyor, bu yüzden toplayıcılar yan yana iki evi asla ziyaret etmiyor. En fazla ne toplayabilirler?",
+      "hints": [
+        "Bir ev atlayarak gitmek her zaman en iyisi değildir: bazen art arda iki ev atlanır.",
+        "Her evden sonra iki sayı yeter: bu ev ziyaret edildiyse en iyi toplam ve edilmediyse en iyi toplam.",
+        "Bu evi ziyaret etmek, miktarını bir önceki evi atlayan en iyi toplama ekler; atlamak ise önceki iki toplamdan iyi olanı korur."
+      ]
+    },
+    "exact_change": {
+      "title": "Tam Para Üstü",
+      "story": "Bir otomat para üstünü, en küçükten en büyüğe listelenen birkaç değerde madenî parayla ödüyor ve her birinden ihtiyacı kadar var. Tam olarak tutarı oluşturan en az madenî para sayısı nedir? Tutar hiç oluşturulamıyorsa -1 bildir. Önce en büyük parayı almak cazip gelir ve her zaman doğru değildir.",
+      "hints": [
+        "Sığan en büyük parayı tekrar tekrar almak bazı para setlerinde başarısız olur: 1, 3 ve 4 ile 6'yı 3+3 yerine 4+1+1 olarak öder.",
+        "0'dan yukarı her tutar için cevabı bul. 0 tutarı 0 para gerektirir.",
+        "Bir a tutarı için sığan her c parasını dene: bir para artı a - c için en iyi cevap. Oluşturulamayan tutarlar -1 kalır ve atlanır."
+      ]
+    },
+    "many_shortest_routes": {
+      "title": "Çok Sayıda En Kısa Yol",
+      "story": "Bir kurye, tek yönlü sokaklarla bağlı numaralı meydanlardan oluşan bir şehri geçiyor. Yalnızca en kısa yollar (en az sokak) yeterince hızlı. Başlangıç meydanından hedefe kaç farklı en kısa yol var? Zaten hedefte olmak bir yoldur; hiç yol yoksa 0'dır.",
+      "hints": [
+        "Genişlik öncelikli bir arama, her meydana giden en kısa yolun kaç sokak gerektirdiğini bulur.",
+        "Bir meydana giden en kısa yol, tam olarak bir sokak daha yakın bir meydandan gelir. Yani yol sayısı bu meydanlarınkilerin toplamıdır.",
+        "Arama sırasında: bir meydana ilk kez ulaşıldığında geldiği meydanın yollarını devralır; aynı uzaklıktaki bir meydandan yeniden ulaşılırsa o meydanın yolları da eklenir."
+      ]
+    }
+  }
+}

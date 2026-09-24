@@ -4,7 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../progress/campaign.dart';
 import '../../progress/save_data.dart';
+import '../../l10n/content_text.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/terms.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';
 import '../../state/progress_text.dart';
 
@@ -14,11 +18,15 @@ final class PuzzleListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final worldId = ModalRoute.of(context)?.settings.arguments as String? ?? 'world_01';
+    final l = context.l10n;
+    final text = ref.watch(contentTextProvider);
     final view = ref.watch(campaignViewProvider);
     final world = view.valueOrNull?.campaign.manifest.byId(worldId);
     return Scaffold(
       appBar: AppBar(
-        title: Text(world == null ? 'Puzzles' : '${world.index.toString().padLeft(2, '0')} · ${world.title}'),
+        title: Text(
+          world == null ? l.puzzlesTitle : l.worldHeading(world.index.toString().padLeft(2, '0'), text.worldTitle(world)),
+        ),
       ),
       body: SafeArea(top: false, child: view.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -26,14 +34,14 @@ final class PuzzleListScreen extends ConsumerWidget {
         data: (view) {
           final world = view.campaign.manifest.byId(worldId);
           if (world == null) {
-            return const Center(child: Text('Unknown world.'));
+            return Center(child: Text(l.unknownWorld));
           }
           if (!view.progress.isWorldOpen(world.id)) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpace.s5),
                 child: Text(
-                  lockedText(view.progress.missingFor(world.id)),
+                  lockedText(view.progress.missingFor(world.id), l, text),
                   style: const TextStyle(color: AppColors.muted),
                 ),
               ),
@@ -51,7 +59,7 @@ final class PuzzleListScreen extends ConsumerWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 2),
                   child: Text(
-                    '$solved of ${world.puzzleIds.length} solved · teaches ${world.concepts.map(conceptWords).join(', ')}',
+                    l.puzzleListHeader(solved, world.puzzleIds.length, text.concepts(world.concepts)),
                     style: const TextStyle(color: AppColors.muted, fontSize: 13),
                   ),
                 );
@@ -64,6 +72,7 @@ final class PuzzleListScreen extends ConsumerWidget {
                 saved: view.save[id],
                 missing: view.progress.missingFor(id),
                 current: view.progress.currentPuzzleId == id,
+                text: text,
               );
             },
           );
@@ -81,6 +90,7 @@ class _PuzzleRow extends StatelessWidget {
     required this.saved,
     required this.missing,
     required this.current,
+    required this.text,
   });
 
   final String worldId;
@@ -89,10 +99,12 @@ class _PuzzleRow extends StatelessWidget {
   final PuzzleProgress? saved;
   final List<String> missing;
   final bool current;
+  final ContentText text;
 
   @override
   Widget build(BuildContext context) {
     final locked = status == PuzzleStatus.locked;
+    final l = context.l10n;
     return Material(
       color: AppColors.elevated,
       borderRadius: BorderRadius.circular(AppRadius.md),
@@ -131,7 +143,7 @@ class _PuzzleRow extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            puzzle.title,
+                            text.puzzleTitle(puzzle),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: locked ? AppColors.muted : AppColors.fg,
@@ -140,9 +152,9 @@ class _PuzzleRow extends StatelessWidget {
                         ),
                         if (current) ...[
                           const SizedBox(width: AppSpace.s2),
-                          const Text(
-                            'CURRENT',
-                            style: TextStyle(
+                          Text(
+                            l.tagCurrent,
+                            style: const TextStyle(
                               color: AppColors.accent,
                               fontSize: 11,
                               letterSpacing: 1.2,
@@ -154,7 +166,7 @@ class _PuzzleRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      puzzleStatusText(status, saved, missing),
+                      puzzleStatusText(status, saved, missing, l, text),
                       style: TextStyle(
                         color: status == PuzzleStatus.completed ? AppColors.fg : AppColors.muted,
                         fontSize: 13,
@@ -162,7 +174,9 @@ class _PuzzleRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Tier ${puzzle.tier.index + 1}${puzzle.mode == PuzzleMode.build ? '' : ' · ${puzzle.mode.name}'}',
+                      puzzle.mode == PuzzleMode.build
+                          ? l.tierLabel(puzzle.tier.index + 1)
+                          : l.tierWithMode(puzzle.tier.index + 1, modeText(puzzle.mode, l)),
                       style: const TextStyle(color: AppColors.muted, fontSize: 12),
                     ),
                   ],

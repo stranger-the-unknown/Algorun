@@ -2,6 +2,9 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/terms.dart';
+import '../screens/guide/guide_screen.dart';
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 import 'editor_theme.dart';
@@ -61,17 +64,18 @@ abstract final class HolePicker {
 }
 
 /// Where a pick will go, in player words: `the condition of WHILE`.
-String describeHole(BlockGraph graph, PortRef hole) {
-  if (hole.blockId == BlockGraph.mainId) return 'the program';
+String describeHole(BlockGraph graph, PortRef hole, [AppLocalizations? strings]) {
+  final l = strings ?? englishStrings;
+  if (hole.blockId == BlockGraph.mainId) return l.targetProgram;
   final block = graph.blocks[hole.blockId];
-  if (block == null) return 'this slot';
-  if (block.catalogId == BlockIds.ctrlElse) return 'ELSE';
+  if (block == null) return l.targetSlot;
+  if (block.catalogId == BlockIds.ctrlElse) return l.targetElse;
   final label = BlockChrome.labelOf(block.catalogId);
   return switch (hole.port) {
-    'then' => 'THEN of $label',
-    'body' => 'DO of $label',
-    'else' => 'ELSE of $label',
-    final port => 'the ${BlockChrome.holeCaption(port)} of $label',
+    'then' => l.targetThenOf(label),
+    'body' => l.targetDoOf(label),
+    'else' => l.targetElseOf(label),
+    final port => l.targetCaptionOf(holeCaptionText(port, l), label),
   };
 }
 
@@ -88,6 +92,7 @@ class _PickerBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final groups = <BlockCategory, List<Placement>>{};
     for (final p in placements) {
       if (BlockChrome.hiddenFromEditor(p.catalogId)) continue;
@@ -111,7 +116,7 @@ class _PickerBody extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Choose a piece',
+                          l.chooseAPiece,
                           style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                 letterSpacing: 0.4,
                                 fontWeight: FontWeight.w600,
@@ -119,7 +124,7 @@ class _PickerBody extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'For ${describeHole(controller.graph, hole)}. Only pieces that fit this slot are listed.',
+                          l.pickerFor(describeHole(controller.graph, hole, l)),
                           style: const TextStyle(color: AppColors.muted, fontSize: 13, height: 1.35),
                         ),
                       ],
@@ -127,7 +132,19 @@ class _PickerBody extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Close',
+                  tooltip: l.openGuide,
+                  onPressed: () {
+                    final navigator = Navigator.of(context);
+                    navigator.pop();
+                    navigator.pushNamed(
+                      '/guide',
+                      arguments: GuideArgs(allow: controller.paletteIds, tab: GuideTab.blocks),
+                    );
+                  },
+                  icon: const Icon(Icons.menu_book_outlined, color: AppColors.muted),
+                ),
+                IconButton(
+                  tooltip: l.close,
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.close, color: AppColors.muted),
                 ),
@@ -135,11 +152,11 @@ class _PickerBody extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             if (placements.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
-                  'Nothing in this puzzle fits here.',
-                  style: TextStyle(color: AppColors.muted),
+                  l.nothingFits,
+                  style: const TextStyle(color: AppColors.muted),
                 ),
               )
             else
@@ -149,7 +166,7 @@ class _PickerBody extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 12),
                   children: [
                     for (final entry in groups.entries) ...[
-                      Text(BlockChrome.categoryLabel(entry.key), style: AppText.label),
+                      Text(categoryText(entry.key, l), style: AppText.label),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -195,7 +212,6 @@ class _PickerBody extends StatelessWidget {
           blockId: id,
           key: 'name',
           names: controller.graph.variables.keys.toList(),
-          allowCreate: true,
         );
       }
     }

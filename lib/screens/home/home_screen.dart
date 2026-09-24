@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/l10n.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';
+import '../guide/guide_screen.dart';
 
 final class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -11,6 +14,8 @@ final class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Nothing waits on the save here: ENTER is always there, CONTINUE appears
     // once the save says where the player was.
+    final l = context.l10n;
+    final text = ref.watch(contentTextProvider);
     final view = ref.watch(campaignViewProvider).valueOrNull;
     final currentId = view?.progress.currentPuzzleId;
     final current = currentId == null ? null : view!.campaign.puzzles[currentId];
@@ -42,14 +47,26 @@ final class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: AppSpace.s3),
-                    const Text(
-                      'Construct the algorithm.\nNever type it.',
-                      style: TextStyle(
+                    Text(
+                      l.homeTagline,
+                      style: const TextStyle(
                         color: AppColors.muted,
                         height: 1.45,
                         fontSize: 16,
                       ),
                     ),
+                    if (view != null && view.progress.solvedCount == 0) ...[
+                      const SizedBox(height: AppSpace.s3),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          key: const Key('home-how-to-play'),
+                          onPressed: () => Navigator.pushNamed(context, '/guide', arguments: const GuideArgs()),
+                          icon: const Icon(Icons.help_outline, size: 18),
+                          label: Text(l.homeHowToPlay),
+                        ),
+                      ),
+                    ],
                     const Spacer(),
                     const SizedBox(height: AppSpace.s5),
                     if (view != null)
@@ -63,10 +80,10 @@ final class HomeScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('PROGRESS', style: AppText.label),
+                            Text(l.homeProgress, style: AppText.label),
                             const SizedBox(height: AppSpace.s2),
                             Text(
-                              '${view.progress.solvedCount} of ${view.progress.puzzleCount} puzzles solved',
+                              l.homeSolvedCount(view.progress.solvedCount, view.progress.puzzleCount),
                               style: const TextStyle(color: AppColors.fg),
                             ),
                             const SizedBox(height: AppSpace.s2),
@@ -85,7 +102,7 @@ final class HomeScreen extends ConsumerWidget {
                             if (current != null && currentWorld != null) ...[
                               const SizedBox(height: AppSpace.s3),
                               Text(
-                                'Last played: ${current.title} · ${currentWorld.title}',
+                                l.homeLastPlayed(text.puzzleTitle(current), text.worldTitle(currentWorld)),
                                 style: const TextStyle(color: AppColors.muted, height: 1.45),
                               ),
                             ],
@@ -101,22 +118,33 @@ final class HomeScreen extends ConsumerWidget {
                           '/puzzle',
                           arguments: {'worldId': currentWorld.id, 'puzzleId': current.id},
                         ),
-                        child: const Text('CONTINUE'),
+                        child: Text(l.homeContinue),
                       ),
                       const SizedBox(height: AppSpace.s3),
                       OutlinedButton(
                         onPressed: () => Navigator.pushNamed(context, '/worlds'),
-                        child: const Text('WORLDS'),
+                        child: Text(l.homeWorlds),
                       ),
                     ] else
                       FilledButton(
                         onPressed: () => Navigator.pushNamed(context, '/worlds'),
-                        child: const Text('ENTER'),
+                        child: Text(l.homeEnter),
                       ),
+                    const SizedBox(height: AppSpace.s3),
+                    OutlinedButton.icon(
+                      key: const Key('home-guide'),
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        '/guide',
+                        arguments: const GuideArgs(tab: GuideTab.blocks),
+                      ),
+                      icon: const Icon(Icons.menu_book_outlined, size: 18),
+                      label: Text(l.homeGuide),
+                    ),
                     const SizedBox(height: AppSpace.s3),
                     OutlinedButton(
                       onPressed: () => Navigator.pushNamed(context, '/settings'),
-                      child: const Text('Settings'),
+                      child: Text(l.homeSettings),
                     ),
                   ],
                 ),

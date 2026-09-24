@@ -1,6 +1,25 @@
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/foundation.dart';
 
+import '../l10n/engine_text.dart';
+import '../l10n/l10n.dart';
+import '../l10n/terms.dart';
+
+/// Feedback from the last edit. The controller does not know the player's
+/// language: the screen renders the notice with its strings.
+final class EditorNotice {
+  const EditorNotice(this.render);
+
+  /// A message from the engine (a refused connection), in its English.
+  factory EditorNotice.engine(String? message) =>
+      EditorNotice((l) => message == null ? l.noticePieceDoesNotFit : engineText(message, l));
+
+  final String Function(AppLocalizations l) render;
+
+  @override
+  String toString() => render(englishStrings);
+}
+
 /// Where a selected instruction can move (MS13). Every move is the engine's
 /// own detach + attach, so `GraphTyping.canConnect` decides whether the new
 /// place is allowed.
@@ -43,20 +62,25 @@ final class SelectionInfo {
 
 /// Owns [GraphHistory]. Pointer / sheet UI does not go through Riverpod.
 final class EditorController extends ChangeNotifier {
-  /// [initialGraph] restores a saved program; the puzzle's givens are always
-  /// declared with their current types on top of it. Blocks that are not part
-  /// of the program (left behind by an older editor's delete) are dropped:
-  /// nothing ever ran them, they only counted against the block budget.
-  /// Folded C-blocks in it stay folded.
+  /// [initialGraph] restores a saved program; the puzzle's givens and its
+  /// variable pool are always declared with their current types on top of it.
+  /// Blocks that are not part of the program (left behind by an older
+  /// editor's delete) are dropped: nothing ever ran them, they only counted
+  /// against the block budget. Folded C-blocks in it stay folded.
+  ///
+  /// Every name a player can use comes from the puzzle (givens and
+  /// `variables.pool`); there is no free naming. So all of them are declared
+  /// from the start (U1) instead of being "created" one by one. Declaring is
+  /// only a type for the lowering: no block, no step, no memory.
   EditorController({
     required this.puzzle,
     bool seedExample = false,
     BlockGraph? initialGraph,
   }) : _history = GraphHistory(
           initialGraph == null
-              ? BlockGraph(blocks: const {}, variables: _givens(puzzle))
+              ? BlockGraph(blocks: const {}, variables: _names(puzzle))
               : withoutStrays(initialGraph).copyWith(
-                  variables: {...initialGraph.variables, ..._givens(puzzle)},
+                  variables: {...initialGraph.variables, ..._names(puzzle)},
                 ),
         ) {
     collapsedIds.addAll(_foldsOf(graph));
@@ -66,7 +90,9 @@ final class EditorController extends ChangeNotifier {
     }
   }
 
-  static Map<String, ValueType> _givens(Puzzle puzzle) => {
+  /// The pool, then the givens: every name the puzzle provides.
+  static Map<String, ValueType> _names(Puzzle puzzle) => {
+        for (final v in puzzle.variablePool) v.name: v.type,
         for (final input in puzzle.io.inputs) input.name: input.type,
       };
 
@@ -75,7 +101,7 @@ final class EditorController extends ChangeNotifier {
 
   PortRef? activeHole;
   String? selectedBlockId;
-  String? flash;
+  EditorNotice? flash;
 
   /// Folded C-blocks. UI state: never an undo step, saved with the draft.
   final Set<String> collapsedIds = {};
@@ -103,6 +129,10 @@ final class EditorController extends ChangeNotifier {
 
   List<IoBinding> get givens => puzzle.io.inputs;
 
+  /// The puzzle's working variables (`variables.pool`), declared from the
+  /// start.
+  List<IoBinding> get poolVariables => puzzle.variablePool;
+
   List<IoBinding> get unusedPool => [
         for (final v in puzzle.variablePool)
           if (!graph.variables.containsKey(v.name)) v,
@@ -117,8 +147,8 @@ final class EditorController extends ChangeNotifier {
     );
   }
 
-  void showFlash(String message) {
-    flash = message;
+  void showFlash(EditorNotice notice) {
+    flash = notice;
     notifyListeners();
   }
 
@@ -230,7 +260,7 @@ final class EditorController extends ChangeNotifier {
   bool apply(GraphCommand command) {
     final result = _history.apply(command);
     if (!result.ok) {
-      flash = result.decision.message;
+      flash = EditorNotice.engine(result.decision.message);
       notifyListeners();
       return false;
     }
@@ -279,14 +309,14 @@ final class EditorController extends ChangeNotifier {
     if (def.role == BlockRole.expression) {
       final hole = activeHole;
       if (hole == null) {
-        flash = 'Tap a value slot first.';
+        flash = EditorNotice((l) => l.noticeTapSlotFirst);
         notifyListeners();
         return;
       }
       final allowed = placementsFor(hole);
       final hit = allowed.where((p) => p.catalogId == catalogId).toList();
       if (hit.isEmpty) {
-        flash = 'This piece does not fit here.';
+        flash = EditorNotice((l) => l.noticePieceDoesNotFit);
         notifyListeners();
         return;
       }
@@ -445,9 +475,10 @@ final class EditorController extends ChangeNotifier {
     if (!ok) return false;
     _clearSelection();
     collapsedIds.removeAll(tree);
-    flash = tree.length == 1
-        ? 'Removed $label. UNDO brings it back.'
-        : 'Removed $label and ${blocksWord(tree.length - 1)} inside. UNDO brings them back.';
+    final inside = tree.length - 1;
+    flash = EditorNotice((l) => inside == 0
+        ? l.noticeRemoved(label)
+        : l.noticeRemovedWithInside(label, blocksText(inside, l)));
     notifyListeners();
     return true;
   }
@@ -512,9 +543,11 @@ final class EditorController extends ChangeNotifier {
       if (collapsedIds.contains(b)) collapsedIds.add(ids[b]!);
     }
     selectedBlockId = copyId;
-    flash = tree.length == 1
-        ? 'Copied ${_labelOf(graph.blocks[copyId]!)}.'
-        : 'Copied ${_labelOf(graph.blocks[copyId]!)} with ${blocksWord(tree.length - 1)} inside.';
+    final copied = _labelOf(graph.blocks[copyId]!);
+    final inside = tree.length - 1;
+    flash = EditorNotice((l) => inside == 0
+        ? l.noticeCopied(copied)
+        : l.noticeCopiedWithInside(copied, blocksText(inside, l)));
     _reveal(copyId);
     notifyListeners();
     return copyId;
@@ -566,7 +599,7 @@ final class EditorController extends ChangeNotifier {
 
   /// After a RUN that stopped on a block: select it, bring it into view and
   /// say why.
-  void showProblem(String blockId, String message) {
+  void showProblem(String blockId, EditorNotice message) {
     if (!graph.blocks.containsKey(blockId)) {
       showFlash(message);
       return;
@@ -584,7 +617,7 @@ final class EditorController extends ChangeNotifier {
   /// step brings the previous program back.
   void replaceGraph(BlockGraph graph) {
     apply(_ReplaceGraphCommand(
-      withoutStrays(graph).copyWith(variables: {...graph.variables, ..._givens(puzzle)}),
+      withoutStrays(graph).copyWith(variables: {...graph.variables, ..._names(puzzle)}),
     ));
     _clearSelection();
     collapsedIds
@@ -598,7 +631,10 @@ final class EditorController extends ChangeNotifier {
     apply(SetLiteralsCommand(blockId, {key: value}));
   }
 
+  /// Declares a name that is not declared yet (tests, custom puzzles); the
+  /// puzzle's own names already are.
   void declareVariable(String name, ValueType type) {
+    if (graph.variables.containsKey(name)) return;
     apply(DeclareVariableCommand(name: name, type: type));
   }
 
@@ -713,9 +749,6 @@ final class EditorController extends ChangeNotifier {
     selectedBlockId = null;
   }
 }
-
-/// `1 block`, `3 blocks`.
-String blocksWord(int n) => n == 1 ? '1 block' : '$n blocks';
 
 /// [graph] without the blocks the program does not reach from its top-level
 /// list. Returns [graph] itself when every block is part of the program.

@@ -3,7 +3,7 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current milestone: 13 COMPLETE (mobile UX polish and real-device usability, verified on an Android emulator — no physical device).**
+**Current state: U1 COMPLETE (English / Turkish, block reference, number entry, puzzle variables) on top of Milestone 13 (mobile UX polish, verified on an Android emulator — no physical device).**
 **Next milestone: 14 — the user decides: a second content batch through the MS12 pipeline (recommended first), or a language milestone (player functions / recursion) that unblocks Backtracking.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
@@ -17,8 +17,10 @@ MS9 `2be68bde64fc537c9a8e211c52d355a6d0c31d52`,
 MS10 `c192118c079e73c8ff78b7fa71d00adf0285959a`,
 L1 `d850525b2869271381356b27227e42648476192f`,
 MS11 `033f3ec63dc137e1b74a7b2b20d2233da0fe3da8`,
-MS12 `c3f3d5d75c128f62ea1547715bb89a0f62d41857`, MS13 — see `git log` (the
-commit titled "Milestone 13: mobile UX polish and usability").
+MS12 `c3f3d5d75c128f62ea1547715bb89a0f62d41857`,
+MS13 `10f6ec447778b92bf65eab579ba17d904cb6df17`, U1 — see `git log` (the
+commit titled "U1: Turkish localization, block reference, number entry and
+puzzle variables").
 
 ---
 
@@ -74,7 +76,11 @@ algorun/                          Flutter app (repository root)
       editor_controller.dart      EditorController: typed placement, selection, moves, copy, delete, folds (MS13)
       editor_bars.dart            FlashBanner, BlockActionsBar (selection), RunBar (undo / redo / count / RUN) (MS13)
     dev/stress_probe.dart         the 82-block editor stress program, built through EditorController.place (MS13)
-    screens/                      home, worlds, puzzle, results, settings
+    l10n/                         U1: app_en.arb (template) + app_tr.arb, gen/ (generated, committed), l10n.dart (context.l10n),
+                                  terms.dart (game words), engine_text.dart (engine sentences → Turkish), content_text.dart (puzzle text)
+    guide/guide_data.dart         U1: the block reference's content (73 blocks, 12 concepts, EN + TR)
+    screens/                      home, worlds, puzzle, results, settings, guide (U1: block reference)
+    state/l10n_providers.dart     U1: languageProvider, contentTextProvider (Turkish content loaded only when chosen)
     puzzles/asset_repository.dart loads assets through the engine schema
     state/providers.dart          engineProvider → DefaultEngine
     state/run_puzzle.dart         the RUN path: graph → lower → runTests (+ hintsUsed)
@@ -90,6 +96,7 @@ algorun/                          Flutter app (repository root)
     state/progress_text.dart      player wording for locks and statuses
   assets/                         bundled with the app
     worlds.json                   14 worlds, 38 puzzles; 09 (heaps) and 12 (backtracking) have none
+    l10n/content_tr.json          U1: Turkish world titles, concept words, puzzle titles / stories / hints
     puzzles/world_01/             warm_readings, highest_tide + ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe, ms13_stress_probe (unlisted dev probes)
     puzzles/world_02 … world_14/  the campaign puzzles (list: "Content backlog and coverage")
   content/                        offline only, NOT bundled
@@ -140,14 +147,18 @@ algorun/                          Flutter app (repository root)
   test/responsive_test.dart       the whole flow on 5 phone sizes × 2 font scales (MS13)
   test/campaign_regression_test.dart  all 38 puzzles: built by taps, saved, run, reported at 360 × 800 (MS13)
   test/screens_polish_test.dart   verdicts, next puzzle, world / puzzle wording (MS13)
-  test/literal_sheets_test.dart   number pad and name sheet under the real theme (MS13)
+  test/literal_sheets_test.dart   number pad, name sheet and TRUE / FALSE under the real theme (MS13, U1)
+  test/localization_test.dart     U1: ARB parity, engine sentence coverage, Turkish content, block reference coverage
+  test/localization_ui_test.dart  U1: language switch, reference in both languages, a Turkish puzzle, Turkish at ×1.6
+  test/editor_variables_test.dart U1: puzzle variables declared on open; every reference restores with identical IR
   test/support/                   shared helpers: campaign from files, progress fixtures, phone sizes, UI replay, results rows
   lib/state/performance_text.dart player wording for budgets (MS10)
 ```
 
-App `pubspec.yaml` path-depends on `packages/algorun_engine` only; its one
-package dependency beyond Flutter and Riverpod is `path_provider` (MS11, to
-find the save directory).
+App `pubspec.yaml` path-depends on `packages/algorun_engine` only; beyond
+Flutter and Riverpod it uses `path_provider` (MS11, to find the save
+directory) and, since U1, `flutter_localizations` + `intl` (gen-l10n,
+`l10n.yaml`).
 
 ## Important APIs
 
@@ -607,8 +618,16 @@ drag, no TextField (names are chips, numbers a pad). Labels via
   rail from 840 dp width. Instruction rows ≥ 48 dp, values 36 dp, empty slots
   40 × 64 dp. System font honoured to ×1.6.
 - After *Invalid Program*, returning selects the block to fix and says why.
+- **Names (U1).** The editor declares the puzzle's `variables.pool` and
+  givens when it opens and when a draft is restored (type environment only —
+  no block, no step). There is no CREATE VARIABLE in the UI; the engine's
+  `DeclareVariableCommand` / `declareVariable` stay for future player-named
+  variables. GIVENS and VARIABLES are chips above the program.
+- **Numbers (U1).** The pad opens with the number selected (typing replaces
+  it), ⌫ deletes the last digit, CLEAR empties it, +/− with a "negative" tag;
+  no ±1 buttons; never the system keyboard.
 
-Details: [`MILESTONE_13.md`](MILESTONE_13.md).
+Details: [`MILESTONE_13.md`](MILESTONE_13.md), [`MILESTONE_U1.md`](MILESTONE_U1.md).
 
 ### Android shell (MS13)
 
@@ -619,7 +638,22 @@ insets; the RUN bar and results buttons stay above the navigation bar.
 Verified on the emulator: back, background autosave, process death and
 restore, no keyboard ever.
 
-## Test results at MS13 closeout
+### Languages (U1)
+
+English (default) and Turkish, chosen in Settings and saved in
+`settings.language` (reset progress keeps it). UI strings: ARB + gen-l10n
+(`lib/l10n/`, run `flutter gen-l10n` after editing an ARB). Puzzle content
+stays English in the puzzle JSON; Turkish lives in
+`assets/l10n/content_tr.json` with a per-field English fallback. The engine
+stays English; `lib/l10n/engine_text.dart` translates its sentences by exact
+text (a test scans the engine and fails on an untranslated sentence). Block
+names and the words inside blocks stay English in every language, also
+inside Turkish stories and hints. Turkish capitals go through `l.upper()`.
+The block reference (Blok Rehberi, `/guide`) opens from home, settings, the
+puzzle app bar and the piece picker. Details:
+[`MILESTONE_U1.md`](MILESTONE_U1.md).
+
+## Test results at U1 closeout
 
 | Suite | Result |
 |---|---|
@@ -629,9 +663,10 @@ restore, no keyboard ever.
 | `packages/algorun_content` `dart test` | **85 passed** |
 | Content validator (assets + worlds + references) | `PIPELINE 38 of 38 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 43 puzzle(s), 7 warning(s)` |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **235 passed** |
+| Flutter `test` | **260 passed** (235 at MS13) |
 | `flutter build apk --debug` | built |
-| Emulator checklist (18 steps, MILESTONE_13.md) | passed on Android 15 emulator, 360 / 390 / 412 dp, landscape |
+| Emulator checklist (18 steps, MILESTONE_13.md) | passed on Android 15 emulator, 360 / 390 / 412 dp, landscape (MS13) |
+| U1 emulator pass (MILESTONE_U1.md) | English and Turkish at 360 × 800 dp: home, reference, settings, worlds, puzzle, picker, pad, results |
 
 Engine: MS4 lowering (86), MS5 interpreter (42), MS6 runner (26), MS7 codec
 (40), schema (41), FLOOR DIVIDE (14), MS8 shipped puzzles (30), MS10
@@ -647,7 +682,9 @@ results (18), sessions and autosave (9), purity guards (2), progression UI
 editor actions (13), stress probe (6), responsive flows (11), all 38 puzzles
 built by taps and run on a phone (77), screens (11), literal sheets under the
 real theme (3). Engine +3 (INCREMENT / DECREMENT placements), content +3
-(replay of an editor-saved ELSE).
+(replay of an editor-saved ELSE). U1 (+25): localization (9), localization
+UI (7), puzzle variables (4), number pad and TRUE / FALSE (+4), save
+language (+1).
 
 The seven warnings are known and deliberate: Backtracking (world 12) requires
 `recursion`, which no world teaches (the world has no puzzles; two warnings:
@@ -691,6 +728,7 @@ test waits on it forever.
 - Generic unification is per-block, not Hindley–Milner. Flutter web is preview-only.
 - **Editor (MS13).** No drag and drop: blocks move one step at a time (UP / DOWN / OUT / IN). A move is typed by `GraphTyping`, but narrowing that changes with the new position is reported by lowering at RUN. The picker has no search. Landscape phones lose the palette (the picker remains). The stress probe opens from Settings in debug builds only.
 - **Device testing (MS13).** Emulator only (software rendering, three-button navigation); no physical phone, no TalkBack pass, no frame timing on real hardware yet.
+- **Languages (U1).** English and Turkish only. Engine sentences are matched by their English text, so changing one needs its ARB entry (the scan test says which). Fixture values on the results screen are JSON in both languages. Puzzle input and variable names stay English (they are the program's identifiers).
 - `ARCHITECTURE.md` spells the validator command `dart run algorun_content:validate`; use the command below.
 
 ## Exact commands
@@ -708,6 +746,7 @@ cd packages/algorun_content && dart analyze && dart test && cd ../..
 dart run packages/algorun_content/bin/validate.dart assets/puzzles assets/worlds.json content/references --coverage content/coverage.json
 
 # App
+flutter gen-l10n     # after editing lib/l10n/app_*.arb (generated code is committed)
 flutter analyze
 flutter test
 flutter run          # Android device/emulator
@@ -738,6 +777,7 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | 11 | Progression + local save | complete |
 | 12 | Content pipeline (oracles, reachability, coverage, redundancy) + 33 new puzzles | complete |
 | 13 | Mobile UX polish and usability (emulator-verified) | complete |
+| U1 | English / Turkish, block reference, number entry, no CREATE VARIABLE | complete |
 | **14** | **Content batch 2 through the MS12 pipeline** (recommended) — or a language milestone | **next, when the user asks** |
 | later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content (see the backlog) |
 
@@ -805,6 +845,9 @@ unblocks Backtracking and recursive tree content.
   weaken a check or edit an expected answer to make a candidate pass.
 - Every new listed puzzle is covered by `test/campaign_regression_test.dart`
   automatically: its reference must be buildable through the picker.
+- Every new listed puzzle (and world, and concept) needs its Turkish text in
+  `assets/l10n/content_tr.json`, block names kept English;
+  `test/localization_test.dart` fails until it is there (U1).
 - Bump a puzzle's `version` for any incompatible change to a shipped puzzle
   (saved best results for it are then cleared, completion kept).
 - Do not change the unlock rules to make content pass; keep the MS11 rule
@@ -831,4 +874,5 @@ unblocks Backtracking and recursive tree content.
 | [`MILESTONE_12.md`](MILESTONE_12.md) | complete — content pipeline and first expansion batch |
 | [`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md) | the authoring contract (people and AI sessions) |
 | [`MILESTONE_13.md`](MILESTONE_13.md) | complete — mobile UX polish, emulator verification |
-| this file | MS13 handoff |
+| [`MILESTONE_U1.md`](MILESTONE_U1.md) | complete — Turkish, block reference, number entry, puzzle variables |
+| this file | U1 handoff |

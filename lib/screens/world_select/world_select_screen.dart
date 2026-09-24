@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../progress/campaign.dart';
+import '../../l10n/content_text.dart';
+import '../../l10n/l10n.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';
 import '../../state/progress_text.dart';
 
@@ -12,9 +15,11 @@ final class WorldSelectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final text = ref.watch(contentTextProvider);
     final view = ref.watch(campaignViewProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Worlds')),
+      appBar: AppBar(title: Text(l.worldsTitle)),
       body: SafeArea(top: false, child: view.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(
@@ -38,7 +43,8 @@ final class WorldSelectScreen extends ConsumerWidget {
               return _WorldCard(
                 world: world,
                 status: view.progress.worldStatus(world.id),
-                subtitle: worldStatusText(world, view.progress.worldStatus(world.id), view.progress),
+                subtitle: worldStatusText(world, view.progress.worldStatus(world.id), view.progress, l, text),
+                text: text,
                 current: world.id == currentWorld,
                 solved: world.puzzleIds
                     .where((id) => view.progress.puzzleStatus(id) == PuzzleStatus.completed)
@@ -59,6 +65,7 @@ class _WorldCard extends StatelessWidget {
     required this.subtitle,
     required this.current,
     required this.solved,
+    required this.text,
   });
 
   final WorldDef world;
@@ -66,6 +73,7 @@ class _WorldCard extends StatelessWidget {
   final String subtitle;
   final bool current;
   final int solved;
+  final ContentText text;
   int get total => world.puzzleIds.length;
 
   bool get _playable => status == WorldStatus.open || status == WorldStatus.completed;
@@ -73,6 +81,7 @@ class _WorldCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dim = !_playable;
+    final l = context.l10n;
     return Material(
       color: AppColors.elevated,
       borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -110,7 +119,7 @@ class _WorldCard extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            world.title,
+                            text.worldTitle(world),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
@@ -120,7 +129,7 @@ class _WorldCard extends StatelessWidget {
                         ),
                         if (current) ...[
                           const SizedBox(width: AppSpace.s2),
-                          const _Tag('CURRENT'),
+                          _Tag(l.tagCurrent),
                         ],
                       ],
                     ),
@@ -135,7 +144,7 @@ class _WorldCard extends StatelessWidget {
                     if (world.concepts.isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Text(
-                        'Teaches ${world.concepts.map(conceptWords).join(', ')}',
+                        l.worldTeaches(text.concepts(world.concepts)),
                         style: const TextStyle(color: AppColors.muted, fontSize: 12),
                       ),
                     ],
@@ -161,10 +170,10 @@ class _WorldCard extends StatelessWidget {
                 },
                 color: status == WorldStatus.completed ? AppColors.ok : AppColors.muted,
                 semanticLabel: switch (status) {
-                  WorldStatus.locked => 'Locked',
-                  WorldStatus.completed => 'Completed',
-                  WorldStatus.empty => 'No puzzles yet',
-                  WorldStatus.open => 'Open',
+                  WorldStatus.locked => l.locked,
+                  WorldStatus.completed => l.stateCompleted,
+                  WorldStatus.empty => l.worldNoPuzzles,
+                  WorldStatus.open => l.stateOpen,
                 },
               ),
             ],

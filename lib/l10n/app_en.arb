@@ -1,0 +1,1057 @@
+{
+  "@@locale": "en",
+  "appTitle": "Algorun",
+  "homeTagline": "Construct the algorithm.\nNever type it.",
+  "homeProgress": "PROGRESS",
+  "homeSolvedCount": "{solved} of {total} puzzles solved",
+  "@homeSolvedCount": {
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeLastPlayed": "Last played: {puzzle} · {world}",
+  "@homeLastPlayed": {
+    "placeholders": {
+      "puzzle": {
+        "type": "String"
+      },
+      "world": {
+        "type": "String"
+      }
+    }
+  },
+  "homeContinue": "CONTINUE",
+  "homeWorlds": "WORLDS",
+  "homeEnter": "ENTER",
+  "homeSettings": "Settings",
+  "homeGuide": "Block reference",
+  "homeHowToPlay": "New here? See how to play",
+  "worldsTitle": "Worlds",
+  "worldTeaches": "Teaches {concepts}",
+  "@worldTeaches": {
+    "placeholders": {
+      "concepts": {
+        "type": "String"
+      }
+    }
+  },
+  "tagCurrent": "CURRENT",
+  "worldNoPuzzles": "No puzzles yet",
+  "worldSolvedOne": "Solved",
+  "worldAllSolved": "All {total} solved",
+  "@worldAllSolved": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "worldProgress": "{solved} of {total} solved",
+  "@worldProgress": {
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "lockedLearnFirst": "Locked — learn {concepts} first",
+  "@lockedLearnFirst": {
+    "placeholders": {
+      "concepts": {
+        "type": "String"
+      }
+    }
+  },
+  "locked": "Locked",
+  "stateCompleted": "Completed",
+  "stateOpen": "Open",
+  "puzzlesTitle": "Puzzles",
+  "worldHeading": "{index} · {title}",
+  "@worldHeading": {
+    "placeholders": {
+      "index": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleListHeader": "{solved} of {total} solved · teaches {concepts}",
+  "@puzzleListHeader": {
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "concepts": {
+        "type": "String"
+      }
+    }
+  },
+  "tierLabel": "Tier {tier}",
+  "@tierLabel": {
+    "placeholders": {
+      "tier": {
+        "type": "int"
+      }
+    }
+  },
+  "tierWithMode": "Tier {tier} · {mode}",
+  "@tierWithMode": {
+    "placeholders": {
+      "tier": {
+        "type": "int"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "unknownWorld": "Unknown world.",
+  "statusNotStarted": "Not started",
+  "statusInProgress": "In progress",
+  "statusInProgressLastRun": "In progress · last run: {result}",
+  "@statusInProgressLastRun": {
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "statusInProgressLastRunEdited": "In progress · last run: {result}, edited since",
+  "@statusInProgressLastRunEdited": {
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "statusSolved": "Solved",
+  "statusSolvedBest": "Solved · best {steps} steps · {blocks} blocks",
+  "@statusSolvedBest": {
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "int"
+      }
+    }
+  },
+  "modeBuild": "build",
+  "modeBudget": "budget",
+  "modeOptimize": "optimize",
+  "modeEdge": "edge",
+  "modeRestricted": "restricted",
+  "modeOther": "challenge",
+  "puzzleFallbackTitle": "Puzzle",
+  "puzzleCouldNotOpen": "This puzzle could not be opened.",
+  "puzzleOpening": "Opening the puzzle…",
+  "puzzleLocked": "This puzzle is locked.",
+  "puzzleLockedLearn": "This puzzle is locked. It opens once you have learned {concepts}.",
+  "@puzzleLockedLearn": {
+    "placeholders": {
+      "concepts": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleLockedHow": "A concept is learned by solving every puzzle of the world that teaches it.",
+  "back": "BACK",
+  "puzzleChangedNotice": "This puzzle changed since you last played it. Your program was kept; RUN shows what to update.",
+  "solved": "Solved",
+  "programOptions": "Program options",
+  "foldAll": "Fold every block",
+  "unfoldAll": "Unfold every block",
+  "clearProgram": "Clear the program",
+  "solvedLine": "Solved. Keep improving, or try the next one.",
+  "loadBest": "Load best solution",
+  "bestButton": "BEST",
+  "bestLoaded": "Your best solution is loaded. UNDO brings back the program you had.",
+  "programCleared": "The program is cleared. UNDO brings it back.",
+  "blockNeedsAttention": "This block needs attention.",
+  "brief": "BRIEF",
+  "briefTier": "TIER {tier}",
+  "@briefTier": {
+    "placeholders": {
+      "tier": {
+        "type": "int"
+      }
+    }
+  },
+  "briefTierMode": "TIER {tier} · {mode}",
+  "@briefTierMode": {
+    "placeholders": {
+      "tier": {
+        "type": "int"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "ioInputs": "INPUTS",
+  "ioReturns": "RETURNS",
+  "hints": "HINTS",
+  "showHint": "SHOW HINT {n}",
+  "@showHint": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "noMoreHints": "NO MORE HINTS",
+  "hintsIntro": "Hints go from the idea to the approach, one at a time. They are counted, never charged.",
+  "givens": "GIVENS",
+  "variables": "VARIABLES",
+  "variablesNote": "The puzzle provides these names; tap a slot, then a name.",
+  "program": "PROGRAM",
+  "tapSlotThenName": "Tap a value slot, then a name.",
+  "nameDoesNotFit": "That name does not fit this slot.",
+  "openGuide": "Block reference",
+  "typeNumber": "number",
+  "typeBool": "yes / no",
+  "typeText": "text",
+  "typeNothing": "nothing",
+  "typeValue": "value",
+  "typeListNode": "chain link",
+  "typeTreeNode": "tree node",
+  "typeGraph": "graph",
+  "itemNumber": "numbers",
+  "itemBool": "yes / no values",
+  "itemText": "texts",
+  "itemValue": "values",
+  "itemList": "lists",
+  "itemListNode": "chain links",
+  "itemTreeNode": "tree nodes",
+  "itemGraph": "graphs",
+  "itemOther": "collections",
+  "typeListOf": "list of {item}",
+  "@typeListOf": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "typeSetOf": "set of {item}",
+  "@typeSetOf": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "typeStackOf": "stack of {item}",
+  "@typeStackOf": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "typeQueueOf": "queue of {item}",
+  "@typeQueueOf": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "typeDequeOf": "deque of {item}",
+  "@typeDequeOf": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "typeMapOf": "map from {key} to {value}",
+  "@typeMapOf": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "typeMaybe": "{type}, or NOTHING",
+  "@typeMaybe": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "typeCollection": "collection",
+  "dismiss": "Dismiss",
+  "selected": "SELECTED",
+  "blocksCount": "{count, plural, =1{1 block} other{{count} blocks}}",
+  "@blocksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionTitle": "{label} · {blocks}",
+  "@selectionTitle": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "actionUp": "UP",
+  "actionDown": "DOWN",
+  "actionOut": "OUT",
+  "actionIn": "IN",
+  "actionCopy": "COPY",
+  "actionDelete": "DELETE",
+  "actionReplace": "REPLACE",
+  "moveUp": "Move up",
+  "moveDown": "Move down",
+  "moveOut": "Move out of the block around it",
+  "moveIn": "Move into the block above",
+  "duplicate": "Duplicate",
+  "delete": "Delete",
+  "deleteWithInside": "Delete it and the {blocks} inside",
+  "@deleteWithInside": {
+    "placeholders": {
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "replaceValue": "Replace this value",
+  "done": "Done",
+  "undo": "Undo",
+  "redo": "Redo",
+  "blockCountWithMax": "{count} / {max} blocks",
+  "@blockCountWithMax": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "blockCountSemantics": "{count} of {max} blocks",
+  "@blockCountSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "overBudgetSuffix": ", over the budget",
+  "savedOnDevice": "Saved on this device",
+  "practiceNotSaved": "Practice · not saved",
+  "run": "RUN",
+  "running": "RUNNING",
+  "noticeRemoved": "Removed {label}. UNDO brings it back.",
+  "@noticeRemoved": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeRemovedWithInside": "Removed {label} and {blocks} inside. UNDO brings them back.",
+  "@noticeRemovedWithInside": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeCopied": "Copied {label}.",
+  "@noticeCopied": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeCopiedWithInside": "Copied {label} with {blocks} inside.",
+  "@noticeCopiedWithInside": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeTapSlotFirst": "Tap a value slot first.",
+  "noticePieceDoesNotFit": "This piece does not fit here.",
+  "chooseAPiece": "Choose a piece",
+  "pickerFor": "For {target}. Only pieces that fit this slot are listed.",
+  "@pickerFor": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "close": "Close",
+  "nothingFits": "Nothing in this puzzle fits here.",
+  "targetProgram": "the program",
+  "targetSlot": "this slot",
+  "targetElse": "ELSE",
+  "targetThenOf": "THEN of {block}",
+  "@targetThenOf": {
+    "placeholders": {
+      "block": {
+        "type": "String"
+      }
+    }
+  },
+  "targetDoOf": "DO of {block}",
+  "@targetDoOf": {
+    "placeholders": {
+      "block": {
+        "type": "String"
+      }
+    }
+  },
+  "targetElseOf": "ELSE of {block}",
+  "@targetElseOf": {
+    "placeholders": {
+      "block": {
+        "type": "String"
+      }
+    }
+  },
+  "targetCaptionOf": "the {caption} of {block}",
+  "@targetCaptionOf": {
+    "placeholders": {
+      "caption": {
+        "type": "String"
+      },
+      "block": {
+        "type": "String"
+      }
+    }
+  },
+  "captionCondition": "condition",
+  "captionNumber": "number",
+  "captionList": "list",
+  "captionValue": "value",
+  "captionMap": "map",
+  "captionSet": "set",
+  "captionStack": "stack",
+  "captionQueue": "queue",
+  "captionKey": "key",
+  "captionNode": "node",
+  "captionGraph": "graph",
+  "captionInstruction": "instruction",
+  "captionElse": "else",
+  "emptySlot": "Empty {caption} slot",
+  "@emptySlot": {
+    "placeholders": {
+      "caption": {
+        "type": "String"
+      }
+    }
+  },
+  "catAll": "ALL",
+  "catControl": "CONTROL",
+  "catValues": "VALUES",
+  "catLogic": "LOGIC",
+  "catMath": "MATH",
+  "catLists": "LISTS",
+  "catStructure": "STRUCTURE",
+  "paletteBlocks": "BLOCKS",
+  "addStep": "add step",
+  "emptyProgram": "Your program is empty. Tap to place the first instruction.",
+  "addElse": "ADD ELSE",
+  "removeElse": "Remove ELSE",
+  "collapse": "Collapse",
+  "expand": "Expand",
+  "foldedEmpty": "Folded · empty",
+  "foldedInside": "Folded · {blocks} inside",
+  "@foldedInside": {
+    "placeholders": {
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "variableChange": "Variable {name}, change",
+  "@variableChange": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "namePlaceholder": "name",
+  "itemPlaceholder": "item",
+  "chooseName": "Choose a name",
+  "namesFromPuzzle": "Names come from the puzzle; there is no typing.",
+  "padDone": "DONE",
+  "padClear": "CLEAR",
+  "padSelectedHint": "Typing replaces this number",
+  "padEditHint": "Tap the number to select it all",
+  "padEmpty": "Type a number",
+  "padNegative": "negative",
+  "changeSign": "Change sign",
+  "deleteDigit": "Delete last digit",
+  "clearNumber": "Clear the number",
+  "padValueSemantics": "Number {value}",
+  "@padValueSemantics": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "resultTitle": "Result",
+  "noResult": "No result.",
+  "verdictCorrect": "CORRECT",
+  "verdictWrongAnswer": "WRONG ANSWER",
+  "verdictRuntimeError": "RUNTIME ERROR",
+  "verdictOperationLimit": "OPERATION LIMIT",
+  "verdictTimeLimit": "TIME LIMIT",
+  "verdictMemoryLimit": "MEMORY LIMIT",
+  "verdictDepthLimit": "DEPTH LIMIT",
+  "verdictInvalidProgram": "INVALID PROGRAM",
+  "kindCorrect": "correct",
+  "kindWrongAnswer": "wrong answer",
+  "kindRuntimeError": "runtime error",
+  "kindOperationLimit": "operation limit",
+  "kindTimeLimit": "time limit",
+  "kindMemoryLimit": "memory limit",
+  "kindDepthLimit": "depth limit",
+  "kindInvalidProgram": "invalid program",
+  "meaningCorrect": "Every case came out right, within every budget.",
+  "meaningWrongAnswer": "The program finished, but at least one answer is not the expected one.",
+  "meaningRuntimeError": "The program stopped on an instruction it could not carry out.",
+  "meaningOperationLimit": "The program needed more steps than the budget allows.",
+  "meaningTimeLimit": "The program ran out of time.",
+  "meaningMemoryLimit": "The program kept more values in its lists and maps than the budget allows.",
+  "meaningDepthLimit": "The program went deeper than the budget allows.",
+  "meaningInvalidProgram": "The program cannot run yet. Fix what is listed below.",
+  "progressSection": "PROGRESS",
+  "progressSolved": "Puzzle solved.",
+  "progressNewBest": "New best: {metrics}.",
+  "@progressNewBest": {
+    "placeholders": {
+      "metrics": {
+        "type": "String"
+      }
+    }
+  },
+  "progressNowOpen": "Now open: {worlds}.",
+  "@progressNowOpen": {
+    "placeholders": {
+      "worlds": {
+        "type": "String"
+      }
+    }
+  },
+  "bestSteps": "fewest steps",
+  "bestMemory": "least memory",
+  "bestDepth": "least depth",
+  "bestBlocks": "fewest blocks",
+  "bestHints": "fewest hints",
+  "whatToFix": "WHAT TO FIX",
+  "cases": "CASES",
+  "hidden": "HIDDEN",
+  "hiddenPassed": "{passed} of {total} hidden cases passed.",
+  "@hiddenPassed": {
+    "placeholders": {
+      "passed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "whatItCost": "WHAT IT COST",
+  "costUsed": "USED",
+  "costBudget": "BUDGET",
+  "costSteps": "Steps",
+  "costMemory": "Memory cells",
+  "costDepth": "Depth",
+  "costBlocks": "Blocks",
+  "costHints": "Hints",
+  "hintsCount": "{count, plural, =1{1 hint} other{{count} hints}}",
+  "@hintsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "costRowSemantics": "{label}: {used} used, budget {budget}",
+  "@costRowSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "used": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "stoppedAfterStep": "Stopped after step {step}.",
+  "@stoppedAfterStep": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
+  "hiddenNotShown": "Hidden test inputs and answers are not shown.",
+  "nextPuzzle": "NEXT: {title}",
+  "@nextPuzzle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "backToPuzzle": "BACK TO PUZZLE",
+  "casePassed": "passed",
+  "caseGiven": "given",
+  "caseExpected": "expected",
+  "caseYouGave": "you gave",
+  "perfCorrectButOver": "The result is correct, but this solution uses too many operations: {measured} against a budget of {budget}.",
+  "@perfCorrectButOver": {
+    "placeholders": {
+      "measured": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "perfStillRunning": "Every case that finished came out right, but this solution uses too many operations: it was still running after {measured}, and the budget is {budget}.",
+  "@perfStillRunning": {
+    "placeholders": {
+      "measured": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "perfWrongAndOver": "This solution uses too many operations ({ops} against a budget of {budget}), and not every answer is right either.",
+  "@perfWrongAndOver": {
+    "placeholders": {
+      "ops": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "perfMoreThan": "more than {count}",
+  "@perfMoreThan": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Settings",
+  "showBriefSetting": "Show the brief when a puzzle opens",
+  "privacyNote": "Progress, your programs and your best results are saved on this device only. There is no account and nothing is uploaded.",
+  "resetProgress": "Reset progress",
+  "resetConfirmTitle": "Reset progress?",
+  "resetConfirmBody": "Every solved puzzle, saved program and best result on this device is deleted. This cannot be undone.",
+  "cancel": "Cancel",
+  "reset": "Reset",
+  "platformNote": "Android is the primary target. Engine code is pure Dart and does not import Flutter.",
+  "languageSection": "LANGUAGE",
+  "languageEnglish": "English",
+  "languageTurkish": "Türkçe",
+  "languageNote": "Block names such as IF, WHILE and RETURN stay in English in every language. The block reference explains each of them.",
+  "languageSelected": "selected",
+  "developerSection": "DEVELOPER",
+  "developerNote": "Debug builds only. The stress probe opens a long, deep program for testing the editor on a phone; it is not saved and not part of the campaign.",
+  "openStressProbe": "Open the editor stress probe",
+  "versionLine": "Version {version}",
+  "@versionLine": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "guideTitle": "Block reference",
+  "guideTabBasics": "How to play",
+  "guideTabConcepts": "Concepts",
+  "guideTabBlocks": "Blocks",
+  "guideInThisPuzzle": "IN THIS PUZZLE",
+  "guideAllBlocks": "ALL BLOCKS",
+  "guideExample": "Example",
+  "guideKeywordNote": "Block names stay in English. Each card gives the name, what it means in Turkish and in English, and a small example.",
+  "guideBasics1Title": "Read the brief",
+  "guideBasics1": "The brief tells the story and what to return. INPUTS lists what the puzzle gives you; RETURNS says what your program must give back.",
+  "guideBasics2Title": "Place instructions",
+  "guideBasics2": "Tap add step and choose a piece. The picker only lists pieces that fit the place you tapped, so you never type code.",
+  "guideBasics3Title": "Fill the slots",
+  "guideBasics3": "A dashed slot is still empty. Tap it to plug in a value: a name from GIVENS or VARIABLES, a number, or a calculation.",
+  "guideBasics4Title": "Edit",
+  "guideBasics4": "Tap a block to select it, then move it, copy it or delete it. Every change can be undone. Fold long blocks to see the outline.",
+  "guideBasics5Title": "Run",
+  "guideBasics5": "RUN checks your program on the visible cases and on hidden ones. Hidden cases only show how many passed. Some puzzles also have a step budget: a correct but slow program is not enough.",
+  "guideBasics6Title": "Hints and progress",
+  "guideBasics6": "Hints come one at a time. They never stop a solve; the result only counts how many you used. Solving every puzzle of a world teaches its concepts and opens the next worlds.",
+  "engineNotReadyToRun": "This program is not ready to run.",
+  "@engineNotReadyToRun": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineTheCanvasIsEmpty": "The canvas is empty.",
+  "@engineTheCanvasIsEmpty": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineUnknownBlock": "Unknown block.",
+  "@engineUnknownBlock": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineAStackPointsAtAMissingBlock": "A stack points at a missing block.",
+  "@engineAStackPointsAtAMissingBlock": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisProgramIsNotPutTogetherCorrectly": "This program is not put together correctly.",
+  "@engineThisProgramIsNotPutTogetherCorrectly": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineOnlyAnElseBranchFitsHere": "Only an else branch fits here.",
+  "@engineOnlyAnElseBranchFitsHere": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisPieceCannotBeUsedYet": "This piece cannot be used yet.",
+  "@engineThisPieceCannotBeUsedYet": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisSpotNeedsAnInstructionNotA": "This spot needs an instruction, not a value.",
+  "@engineThisSpotNeedsAnInstructionNotA": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineAConnectionPointsAtAMissingBlock": "A connection points at a missing block.",
+  "@engineAConnectionPointsAtAMissingBlock": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineChooseAName": "Choose a name.",
+  "@engineChooseAName": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAList": "This block needs a list.",
+  "@engineThisBlockNeedsAList": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisVariableIsNotDefined": "This variable is not defined.",
+  "@engineThisVariableIsNotDefined": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisVariableIsNotANumber": "This variable is not a number.",
+  "@engineThisVariableIsNotANumber": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisPieceDoesNotFitHere": "This piece does not fit here.",
+  "@engineThisPieceDoesNotFitHere": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsANumber": "This block needs a number.",
+  "@engineThisBlockNeedsANumber": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisSpotNeedsAValueNotA": "This spot needs a value, not a full instruction.",
+  "@engineThisSpotNeedsAValueNotA": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsACondition": "This block needs a condition.",
+  "@engineThisBlockNeedsACondition": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAMap": "This block needs a map.",
+  "@engineThisBlockNeedsAMap": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsASet": "This block needs a set.",
+  "@engineThisBlockNeedsASet": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAStack": "This block needs a stack.",
+  "@engineThisBlockNeedsAStack": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAQueue": "This block needs a queue.",
+  "@engineThisBlockNeedsAQueue": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAValue": "This block needs a value.",
+  "@engineThisBlockNeedsAValue": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAKey": "This block needs a key.",
+  "@engineThisBlockNeedsAKey": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsANode": "This block needs a node.",
+  "@engineThisBlockNeedsANode": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAGraph": "This block needs a graph.",
+  "@engineThisBlockNeedsAGraph": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThatBlockAlreadyExists": "That block already exists.",
+  "@engineThatBlockAlreadyExists": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThatBlockIsGone": "That block is gone.",
+  "@engineThatBlockIsGone": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockIsNotAttached": "This block is not attached.",
+  "@engineThisBlockIsNotAttached": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThatNameIsAlreadyInUse": "That name is already in use.",
+  "@engineThatNameIsAlreadyInUse": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisValueMayBeEmptyHereCheck": "This value may be empty here. Check that it is not empty first.",
+  "@engineThisValueMayBeEmptyHereCheck": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineCheckAValueThatMayBeEmpty": "Check a value that may be empty, not NOTHING itself.",
+  "@engineCheckAValueThatMayBeEmpty": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisValueIsNeverEmptyHereSo": "This value is never empty here, so there is nothing to check.",
+  "@engineThisValueIsNeverEmptyHereSo": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineSomethingIsAlreadyPluggedInHere": "Something is already plugged in here.",
+  "@engineSomethingIsAlreadyPluggedInHere": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockIsAttachedInTwoPlaces": "This block is attached in two places.",
+  "@engineThisBlockIsAttachedInTwoPlaces": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisWouldLoopBackOnItself": "This would loop back on itself.",
+  "@engineThisWouldLoopBackOnItself": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThesePiecesDoNotAttachThatWay": "These pieces do not attach that way.",
+  "@engineThesePiecesDoNotAttachThatWay": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockIsAlreadyAttachedSomewhereElse": "This block is already attached somewhere else.",
+  "@engineThisBlockIsAlreadyAttachedSomewhereElse": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockIsAlreadyInThatStack": "This block is already in that stack.",
+  "@engineThisBlockIsAlreadyInThatStack": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThatStackPositionDoesNotExist": "That stack position does not exist.",
+  "@engineThatStackPositionDoesNotExist": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineBreakAndContinueOnlyWorkInsideA": "Break and continue only work inside a loop.",
+  "@engineBreakAndContinueOnlyWorkInsideA": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisPuzzleDoesNotExposeAnyBlocks": "This puzzle does not expose any blocks.",
+  "@engineThisPuzzleDoesNotExposeAnyBlocks": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisPuzzleDoesNotIncludeThatBlock": "This puzzle does not include that block.",
+  "@engineThisPuzzleDoesNotIncludeThatBlock": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisProgramHasNoStartingPoint": "This program has no starting point.",
+  "@engineThisProgramHasNoStartingPoint": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisProgramWentTooManyLevelsDeep": "This program went too many levels deep.",
+  "@engineThisProgramWentTooManyLevelsDeep": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockOnlyWorksInsideALoop": "This block only works inside a loop.",
+  "@engineThisBlockOnlyWorksInsideALoop": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisLoopWouldNeverFinish": "This loop would never finish.",
+  "@engineThisLoopWouldNeverFinish": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisValueCannotBeUsedHere": "This value cannot be used here.",
+  "@engineThisValueCannotBeUsedHere": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisNameHasNoValueYet": "This name has no value yet.",
+  "@engineThisNameHasNoValueYet": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineYouCannotDivideByZero": "You cannot divide by zero.",
+  "@engineYouCannotDivideByZero": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisNumberIsTooBig": "This number is too big.",
+  "@engineThisNumberIsTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisCallIsMissingAValue": "This call is missing a value.",
+  "@engineThisCallIsMissingAValue": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockIsMissingAValue": "This block is missing a value.",
+  "@engineThisBlockIsMissingAValue": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisListGotTooBig": "This list got too big.",
+  "@engineThisListGotTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisMapGotTooBig": "This map got too big.",
+  "@engineThisMapGotTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisSetGotTooBig": "This set got too big.",
+  "@engineThisSetGotTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisStackGotTooBig": "This stack got too big.",
+  "@engineThisStackGotTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisStackIsEmpty": "This stack is empty.",
+  "@engineThisStackIsEmpty": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisQueueGotTooBig": "This queue got too big.",
+  "@engineThisQueueGotTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisQueueIsEmpty": "This queue is empty.",
+  "@engineThisQueueIsEmpty": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockCannotRunYet": "This block cannot run yet.",
+  "@engineThisBlockCannotRunYet": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockIsMissingAName": "This block is missing a name.",
+  "@engineThisBlockIsMissingAName": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockCanOnlySwapTwoNames": "This block can only swap two names.",
+  "@engineThisBlockCanOnlySwapTwoNames": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThereIsNothingHere": "There is nothing here.",
+  "@engineThereIsNothingHere": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAYesOrNo": "This block needs a yes or no value.",
+  "@engineThisBlockNeedsAYesOrNo": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsANumberSomeText": "This block needs a number, some text, or a yes or no value as the key.",
+  "@engineThisBlockNeedsANumberSomeText": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineAPositionHasToBeAWhole": "A position has to be a whole number.",
+  "@engineAPositionHasToBeAWhole": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThatPositionIsOutsideTheList": "That position is outside the list.",
+  "@engineThatPositionIsOutsideTheList": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisProgramIsNestedTooDeeply": "This program is nested too deeply.",
+  "@engineThisProgramIsNestedTooDeeply": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisProgramTookTooManySteps": "This program took too many steps.",
+  "@engineThisProgramTookTooManySteps": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisProgramUsedTooMuchMemory": "This program used too much memory.",
+  "@engineThisProgramUsedTooMuchMemory": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisPuzzleHasNoTestCases": "This puzzle has no test cases.",
+  "@engineThisPuzzleHasNoTestCases": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineEveryCasePassed": "Every case passed.",
+  "@engineEveryCasePassed": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisCaseDidNotComeOutThe": "This case did not come out the way the puzzle expects.",
+  "@engineThisCaseDidNotComeOutThe": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineAHiddenCaseDidNotComeOut": "A hidden case did not come out the way the puzzle expects.",
+  "@engineAHiddenCaseDidNotComeOut": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineMaxBlocks": "This puzzle allows at most {max} blocks.",
+  "@engineMaxBlocks": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "engineNoValueFor": "This program did not get a value for {name}.",
+  "@engineNoValueFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "engineCaseFailed": "Case {id} did not come out the way the puzzle expects.",
+  "@engineCaseFailed": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  }
+}

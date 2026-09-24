@@ -28,7 +28,7 @@ PlayerSave _richSave() => PlayerSave(
         ),
         'smallest_cart': PuzzleProgress(puzzleVersion: 1, draft: lengthGraph()),
       },
-      settings: const PlayerSettings(showBriefOnOpen: false),
+      settings: const PlayerSettings(showBriefOnOpen: false, language: 'tr'),
       session: const CurrentSession(worldId: 'world_03', puzzleId: 'twin_beacons'),
     );
 
@@ -71,6 +71,7 @@ void main() {
       expect(graphText(twin.draft!), graphText(lengthGraph(retId: 'edited')));
       expect(read.save['smallest_cart']!.completed, isFalse);
       expect(read.save.settings.showBriefOnOpen, isFalse);
+      expect(read.save.settings.language, 'tr');
       expect(read.save.session!.puzzleId, 'twin_beacons');
       expect(encodeSave(read.save), encodeSave(_richSave()));
     });
@@ -98,7 +99,7 @@ void main() {
       expect(_json(encodeSave(PlayerSave.fresh)), {
         'puzzles': <String, Object?>{},
         'saveVersion': 1,
-        'settings': {'showBriefOnOpen': true},
+        'settings': {'language': 'en', 'showBriefOnOpen': true},
       });
     });
 
@@ -237,6 +238,23 @@ void main() {
       expect(noSettings.save.session, isNull);
       expect(noSettings.save.puzzles, hasLength(2));
       expect(noSettings.issues.map((i) => i.path), ['settings.showBriefOnOpen', 'session']);
+    });
+
+    test('U1: the language setting is read back; old saves and unknown languages give English', () {
+      final old = decodeSave(_with((json) => json['settings'] = {'showBriefOnOpen': false}));
+      expect(old.issues, isEmpty, reason: 'a save from before the language setting is not damaged');
+      expect(old.save.settings.language, 'en');
+      expect(old.save.settings.showBriefOnOpen, isFalse);
+
+      final klingon = decodeSave(_with((json) => json['settings'] = {'showBriefOnOpen': false, 'language': 'tlh'}));
+      expect(klingon.save.settings.language, 'en');
+      expect(klingon.save.settings.showBriefOnOpen, isFalse, reason: 'the other setting stands');
+      expect(klingon.issues.map((i) => i.path), ['settings.language']);
+
+      final turkish = decodeSave(_with((json) => json['settings'] = {'showBriefOnOpen': true, 'language': 'tr'}));
+      expect(turkish.issues, isEmpty);
+      expect(turkish.save.settings.language, 'tr');
+      expect(_json(encodeSave(turkish.save))['settings'], {'language': 'tr', 'showBriefOnOpen': true});
     });
 
     test('unknown fields are read past and not written back', () {

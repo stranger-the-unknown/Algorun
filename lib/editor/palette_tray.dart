@@ -2,6 +2,8 @@ import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/terms.dart';
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 import 'editor_theme.dart';
@@ -48,16 +50,17 @@ class _PaletteTrayState extends State<PaletteTray> {
         if (_filter == null || BlockChrome.of(id).category == _filter) id,
     ];
     final scale = (MediaQuery.textScalerOf(context).scale(14) / 14).clamp(1.0, maxTextScale);
+    final l = context.l10n;
     final filters = [
       _CatChip(
-        label: 'ALL',
+        label: l.catAll,
         selected: _filter == null,
         onTap: () => setState(() => _filter = null),
       ),
       for (final cat in BlockCategory.values)
         if (cats.contains(cat))
           _CatChip(
-            label: BlockChrome.categoryLabel(cat),
+            label: categoryText(cat, l),
             selected: _filter == cat,
             onTap: () => setState(() => _filter = cat),
           ),
@@ -72,7 +75,7 @@ class _PaletteTrayState extends State<PaletteTray> {
         child: ListView(
           padding: const EdgeInsets.all(12),
           children: [
-            const Text('BLOCKS', style: AppText.label),
+            Text(l.paletteBlocks, style: AppText.label),
             const SizedBox(height: 8),
             Wrap(spacing: 8, runSpacing: 8, children: filters),
             const SizedBox(height: 12),

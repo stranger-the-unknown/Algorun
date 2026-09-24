@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 
-/// Number pad / chip pickers. No TextField. No system keyboard.
+/// The largest number the pad enters (the content pipeline checks the same
+/// limit for reference programs).
+const padNumberLimit = 999999;
+
+/// Number pad, yes / no and name pickers. No TextField, no system keyboard:
+/// the pad is the game's own number keyboard.
 abstract final class LiteralSheet {
   static Future<void> showNumber(
     BuildContext context,
@@ -13,7 +20,11 @@ abstract final class LiteralSheet {
     return showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.elevated,
-      builder: (_) => SizedBox(width: double.infinity, child: _NumberPad(controller: controller, blockId: blockId)),
+      isScrollControlled: true,
+      builder: (_) => SizedBox(
+        width: double.infinity,
+        child: NumberPad(controller: controller, blockId: blockId),
+      ),
     );
   }
 
@@ -22,34 +33,45 @@ abstract final class LiteralSheet {
     EditorController controller,
     String blockId,
   ) {
+    final current = controller.graph.blocks[blockId]?.literals['value'] == true;
     return showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.elevated,
-      builder: (_) {
+      builder: (context) {
+        final l = context.l10n;
+        Widget choice(bool value, String label) {
+          final selected = current == value;
+          return Expanded(
+            child: Semantics(
+              selected: selected,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  backgroundColor: selected ? AppColors.subtle : null,
+                  side: BorderSide(
+                    color: selected ? AppColors.accent : AppColors.borderStrong,
+                    width: selected ? 2 : 1,
+                  ),
+                ),
+                onPressed: () {
+                  controller.setLiteral(blockId, 'value', value);
+                  Navigator.pop(context);
+                },
+                icon: Icon(selected ? Icons.check : Icons.circle_outlined, size: 18),
+                label: Text(selected ? '$label · ${l.languageSelected}' : label),
+              ),
+            ),
+          );
+        }
+
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Expanded(
-                  child: FilledButton(
-                    onPressed: () {
-                      controller.setLiteral(blockId, 'value', true);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('TRUE'),
-                  ),
-                ),
+                choice(true, 'TRUE'),
                 const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      controller.setLiteral(blockId, 'value', false);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('FALSE'),
-                  ),
-                ),
+                choice(false, 'FALSE'),
               ],
             ),
           ),
@@ -64,7 +86,6 @@ abstract final class LiteralSheet {
     required String blockId,
     required String key,
     required List<String> names,
-    bool allowCreate = false,
   }) {
     return showModalBottomSheet<void>(
       context: context,
@@ -76,124 +97,221 @@ abstract final class LiteralSheet {
           blockId: blockId,
           nameKey: key,
           names: names,
-          allowCreate: allowCreate,
         ),
       ),
     );
   }
 }
 
-class _NumberPad extends StatefulWidget {
-  const _NumberPad({required this.controller, required this.blockId});
+/// The game's number keyboard.
+///
+/// It opens with the current number **selected**: the first digit typed
+/// replaces it (45 → type 4, 4 → 44). ⌫ deletes the last digit (on a
+/// selected number it clears it), CLEAR empties it in one tap, and tapping
+/// the number selects it all again. The sign key flips the sign; the number
+/// shows its sign and a "negative" tag, so the state never depends on
+/// colour.
+final class NumberPad extends StatefulWidget {
+  const NumberPad({super.key, required this.controller, required this.blockId});
   final EditorController controller;
   final String blockId;
 
   @override
-  State<_NumberPad> createState() => _NumberPadState();
+  State<NumberPad> createState() => _NumberPadState();
 }
 
-class _NumberPadState extends State<_NumberPad> {
-  late int _value;
+class _NumberPadState extends State<NumberPad> {
+  /// The digits typed, without sign; empty means nothing typed yet.
+  late String _digits;
   bool _negative = false;
+
+  /// The whole number is selected: the next digit replaces it.
+  bool _selected = true;
 
   @override
   void initState() {
     super.initState();
-    final raw =
-        widget.controller.graph.blocks[widget.blockId]?.literals['value'];
+    final raw = widget.controller.graph.blocks[widget.blockId]?.literals['value'];
     final n = raw is int ? raw : int.tryParse('$raw') ?? 0;
     _negative = n < 0;
-    _value = n.abs();
+    _digits = '${n.abs()}';
   }
 
-  int get _signed => _negative ? -_value : _value;
+  int get _value {
+    final n = _digits.isEmpty ? 0 : int.parse(_digits);
+    return _negative ? -n : n;
+  }
 
-  void _digit(int d) {
-    setState(() {
-      _value = (_value * 10 + d).clamp(0, 999999);
-    });
+  void _digit(int d) => setState(() {
+        final base = _selected ? '' : _digits;
+        _selected = false;
+        final next = base == '0' ? '$d' : '$base$d';
+        if (next.length <= 6 && int.parse(next) <= padNumberLimit) _digits = next;
+      });
+
+  void _backspace() => setState(() {
+        if (_selected) {
+          _digits = '';
+        } else if (_digits.isNotEmpty) {
+          _digits = _digits.substring(0, _digits.length - 1);
+        }
+        _selected = false;
+      });
+
+  void _clear() => setState(() {
+        _digits = '';
+        _negative = false;
+        _selected = false;
+      });
+
+  void _sign() => setState(() {
+        _negative = !_negative;
+        _selected = false;
+      });
+
+  void _done() {
+    widget.controller.setLiteral(widget.blockId, 'value', _value);
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    const keys = [
-      ['1', '2', '3'],
-      ['4', '5', '6'],
-      ['7', '8', '9'],
-      ['±', '0', '⌫'],
-    ];
+    final l = context.l10n;
+    final shown = _digits.isEmpty ? '0' : _digits;
+    final text = _negative ? '−$shown' : shown;
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              '$_signed',
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w600,
-                fontFeatures: [FontFeature.tabularFigures()],
+            Semantics(
+              button: true,
+              label: l.padValueSemantics(_negative ? '-$shown' : shown),
+              hint: _selected ? l.padSelectedHint : l.padEditHint,
+              excludeSemantics: true,
+              child: InkWell(
+                key: const Key('pad-display'),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                onTap: () => setState(() => _selected = true),
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 72),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.bg,
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    border: Border.all(
+                      color: _selected ? AppColors.accent : AppColors.borderStrong,
+                      width: _selected ? 2 : 1,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              // A selection highlight, like a text field's.
+                              color: _selected ? AppColors.accent.withValues(alpha: 0.28) : null,
+                              child: Text(
+                                text,
+                                key: const Key('pad-value'),
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w600,
+                                  color: _digits.isEmpty && !_selected ? AppColors.muted : AppColors.fg,
+                                  fontFeatures: const [FontFeature.tabularFigures()],
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (_negative) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.borderStrong),
+                                borderRadius: BorderRadius.circular(AppRadius.xs),
+                              ),
+                              child: Text(l.padNegative, style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _selected ? l.padSelectedHint : l.padEditHint,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppColors.muted, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 12),
-            for (final row in keys)
+            const SizedBox(height: 8),
+            for (final row in const [
+              ['1', '2', '3'],
+              ['4', '5', '6'],
+              ['7', '8', '9'],
+              ['±', '0', '⌫'],
+            ])
               Row(
                 children: [
                   for (final key in row)
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(4),
-                        child: SizedBox(
-                          height: 52,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              if (key == '±') {
-                                setState(() => _negative = !_negative);
-                              } else if (key == '⌫') {
-                                setState(() => _value = _value ~/ 10);
-                              } else {
-                                _digit(int.parse(key));
-                              }
-                            },
-                            child: Text(
-                              key,
-                              semanticsLabel: switch (key) {
-                                '±' => 'Change sign',
-                                '⌫' => 'Delete last digit',
-                                _ => key,
-                              },
-                            ),
-                          ),
+                        child: _PadKey(
+                          key: Key('pad-$key'),
+                          label: key == '±' ? '+/−' : key,
+                          semantics: switch (key) {
+                            '±' => l.changeSign,
+                            '⌫' => l.deleteDigit,
+                            _ => key,
+                          },
+                          icon: key == '⌫' ? Icons.backspace_outlined : null,
+                          onTap: switch (key) {
+                            '±' => _sign,
+                            '⌫' => _backspace,
+                            _ => () => _digit(int.parse(key)),
+                          },
                         ),
                       ),
                     ),
                 ],
               ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Row(
               children: [
-                IconButton(
-                  tooltip: 'One less',
-                  onPressed: () => setState(() {
-                    _value = (_value - 1).clamp(0, 999999);
-                  }),
-                  icon: const Icon(Icons.remove),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Tooltip(
+                      message: l.clearNumber,
+                      child: OutlinedButton(
+                        key: const Key('pad-clear'),
+                        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+                        onPressed: _clear,
+                        child: Text(l.padClear),
+                      ),
+                    ),
+                  ),
                 ),
-                IconButton(
-                  tooltip: 'One more',
-                  onPressed: () => setState(() {
-                    _value = (_value + 1).clamp(0, 999999);
-                  }),
-                  icon: const Icon(Icons.add),
-                ),
-                const Spacer(),
-                FilledButton(
-                  onPressed: () {
-                    widget.controller.setLiteral(widget.blockId, 'value', _signed);
-                    Navigator.pop(context);
-                  },
-                  child: const Text('DONE'),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: FilledButton(
+                      key: const Key('pad-done'),
+                      style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+                      onPressed: _done,
+                      child: Text(l.padDone),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -204,24 +322,50 @@ class _NumberPadState extends State<_NumberPad> {
   }
 }
 
+class _PadKey extends StatelessWidget {
+  const _PadKey({super.key, required this.label, required this.semantics, required this.onTap, this.icon});
+
+  final String label;
+  final String semantics;
+  final VoidCallback onTap;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+      onPressed: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: icon == null
+          ? Text(
+              label,
+              semanticsLabel: semantics,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            )
+          : Icon(icon, semanticLabel: semantics),
+    );
+  }
+}
+
 class _VariableChips extends StatelessWidget {
   const _VariableChips({
     required this.controller,
     required this.blockId,
     required this.nameKey,
     required this.names,
-    required this.allowCreate,
   });
 
   final EditorController controller;
   final String blockId;
   final String nameKey;
   final List<String> names;
-  final bool allowCreate;
 
   @override
   Widget build(BuildContext context) {
-    final pool = controller.unusedPool;
+    final l = context.l10n;
+    final current = controller.graph.blocks[blockId]?.literals[nameKey];
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
@@ -229,14 +373,14 @@ class _VariableChips extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Choose a name',
-              style: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.4),
+            Text(
+              l.chooseName,
+              style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.4),
             ),
             const SizedBox(height: 2),
-            const Text(
-              'Names come from the puzzle; there is no typing.',
-              style: TextStyle(color: AppColors.muted, fontSize: 13),
+            Text(
+              l.namesFromPuzzle,
+              style: const TextStyle(color: AppColors.muted, fontSize: 13),
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -245,6 +389,7 @@ class _VariableChips extends StatelessWidget {
               children: [
                 for (final name in names)
                   ActionChip(
+                    avatar: name == current ? const Icon(Icons.check, size: 18) : null,
                     label: Text(name),
                     onPressed: () {
                       controller.setLiteral(blockId, nameKey, name);
@@ -253,26 +398,6 @@ class _VariableChips extends StatelessWidget {
                   ),
               ],
             ),
-            if (allowCreate && pool.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              const Text('CREATE VARIABLE', style: AppText.label),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final v in pool)
-                    OutlinedButton(
-                      onPressed: () {
-                        controller.declareVariable(v.name, v.type);
-                        controller.setLiteral(blockId, nameKey, v.name);
-                        Navigator.pop(context);
-                      },
-                      child: Text(v.name),
-                    ),
-                ],
-              ),
-            ],
           ],
         ),
       ),

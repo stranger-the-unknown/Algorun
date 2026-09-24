@@ -1,4 +1,6 @@
 import 'package:algorun/editor/editor_controller.dart';
+import 'package:algorun/l10n/l10n.dart';
+import 'package:algorun/l10n/terms.dart';
 import 'package:algorun/progress/progress_ledger.dart';
 import 'package:algorun/progress/save_data.dart';
 import 'package:algorun_engine/algorun_engine.dart';
@@ -83,7 +85,8 @@ void main() {
     expect(p.c.selection!.size, size);
     expect(p.c.deleteSelected(), isTrue);
     expect(p.c.blockCount, _reachable(p.c.graph), reason: 'no unseen blocks count against the budget');
-    expect(p.c.flash, 'Removed WHILE and 9 blocks inside. UNDO brings them back.');
+    expect('${p.c.flash}', 'Removed WHILE and 9 blocks inside. UNDO brings them back.');
+    expect(p.c.flash!.render(stringsFor('tr')), 'WHILE ve içindeki 9 blok silindi. GERİ AL onları geri getirir.');
     p.c.undo();
     expect(graphText(p.c.graph), before);
     expect(p.c.flash, isNull, reason: 'an undone message does not linger');
@@ -200,18 +203,18 @@ void main() {
     p.c.selectBlock(p.ret);
     expect(p.c.selection!.size, 2);
     p.c.deleteSelected();
-    expect(p.c.flash, 'Removed RETURN and 1 block inside. UNDO brings them back.');
-    expect(blocksWord(1), '1 block');
-    expect(blocksWord(3), '3 blocks');
+    expect('${p.c.flash}', 'Removed RETURN and 1 block inside. UNDO brings them back.');
+    expect(blocksText(1, englishStrings), '1 block');
+    expect(blocksText(3, englishStrings), '3 blocks');
   });
 
   test('a problem after RUN is selected, revealed and explained', () {
     final p = _program();
     p.c.collapseAll();
     final inc = p.inc;
-    p.c.showProblem(inc, 'This block needs a value.');
+    p.c.showProblem(inc, EditorNotice.engine('This block needs a value.'));
     expect(p.c.selectedBlockId, inc);
-    expect(p.c.flash, 'This block needs a value.');
+    expect('${p.c.flash}', 'This block needs a value.');
     expect(p.c.isCollapsed(p.loop), isFalse, reason: 'the folded loop around it opens');
     expect(p.c.revealId, inc);
   });

@@ -20,7 +20,7 @@ import 'save_data.dart';
 ///       "editedSinceRun": false
 ///     }
 ///   },
-///   "settings": {"showBriefOnOpen": true},
+///   "settings": {"language": "en", "showBriefOnOpen": true},
 ///   "session": {"worldId": "world_02", "puzzleId": "smallest_cart"}
 /// }
 /// ```
@@ -48,7 +48,7 @@ Map<String, Object?> saveToJson(PlayerSave save) => {
       'puzzles': {
         for (final e in save.puzzles.entries) e.key: _puzzleToJson(e.value),
       },
-      'settings': {'showBriefOnOpen': save.settings.showBriefOnOpen},
+      'settings': {'showBriefOnOpen': save.settings.showBriefOnOpen, 'language': save.settings.language},
       if (save.session case final session?)
         'session': {'worldId': session.worldId, 'puzzleId': session.puzzleId},
     };
@@ -281,7 +281,15 @@ final class _Reader {
     if (brief != null && brief is! bool) {
       issue('settings.showBriefOnOpen', 'Not true or false; default used.');
     }
-    return PlayerSettings(showBriefOnOpen: brief is bool ? brief : PlayerSettings.defaults.showBriefOnOpen);
+    // Saves before the language setting have none: English, silently.
+    final language = raw['language'];
+    if (language != null && !PlayerSettings.languages.contains(language)) {
+      issue('settings.language', 'Not a supported language; English used.');
+    }
+    return PlayerSettings(
+      showBriefOnOpen: brief is bool ? brief : PlayerSettings.defaults.showBriefOnOpen,
+      language: PlayerSettings.languages.contains(language) ? language as String : PlayerSettings.defaults.language,
+    );
   }
 
   CurrentSession? _session(Object? raw) {

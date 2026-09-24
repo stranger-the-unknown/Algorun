@@ -1,6 +1,8 @@
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/terms.dart';
 import '../shared/theme/app_theme.dart';
 import 'editor_controller.dart';
 import 'hole_picker.dart';
@@ -27,7 +29,7 @@ final class HoleWidget extends StatelessWidget {
     final filled = graph.slotList(parentId, port);
     final hole = PortRef(parentId, port);
     final selected = controller.activeHole == hole;
-    final caption = BlockChrome.holeCaption(port);
+    final caption = holeCaptionText(port, context.l10n);
 
     if (filled.isNotEmpty) {
       final childId = filled.first;
@@ -40,7 +42,7 @@ final class HoleWidget extends StatelessWidget {
     return Semantics(
       container: true,
       button: true,
-      label: 'Empty $caption slot',
+      label: context.l10n.emptySlot(caption),
       selected: selected,
       excludeSemantics: true,
       child: Material(
