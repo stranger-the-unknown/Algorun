@@ -1,0 +1,174 @@
+{
+  "id": "josephus_line",
+  "version": 1,
+  "title": "Counting Out",
+  "world": "world_06",
+  "chapter": "counting_out_queue",
+  "tier": 3,
+  "mode": "build",
+  "concepts": [
+    "queue"
+  ],
+  "prerequisites": [],
+  "story": "People numbered 1 to n stand in a circle, in that order. Count k people from the front: the k-th leaves, and the count continues with the next person. Report the number of the last person still standing. n and k are at least 1.",
+  "io": {
+    "inputs": [
+      {
+        "name": "people",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "k is 1, so people leave in order and the last number remains",
+      "n is 1",
+      "the last original person is not always the survivor"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.sub",
+      "cmp.gt",
+      "ctrl.for_range",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "new.queue",
+      "queue.deq",
+      "queue.enq",
+      "queue.front",
+      "var.dec",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 44
+  },
+  "limits": {
+    "maxOps": 349,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "A queue can be the circle: the front is who you are counting now.",
+    "To skip someone, take them off the front and send them to the back.",
+    "The k-th person leaves and does not rejoin. When one person remains, they are the answer."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "people": 1,
+          "count": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {
+          "people": 1,
+          "count": 4
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "people": 5,
+          "count": 2
+        },
+        "out": 3
+      },
+      {
+        "id": "h02",
+        "in": {
+          "people": 4,
+          "count": 3
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "people": 6,
+          "count": 2
+        },
+        "out": 5
+      },
+      {
+        "id": "h04",
+        "in": {
+          "people": 2,
+          "count": 2
+        },
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "people": 8,
+          "count": 2
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "people": 8,
+          "count": 3
+        },
+        "out": 7
+      }
+    ]
+  },
+  "edgeCases": [
+    "k is 1, so people leave in order and the last number remains",
+    "n is 1",
+    "the last original person is not always the survivor"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "t",
+        "type": "num"
+      },
+      {
+        "name": "line",
+        "type": "queue<num>"
+      },
+      {
+        "name": "left",
+        "type": "num"
+      },
+      {
+        "name": "gone",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "counting_out_queue"
+  }
+}

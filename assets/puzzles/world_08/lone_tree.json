@@ -1,0 +1,267 @@
+{
+  "id": "lone_tree",
+  "version": 1,
+  "title": "Lone Tree",
+  "world": "world_08",
+  "chapter": "single_node_tree",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "tree"
+  ],
+  "prerequisites": [],
+  "story": "A grove is lone when it is exactly one node: it has a root, and both children are empty. An empty grove is not lone, and neither is a root that has a child. Report yes or no.",
+  "io": {
+    "inputs": [
+      {
+        "name": "root",
+        "type": "treeNode?"
+      }
+    ],
+    "output": {
+      "type": "bool"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "an empty tree",
+      "a root with one child",
+      "treating every tree as lone"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.bool",
+      "logic.and",
+      "logic.is_not_nothing",
+      "logic.is_nothing",
+      "tree.left",
+      "tree.right",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 30
+  },
+  "limits": {
+    "maxOps": 35,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "First the root must IS NOT NOTHING. An empty grove answers no.",
+    "Then both LEFT and RIGHT of that root must IS NOTHING.",
+    "Any tree with a child answers no, even if the rest is empty."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": null
+        },
+        "out": false
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": true
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 0,
+            "left": {
+              "type": "treeNode",
+              "value": -2,
+              "left": {
+                "type": "treeNode",
+                "value": 2,
+                "left": null,
+                "right": null
+              },
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": -1,
+                "left": null,
+                "right": null
+              },
+              "right": null
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 0,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 3,
+            "left": {
+              "type": "treeNode",
+              "value": -3,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": null,
+                "right": null
+              },
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 1,
+                "left": null,
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": -3,
+                "left": null,
+                "right": null
+              }
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 3,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {
+                  "type": "treeNode",
+                  "value": -3,
+                  "left": null,
+                  "right": null
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 0,
+                  "left": null,
+                  "right": null
+                }
+              },
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": -1,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": [
+    "an empty tree",
+    "a root with one child",
+    "treating every tree as lone"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "left",
+        "type": "treeNode?"
+      },
+      {
+        "name": "right",
+        "type": "treeNode?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "single_node_tree"
+  }
+}

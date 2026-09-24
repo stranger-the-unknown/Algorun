@@ -1,0 +1,335 @@
+{
+  "id": "direct_hop",
+  "version": 1,
+  "title": "Direct Hop",
+  "world": "world_10",
+  "chapter": "direct_edge_exists",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "graph"
+  ],
+  "prerequisites": [],
+  "story": "Report whether the goal is one direct ride from the start: the goal appears in the start's neighbour list. A ride the other way does not count. The answer is yes or no.",
+  "io": {
+    "inputs": [
+      {
+        "name": "roads",
+        "type": "graph"
+      },
+      {
+        "name": "start",
+        "type": "num"
+      },
+      {
+        "name": "goal",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "bool"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "the ride exists only in the other direction",
+      "the goal is not the first neighbour",
+      "start and goal are the same stop with no loop"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "ctrl.else",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "graph.neighbors",
+      "lit.bool",
+      "lit.num",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 30
+  },
+  "limits": {
+    "maxOps": 40,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Read NEIGHBORS of the start only.",
+    "FOR EACH neighbour, ask whether it equals the goal.",
+    "The first neighbour is not the only door. If none match, the answer is no."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 1,
+          "goal": 0
+        },
+        "out": false
+      },
+      {
+        "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0,
+          "goal": 0
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0,
+          "goal": 2
+        },
+        "out": true
+      },
+      {
+        "id": "h02",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  2
+                ]
+              }
+            ]
+          },
+          "start": 0,
+          "goal": 2
+        },
+        "out": true
+      },
+      {
+        "id": "h03",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  3,
+                  1
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  2
+                ]
+              }
+            ]
+          },
+          "start": 2,
+          "goal": 1
+        },
+        "out": true
+      },
+      {
+        "id": "h04",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 2,
+          "goal": 1
+        },
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "id": 4,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0,
+          "goal": 1
+        },
+        "out": false
+      },
+      {
+        "id": "h06",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0,
+          "goal": 1
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": [
+    "the ride exists only in the other direction",
+    "the goal is not the first neighbour",
+    "start and goal are the same stop with no loop"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "n",
+        "type": "num"
+      },
+      {
+        "name": "found",
+        "type": "bool"
+      },
+      {
+        "name": "nbrs",
+        "type": "array<num>"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "direct_edge_exists"
+  }
+}

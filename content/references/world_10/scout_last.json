@@ -1,0 +1,1103 @@
+{
+  "puzzle": "scout_last",
+  "notes": "breadth-first pops a different last stop; a single stop; neighbour order matters",
+  "spec": {
+    "family": "graph_dfs_iterative",
+    "pattern": "iterative_dfs_last_popped",
+    "structure": "graph",
+    "secondary": [
+      "neighbour_order"
+    ],
+    "performance": "correctness",
+    "traps": [
+      "breadth-first pops a different last stop",
+      "a single stop",
+      "neighbour order matters"
+    ],
+    "oracle": "scout_last"
+  },
+  "metrics": {
+    "blocks": 39,
+    "ops": 96,
+    "peakAlloc": 8,
+    "peakDepth": 1
+  },
+  "solution": {
+    "blocks": {
+      "b0": {
+        "id": "b0",
+        "catalogId": "new.stack",
+        "slots": {},
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b1": {
+        "id": "b1",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b0"
+          }
+        },
+        "literals": {
+          "name": "box"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b2": {
+        "id": "b2",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "start"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b3": {
+        "id": "b3",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "roads"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b4": {
+        "id": "b4",
+        "catalogId": "graph.mark",
+        "slots": {
+          "graph": {
+            "ref": "b3"
+          },
+          "node": {
+            "ref": "b2"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b5": {
+        "id": "b5",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "start"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b6": {
+        "id": "b6",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "box"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b7": {
+        "id": "b7",
+        "catalogId": "stack.push",
+        "slots": {
+          "stack": {
+            "ref": "b6"
+          },
+          "value": {
+            "ref": "b5"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b8": {
+        "id": "b8",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "start"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b9": {
+        "id": "b9",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b8"
+          }
+        },
+        "literals": {
+          "name": "last"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b10": {
+        "id": "b10",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {
+          "value": 0
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b11": {
+        "id": "b11",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b10"
+          }
+        },
+        "literals": {
+          "name": "count"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b12": {
+        "id": "b12",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "box"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b13": {
+        "id": "b13",
+        "catalogId": "stack.empty",
+        "slots": {
+          "stack": {
+            "ref": "b12"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b14": {
+        "id": "b14",
+        "catalogId": "logic.not",
+        "slots": {
+          "arg": {
+            "ref": "b13"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b15": {
+        "id": "b15",
+        "catalogId": "ctrl.while",
+        "slots": {
+          "condition": {
+            "ref": "b14"
+          },
+          "body": {
+            "list": [
+              "b18",
+              "b20",
+              "b21",
+              "b25"
+            ]
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b16": {
+        "id": "b16",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "box"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b17": {
+        "id": "b17",
+        "catalogId": "stack.pop",
+        "slots": {
+          "stack": {
+            "ref": "b16"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b18": {
+        "id": "b18",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b17"
+          }
+        },
+        "literals": {
+          "name": "here"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b19": {
+        "id": "b19",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "here"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b20": {
+        "id": "b20",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b19"
+          }
+        },
+        "literals": {
+          "name": "last"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b21": {
+        "id": "b21",
+        "catalogId": "var.inc",
+        "slots": {},
+        "literals": {
+          "name": "count"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b22": {
+        "id": "b22",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "roads"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b23": {
+        "id": "b23",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "here"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b24": {
+        "id": "b24",
+        "catalogId": "graph.neighbors",
+        "slots": {
+          "graph": {
+            "ref": "b22"
+          },
+          "node": {
+            "ref": "b23"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b25": {
+        "id": "b25",
+        "catalogId": "ctrl.foreach",
+        "slots": {
+          "collection": {
+            "ref": "b24"
+          },
+          "body": {
+            "list": [
+              "b30"
+            ]
+          }
+        },
+        "literals": {
+          "name": "n"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b26": {
+        "id": "b26",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "roads"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b27": {
+        "id": "b27",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "n"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b28": {
+        "id": "b28",
+        "catalogId": "graph.visited",
+        "slots": {
+          "graph": {
+            "ref": "b26"
+          },
+          "node": {
+            "ref": "b27"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b29": {
+        "id": "b29",
+        "catalogId": "logic.not",
+        "slots": {
+          "arg": {
+            "ref": "b28"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b30": {
+        "id": "b30",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {
+            "ref": "b29"
+          },
+          "then": {
+            "list": [
+              "b33",
+              "b36"
+            ]
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b31": {
+        "id": "b31",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "n"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b32": {
+        "id": "b32",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "roads"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b33": {
+        "id": "b33",
+        "catalogId": "graph.mark",
+        "slots": {
+          "graph": {
+            "ref": "b32"
+          },
+          "node": {
+            "ref": "b31"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b34": {
+        "id": "b34",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "n"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b35": {
+        "id": "b35",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "box"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b36": {
+        "id": "b36",
+        "catalogId": "stack.push",
+        "slots": {
+          "stack": {
+            "ref": "b35"
+          },
+          "value": {
+            "ref": "b34"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b37": {
+        "id": "b37",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "last"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b38": {
+        "id": "b38",
+        "catalogId": "ctrl.return",
+        "slots": {
+          "value": {
+            "ref": "b37"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      }
+    },
+    "entryIds": [
+      "b1",
+      "b4",
+      "b7",
+      "b9",
+      "b11",
+      "b15",
+      "b38"
+    ],
+    "variables": {
+      "roads": "graph",
+      "start": "num",
+      "here": "num",
+      "n": "num",
+      "last": "num",
+      "count": "num",
+      "box": "stack<num>"
+    }
+  },
+  "rejects": [
+    {
+      "name": "walk breadth-first and keep the last stop",
+      "expect": "wrongAnswer",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "new.queue",
+            "slots": {},
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b0"
+              }
+            },
+            "literals": {
+              "name": "line"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "start"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "roads"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "graph.mark",
+            "slots": {
+              "graph": {
+                "ref": "b3"
+              },
+              "node": {
+                "ref": "b2"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "start"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "line"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "queue.enq",
+            "slots": {
+              "queue": {
+                "ref": "b6"
+              },
+              "value": {
+                "ref": "b5"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "start"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b8"
+              }
+            },
+            "literals": {
+              "name": "last"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {
+              "value": 0
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b10"
+              }
+            },
+            "literals": {
+              "name": "count"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "line"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "queue.empty",
+            "slots": {
+              "queue": {
+                "ref": "b12"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "logic.not",
+            "slots": {
+              "arg": {
+                "ref": "b13"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "ctrl.while",
+            "slots": {
+              "condition": {
+                "ref": "b14"
+              },
+              "body": {
+                "list": [
+                  "b18",
+                  "b20",
+                  "b21",
+                  "b25"
+                ]
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "line"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "queue.deq",
+            "slots": {
+              "queue": {
+                "ref": "b16"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b18": {
+            "id": "b18",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b17"
+              }
+            },
+            "literals": {
+              "name": "here"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b19": {
+            "id": "b19",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "here"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b20": {
+            "id": "b20",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b19"
+              }
+            },
+            "literals": {
+              "name": "last"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b21": {
+            "id": "b21",
+            "catalogId": "var.inc",
+            "slots": {},
+            "literals": {
+              "name": "count"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b22": {
+            "id": "b22",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "roads"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b23": {
+            "id": "b23",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "here"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b24": {
+            "id": "b24",
+            "catalogId": "graph.neighbors",
+            "slots": {
+              "graph": {
+                "ref": "b22"
+              },
+              "node": {
+                "ref": "b23"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b25": {
+            "id": "b25",
+            "catalogId": "ctrl.foreach",
+            "slots": {
+              "collection": {
+                "ref": "b24"
+              },
+              "body": {
+                "list": [
+                  "b30"
+                ]
+              }
+            },
+            "literals": {
+              "name": "n"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b26": {
+            "id": "b26",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "roads"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b27": {
+            "id": "b27",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "n"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b28": {
+            "id": "b28",
+            "catalogId": "graph.visited",
+            "slots": {
+              "graph": {
+                "ref": "b26"
+              },
+              "node": {
+                "ref": "b27"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b29": {
+            "id": "b29",
+            "catalogId": "logic.not",
+            "slots": {
+              "arg": {
+                "ref": "b28"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b30": {
+            "id": "b30",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {
+                "ref": "b29"
+              },
+              "then": {
+                "list": [
+                  "b33",
+                  "b36"
+                ]
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b31": {
+            "id": "b31",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "n"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b32": {
+            "id": "b32",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "roads"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b33": {
+            "id": "b33",
+            "catalogId": "graph.mark",
+            "slots": {
+              "graph": {
+                "ref": "b32"
+              },
+              "node": {
+                "ref": "b31"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b34": {
+            "id": "b34",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "n"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b35": {
+            "id": "b35",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "line"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b36": {
+            "id": "b36",
+            "catalogId": "queue.enq",
+            "slots": {
+              "queue": {
+                "ref": "b35"
+              },
+              "value": {
+                "ref": "b34"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b37": {
+            "id": "b37",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "last"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b38": {
+            "id": "b38",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {
+                "ref": "b37"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": [
+          "b1",
+          "b4",
+          "b7",
+          "b9",
+          "b11",
+          "b15",
+          "b38"
+        ],
+        "variables": {
+          "roads": "graph",
+          "start": "num",
+          "here": "num",
+          "n": "num",
+          "last": "num",
+          "count": "num",
+          "line": "queue<num>"
+        }
+      }
+    }
+  ]
+}

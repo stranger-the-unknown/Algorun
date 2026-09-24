@@ -1,0 +1,227 @@
+{
+  "id": "dock_overlap",
+  "version": 1,
+  "title": "Dock Overlap",
+  "world": "world_11",
+  "chapter": "max_overlap_two_pointers",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": [
+    "greedy"
+  ],
+  "prerequisites": [],
+  "story": "Ships have arrival times and departure times, each list already sorted, lowest first. A ship occupies a berth from its arrival up to but not including its departure. What is the largest number of ships in berth at the same moment? No ships is 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "starts",
+        "type": "array<num>"
+      },
+      {
+        "name": "ends",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a departure at the same minute does not overlap that arrival",
+      "no ships",
+      "every ship overlaps"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.get",
+      "arr.len",
+      "cmp.gt",
+      "cmp.le",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.and",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 51
+  },
+  "limits": {
+    "maxOps": 318,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Walk the two sorted lists. An arrival increases the count; a departure decreases it.",
+    "When an arrival and a departure share a minute, the departure happens first, so that ship is already gone.",
+    "The answer is the highest count you see."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "starts": [],
+          "ends": []
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "starts": [
+            1
+          ],
+          "ends": [
+            2
+          ]
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "starts": [
+            1,
+            2
+          ],
+          "ends": [
+            2,
+            3
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "starts": [
+            4,
+            5,
+            6
+          ],
+          "ends": [
+            6,
+            6,
+            8
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {
+          "starts": [
+            3,
+            4,
+            6,
+            7
+          ],
+          "ends": [
+            7,
+            8,
+            8,
+            11
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {
+          "starts": [
+            1,
+            3,
+            5,
+            5,
+            5
+          ],
+          "ends": [
+            5,
+            6,
+            7,
+            8,
+            8
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {
+          "starts": [
+            0,
+            1,
+            3,
+            6,
+            6
+          ],
+          "ends": [
+            2,
+            4,
+            6,
+            7,
+            10
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "starts": [
+            5
+          ],
+          "ends": [
+            7
+          ]
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "a departure at the same minute does not overlap that arrival",
+    "no ships",
+    "every ship overlaps"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "cur",
+        "type": "num"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "max_overlap_two_pointers"
+  }
+}

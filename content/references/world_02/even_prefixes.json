@@ -1,0 +1,573 @@
+{
+  "puzzle": "even_prefixes",
+  "notes": "MOD is the remainder block.",
+  "spec": {
+    "family": "prefix_sum",
+    "pattern": "even_prefix_count",
+    "structure": "array",
+    "secondary": [
+      "arrays"
+    ],
+    "performance": "correctness",
+    "traps": [
+      "the empty day still counts the starting zero",
+      "odd totals must not be counted",
+      "negative receipts"
+    ],
+    "oracle": "even_prefixes"
+  },
+  "metrics": {
+    "blocks": 19,
+    "ops": 32,
+    "peakAlloc": 0,
+    "peakDepth": 1
+  },
+  "solution": {
+    "blocks": {
+      "b0": {
+        "id": "b0",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {
+          "value": 0
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b1": {
+        "id": "b1",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b0"
+          }
+        },
+        "literals": {
+          "name": "sum"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b2": {
+        "id": "b2",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {
+          "value": 1
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b3": {
+        "id": "b3",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b2"
+          }
+        },
+        "literals": {
+          "name": "count"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b4": {
+        "id": "b4",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "values"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b5": {
+        "id": "b5",
+        "catalogId": "ctrl.foreach",
+        "slots": {
+          "collection": {
+            "ref": "b4"
+          },
+          "body": {
+            "list": [
+              "b9",
+              "b15"
+            ]
+          }
+        },
+        "literals": {
+          "name": "v"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b6": {
+        "id": "b6",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "sum"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b7": {
+        "id": "b7",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "v"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b8": {
+        "id": "b8",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {
+            "ref": "b6"
+          },
+          "right": {
+            "ref": "b7"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b9": {
+        "id": "b9",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b8"
+          }
+        },
+        "literals": {
+          "name": "sum"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b10": {
+        "id": "b10",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "sum"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b11": {
+        "id": "b11",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {
+          "value": 2
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b12": {
+        "id": "b12",
+        "catalogId": "arith.mod",
+        "slots": {
+          "left": {
+            "ref": "b10"
+          },
+          "right": {
+            "ref": "b11"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b13": {
+        "id": "b13",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {
+          "value": 0
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b14": {
+        "id": "b14",
+        "catalogId": "cmp.eq",
+        "slots": {
+          "left": {
+            "ref": "b12"
+          },
+          "right": {
+            "ref": "b13"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b15": {
+        "id": "b15",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {
+            "ref": "b14"
+          },
+          "then": {
+            "list": [
+              "b16"
+            ]
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b16": {
+        "id": "b16",
+        "catalogId": "var.inc",
+        "slots": {},
+        "literals": {
+          "name": "count"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b17": {
+        "id": "b17",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "count"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b18": {
+        "id": "b18",
+        "catalogId": "ctrl.return",
+        "slots": {
+          "value": {
+            "ref": "b17"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      }
+    },
+    "entryIds": [
+      "b1",
+      "b3",
+      "b5",
+      "b18"
+    ],
+    "variables": {
+      "values": "array<num>",
+      "v": "num",
+      "sum": "num",
+      "count": "num"
+    }
+  },
+  "rejects": [
+    {
+      "name": "count odd running totals",
+      "expect": "wrongAnswer",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {
+              "value": 0
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b0"
+              }
+            },
+            "literals": {
+              "name": "sum"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {
+              "value": 0
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b2"
+              }
+            },
+            "literals": {
+              "name": "count"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "values"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "ctrl.foreach",
+            "slots": {
+              "collection": {
+                "ref": "b4"
+              },
+              "body": {
+                "list": [
+                  "b9",
+                  "b15"
+                ]
+              }
+            },
+            "literals": {
+              "name": "v"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "sum"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "v"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {
+                "ref": "b6"
+              },
+              "right": {
+                "ref": "b7"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b8"
+              }
+            },
+            "literals": {
+              "name": "sum"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "sum"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {
+              "value": 2
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "arith.mod",
+            "slots": {
+              "left": {
+                "ref": "b10"
+              },
+              "right": {
+                "ref": "b11"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {
+              "value": 0
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "cmp.ne",
+            "slots": {
+              "left": {
+                "ref": "b12"
+              },
+              "right": {
+                "ref": "b13"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {
+                "ref": "b14"
+              },
+              "then": {
+                "list": [
+                  "b16"
+                ]
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "var.inc",
+            "slots": {},
+            "literals": {
+              "name": "count"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "count"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b18": {
+            "id": "b18",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {
+                "ref": "b17"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": [
+          "b1",
+          "b3",
+          "b5",
+          "b18"
+        ],
+        "variables": {
+          "values": "array<num>",
+          "v": "num",
+          "sum": "num",
+          "count": "num"
+        }
+      }
+    }
+  ]
+}

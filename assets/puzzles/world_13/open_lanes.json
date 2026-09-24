@@ -1,0 +1,275 @@
+{
+  "id": "open_lanes",
+  "version": 1,
+  "title": "Open Lanes",
+  "world": "world_13",
+  "chapter": "count_paths_with_walls",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": [
+    "dp"
+  ],
+  "prerequisites": [],
+  "story": "A grid of 0s and 1s is a floor. 1 is a wall. You start at the top-left, which is open, and step only right or down to the bottom-right, also open. How many different paths never step on a wall? If either corner were a wall there would be no path, but the corners are open.",
+  "io": {
+    "inputs": [
+      {
+        "name": "grid",
+        "type": "array<array<num>>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a wall off to the side leaves other routes",
+      "a wall cutting the only route",
+      "a one-by-one floor"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.mul",
+      "arith.sub",
+      "arr.append",
+      "arr.get",
+      "arr.len",
+      "arr.set",
+      "cmp.eq",
+      "cmp.gt",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "logic.or",
+      "new.array",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 141
+  },
+  "limits": {
+    "maxOps": 773,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "The ways into an open square are the ways into the square above plus the ways into the square to the left.",
+    "A wall has zero ways, and it does not feed its neighbours.",
+    "One wall does not block every route unless it cuts all of them."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "grid": [
+            [
+              0
+            ]
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {
+          "grid": [
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "grid": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h02",
+        "in": {
+          "grid": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "grid": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "grid": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "grid": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h06",
+        "in": {
+          "grid": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "a wall off to the side leaves other routes",
+    "a wall cutting the only route",
+    "a one-by-one floor"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "r",
+        "type": "num"
+      },
+      {
+        "name": "c",
+        "type": "num"
+      },
+      {
+        "name": "rows",
+        "type": "num"
+      },
+      {
+        "name": "cols",
+        "type": "num"
+      },
+      {
+        "name": "idx",
+        "type": "num"
+      },
+      {
+        "name": "cell",
+        "type": "num"
+      },
+      {
+        "name": "up",
+        "type": "num"
+      },
+      {
+        "name": "left",
+        "type": "num"
+      },
+      {
+        "name": "cells",
+        "type": "num"
+      },
+      {
+        "name": "dp",
+        "type": "array<num>"
+      },
+      {
+        "name": "row",
+        "type": "array<num>"
+      },
+      {
+        "name": "ways",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_paths_with_walls"
+  }
+}

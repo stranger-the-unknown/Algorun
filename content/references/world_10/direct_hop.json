@@ -1,0 +1,493 @@
+{
+  "puzzle": "direct_hop",
+  "notes": "the ride exists only in the other direction; the goal is not the first neighbour; start and goal are the same stop with no loop",
+  "spec": {
+    "family": "graph_connectivity",
+    "pattern": "direct_edge_exists",
+    "structure": "graph",
+    "secondary": [],
+    "performance": "correctness",
+    "traps": [
+      "the ride exists only in the other direction",
+      "the goal is not the first neighbour",
+      "start and goal are the same stop with no loop"
+    ],
+    "oracle": "direct_hop"
+  },
+  "metrics": {
+    "blocks": 14,
+    "ops": 20,
+    "peakAlloc": 3,
+    "peakDepth": 1
+  },
+  "solution": {
+    "blocks": {
+      "b0": {
+        "id": "b0",
+        "catalogId": "lit.bool",
+        "slots": {},
+        "literals": {
+          "value": false
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b1": {
+        "id": "b1",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b0"
+          }
+        },
+        "literals": {
+          "name": "found"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b2": {
+        "id": "b2",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "roads"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b3": {
+        "id": "b3",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "start"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b4": {
+        "id": "b4",
+        "catalogId": "graph.neighbors",
+        "slots": {
+          "graph": {
+            "ref": "b2"
+          },
+          "node": {
+            "ref": "b3"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b5": {
+        "id": "b5",
+        "catalogId": "ctrl.foreach",
+        "slots": {
+          "collection": {
+            "ref": "b4"
+          },
+          "body": {
+            "list": [
+              "b9"
+            ]
+          }
+        },
+        "literals": {
+          "name": "n"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b6": {
+        "id": "b6",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "n"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b7": {
+        "id": "b7",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "goal"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b8": {
+        "id": "b8",
+        "catalogId": "cmp.eq",
+        "slots": {
+          "left": {
+            "ref": "b6"
+          },
+          "right": {
+            "ref": "b7"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b9": {
+        "id": "b9",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {
+            "ref": "b8"
+          },
+          "then": {
+            "list": [
+              "b11"
+            ]
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b10": {
+        "id": "b10",
+        "catalogId": "lit.bool",
+        "slots": {},
+        "literals": {
+          "value": true
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b11": {
+        "id": "b11",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {
+            "ref": "b10"
+          }
+        },
+        "literals": {
+          "name": "found"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b12": {
+        "id": "b12",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {
+          "name": "found"
+        },
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b13": {
+        "id": "b13",
+        "catalogId": "ctrl.return",
+        "slots": {
+          "value": {
+            "ref": "b12"
+          }
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      }
+    },
+    "entryIds": [
+      "b1",
+      "b5",
+      "b13"
+    ],
+    "variables": {
+      "roads": "graph",
+      "start": "num",
+      "goal": "num",
+      "n": "num",
+      "found": "bool"
+    }
+  },
+  "rejects": [
+    {
+      "name": "trust only the first listed door",
+      "expect": "wrongAnswer",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "roads"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "start"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "graph.neighbors",
+            "slots": {
+              "graph": {
+                "ref": "b0"
+              },
+              "node": {
+                "ref": "b1"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {
+                "ref": "b2"
+              }
+            },
+            "literals": {
+              "name": "nbrs"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "nbrs"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "arr.len",
+            "slots": {
+              "array": {
+                "ref": "b4"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {
+              "value": 0
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "cmp.eq",
+            "slots": {
+              "left": {
+                "ref": "b5"
+              },
+              "right": {
+                "ref": "b6"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {
+                "ref": "b7"
+              },
+              "then": {
+                "list": [
+                  "b10"
+                ]
+              },
+              "else": {
+                "list": [
+                  "b11"
+                ]
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "lit.bool",
+            "slots": {},
+            "literals": {
+              "value": false
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {
+                "ref": "b9"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "ctrl.else",
+            "slots": {
+              "body": {
+                "list": [
+                  "b17"
+                ]
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "nbrs"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {
+              "value": 0
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {
+                "ref": "b12"
+              },
+              "index": {
+                "ref": "b13"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {
+              "name": "goal"
+            },
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "cmp.eq",
+            "slots": {
+              "left": {
+                "ref": "b14"
+              },
+              "right": {
+                "ref": "b15"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {
+                "ref": "b16"
+              }
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": [
+          "b3",
+          "b8"
+        ],
+        "variables": {
+          "roads": "graph",
+          "start": "num",
+          "goal": "num",
+          "nbrs": "array<num>"
+        }
+      }
+    }
+  ]
+}

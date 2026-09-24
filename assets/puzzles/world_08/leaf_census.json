@@ -1,0 +1,236 @@
+{
+  "id": "leaf_census",
+  "version": 1,
+  "title": "Leaf Census",
+  "world": "world_08",
+  "chapter": "iterative_leaf_count",
+  "tier": 3,
+  "mode": "build",
+  "concepts": [
+    "tree"
+  ],
+  "prerequisites": [],
+  "story": "A leaf has no left child and no right child. Count the leaves. Walk with a stack, not with recursion. An empty tree has no leaves.",
+  "io": {
+    "inputs": [
+      {
+        "name": "root",
+        "type": "treeNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "counting every node",
+      "a single-node tree is one leaf",
+      "an empty tree"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.and",
+      "logic.is_not_nothing",
+      "logic.is_nothing",
+      "logic.not",
+      "new.stack",
+      "stack.empty",
+      "stack.pop",
+      "stack.push",
+      "tree.left",
+      "tree.right",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 57
+  },
+  "limits": {
+    "maxOps": 282,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Push the root when it exists, the same way as a full census.",
+    "A node is a leaf when both children IS NOTHING.",
+    "A node with one child is not a leaf, but its child might be."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": null
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 8,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -3,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 3,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -3,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 0,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 2
+      }
+    ]
+  },
+  "edgeCases": [
+    "counting every node",
+    "a single-node tree is one leaf",
+    "an empty tree"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "treeNode"
+      },
+      {
+        "name": "st",
+        "type": "stack<treeNode>"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "left",
+        "type": "treeNode?"
+      },
+      {
+        "name": "right",
+        "type": "treeNode?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "iterative_leaf_count"
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "id": "one_dropout",
+  "version": 1,
+  "title": "One Dropout",
+  "world": "world_05",
+  "chapter": "longest_window_one_zero",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": [
+    "sliding_window"
+  ],
+  "prerequisites": [],
+  "story": "A signal is a row of 1s and 0s. A usable stretch may contain at most one 0. Report the length of the longest usable stretch. A row of only 1s is usable end to end, and an empty signal is 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "no zero at all",
+      "zeros in a row",
+      "refusing every stretch that contains a zero"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "cmp.gt",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 55
+  },
+  "limits": {
+    "maxOps": 2215,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Grow the right end, and count the zeros inside the current stretch.",
+    "When a second zero enters, shrink the left end until only one zero remains.",
+    "The answer is the widest stretch you were allowed to keep."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": []
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            1
+          ]
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": [
+            0
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            0,
+            1
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            0,
+            0
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            1,
+            0
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            0,
+            1,
+            1
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            0,
+            0,
+            1
+          ]
+        },
+        "out": 2
+      }
+    ]
+  },
+  "edgeCases": [
+    "no zero at all",
+    "zeros in a row",
+    "refusing every stretch that contains a zero"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "left",
+        "type": "num"
+      },
+      {
+        "name": "right",
+        "type": "num"
+      },
+      {
+        "name": "zeros",
+        "type": "num"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      },
+      {
+        "name": "span",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "longest_window_one_zero"
+  }
+}

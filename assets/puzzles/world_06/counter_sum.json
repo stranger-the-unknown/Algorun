@@ -1,0 +1,187 @@
+{
+  "id": "counter_sum",
+  "version": 1,
+  "title": "Counter Sum",
+  "world": "world_06",
+  "chapter": "queue_serve_positive_enqueue",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "queue"
+  ],
+  "prerequisites": [],
+  "story": "A counter reads a list of actions. A positive number is a customer joining the back of the line with that ticket. A 0 serves the customer at the front, and you add their ticket to a total. Serving an empty line does nothing. Report the total of everyone who was served.",
+  "io": {
+    "inputs": [
+      {
+        "name": "actions",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "serving an empty line",
+      "serving the newest customer instead of the oldest",
+      "nobody is served"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "cmp.eq",
+      "cmp.gt",
+      "ctrl.else",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "logic.not",
+      "new.queue",
+      "new.stack",
+      "queue.deq",
+      "queue.empty",
+      "queue.enq",
+      "stack.empty",
+      "stack.pop",
+      "stack.push",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 43
+  },
+  "limits": {
+    "maxOps": 148,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Customers leave in the order they arrived, so this is a queue.",
+    "A positive action joins the back. A 0 takes the front, but only when someone is waiting.",
+    "Add the ticket as the customer leaves, not when they arrive."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "actions": []
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "actions": [
+            6
+          ]
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "actions": [
+            1,
+            3,
+            4,
+            0,
+            0
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h02",
+        "in": {
+          "actions": [
+            4
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "actions": [
+            5
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "actions": [
+            0
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "actions": [
+            1,
+            5
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h06",
+        "in": {
+          "actions": [
+            6,
+            5
+          ]
+        },
+        "out": 0
+      }
+    ]
+  },
+  "edgeCases": [
+    "serving an empty line",
+    "serving the newest customer instead of the oldest",
+    "nobody is served"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "a",
+        "type": "num"
+      },
+      {
+        "name": "line",
+        "type": "queue<num>"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      },
+      {
+        "name": "served",
+        "type": "num"
+      },
+      {
+        "name": "pile",
+        "type": "stack<num>"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "queue_serve_positive_enqueue"
+  }
+}

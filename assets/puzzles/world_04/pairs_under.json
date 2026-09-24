@@ -1,0 +1,195 @@
+{
+  "id": "pairs_under",
+  "version": 1,
+  "title": "Pairs Under",
+  "world": "world_04",
+  "chapter": "count_pairs_under_limit",
+  "tier": 3,
+  "mode": "build",
+  "concepts": [
+    "two_pointers"
+  ],
+  "prerequisites": [],
+  "story": "A sorted price list, lowest first, may contain repeats. How many pairs of different positions add up to at most the limit? Every such pair counts, not only the closest ones.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      },
+      {
+        "name": "limit",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "counting only one pair when a whole span fits",
+      "nothing fits",
+      "every pair fits"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.le",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 46
+  },
+  "limits": {
+    "maxOps": 600,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Put one mark at the start and one at the end.",
+    "If the two prices fit under the limit, every price between them pairs with the left one, so add that whole span.",
+    "If they do not fit, the right price is too high; move it left."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [],
+          "limit": 5
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            4
+          ],
+          "limit": 7
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": [
+            1,
+            2,
+            3
+          ],
+          "limit": 4
+        },
+        "out": 2
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            -1,
+            3,
+            3
+          ],
+          "limit": 3
+        },
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            5,
+            6,
+            7
+          ],
+          "limit": 20
+        },
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            -2,
+            1,
+            4
+          ],
+          "limit": 9
+        },
+        "out": 3
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            -2,
+            2,
+            2,
+            5
+          ],
+          "limit": 0
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "limit": 2
+        },
+        "out": 6
+      }
+    ]
+  },
+  "edgeCases": [
+    "counting only one pair when a whole span fits",
+    "nothing fits",
+    "every pair fits"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_pairs_under_limit"
+  }
+}

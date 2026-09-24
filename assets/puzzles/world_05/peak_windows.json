@@ -1,0 +1,277 @@
+{
+  "id": "peak_windows",
+  "version": 1,
+  "title": "Peak Windows",
+  "world": "world_05",
+  "chapter": "sum_of_window_peaks",
+  "tier": 4,
+  "mode": "budget",
+  "concepts": [
+    "sliding_window"
+  ],
+  "prerequisites": [],
+  "story": "Every stretch of exactly the given width has a peak, its largest reading. Add those peaks together and report the sum. If the width does not fit, report 0. Re-scanning each stretch from scratch is too slow for a long day.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      },
+      {
+        "name": "width",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "width does not fit",
+      "rescanning every window is over budget",
+      "the peak is not always the newest reading"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.max",
+      "arith.sub",
+      "arr.append",
+      "arr.get",
+      "arr.len",
+      "arr.set",
+      "cmp.eq",
+      "cmp.ge",
+      "cmp.gt",
+      "cmp.le",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.and",
+      "logic.or",
+      "new.array",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 95
+  },
+  "limits": {
+    "maxOps": 6658,
+    "maxDepth": 64,
+    "maxAlloc": 200000
+  },
+  "performance": {
+    "required": true
+  },
+  "hints": [
+    "You need the maximum of each window, not the sum of its readings.",
+    "A list can stand in for a deque: keep indexes whose readings can still be the peak, largest at the front.",
+    "Drop an index when it slides out of the window, and drop smaller readings that sit behind a newer larger one."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [],
+          "width": 1
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            1,
+            2
+          ],
+          "width": 3
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            0,
+            1
+          ],
+          "width": 24
+        },
+        "out": 294
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            5
+          ],
+          "width": 1
+        },
+        "out": 5
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            2
+          ],
+          "width": 1
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            4
+          ],
+          "width": 1
+        },
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            9,
+            4
+          ],
+          "width": 2
+        },
+        "out": 9
+      }
+    ]
+  },
+  "edgeCases": [
+    "width does not fit",
+    "rescanning every window is over budget",
+    "the peak is not always the newest reading"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "dq",
+        "type": "array<num>"
+      },
+      {
+        "name": "head",
+        "type": "num"
+      },
+      {
+        "name": "tail",
+        "type": "num"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      },
+      {
+        "name": "start",
+        "type": "num"
+      },
+      {
+        "name": "k",
+        "type": "num"
+      },
+      {
+        "name": "m",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "sum_of_window_peaks"
+  }
+}

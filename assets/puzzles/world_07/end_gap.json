@@ -1,0 +1,221 @@
+{
+  "id": "end_gap",
+  "version": 1,
+  "title": "End Gap",
+  "world": "world_07",
+  "chapter": "linked_list_last_minus_first",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "linked_list"
+  ],
+  "prerequisites": [],
+  "story": "Report the last car's number minus the first car's number. A train with fewer than two cars has no gap; report 0. The gap may be negative when the tail is smaller.",
+  "io": {
+    "inputs": [
+      {
+        "name": "head",
+        "type": "listNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "fewer than two cars",
+      "a negative gap",
+      "stopping at the second car"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.sub",
+      "cmp.eq",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "ll.next",
+      "ll.value",
+      "logic.and",
+      "logic.is_not_nothing",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 49
+  },
+  "limits": {
+    "maxOps": 213,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Remember the first NODE VALUE before you walk on.",
+    "Keep walking to the tail, the same way as a last-car walk.",
+    "Subtract the first number from the last. Stop early and you will miss a longer train."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "head": null
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              6
+            ]
+          }
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              9,
+              1,
+              3
+            ]
+          }
+        },
+        "out": -6
+      },
+      {
+        "id": "h02",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -3,
+              -4,
+              -3,
+              1,
+              -3,
+              -2,
+              1
+            ]
+          }
+        },
+        "out": 4
+      },
+      {
+        "id": "h03",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              3,
+              4
+            ]
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              -2,
+              4,
+              4,
+              2,
+              4
+            ]
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h05",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -2,
+              -4,
+              2,
+              0,
+              -3,
+              -4,
+              0
+            ]
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -4,
+              3,
+              2
+            ]
+          }
+        },
+        "out": 6
+      }
+    ]
+  },
+  "edgeCases": [
+    "fewer than two cars",
+    "a negative gap",
+    "stopping at the second car"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "listNode?"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "first",
+        "type": "num"
+      },
+      {
+        "name": "last",
+        "type": "num"
+      },
+      {
+        "name": "value",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "linked_list_last_minus_first"
+  }
+}

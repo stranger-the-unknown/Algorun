@@ -1,0 +1,212 @@
+{
+  "id": "windows_at_least",
+  "version": 1,
+  "title": "Windows At Least",
+  "world": "world_05",
+  "chapter": "count_fixed_windows_at_least",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "sliding_window"
+  ],
+  "prerequisites": [],
+  "story": "A platform counts how many stretches of exactly the given width have a sum at least the goal. Stretches overlap: each starting position is its own stretch. If the width is longer than the day, report 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      },
+      {
+        "name": "width",
+        "type": "num"
+      },
+      {
+        "name": "goal",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "width longer than the day",
+      "overlapping windows",
+      "a sum that only just meets the goal"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.ge",
+      "cmp.gt",
+      "cmp.le",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "logic.or",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 64
+  },
+  "limits": {
+    "maxOps": 1433,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Sum the first window, then slide: add the new hour and drop the hour that fell out.",
+    "Count the window when its sum reaches the goal.",
+    "Do not restart the sum from scratch for every start."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [],
+          "width": 1,
+          "goal": 1
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            1,
+            2
+          ],
+          "width": 3,
+          "goal": 1
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": [
+            4,
+            0,
+            4
+          ],
+          "width": 1,
+          "goal": 4
+        },
+        "out": 2
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            1,
+            0,
+            4,
+            5,
+            1
+          ],
+          "width": 1,
+          "goal": 5
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            2,
+            5,
+            4
+          ],
+          "width": 1,
+          "goal": 3
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            1,
+            2,
+            3
+          ],
+          "width": 2,
+          "goal": 5
+        },
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            1,
+            1,
+            1
+          ],
+          "width": 2,
+          "goal": 2
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            2,
+            5,
+            3,
+            0,
+            0,
+            0
+          ],
+          "width": 2,
+          "goal": 8
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "width longer than the day",
+    "overlapping windows",
+    "a sum that only just meets the goal"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_fixed_windows_at_least"
+  }
+}

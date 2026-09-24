@@ -1,0 +1,295 @@
+{
+  "id": "closest_gap",
+  "version": 1,
+  "title": "Closest Gap",
+  "world": "world_04",
+  "chapter": "closest_pair_sum_to_target",
+  "tier": 4,
+  "mode": "budget",
+  "concepts": [
+    "two_pointers"
+  ],
+  "prerequisites": [],
+  "story": "A sorted row of numbers, lowest first, must supply two different positions. Their sum should be as close as possible to the target. Report how far the best sum is from the target — the absolute difference, never negative. There are at least two numbers.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      },
+      {
+        "name": "target",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "the closest sum is not a neighbour pair",
+      "an exact hit has distance 0",
+      "every pair is over budget"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.abs",
+      "arith.add",
+      "arith.min",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 58
+  },
+  "limits": {
+    "maxOps": 2743,
+    "maxDepth": 64,
+    "maxAlloc": 200000
+  },
+  "performance": {
+    "required": true
+  },
+  "hints": [
+    "One mark starts at the left, one at the right.",
+    "If the sum is too small, move the left mark; if it is too big, move the right mark.",
+    "ABS gives the distance to the target. Checking every pair is too slow."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [
+            1,
+            4
+          ],
+          "target": 5
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            1,
+            2
+          ],
+          "target": 7
+        },
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1
+          ],
+          "target": 5
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            -4,
+            -4,
+            -3,
+            -2,
+            -2,
+            1,
+            1,
+            2
+          ],
+          "target": 10
+        },
+        "out": 7
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            -1,
+            1,
+            1,
+            2,
+            3,
+            3,
+            5,
+            5
+          ],
+          "target": 4
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            -4,
+            0,
+            2,
+            3,
+            5,
+            5,
+            6,
+            7
+          ],
+          "target": 5
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            -3,
+            -3,
+            -2,
+            2,
+            4,
+            5,
+            6,
+            8
+          ],
+          "target": 3
+        },
+        "out": 0
+      }
+    ]
+  },
+  "edgeCases": [
+    "the closest sum is not a neighbour pair",
+    "an exact hit has distance 0",
+    "every pair is over budget"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      },
+      {
+        "name": "diff",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "closest_pair_sum_to_target"
+  }
+}

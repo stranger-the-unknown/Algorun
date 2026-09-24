@@ -1,0 +1,282 @@
+{
+  "id": "lowest_leaf",
+  "version": 1,
+  "title": "Lowest Leaf",
+  "world": "world_08",
+  "chapter": "minimum_leaf_value",
+  "tier": 3,
+  "mode": "build",
+  "concepts": [
+    "tree"
+  ],
+  "prerequisites": [],
+  "story": "Among the leaves only, report the smallest mark. Marks inside the tree that still have a child do not count, even when they are smaller. If there is no leaf, report -1.",
+  "io": {
+    "inputs": [
+      {
+        "name": "root",
+        "type": "treeNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "the smallest mark is not a leaf",
+      "a single node",
+      "an empty tree"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.min",
+      "cmp.eq",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.and",
+      "logic.is_not_nothing",
+      "logic.is_nothing",
+      "logic.not",
+      "new.stack",
+      "stack.empty",
+      "stack.pop",
+      "stack.push",
+      "tree.left",
+      "tree.right",
+      "tree.value",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 80
+  },
+  "limits": {
+    "maxOps": 315,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Walk every node with a stack.",
+    "Update the best mark only when both children are empty.",
+    "Start the best at nothing-yet, and if you never see a leaf the answer is -1."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": null
+        },
+        "out": -1
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 4,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -9,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -3,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 0,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -1,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 0,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -3,
+            "left": {
+              "type": "treeNode",
+              "value": 0,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": -1,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": -2,
+                "left": null,
+                "right": null
+              }
+            }
+          }
+        },
+        "out": -2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -2,
+            "left": {
+              "type": "treeNode",
+              "value": -3,
+              "left": {
+                "type": "treeNode",
+                "value": -2,
+                "left": null,
+                "right": {
+                  "type": "treeNode",
+                  "value": -1,
+                  "left": null,
+                  "right": null
+                }
+              },
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": -1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 2,
+            "left": {
+              "type": "treeNode",
+              "value": -2,
+              "left": {
+                "type": "treeNode",
+                "value": 1,
+                "left": null,
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 0,
+                "left": null,
+                "right": null
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": -1,
+                "left": {
+                  "type": "treeNode",
+                  "value": 1,
+                  "left": null,
+                  "right": null
+                },
+                "right": null
+              },
+              "right": null
+            }
+          }
+        },
+        "out": 0
+      }
+    ]
+  },
+  "edgeCases": [
+    "the smallest mark is not a leaf",
+    "a single node",
+    "an empty tree"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "treeNode"
+      },
+      {
+        "name": "st",
+        "type": "stack<treeNode>"
+      },
+      {
+        "name": "have",
+        "type": "num"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      },
+      {
+        "name": "left",
+        "type": "treeNode?"
+      },
+      {
+        "name": "right",
+        "type": "treeNode?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "minimum_leaf_value"
+  }
+}

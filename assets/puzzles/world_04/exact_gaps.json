@@ -1,0 +1,173 @@
+{
+  "id": "exact_gaps",
+  "version": 1,
+  "title": "Exact Gaps",
+  "world": "world_04",
+  "chapter": "count_exact_gap_sorted",
+  "tier": 3,
+  "mode": "restricted",
+  "concepts": [
+    "two_pointers"
+  ],
+  "prerequisites": [],
+  "story": "A sorted row of distinct mile markers is already in order, lowest first. How many pairs of markers are exactly the given gap apart? You may not store the markers in a set; the row is already sorted, so two moving marks are enough. Memory is tight.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      },
+      {
+        "name": "gap",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "no pair hits the gap",
+      "several pairs",
+      "storing every marker runs out of memory"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "cmp.lt",
+      "ctrl.for_range",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.and",
+      "new.set",
+      "set.add",
+      "set.has",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 54
+  },
+  "limits": {
+    "maxOps": 463,
+    "maxDepth": 64,
+    "maxAlloc": 1
+  },
+  "hints": [
+    "Start one mark at the left and another to its right.",
+    "While the right mark is still short of the gap, move it forward.",
+    "Count a pair only when the distance is exactly the gap, then move the left mark."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [],
+          "gap": 2
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [],
+          "gap": 4
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": [
+            5
+          ],
+          "gap": 1
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            2
+          ],
+          "gap": 3
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            1,
+            3
+          ],
+          "gap": 3
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            4,
+            10
+          ],
+          "gap": 4
+        },
+        "out": 0
+      }
+    ]
+  },
+  "edgeCases": [
+    "no pair hits the gap",
+    "several pairs",
+    "storing every marker runs out of memory"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "bag",
+        "type": "set<num>"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_exact_gap_sorted"
+  }
+}

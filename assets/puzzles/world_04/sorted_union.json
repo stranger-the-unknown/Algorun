@@ -1,0 +1,221 @@
+{
+  "id": "sorted_union",
+  "version": 1,
+  "title": "Sorted Union",
+  "world": "world_04",
+  "chapter": "count_sorted_union",
+  "tier": 3,
+  "mode": "build",
+  "concepts": [
+    "two_pointers"
+  ],
+  "prerequisites": [],
+  "story": "Two bells each ring a sorted list of hours, lowest first, with repeats allowed inside a list. How many different hours are rung by at least one bell? Do not build a new list; count them as you merge.",
+  "io": {
+    "inputs": [
+      {
+        "name": "left",
+        "type": "array<num>"
+      },
+      {
+        "name": "right",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "repeats inside one list",
+      "the same hour on both bells",
+      "one list empty"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "cmp.ge",
+      "cmp.le",
+      "cmp.lt",
+      "cmp.ne",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.and",
+      "logic.or",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 100
+  },
+  "limits": {
+    "maxOps": 965,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Walk both lists with a mark on each, always taking the smaller hour.",
+    "When both bells show the same hour, it is still one hour.",
+    "Skip every later copy of an hour you have already counted."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "left": [],
+          "right": []
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "left": [
+            1,
+            2,
+            5
+          ],
+          "right": []
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "left": [
+            1,
+            1,
+            1
+          ],
+          "right": []
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "left": [
+            3,
+            4,
+            5,
+            5
+          ],
+          "right": []
+        },
+        "out": 3
+      },
+      {
+        "id": "h03",
+        "in": {
+          "left": [],
+          "right": [
+            4,
+            4,
+            5
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "left": [
+            1,
+            2
+          ],
+          "right": [
+            1,
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "left": [
+            0,
+            2,
+            6
+          ],
+          "right": [
+            6
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h06",
+        "in": {
+          "left": [
+            1,
+            2,
+            4,
+            6
+          ],
+          "right": [
+            4
+          ]
+        },
+        "out": 4
+      }
+    ]
+  },
+  "edgeCases": [
+    "repeats inside one list",
+    "the same hour on both bells",
+    "one list empty"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "have",
+        "type": "num"
+      },
+      {
+        "name": "last",
+        "type": "num"
+      },
+      {
+        "name": "takeLeft",
+        "type": "bool"
+      },
+      {
+        "name": "v",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_sorted_union"
+  }
+}

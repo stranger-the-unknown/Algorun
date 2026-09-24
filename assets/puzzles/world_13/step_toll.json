@@ -1,0 +1,190 @@
+{
+  "id": "step_toll",
+  "version": 1,
+  "title": "Step Toll",
+  "world": "world_13",
+  "chapter": "min_cost_one_or_two",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "dp"
+  ],
+  "prerequisites": [],
+  "story": "Each stone charges a toll when you land on it. From a stone you may jump one or two stones ahead. You start before the stones and must land on the last stone. Report the cheapest total toll. No stones costs 0. One stone costs that stone.",
+  "io": {
+    "inputs": [
+      {
+        "name": "costs",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "no stones",
+      "one stone",
+      "paying every stone"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.min",
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "ctrl.for_range",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 56
+  },
+  "limits": {
+    "maxOps": 130,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "The cheapest way to land on a stone is its toll plus the cheaper of the two stones you could have come from.",
+    "The first stone can only be reached in one way. The second can come from the start or from the first.",
+    "Paying every stone is not required: a jump skips one."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "costs": []
+        },
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {
+          "costs": [
+            4
+          ]
+        },
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "costs": [
+            1,
+            100,
+            1
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h02",
+        "in": {
+          "costs": [
+            10,
+            1,
+            1
+          ]
+        },
+        "out": 11
+      },
+      {
+        "id": "h03",
+        "in": {
+          "costs": [
+            4,
+            4,
+            3
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "h04",
+        "in": {
+          "costs": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        "out": 6
+      },
+      {
+        "id": "h05",
+        "in": {
+          "costs": [
+            4,
+            5,
+            0,
+            4
+          ]
+        },
+        "out": 8
+      },
+      {
+        "id": "h06",
+        "in": {
+          "costs": [
+            0,
+            4,
+            2,
+            1,
+            0
+          ]
+        },
+        "out": 2
+      }
+    ]
+  },
+  "edgeCases": [
+    "no stones",
+    "one stone",
+    "paying every stone"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "prev2",
+        "type": "num"
+      },
+      {
+        "name": "prev1",
+        "type": "num"
+      },
+      {
+        "name": "here",
+        "type": "num"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "min_cost_one_or_two"
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "id": "leap_reach",
+  "version": 1,
+  "title": "Leap Reach",
+  "world": "world_11",
+  "chapter": "jump_game_reach",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": [
+    "greedy"
+  ],
+  "prerequisites": [],
+  "story": "Stones in a line show how far you may leap forward from that stone, in stones, including a leap of 0. You start on the first stone. Report whether you can reach the last stone. A single stone is already reached.",
+  "io": {
+    "inputs": [
+      {
+        "name": "jumps",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "bool"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a zero leap before the end",
+      "stepping past a gap you never reached",
+      "one stone"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.max",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "cmp.ge",
+      "cmp.gt",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.bool",
+      "lit.num",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 50
+  },
+  "limits": {
+    "maxOps": 190,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Keep the farthest index you can reach so far.",
+    "If your index is beyond that farthest reach, you are stuck.",
+    "From a stone you can stand on, the new reach is the index plus the leap."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "jumps": [
+            0
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {
+          "jumps": [
+            1,
+            0
+          ]
+        },
+        "out": true
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "jumps": [
+            0,
+            1
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h02",
+        "in": {
+          "jumps": [
+            0,
+            3
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h03",
+        "in": {
+          "jumps": [
+            0,
+            2
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h04",
+        "in": {
+          "jumps": [
+            0,
+            0
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {
+          "jumps": [
+            1,
+            0,
+            1
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h06",
+        "in": {
+          "jumps": [
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": [
+    "a zero leap before the end",
+    "stepping past a gap you never reached",
+    "one stone"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "reach",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "jump_game_reach"
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "id": "even_prefixes",
+  "version": 1,
+  "title": "Even Prefixes",
+  "world": "world_02",
+  "chapter": "even_prefix_count",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "prefix_sum",
+    "arrays"
+  ],
+  "prerequisites": [],
+  "story": "A cashier adds each receipt to a running total, starting from 0 before any receipt. How many of those totals — including the starting 0 — are even? A negative receipt can change the total.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "the empty day still counts the starting zero",
+      "odd totals must not be counted",
+      "negative receipts"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.mod",
+      "cmp.eq",
+      "cmp.ne",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 31
+  },
+  "limits": {
+    "maxOps": 840,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "The starting total, before any receipt, is already one even total.",
+    "Add each receipt, then ask whether the new total is even.",
+    "MOD tells you the remainder. An even total leaves no remainder when divided by 2."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [
+            1
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            -1
+          ]
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": []
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            2,
+            2
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            -2,
+            -3
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            1,
+            3
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            1,
+            -2
+          ]
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "the empty day still counts the starting zero",
+    "odd totals must not be counted",
+    "negative receipts"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "even_prefix_count"
+  }
+}

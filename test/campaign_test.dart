@@ -13,8 +13,8 @@ void main() {
         for (final id in ids) id: const PuzzleProgress(puzzleVersion: 1, completed: true),
       });
 
-  test('38 puzzles load, and a fresh install starts at Foundations', () {
-    expect(campaign.puzzles, hasLength(38));
+  test('85 puzzles load, and a fresh install starts at Foundations', () {
+    expect(campaign.puzzles, hasLength(85));
     final fresh = evaluateCampaign(campaign, PlayerSave.fresh);
     expect(fresh.worldStatus('world_01'), WorldStatus.open);
     expect([for (final e in fresh.puzzles.entries) if (e.value != PuzzleStatus.locked) e.key],
