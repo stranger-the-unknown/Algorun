@@ -303,6 +303,18 @@ void main() {
       expect(_says(report, Severity.error, Level.schema, 'No oracle "nobody"'), isTrue);
     });
 
+    test('fixtures that always expect the same answer are refused (a constant would pass)', () {
+      final report = _run([
+        _candidate(hidden: const [
+          {'id': 'h1', 'in': {'nums': [4, 5, 6]}, 'out': 3},
+          {'id': 'h2', 'in': {'nums': [7, 8, 9]}, 'out': 3},
+          {'id': 'h3', 'in': {'nums': [0, 0, 0]}, 'out': 3},
+          {'id': 'h4', 'in': {'nums': [2, 2, 2]}, 'out': 3},
+        ]),
+      ]);
+      expect(_says(report, Severity.error, Level.execution, 'Every case expects 3'), isTrue);
+    });
+
     test('hidden cases must not repeat visible ones, and too few hidden cases warn', () {
       final report = _run([
         _candidate(hidden: const [
@@ -584,7 +596,11 @@ void main() {
     });
 
     test('the committed coverage matrix is up to date', () {
-      expect(coverageJson(report.coverage!), File('../../content/coverage.json').readAsStringSync());
+      // Git may check the file out with CRLF line ends on Windows.
+      expect(
+        coverageJson(report.coverage!),
+        File('../../content/coverage.json').readAsStringSync().replaceAll('\r\n', '\n'),
+      );
     });
 
     test('every oracle in the tooling is used by exactly one puzzle', () {

@@ -16,18 +16,9 @@ Map<String, Object?> firstDescentSample(Random r) =>
     {'values': randomInts(r, between(r, 0, 8), -5, 5)};
 
 Object? secondHighest(Map<String, Object?> input) {
-  final a = ints(input['values']);
-  int? best;
-  int? second;
-  for (final v in a) {
-    if (best == null || v > best) {
-      second = best;
-      best = v;
-    } else if (v < best && (second == null || v > second)) {
-      second = v;
-    }
-  }
-  return second ?? -1;
+  // By the definition: the distinct scores, highest first; take the second.
+  final distinct = ints(input['values']).toSet().toList()..sort((a, b) => b.compareTo(a));
+  return distinct.length < 2 ? -1 : distinct[1];
 }
 
 Map<String, Object?> secondHighestSample(Random r) =>
@@ -69,13 +60,14 @@ Map<String, Object?> maxProductTwoSample(Random r) =>
     {'values': randomInts(r, between(r, 0, 8), -6, 6)};
 
 Object? pairSumCount(Map<String, Object?> input) {
+  // Every pair of positions, one by one.
   final a = ints(input['values']);
   final target = integer(input['target']);
-  final seen = <int, int>{};
   var count = 0;
-  for (final v in a) {
-    count += seen[target - v] ?? 0;
-    seen[v] = (seen[v] ?? 0) + 1;
+  for (var i = 0; i < a.length; i++) {
+    for (var j = i + 1; j < a.length; j++) {
+      if (a[i] + a[j] == target) count++;
+    }
   }
   return count;
 }
@@ -86,15 +78,12 @@ Map<String, Object?> pairSumCountSample(Random r) => {
     };
 
 Object? sameValueSpan(Map<String, Object?> input) {
+  // Every pair of equal codes, one by one.
   final a = ints(input['values']);
-  final first = <int, int>{};
   var best = -1;
   for (var i = 0; i < a.length; i++) {
-    final seen = first[a[i]];
-    if (seen == null) {
-      first[a[i]] = i;
-    } else if (i - seen > best) {
-      best = i - seen;
+    for (var j = i + 1; j < a.length; j++) {
+      if (a[i] == a[j] && j - i > best) best = j - i;
     }
   }
   return best;
@@ -114,15 +103,14 @@ Map<String, Object?> sharedValuesSample(Random r) => {
     };
 
 Object? exactGaps(Map<String, Object?> input) {
+  // Every pair of markers, one by one.
   final a = ints(input['values']);
   final gap = integer(input['gap']);
-  var j = 0;
   var count = 0;
   for (var i = 0; i < a.length; i++) {
-    while (j < a.length && a[j] - a[i] < gap) {
-      j++;
+    for (var j = i + 1; j < a.length; j++) {
+      if (a[j] - a[i] == gap) count++;
     }
-    if (j < a.length && a[j] - a[i] == gap) count++;
   }
   return count;
 }
@@ -137,17 +125,13 @@ Map<String, Object?> exactGapsSample(Random r) {
 }
 
 Object? pairsUnder(Map<String, Object?> input) {
+  // Every pair of positions, one by one.
   final a = ints(input['values']);
   final limit = integer(input['limit']);
-  var i = 0;
-  var j = a.length - 1;
   var count = 0;
-  while (i < j) {
-    if (a[i] + a[j] <= limit) {
-      count += j - i;
-      i++;
-    } else {
-      j--;
+  for (var i = 0; i < a.length; i++) {
+    for (var j = i + 1; j < a.length; j++) {
+      if (a[i] + a[j] <= limit) count++;
     }
   }
   return count;
@@ -158,25 +142,8 @@ Map<String, Object?> pairsUnderSample(Random r) => {
       'limit': between(r, 0, 10),
     };
 
-Object? sortedUnion(Map<String, Object?> input) {
-  final left = ints(input['left']);
-  final right = ints(input['right']);
-  var i = 0;
-  var j = 0;
-  int? last;
-  var count = 0;
-  while (i < left.length || j < right.length) {
-    final takeLeft = j >= right.length || (i < left.length && left[i] <= right[j]);
-    final v = takeLeft ? left[i] : right[j];
-    if (last != v) {
-      count++;
-      last = v;
-    }
-    if (i < left.length && left[i] == v) i++;
-    if (j < right.length && right[j] == v) j++;
-  }
-  return count;
-}
+Object? sortedUnion(Map<String, Object?> input) =>
+    {...ints(input['left']), ...ints(input['right'])}.length;
 
 Map<String, Object?> sortedUnionSample(Random r) => {
       'left': sortedInts(r, between(r, 0, 6), 0, 6),
@@ -202,17 +169,17 @@ Map<String, Object?> closestGapSample(Random r) {
 }
 
 Object? windowsAtLeast(Map<String, Object?> input) {
+  // Every window summed from scratch.
   final a = ints(input['values']);
   final width = integer(input['width']);
   final goal = integer(input['goal']);
   if (width <= 0 || width > a.length) return 0;
-  var sum = 0;
-  for (var i = 0; i < width; i++) {
-    sum += a[i];
-  }
-  var count = sum >= goal ? 1 : 0;
-  for (var i = width; i < a.length; i++) {
-    sum += a[i] - a[i - width];
+  var count = 0;
+  for (var start = 0; start + width <= a.length; start++) {
+    var sum = 0;
+    for (var k = start; k < start + width; k++) {
+      sum += a[k];
+    }
     if (sum >= goal) count++;
   }
   return count;
@@ -224,18 +191,16 @@ Map<String, Object?> windowsAtLeastSample(Random r) {
 }
 
 Object? oneDropout(Map<String, Object?> input) {
+  // Every stretch, counting its zeros.
   final a = ints(input['values']);
-  var left = 0;
-  var zeros = 0;
   var best = 0;
-  for (var right = 0; right < a.length; right++) {
-    if (a[right] == 0) zeros++;
-    while (zeros > 1) {
-      if (a[left] == 0) zeros--;
-      left++;
+  for (var left = 0; left < a.length; left++) {
+    var zeros = 0;
+    for (var right = left; right < a.length; right++) {
+      if (a[right] == 0) zeros++;
+      if (zeros > 1) break;
+      if (right - left + 1 > best) best = right - left + 1;
     }
-    final span = right - left + 1;
-    if (span > best) best = span;
   }
   return best;
 }
@@ -302,16 +267,18 @@ Map<String, Object?> josephusLineSample(Random r) =>
     {'people': between(r, 1, 8), 'count': between(r, 1, 4)};
 
 Object? ticketMinutes(Map<String, Object?> input) {
-  final tickets = ints(input['tickets']);
+  // The line itself, one minute at a time.
+  final left = ints(input['tickets']);
   final person = integer(input['person']);
-  final need = tickets[person];
-  var time = 0;
-  for (var i = 0; i < tickets.length; i++) {
-    final cap = i <= person ? need : need - 1;
-    final take = cap < 0 ? 0 : (tickets[i] < cap ? tickets[i] : cap);
-    time += take;
+  final line = [for (var i = 0; i < left.length; i++) i];
+  var minute = 0;
+  while (true) {
+    final front = line.removeAt(0);
+    left[front]--;
+    minute++;
+    if (front == person && left[front] == 0) return minute;
+    if (left[front] > 0) line.add(front);
   }
-  return time;
 }
 
 Map<String, Object?> ticketMinutesSample(Random r) {
@@ -320,17 +287,20 @@ Map<String, Object?> ticketMinutesSample(Random r) {
 }
 
 Object? stackSorted(Map<String, Object?> input) {
+  // Search every sequence of pushes and pops.
   final want = ints(input['want']);
-  final stack = <int>[];
-  var i = 0;
-  for (var x = 1; x <= want.length; x++) {
-    stack.add(x);
-    while (stack.isNotEmpty && i < want.length && stack.last == want[i]) {
-      stack.removeLast();
-      i++;
+  final n = want.length;
+  final tried = <String>{};
+  bool go(int next, List<int> stack, int out) {
+    if (out == n) return true;
+    if (!tried.add('$next|$out|${stack.join(',')}')) return false;
+    if (stack.isNotEmpty && stack.last == want[out] && go(next, stack.sublist(0, stack.length - 1), out + 1)) {
+      return true;
     }
+    return next <= n && go(next + 1, [...stack, next], out);
   }
-  return i == want.length;
+
+  return go(1, const [], 0);
 }
 
 Map<String, Object?> stackSortedSample(Random r) {
@@ -490,8 +460,19 @@ List<int> _dfsOrder(Map<int, List<int>> adj, int start) {
 }
 
 Object? scoutReach(Map<String, Object?> input) {
+  // Grow the reached set until nothing new appears (no stack, no order).
   final adj = adjacency(input['roads']);
-  return _dfsOrder(adj, integer(input['start'])).length;
+  final reached = <int>{integer(input['start'])};
+  var grew = true;
+  while (grew) {
+    grew = false;
+    for (final at in reached.toList()) {
+      for (final n in adj[at] ?? const <int>[]) {
+        if (reached.add(n)) grew = true;
+      }
+    }
+  }
+  return reached.length;
 }
 
 Object? scoutLast(Map<String, Object?> input) {
@@ -505,65 +486,78 @@ Map<String, Object?> _startGraph(Random r) {
 }
 
 Object? biggestPatch(Map<String, Object?> input) {
+  // Union-find over the rides.
   final adj = adjacency(input['roads']);
-  final seen = <int>{};
-  var best = 0;
-  final nodes = adj.keys.toList()..sort();
-  for (final s in nodes) {
-    if (seen.contains(s)) continue;
-    final order = _dfsOrder(adj, s);
-    for (final n in order) {
-      seen.add(n);
+  final parent = {for (final n in adj.keys) n: n};
+  int root(int n) => parent[n] == n ? n : parent[n] = root(parent[n]!);
+  for (final e in adj.entries) {
+    for (final m in e.value) {
+      parent[root(e.key)] = root(m);
     }
-    if (order.length > best) best = order.length;
   }
-  return best;
+  final sizes = <int, int>{};
+  for (final n in adj.keys) {
+    sizes[root(n)] = (sizes[root(n)] ?? 0) + 1;
+  }
+  return sizes.values.fold<int>(0, max);
 }
 
 Map<String, Object?> biggestPatchSample(Random r) =>
     {'roads': graphJson(randomUndirected(r, between(r, 1, 6), between(r, 0, 6)))};
 
-(List<int> dist, int maxDist) _bfs(Map<int, List<int>> adj, int start) {
+/// Hop distances from [start] by relaxing every ride until nothing changes
+/// (Bellman-Ford on unit weights), not by a queue.
+Map<int, int> _hops(Map<int, List<int>> adj, int start) {
   final dist = <int, int>{start: 0};
-  final queue = <int>[start];
-  var maxDist = 0;
-  var head = 0;
-  while (head < queue.length) {
-    final here = queue[head++];
-    for (final n in adj[here] ?? const <int>[]) {
-      if (dist.containsKey(n)) continue;
-      dist[n] = dist[here]! + 1;
-      if (dist[n]! > maxDist) maxDist = dist[n]!;
-      queue.add(n);
+  var changed = true;
+  while (changed) {
+    changed = false;
+    for (final e in adj.entries) {
+      final here = dist[e.key];
+      if (here == null) continue;
+      for (final n in e.value) {
+        final seen = dist[n];
+        if (seen == null || here + 1 < seen) {
+          dist[n] = here + 1;
+          changed = true;
+        }
+      }
     }
   }
-  return (dist.values.toList(), maxDist);
+  return dist;
 }
 
 Object? sourceRadius(Map<String, Object?> input) =>
-    _bfs(adjacency(input['roads']), integer(input['start'])).$2;
+    _hops(adjacency(input['roads']), integer(input['start'])).values.fold<int>(0, max);
 
 Object? lastLayer(Map<String, Object?> input) {
-  final reached = _bfs(adjacency(input['roads']), integer(input['start']));
-  return reached.$1.where((d) => d == reached.$2).length;
+  final dist = _hops(adjacency(input['roads']), integer(input['start'])).values;
+  final far = dist.fold<int>(0, max);
+  return dist.where((d) => d == far).length;
 }
 
 // --- greedy -----------------------------------------------------------------
 
 Object? cookieGifts(Map<String, Object?> input) {
+  // A maximum matching of children to cookies that fit (augmenting paths),
+  // not the sorted greedy walk.
   final children = ints(input['children']);
   final cookies = ints(input['cookies']);
-  var i = 0;
-  var j = 0;
-  var fed = 0;
-  while (i < children.length && j < cookies.length) {
-    if (cookies[j] >= children[i]) {
-      fed++;
-      i++;
-      j++;
-    } else {
-      j++;
+  final owner = List<int?>.filled(cookies.length, null);
+  bool feed(int child, Set<int> tried) {
+    for (var c = 0; c < cookies.length; c++) {
+      if (cookies[c] < children[child] || !tried.add(c)) continue;
+      if (owner[c] == null || feed(owner[c]!, tried)) {
+        owner[c] = child;
+        return true;
+      }
     }
+    return false;
+  }
+
+  var fed = 0;
+  for (var child = 0; child < children.length; child++) {
+    if (feed(child, <int>{})) fed++;
   }
   return fed;
 }
@@ -574,21 +568,13 @@ Map<String, Object?> cookieGiftsSample(Random r) => {
     };
 
 Object? dockOverlap(Map<String, Object?> input) {
+  // Count the ships in berth at every moment that matters.
   final starts = ints(input['starts']);
   final ends = ints(input['ends']);
-  var i = 0;
-  var j = 0;
-  var cur = 0;
   var best = 0;
-  while (i < starts.length && j < ends.length) {
-    if (starts[i] < ends[j]) {
-      cur++;
-      if (cur > best) best = cur;
-      i++;
-    } else {
-      cur--;
-      j++;
-    }
+  for (final t in {...starts, ...ends}) {
+    final inBerth = starts.where((s) => s <= t).length - ends.where((e) => e <= t).length;
+    if (inBerth > best) best = inBerth;
   }
   return best;
 }
@@ -605,16 +591,18 @@ Map<String, Object?> dockOverlapSample(Random r) {
 }
 
 Object? leapReach(Map<String, Object?> input) {
+  // Every stone reachable by some sequence of leaps.
   final jumps = ints(input['jumps']);
   if (jumps.isEmpty) return false;
-  var reach = 0;
-  for (var i = 0; i < jumps.length; i++) {
-    if (i > reach) return false;
-    final next = i + jumps[i];
-    if (next > reach) reach = next;
-    if (reach >= jumps.length - 1) return true;
+  final reached = <int>{0};
+  final todo = [0];
+  while (todo.isNotEmpty) {
+    final at = todo.removeLast();
+    for (var d = 1; d <= jumps[at]; d++) {
+      if (at + d < jumps.length && reached.add(at + d)) todo.add(at + d);
+    }
   }
-  return true;
+  return reached.contains(jumps.length - 1);
 }
 
 Map<String, Object?> leapReachSample(Random r) =>
@@ -623,32 +611,30 @@ Map<String, Object?> leapReachSample(Random r) =>
 // --- dp ---------------------------------------------------------------------
 
 Object? plankWays(Map<String, Object?> input) {
-  final n = integer(input['length']);
-  if (n <= 1) return 1;
-  var a = 1;
-  var b = 1;
-  for (var i = 2; i <= n; i++) {
-    final c = a + b;
-    a = b;
-    b = c;
-  }
-  return b;
+  // Count the step sequences themselves.
+  int ways(int left) => left < 0 ? 0 : (left == 0 ? 1 : ways(left - 1) + ways(left - 2));
+  return ways(integer(input['length']));
 }
 
 Map<String, Object?> plankWaysSample(Random r) => {'length': between(r, 0, 12)};
 
 Object? stepToll(Map<String, Object?> input) {
+  // Every sequence of jumps from the first stone to the last.
   final costs = ints(input['costs']);
   if (costs.isEmpty) return 0;
-  var prev2 = costs[0];
-  if (costs.length == 1) return prev2;
-  var prev1 = costs[0] + costs[1];
-  for (var i = 2; i < costs.length; i++) {
-    final here = costs[i] + (prev1 < prev2 ? prev1 : prev2);
-    prev2 = prev1;
-    prev1 = here;
+  int? best;
+  void go(int at, int paid) {
+    if (at == costs.length - 1) {
+      if (best == null || paid < best!) best = paid;
+      return;
+    }
+    for (final d in const [1, 2]) {
+      if (at + d < costs.length) go(at + d, paid + costs[at + d]);
+    }
   }
-  return prev1;
+
+  go(0, costs[0]);
+  return best;
 }
 
 Map<String, Object?> stepTollSample(Random r) =>
@@ -658,23 +644,29 @@ List<List<int>> _grid(Object? json) => intRows(json);
 
 Object? aisleCost(Map<String, Object?> input) {
   final g = _grid(input['grid']);
+  int? best;
+  _paths(g, const [(0, 1), (1, 0)], (cells) {
+    final sum = cells.fold<int>(0, (s, c) => s + g[c.$1][c.$2]);
+    if (best == null || sum < best!) best = sum;
+  });
+  return best;
+}
+
+/// Every path from the top-left to the bottom-right with the given [moves].
+void _paths(List<List<int>> g, List<(int, int)> moves, void Function(List<(int, int)>) visit) {
   final rows = g.length;
   final cols = g[0].length;
-  final dp = [for (final row in g) [...row]];
-  for (var c = 1; c < cols; c++) {
-    dp[0][c] += dp[0][c - 1];
-  }
-  for (var r = 1; r < rows; r++) {
-    dp[r][0] += dp[r - 1][0];
-  }
-  for (var r = 1; r < rows; r++) {
-    for (var c = 1; c < cols; c++) {
-      final up = dp[r - 1][c];
-      final left = dp[r][c - 1];
-      dp[r][c] += up < left ? up : left;
+  void go(int r, int c, List<(int, int)> path) {
+    if (r == rows - 1 && c == cols - 1) {
+      visit(path);
+      return;
+    }
+    for (final (dr, dc) in moves) {
+      if (r + dr < rows && c + dc < cols) go(r + dr, c + dc, [...path, (r + dr, c + dc)]);
     }
   }
-  return dp[rows - 1][cols - 1];
+
+  go(0, 0, [(0, 0)]);
 }
 
 Map<String, Object?> aisleCostSample(Random r) {
@@ -687,24 +679,11 @@ Map<String, Object?> aisleCostSample(Random r) {
 
 Object? openLanes(Map<String, Object?> input) {
   final g = _grid(input['grid']);
-  final rows = g.length;
-  final cols = g[0].length;
-  if (g[0][0] == 1 || g[rows - 1][cols - 1] == 1) return 0;
-  final dp = [for (var r = 0; r < rows; r++) List<int>.filled(cols, 0)];
-  dp[0][0] = 1;
-  for (var r = 0; r < rows; r++) {
-    for (var c = 0; c < cols; c++) {
-      if (g[r][c] == 1) {
-        dp[r][c] = 0;
-        continue;
-      }
-      if (r == 0 && c == 0) continue;
-      final up = r > 0 ? dp[r - 1][c] : 0;
-      final left = c > 0 ? dp[r][c - 1] : 0;
-      dp[r][c] = up + left;
-    }
-  }
-  return dp[rows - 1][cols - 1];
+  var count = 0;
+  _paths(g, const [(0, 1), (1, 0)], (cells) {
+    if (cells.every((c) => g[c.$1][c.$2] == 0)) count++;
+  });
+  return count;
 }
 
 Map<String, Object?> openLanesSample(Random r) {
@@ -720,41 +699,32 @@ Map<String, Object?> openLanesSample(Random r) {
 
 Object? diagonalHaul(Map<String, Object?> input) {
   final g = _grid(input['grid']);
-  final rows = g.length;
-  final cols = g[0].length;
-  final dp = [for (final row in g) [...row]];
-  for (var r = 0; r < rows; r++) {
-    for (var c = 0; c < cols; c++) {
-      var best = -1 << 30;
-      var any = false;
-      void take(int v) {
-        any = true;
-        if (v > best) best = v;
-      }
-
-      if (c > 0) take(dp[r][c - 1]);
-      if (r > 0) take(dp[r - 1][c]);
-      if (r > 0 && c > 0) take(dp[r - 1][c - 1]);
-      if (any) dp[r][c] = g[r][c] + best;
-    }
-  }
-  return dp[rows - 1][cols - 1];
+  int? best;
+  _paths(g, const [(0, 1), (1, 0), (1, 1)], (cells) {
+    final sum = cells.fold<int>(0, (s, c) => s + g[c.$1][c.$2]);
+    if (best == null || sum > best!) best = sum;
+  });
+  return best;
 }
 
 Object? packBins(Map<String, Object?> input) {
+  // Every subset of crates.
   final weights = ints(input['weights']);
   final values = ints(input['values']);
   final cap = integer(input['cap']);
-  final dp = List<int>.filled(cap + 1, 0);
-  for (var i = 0; i < weights.length; i++) {
-    final w = weights[i];
-    final v = values[i];
-    for (var c = cap; c >= w; c--) {
-      final withItem = dp[c - w] + v;
-      if (withItem > dp[c]) dp[c] = withItem;
+  var best = 0;
+  for (var mask = 0; mask < 1 << weights.length; mask++) {
+    var w = 0;
+    var v = 0;
+    for (var i = 0; i < weights.length; i++) {
+      if (mask >> i & 1 == 1) {
+        w += weights[i];
+        v += values[i];
+      }
     }
+    if (w <= cap && v > best) best = v;
   }
-  return dp[cap];
+  return best;
 }
 
 Map<String, Object?> packBinsSample(Random r) {

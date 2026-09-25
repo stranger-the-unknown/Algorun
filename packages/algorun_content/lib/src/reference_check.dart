@@ -201,6 +201,13 @@ final class ReferenceChecker {
       warn(Level.execution, 'fixtures.hidden',
           'Only ${puzzle.hiddenTests.length} hidden case(s); hidden cases should cover the edges and the traps.');
     }
+    // MS14 review: fixtures whose answers never change let a constant pass.
+    final cases = [...puzzle.visibleTests, ...puzzle.hiddenTests];
+    final answers = {for (final c in cases) jsonEncode(valueToJson(c.output))};
+    if (cases.length > 1 && answers.length == 1) {
+      error(Level.execution, 'fixtures',
+          'Every case expects ${answers.single}: a program that always returns that would pass. Add cases with other answers.');
+    }
   }
 
   RuntimeValue? _answer(
