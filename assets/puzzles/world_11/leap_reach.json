@@ -10,7 +10,7 @@
     "greedy"
   ],
   "prerequisites": [],
-  "story": "Stones in a line show how far you may leap forward from that stone, in stones, including a leap of 0. You start on the first stone. Report whether you can reach the last stone. A single stone is already reached.",
+  "story": "Stones stand in a line. The number on a stone is the longest leap you may make from it: you may move forward any number of stones from 1 up to that number, so a stone showing 0 lets you go nowhere. You start on the first stone. Report whether you can reach the last stone. A single stone is already reached.",
   "io": {
     "inputs": [
       {
@@ -72,7 +72,11 @@
         "id": "v1",
         "in": {
           "jumps": [
-            0
+            2,
+            3,
+            1,
+            1,
+            4
           ]
         },
         "out": true
@@ -81,7 +85,9 @@
         "id": "v2",
         "in": {
           "jumps": [
-            1,
+            3,
+            0,
+            0,
             0
           ]
         },
@@ -93,18 +99,18 @@
         "id": "h01",
         "in": {
           "jumps": [
-            0,
-            1
+            1,
+            0
           ]
         },
-        "out": false
+        "out": true
       },
       {
         "id": "h02",
         "in": {
           "jumps": [
             0,
-            3
+            1
           ]
         },
         "out": false
@@ -114,7 +120,7 @@
         "in": {
           "jumps": [
             0,
-            2
+            3
           ]
         },
         "out": false
@@ -124,7 +130,7 @@
         "in": {
           "jumps": [
             0,
-            0
+            2
           ]
         },
         "out": false
@@ -133,9 +139,8 @@
         "id": "h05",
         "in": {
           "jumps": [
-            1,
             0,
-            1
+            0
           ]
         },
         "out": false
@@ -146,11 +151,60 @@
           "jumps": [
             1,
             0,
+            1
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h07",
+        "in": {
+          "jumps": [
+            1,
+            0,
             1,
             0
           ]
         },
         "out": false
+      },
+      {
+        "id": "h08",
+        "in": {
+          "jumps": [
+            2,
+            0,
+            0
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "h09",
+        "in": {
+          "jumps": [
+            3,
+            2,
+            1,
+            0,
+            4
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h10",
+        "in": {
+          "jumps": [
+            1,
+            3,
+            0,
+            0,
+            2,
+            0
+          ]
+        },
+        "out": true
       }
     ]
   },

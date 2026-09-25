@@ -28,13 +28,13 @@
       ],
       "puzzles": [
         "lowest_balance",
-        "shelf_totals",
-        "departure_board",
-        "smallest_cart",
         "first_descent",
         "second_highest",
         "even_prefixes",
         "nested_distinct",
+        "shelf_totals",
+        "departure_board",
+        "smallest_cart",
         "max_product_two"
       ]
     },
@@ -51,11 +51,11 @@
       "puzzles": [
         "loudest_echo",
         "twin_beacons",
-        "level_stretches",
-        "longest_streak",
+        "shared_values",
         "pair_sum_count",
         "same_value_span",
-        "shared_values"
+        "level_stretches",
+        "longest_streak"
       ]
     },
     {
@@ -70,10 +70,10 @@
       ],
       "puzzles": [
         "matched_pair",
-        "widest_basin",
         "exact_gaps",
         "pairs_under",
         "sorted_union",
+        "widest_basin",
         "closest_gap"
       ]
     },
@@ -89,11 +89,11 @@
       ],
       "puzzles": [
         "rush_hour",
+        "windows_at_least",
         "patchy_signal",
         "quota_hours",
-        "market_variety",
-        "windows_at_least",
         "one_dropout",
+        "market_variety",
         "peak_windows"
       ]
     },
@@ -111,12 +111,12 @@
       "puzzles": [
         "sealed_crates",
         "undo_button",
-        "relay_towers",
-        "largest_billboard",
         "counter_sum",
+        "relay_towers",
         "josephus_line",
+        "stack_sorted",
         "ticket_minutes",
-        "stack_sorted"
+        "largest_billboard"
       ]
     },
     {
@@ -130,15 +130,15 @@
         "stack"
       ],
       "puzzles": [
-        "middle_car",
-        "reverse_train",
-        "drop_faulty_cars",
-        "loop_detector",
         "tail_lamp",
         "cold_cars",
         "named_car",
         "end_gap",
-        "rising_links"
+        "rising_links",
+        "middle_car",
+        "reverse_train",
+        "drop_faulty_cars",
+        "loop_detector"
       ]
     },
     {
@@ -153,16 +153,16 @@
         "linked_list"
       ],
       "puzzles": [
-        "canopy_height",
-        "widest_level",
-        "trail_sum",
-        "sorted_grove",
         "left_vine",
         "right_marks",
         "lone_tree",
         "node_census",
+        "canopy_height",
         "leaf_census",
-        "lowest_leaf"
+        "lowest_leaf",
+        "widest_level",
+        "trail_sum",
+        "sorted_grove"
       ]
     },
     {
@@ -190,19 +190,19 @@
         "tree"
       ],
       "puzzles": [
-        "island_count",
-        "fewest_rides",
-        "two_teams",
-        "task_order",
-        "nearest_depot",
         "platform_doors",
         "direct_hop",
         "silent_stops",
+        "island_count",
+        "fewest_rides",
         "scout_reach",
         "scout_last",
         "biggest_patch",
-        "source_radius",
-        "last_layer"
+        "last_layer",
+        "two_teams",
+        "task_order",
+        "nearest_depot",
+        "source_radius"
       ]
     },
     {
@@ -217,10 +217,10 @@
       ],
       "puzzles": [
         "one_good_trade",
-        "fuel_loop",
         "cookie_gifts",
         "dock_overlap",
-        "leap_reach"
+        "leap_reach",
+        "fuel_loop"
       ]
     },
     {
@@ -246,12 +246,12 @@
         "greedy"
       ],
       "puzzles": [
-        "quiet_street",
-        "exact_change",
         "plank_ways",
         "step_toll",
+        "quiet_street",
         "aisle_cost",
         "open_lanes",
+        "exact_change",
         "diagonal_haul",
         "pack_bins"
       ]

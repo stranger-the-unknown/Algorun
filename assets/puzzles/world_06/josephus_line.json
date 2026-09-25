@@ -10,7 +10,7 @@
     "queue"
   ],
   "prerequisites": [],
-  "story": "People numbered 1 to n stand in a circle, in that order. Count k people from the front: the k-th leaves, and the count continues with the next person. Report the number of the last person still standing. n and k are at least 1.",
+  "story": "n people, numbered 1 to n, stand in a circle in that order; n is the input people. Count k people from the front, where k is the input count: the k-th person leaves, and the count continues with the next person. Report the number of the last person still standing. Both inputs are at least 1.",
   "io": {
     "inputs": [
       {
@@ -74,23 +74,39 @@
       {
         "id": "v1",
         "in": {
+          "people": 5,
+          "count": 1
+        },
+        "out": 5
+      },
+      {
+        "id": "v2",
+        "in": {
+          "people": 3,
+          "count": 2
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
           "people": 1,
           "count": 1
         },
         "out": 1
       },
       {
-        "id": "v2",
+        "id": "h02",
         "in": {
           "people": 1,
           "count": 4
         },
         "out": 1
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h03",
         "in": {
           "people": 5,
           "count": 2
@@ -98,7 +114,7 @@
         "out": 3
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "people": 4,
           "count": 3
@@ -106,7 +122,7 @@
         "out": 1
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "people": 6,
           "count": 2
@@ -114,7 +130,7 @@
         "out": 5
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "people": 2,
           "count": 2
@@ -122,7 +138,7 @@
         "out": 1
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "people": 8,
           "count": 2
@@ -130,12 +146,20 @@
         "out": 1
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "people": 8,
           "count": 3
         },
         "out": 7
+      },
+      {
+        "id": "h09",
+        "in": {
+          "people": 7,
+          "count": 3
+        },
+        "out": 4
       }
     ]
   },

@@ -11,7 +11,7 @@
     "bfs"
   ],
   "prerequisites": [],
-  "story": "Using the same hop distances from the start, the last layer is every reached stop whose distance equals the farthest distance. Report how many stops sit in that layer. Do not report the distance itself.",
+  "story": "Each ride costs one hop, and a stop's distance is the fewest hops needed to reach it from the start. The last layer is every reached stop whose distance equals the farthest distance. Report how many stops sit in that layer. Do not report the distance itself.",
   "io": {
     "inputs": [
       {
@@ -64,7 +64,7 @@
       "var.inc",
       "var.set"
     ],
-    "maxBlocks": 83
+    "maxBlocks": 93
   },
   "limits": {
     "maxOps": 939,
@@ -72,7 +72,7 @@
     "maxAlloc": 100000
   },
   "hints": [
-    "First find the farthest distance, the same way as Source Radius.",
+    "First find the distance of every reached stop with a breadth-first walk: a queue, and a list of distances where -1 means not reached yet.",
     "Then count the stops whose stored distance equals that farthest number.",
     "A stop still marked -1 was never reached and is not in the layer."
   ],
@@ -90,23 +90,78 @@
               {
                 "id": 0,
                 "neighbors": [
-                  0
+                  1
                 ]
               },
               {
                 "id": 1,
                 "neighbors": [
-                  0
+                  2,
+                  3
                 ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": []
               }
             ]
           },
-          "start": 1
+          "start": 0
         },
-        "out": 1
+        "out": 2
       },
       {
         "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  3,
+                  4,
+                  5
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              },
+              {
+                "id": 4,
+                "neighbors": []
+              },
+              {
+                "id": 5,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
         "in": {
           "roads": {
             "type": "graph",
@@ -140,24 +195,6 @@
           "start": 0
         },
         "out": 1
-      }
-    ],
-    "hidden": [
-      {
-        "id": "h01",
-        "in": {
-          "roads": {
-            "type": "graph",
-            "nodes": [
-              {
-                "id": 0,
-                "neighbors": []
-              }
-            ]
-          },
-          "start": 0
-        },
-        "out": 1
       },
       {
         "id": "h02",
@@ -167,9 +204,7 @@
             "nodes": [
               {
                 "id": 0,
-                "neighbors": [
-                  0
-                ]
+                "neighbors": []
               }
             ]
           },
@@ -185,21 +220,13 @@
             "nodes": [
               {
                 "id": 0,
-                "neighbors": []
-              },
-              {
-                "id": 1,
-                "neighbors": []
-              },
-              {
-                "id": 2,
                 "neighbors": [
-                  2
+                  0
                 ]
               }
             ]
           },
-          "start": 1
+          "start": 0
         },
         "out": 1
       },
@@ -225,12 +252,38 @@
               }
             ]
           },
-          "start": 0
+          "start": 1
         },
         "out": 1
       },
       {
         "id": "h05",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  2
+                ]
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
         "in": {
           "roads": {
             "type": "graph",
@@ -254,7 +307,7 @@
         "out": 1
       },
       {
-        "id": "h06",
+        "id": "h07",
         "in": {
           "roads": {
             "type": "graph",
@@ -274,6 +327,103 @@
           "start": 1
         },
         "out": 1
+      },
+      {
+        "id": "h08",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 2
+      },
+      {
+        "id": "h09",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2,
+                  3,
+                  4
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              },
+              {
+                "id": 4,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 3
+      },
+      {
+        "id": "h10",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  2,
+                  3
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 3
       }
     ]
   },

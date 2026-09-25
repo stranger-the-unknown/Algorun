@@ -83,6 +83,73 @@
             "nodes": [
               {
                 "id": 0,
+                "neighbors": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  3
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  0
+                ]
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 4
+      },
+      {
+        "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  0
+                ]
+              }
+            ]
+          },
+          "start": 1
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
                 "neighbors": []
               }
             ]
@@ -92,7 +159,7 @@
         "out": 1
       },
       {
-        "id": "v2",
+        "id": "h02",
         "in": {
           "roads": {
             "type": "graph",
@@ -108,11 +175,9 @@
           "start": 0
         },
         "out": 1
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h03",
         "in": {
           "roads": {
             "type": "graph",
@@ -146,7 +211,7 @@
         "out": 2
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "roads": {
             "type": "graph",
@@ -172,7 +237,7 @@
         "out": 2
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "roads": {
             "type": "graph",
@@ -212,7 +277,7 @@
         "out": 2
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "roads": {
             "type": "graph",
@@ -254,7 +319,7 @@
         "out": 4
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "roads": {
             "type": "graph",
@@ -304,7 +369,7 @@
         "out": 1
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "roads": {
             "type": "graph",
@@ -335,6 +400,43 @@
                 "id": 5,
                 "neighbors": [
                   3,
+                  0
+                ]
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 2
+      },
+      {
+        "id": "h09",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  3
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  2,
                   0
                 ]
               }

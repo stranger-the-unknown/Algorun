@@ -63,7 +63,7 @@
   },
   "hints": [
     "Push the root when it exists, the same way as a full census.",
-    "A node is a leaf when both children IS NOTHING.",
+    "A node is a leaf when both of its children are empty: each IS NOTHING.",
     "A node with one child is not a leaf, but its child might be."
   ],
   "validators": {
@@ -74,13 +74,6 @@
       {
         "id": "v1",
         "in": {
-          "root": null
-        },
-        "out": 0
-      },
-      {
-        "id": "v2",
-        "in": {
           "root": {
             "type": "treeNode",
             "value": 8,
@@ -89,6 +82,13 @@
           }
         },
         "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": null
+        },
+        "out": 0
       }
     ],
     "hidden": [
@@ -198,6 +198,70 @@
           }
         },
         "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": null,
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": null,
+                "right": null
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 6,
+                "left": null,
+                "right": null
+              }
+            }
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": null,
+                  "right": null
+                },
+                "right": null
+              },
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 1
       }
     ]
   },

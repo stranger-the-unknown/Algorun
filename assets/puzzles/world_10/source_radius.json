@@ -92,6 +92,66 @@
             "nodes": [
               {
                 "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  0
+                ]
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
                 "neighbors": []
               }
             ]
@@ -101,7 +161,7 @@
         "out": 0
       },
       {
-        "id": "v2",
+        "id": "h02",
         "in": {
           "roads": {
             "type": "graph",
@@ -117,11 +177,9 @@
           "start": 0
         },
         "out": 0
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h03",
         "in": {
           "roads": {
             "type": "graph",
@@ -215,7 +273,7 @@
         "out": 11
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "roads": {
             "type": "graph",
@@ -264,7 +322,7 @@
         "out": 3
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "roads": {
             "type": "graph",
@@ -310,7 +368,7 @@
         "out": 3
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "roads": {
             "type": "graph",
@@ -356,7 +414,7 @@
         "out": 1
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "roads": {
             "type": "graph",

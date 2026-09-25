@@ -66,7 +66,7 @@
   "hints": [
     "Walk every node with a stack.",
     "Update the best mark only when both children are empty.",
-    "Start the best at nothing-yet, and if you never see a leaf the answer is -1."
+    "Use have to remember whether you have seen a leaf yet. If you never see one, the answer is -1."
   ],
   "validators": {
     "output": "equal"
@@ -76,12 +76,73 @@
       {
         "id": "v1",
         "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": null,
+                "right": null
+              },
+              "right": null
+            }
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 9,
+            "left": {
+              "type": "treeNode",
+              "value": 7,
+              "left": {
+                "type": "treeNode",
+                "value": 2,
+                "left": null,
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 6,
+                "left": null,
+                "right": null
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 12,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
           "root": null
         },
         "out": -1
       },
       {
-        "id": "v2",
+        "id": "h02",
         "in": {
           "root": {
             "type": "treeNode",
@@ -91,11 +152,9 @@
           }
         },
         "out": 4
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h03",
         "in": {
           "root": {
             "type": "treeNode",
@@ -112,7 +171,7 @@
         "out": 3
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "root": {
             "type": "treeNode",
@@ -129,7 +188,7 @@
         "out": 0
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "root": {
             "type": "treeNode",
@@ -146,7 +205,7 @@
         "out": 0
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "root": {
             "type": "treeNode",
@@ -173,7 +232,7 @@
         "out": -2
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "root": {
             "type": "treeNode",
@@ -200,7 +259,7 @@
         "out": -1
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "root": {
             "type": "treeNode",

@@ -10,7 +10,7 @@
     "linked_list"
   ],
   "prerequisites": [],
-  "story": "A clerk has a target car number and the head of a train. Report whether any car wears that number. The answer is yes or no. An empty train does not.",
+  "story": "A clerk has a target car number and the head of a train. Report whether any car wears that number. The answer is yes or no. An empty train has no cars, so the answer is no.",
   "io": {
     "inputs": [
       {
@@ -72,16 +72,30 @@
       {
         "id": "v1",
         "in": {
-          "head": null,
-          "target": 1
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              8,
+              5
+            ]
+          },
+          "target": 3
         },
-        "out": false
+        "out": true
       },
       {
         "id": "v2",
         "in": {
-          "head": null,
-          "target": 3
+          "head": {
+            "type": "listNode",
+            "values": [
+              4,
+              1,
+              6
+            ]
+          },
+          "target": 9
         },
         "out": false
       }
@@ -89,6 +103,22 @@
     "hidden": [
       {
         "id": "h01",
+        "in": {
+          "head": null,
+          "target": 1
+        },
+        "out": false
+      },
+      {
+        "id": "h02",
+        "in": {
+          "head": null,
+          "target": 3
+        },
+        "out": false
+      },
+      {
+        "id": "h03",
         "in": {
           "head": {
             "type": "listNode",
@@ -102,7 +132,7 @@
         "out": true
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "head": {
             "type": "listNode",
@@ -120,7 +150,7 @@
         "out": true
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "head": {
             "type": "listNode",
@@ -137,7 +167,7 @@
         "out": true
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "head": {
             "type": "listNode",
@@ -153,7 +183,7 @@
         "out": true
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "head": {
             "type": "listNode",
@@ -173,7 +203,7 @@
         "out": true
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "head": {
             "type": "listNode",
@@ -187,6 +217,22 @@
             ]
           },
           "target": 1
+        },
+        "out": true
+      },
+      {
+        "id": "h09",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              2,
+              7,
+              7,
+              9
+            ]
+          },
+          "target": 9
         },
         "out": true
       }

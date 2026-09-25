@@ -72,23 +72,54 @@
       {
         "id": "v1",
         "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              5,
+              -2,
+              8,
+              1
+            ]
+          },
+          "limit": 3
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              7,
+              4,
+              9
+            ]
+          },
+          "limit": 5
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
           "head": null,
           "limit": 0
         },
         "out": 0
       },
       {
-        "id": "v2",
+        "id": "h02",
         "in": {
           "head": null,
           "limit": 1
         },
         "out": 0
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h03",
         "in": {
           "head": {
             "type": "listNode",
@@ -101,7 +132,7 @@
         "out": 0
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "head": {
             "type": "listNode",
@@ -115,7 +146,7 @@
         "out": 0
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "head": {
             "type": "listNode",
@@ -129,7 +160,7 @@
         "out": 1
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "head": {
             "type": "listNode",
@@ -144,7 +175,7 @@
         "out": 1
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "head": {
             "type": "listNode",
@@ -159,7 +190,7 @@
         "out": 2
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "head": {
             "type": "listNode",
@@ -173,6 +204,22 @@
           "limit": 2
         },
         "out": 2
+      },
+      {
+        "id": "h09",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              3,
+              1,
+              3
+            ]
+          },
+          "limit": 3
+        },
+        "out": 1
       }
     ]
   },

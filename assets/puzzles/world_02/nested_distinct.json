@@ -53,9 +53,9 @@
     "maxBlocks": 40
   },
   "limits": {
-    "maxOps": 509,
+    "maxOps": 568,
     "maxDepth": 64,
-    "maxAlloc": 2
+    "maxAlloc": 4
   },
   "hints": [
     "A code is new when no earlier position holds the same code.",
@@ -70,49 +70,53 @@
       {
         "id": "v1",
         "in": {
-          "values": []
+          "values": [
+            3,
+            3,
+            5,
+            3,
+            5
+          ]
         },
-        "out": 0
+        "out": 2
       },
       {
         "id": "v2",
         "in": {
           "values": [
-            4
+            7,
+            2,
+            7,
+            9,
+            2
           ]
         },
-        "out": 1
+        "out": 3
       }
     ],
     "hidden": [
       {
         "id": "h01",
         "in": {
-          "values": [
-            1,
-            2
-          ]
+          "values": []
         },
-        "out": 2
+        "out": 0
       },
       {
         "id": "h02",
         "in": {
           "values": [
-            4,
-            4,
-            2
+            4
           ]
         },
-        "out": 2
+        "out": 1
       },
       {
         "id": "h03",
         "in": {
           "values": [
             1,
-            1,
-            0
+            2
           ]
         },
         "out": 2
@@ -121,6 +125,28 @@
         "id": "h04",
         "in": {
           "values": [
+            4,
+            4,
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            1,
+            1,
+            0
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
             1,
             0,
             0,
@@ -128,6 +154,38 @@
           ]
         },
         "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            1
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "h08",
+        "in": {
+          "values": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        "out": 1
       }
     ]
   },

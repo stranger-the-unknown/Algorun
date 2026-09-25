@@ -73,19 +73,28 @@
             "nodes": [
               {
                 "id": 0,
-                "neighbors": []
+                "neighbors": [
+                  1
+                ]
               },
               {
                 "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
                 "neighbors": [
-                  1,
-                  0
+                  3
                 ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
               }
             ]
           }
         },
-        "out": 1
+        "out": 2
       },
       {
         "id": "v2",
@@ -96,17 +105,38 @@
               {
                 "id": 0,
                 "neighbors": [
-                  0
+                  1,
+                  2
                 ]
               },
               {
                 "id": 1,
                 "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  4
+                ]
+              },
+              {
+                "id": 4,
+                "neighbors": [
+                  5
+                ]
+              },
+              {
+                "id": 5,
+                "neighbors": []
               }
             ]
           }
         },
-        "out": 1
+        "out": 3
       }
     ],
     "hidden": [
@@ -119,6 +149,13 @@
               {
                 "id": 0,
                 "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  1,
+                  0
+                ]
               }
             ]
           }
@@ -136,6 +173,42 @@
                 "neighbors": [
                   0
                 ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  0
+                ]
               }
             ]
           }
@@ -143,7 +216,7 @@
         "out": 0
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "roads": {
             "type": "graph",
@@ -166,7 +239,7 @@
         "out": 0
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "roads": {
             "type": "graph",
@@ -189,7 +262,7 @@
         "out": 3
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "roads": {
             "type": "graph",
@@ -214,7 +287,7 @@
         "out": 2
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "roads": {
             "type": "graph",

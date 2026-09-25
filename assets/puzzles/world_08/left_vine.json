@@ -71,12 +71,53 @@
       {
         "id": "v1",
         "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 1,
+                "left": null,
+                "right": null
+              },
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 2,
+            "left": {
+              "type": "treeNode",
+              "value": 7,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
           "root": null
         },
         "out": 0
       },
       {
-        "id": "v2",
+        "id": "h02",
         "in": {
           "root": {
             "type": "treeNode",
@@ -86,11 +127,9 @@
           }
         },
         "out": 1
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h03",
         "in": {
           "root": {
             "type": "treeNode",
@@ -107,7 +146,7 @@
         "out": 1
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "root": {
             "type": "treeNode",
@@ -124,7 +163,7 @@
         "out": 1
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "root": {
             "type": "treeNode",
@@ -141,7 +180,7 @@
         "out": 1
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "root": {
             "type": "treeNode",
@@ -158,7 +197,7 @@
         "out": 1
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "root": {
             "type": "treeNode",
@@ -180,7 +219,7 @@
         "out": 1
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "root": {
             "type": "treeNode",
@@ -196,6 +235,48 @@
               "value": 1,
               "left": null,
               "right": null
+            }
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h09",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": null,
+                  "right": null
+                },
+                "right": null
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 5,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": null,
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": null,
+                "right": null
+              }
             }
           }
         },

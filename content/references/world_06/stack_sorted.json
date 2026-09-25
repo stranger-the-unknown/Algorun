@@ -17,7 +17,7 @@
   "metrics": {
     "blocks": 38,
     "ops": 186,
-    "peakAlloc": 4,
+    "peakAlloc": 5,
     "peakDepth": 1
   },
   "solution": {

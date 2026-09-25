@@ -10,7 +10,7 @@
     "dp"
   ],
   "prerequisites": [],
-  "story": "Each stone charges a toll when you land on it. From a stone you may jump one or two stones ahead. You start before the stones and must land on the last stone. Report the cheapest total toll. No stones costs 0. One stone costs that stone.",
+  "story": "Each stone charges a toll when you land on it. You start on the first stone and pay its toll. From a stone you may jump one or two stones ahead, and you must finish on the last stone. Report the cheapest total toll. No stones costs 0. One stone costs that stone.",
   "io": {
     "inputs": [
       {
@@ -57,7 +57,7 @@
   },
   "hints": [
     "The cheapest way to land on a stone is its toll plus the cheaper of the two stones you could have come from.",
-    "The first stone can only be reached in one way. The second can come from the start or from the first.",
+    "You always pay the first stone. The second stone can only be reached from the first, so it costs both tolls.",
     "Paying every stone is not required: a jump skips one."
   ],
   "validators": {
@@ -68,23 +68,44 @@
       {
         "id": "v1",
         "in": {
+          "costs": [
+            4,
+            0,
+            3
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "v2",
+        "in": {
+          "costs": [
+            9,
+            4
+          ]
+        },
+        "out": 13
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
           "costs": []
         },
         "out": 0
       },
       {
-        "id": "v2",
+        "id": "h02",
         "in": {
           "costs": [
             4
           ]
         },
         "out": 4
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h03",
         "in": {
           "costs": [
             1,
@@ -95,7 +116,7 @@
         "out": 2
       },
       {
-        "id": "h02",
+        "id": "h04",
         "in": {
           "costs": [
             10,
@@ -106,7 +127,7 @@
         "out": 11
       },
       {
-        "id": "h03",
+        "id": "h05",
         "in": {
           "costs": [
             4,
@@ -117,7 +138,7 @@
         "out": 7
       },
       {
-        "id": "h04",
+        "id": "h06",
         "in": {
           "costs": [
             2,
@@ -129,7 +150,7 @@
         "out": 6
       },
       {
-        "id": "h05",
+        "id": "h07",
         "in": {
           "costs": [
             4,
@@ -141,7 +162,7 @@
         "out": 8
       },
       {
-        "id": "h06",
+        "id": "h08",
         "in": {
           "costs": [
             0,
@@ -152,6 +173,19 @@
           ]
         },
         "out": 2
+      },
+      {
+        "id": "h09",
+        "in": {
+          "costs": [
+            1,
+            9,
+            1,
+            9,
+            1
+          ]
+        },
+        "out": 3
       }
     ]
   },

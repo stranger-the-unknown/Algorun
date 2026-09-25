@@ -55,8 +55,8 @@
     "maxAlloc": 100000
   },
   "hints": [
-    "First the root must IS NOT NOTHING. An empty grove answers no.",
-    "Then both LEFT and RIGHT of that root must IS NOTHING.",
+    "First the root must be there: check that it IS NOT NOTHING. An empty grove answers no.",
+    "Then both LEFT and RIGHT of that root must be empty: each IS NOTHING.",
     "Any tree with a child answers no, even if the rest is empty."
   ],
   "validators": {
@@ -67,12 +67,26 @@
       {
         "id": "v1",
         "in": {
-          "root": null
+          "root": {
+            "type": "treeNode",
+            "value": 7,
+            "left": null,
+            "right": null
+          }
         },
-        "out": false
+        "out": true
       },
       {
         "id": "v2",
+        "in": {
+          "root": null
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
         "in": {
           "root": {
             "type": "treeNode",
@@ -82,11 +96,9 @@
           }
         },
         "out": true
-      }
-    ],
-    "hidden": [
+      },
       {
-        "id": "h01",
+        "id": "h02",
         "in": {
           "root": {
             "type": "treeNode",
@@ -103,7 +115,7 @@
         "out": false
       },
       {
-        "id": "h02",
+        "id": "h03",
         "in": {
           "root": {
             "type": "treeNode",
@@ -120,7 +132,7 @@
         "out": false
       },
       {
-        "id": "h03",
+        "id": "h04",
         "in": {
           "root": {
             "type": "treeNode",
@@ -152,7 +164,7 @@
         "out": false
       },
       {
-        "id": "h04",
+        "id": "h05",
         "in": {
           "root": {
             "type": "treeNode",
@@ -169,7 +181,7 @@
         "out": false
       },
       {
-        "id": "h05",
+        "id": "h06",
         "in": {
           "root": {
             "type": "treeNode",
@@ -206,7 +218,7 @@
         "out": false
       },
       {
-        "id": "h06",
+        "id": "h07",
         "in": {
           "root": {
             "type": "treeNode",
@@ -235,6 +247,23 @@
             "right": {
               "type": "treeNode",
               "value": -1,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 2,
               "left": null,
               "right": null
             }

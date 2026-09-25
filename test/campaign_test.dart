@@ -43,9 +43,13 @@ void main() {
     final afterBasics = evaluateCampaign(campaign, solved(['warm_readings', 'highest_tide']));
     expect(afterBasics.worldStatus('world_02'), WorldStatus.open);
     expect(afterBasics.worldStatus('world_03'), WorldStatus.locked);
-    final afterArrays = evaluateCampaign(campaign, solved([
-      'warm_readings', 'highest_tide', 'lowest_balance', 'shelf_totals', 'departure_board', 'smallest_cart',
-    ]));
+    // A world completes when every puzzle it lists is solved (MS14 made
+    // Arrays nine puzzles long).
+    final arrays = campaign.manifest.byId('world_02')!.puzzleIds;
+    expect(arrays, hasLength(9));
+    final almost = evaluateCampaign(campaign, solved(['warm_readings', 'highest_tide', ...arrays.skip(1)]));
+    expect(almost.worldStatus('world_03'), WorldStatus.locked, reason: 'one Arrays puzzle is still open');
+    final afterArrays = evaluateCampaign(campaign, solved(['warm_readings', 'highest_tide', ...arrays]));
     for (final world in ['world_03', 'world_04', 'world_06', 'world_11']) {
       expect(afterArrays.worldStatus(world), WorldStatus.open, reason: world);
     }

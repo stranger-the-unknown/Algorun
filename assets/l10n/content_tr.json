@@ -539,7 +539,7 @@
     },
     "josephus_line": {
       "title": "Sayarak Eleme",
-      "story": "1'den n'e numaralı insanlar o sırayla bir çemberde duruyor. Önden k kişi say: k. kişi ayrılır ve sayım sonraki kişiyle sürer. Ayakta kalan son kişinin numarasını bildir. n ve k en az 1'dir.",
+      "story": "1'den n'e numaralı n kişi o sırayla bir çemberde duruyor; n, people girdisidir. Önden k kişi say, k burada count girdisidir: k. kişi ayrılır ve sayım sonraki kişiyle sürer. Ayakta kalan son kişinin numarasını bildir. İki girdi de en az 1'dir.",
       "hints": [
         "Bir kuyruk çember olabilir: ön, şu an saydığın kişidir.",
         "Birini atlamak için onu önden al ve arkaya gönder.",
@@ -584,7 +584,7 @@
     },
     "named_car": {
       "title": "Adı Geçen Vagon",
-      "story": "Bir memurun hedef vagon numarası ve trenin başı var. Herhangi bir vagonun o numarayı taşıyıp taşımadığını bildir. Cevap evet ya da hayırdır. Boş bir tren taşımaz.",
+      "story": "Bir memurun hedef vagon numarası ve trenin başı var. Herhangi bir vagonun o numarayı taşıyıp taşımadığını bildir. Cevap evet ya da hayırdır. Boş bir trende vagon yoktur; cevap hayırdır.",
       "hints": [
         "Vagon IS NOT NOTHING olduğu sürece zinciri yürü.",
         "NODE VALUE hedefe eşitse hemen evet diyebilirsin.",
@@ -660,7 +660,7 @@
       "hints": [
         "Her düğümü bir yığınla yürü.",
         "En iyi işareti yalnızca iki çocuk da boşken güncelle.",
-        "En iyiyi henüz yok diye başlat; hiç yaprak görmezsen cevap -1'dir."
+        "Bir yaprak görüp görmediğini have ile hatırla. Hiç görmezsen cevap -1'dir."
       ]
     },
     "platform_doors": {
@@ -669,7 +669,7 @@
       "hints": [
         "NEIGHBORS bir duraktan çıkan kapıların listesini verir.",
         "O listenin LENGTH değeri cevaptır.",
-        "Sıfır numaralı durak dışındaki her istasyon için 0 deme."
+        "Yalnızca sıfır numaralı durağın değil, her durağın kapısı olabilir."
       ]
     },
     "direct_hop": {
@@ -701,7 +701,7 @@
     },
     "scout_last": {
       "title": "Son Keşif",
-      "story": "Aynı keşif eri bir yığınla derinlik öncelikli yürür. Komşular NEIGHBORS listesinin sırasında itilir, bu yüzden son komşu önce çıkar. Keşif erinin çıkardığı son durağın numarasını bildir. Başlangıç her zaman çıkarılır.",
+      "story": "Aynı keşif eri, Keşif Erişimi bulmacasındaki gibi bir yığınla derinlik öncelikli yürür: bir durağı yığına iterken işaretler, böylece her durak en fazla bir kez itilir. Komşular NEIGHBORS listesinin sırasında itilir, bu yüzden son komşu önce çıkar. Keşif erinin çıkardığı son durağın numarasını bildir. Başlangıç her zaman çıkarılır.",
       "hints": [
         "Bu, erişim yürüyüşüdür; ama yalnızca saymak yerine az önce çıkardığın durağı hatırlarsın.",
         "Komşuları listelenen sırayla it, sıralama.",
@@ -728,9 +728,9 @@
     },
     "last_layer": {
       "title": "Son Katman",
-      "story": "Başlangıçtan aynı sıçrama uzaklıklarını kullanarak son katman, uzaklığı en uzak mesafeye eşit olan her ulaşılmış duraktır. O katmanda kaç durak olduğunu bildir. Uzaklığın kendisini bildirme.",
+      "story": "Her sefer bir sıçrama tutar; bir durağın uzaklığı, başlangıçtan ona ulaşmak için gereken en az sıçrama sayısıdır. Son katman, uzaklığı en büyük uzaklığa eşit olan her ulaşılmış duraktır. O katmanda kaç durak olduğunu bildir. Uzaklığın kendisini bildirme.",
       "hints": [
-        "Önce en uzak mesafeyi bul, Kaynak Yarıçapı ile aynı şekilde.",
+        "Önce ulaşılan her durağın uzaklığını genişlik öncelikli bir yürüyüşle bul: bir kuyruk ve -1'in henüz ulaşılmadı demek olduğu bir uzaklık listesi.",
         "Sonra kayıtlı uzaklığı o en uzak sayıya eşit olan durakları say.",
         "Hâlâ -1 yazılı bir durağa hiç ulaşılmamıştır ve katmanda değildir."
       ]
@@ -755,7 +755,7 @@
     },
     "leap_reach": {
       "title": "Sıçrama Erişimi",
-      "story": "Bir sıradaki taşlar, o taştan kaç taş ileri sıçrayabileceğini gösterir; 0 sıçrama da olabilir. İlk taştan başlarsın. Son taşa ulaşıp ulaşamayacağını bildir. Tek bir taşa zaten ulaşılmıştır.",
+      "story": "Taşlar bir sırada duruyor. Bir taşın üzerindeki sayı, o taştan yapabileceğin en uzun sıçramadır: 1'den o sayıya kadar istediğin kadar taş ileri gidebilirsin; 0 yazan bir taştan hiçbir yere gidemezsin. İlk taştan başlarsın. Son taşa ulaşıp ulaşamayacağını bildir. Tek bir taşa zaten ulaşılmıştır.",
       "hints": [
         "Şimdiye kadar ulaşabildiğin en uzak indeksi tut.",
         "İndeksin o en uzak erişimin ötesindeyse takılırsın.",
@@ -773,10 +773,10 @@
     },
     "step_toll": {
       "title": "Adım Geçiş Ücreti",
-      "story": "Her taş, üzerine indiğinde bir geçiş ücreti alır. Bir taştan bir veya iki taş ileri zıplayabilirsin. Taşlardan önce başlarsın ve son taşa inmek zorundasın. En ucuz toplam ücreti bildir. Taş yoksa 0'dır. Tek taş, o taşın ücretidir.",
+      "story": "Her taş, üzerine indiğinde bir geçiş ücreti alır. İlk taşın üzerinde başlarsın ve onun ücretini ödersin. Bir taştan bir veya iki taş ileri zıplayabilirsin ve son taşta bitirmek zorundasın. En ucuz toplam ücreti bildir. Taş yoksa 0'dır. Tek taş, o taşın ücretidir.",
       "hints": [
         "Bir taşa inmenin en ucuz yolu, ücreti artı gelebileceğin iki taşın daha ucuzudur.",
-        "İlk taşa tek yolla varılır. İkincisine başlangıçtan veya ilkinden gelinebilir.",
+        "İlk taşın ücretini her zaman ödersin. İkinci taşa yalnızca ilkinden gelinir; bu yüzden ikisinin ücreti birlikte ödenir.",
         "Her taşı ödemek gerekmez: bir sıçrama birini atlar."
       ]
     },
