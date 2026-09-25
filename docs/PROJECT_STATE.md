@@ -3,7 +3,7 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current state: MS14 content batch 2 is in the tree (85 campaign puzzles). Playtest is next. Recursion / player functions are still not built.**
+**Current state: MS14 content batch 2 is in the tree (85 campaign puzzles), reviewed and fixed before the merge (see MILESTONE_14.md, "Review and integration"). Playtest is next. Recursion / player functions are still not built.**
 **Next: real player testing of this batch. Do not grow the corpus toward 300, and do not start recursion, until those playtest notes say what to add.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
@@ -689,9 +689,12 @@ real theme (3). Engine +3 (INCREMENT / DECREMENT placements), content +3
 UI (7), puzzle variables (4), number pad and TRUE / FALSE (+4), save
 language (+1).
 
-MS14 re-ran `dart test` in the engine (350) and content package (85) against
-the 85-puzzle corpus. Flutter is not in this environment, so the 260 widget
-tests were not re-run; the ones that print the campaign size now expect 85.
+MS14 review (2026-09-25): engine 350, content **86** (+1: a puzzle whose
+cases all expect one answer is refused), Flutter **364** (MS14 added the new
+puzzles to the campaign loops, plus the move-reveal and playtest-unlock
+tests), `flutter analyze` clean, validator 85 of 85 with the seven known
+warnings. A scratch cross-check (story-based solvers against fixtures,
+oracles and references, 14 596 runs) found no disagreement after the fixes.
 
 The seven warnings are known and deliberate: Backtracking (world 12) requires
 `recursion`, which no world teaches (the world has no puzzles; two warnings:
@@ -719,6 +722,7 @@ test waits on it forever.
 - **Random inputs are for checking only (MS12).** Oracles sample small inputs to compare with the reference; nothing generates shipped fixtures. A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
 - **Content pipeline limits (MS12).** Redundancy relies on an honest `pattern` plus program structure — a differently programmed restatement can pass as "related". Oracles are hand-written per puzzle and only as independent as their author made them; sampled inputs are small. Coverage targets are a plan; difficulty advice is a heuristic.
 - **Modes without a UI.** complete, repair, trace, predict, structure and ops need a starter program or an answer input the schema and editor do not have; every shipped puzzle is build-style in its mode (build, budget, optimize, restricted, edge).
+- **World size (MS14).** Completion still needs every listed puzzle: Arrays is 9 puzzles before four worlds open, Graphs 13. Decide on a mastery threshold after the playtest.
 - **World prerequisites.** Backtracking (world 12) requires `recursion`, which no world teaches (warning). Dynamic Programming now requires `greedy` (MS12; its puzzles are iterative).
 
 ### Other
@@ -838,7 +842,10 @@ passes the visible cases and ends in its declared verdict, and Turkish
 title / story / hints. Block names stay English.
 
 Authoring helpers under `packages/algorun_content/tool/` are offline. The app
-does not import them.
+does not import them. `ms14_emit.dart` wrote the first draft; the review then
+replaced the visible cases, strengthened hidden ones, rewrote twenty oracles
+and fixed four stories — **do not re-run it**, it would overwrite that work.
+Each world now lists its puzzles by tier.
 
 ## Milestone docs
 

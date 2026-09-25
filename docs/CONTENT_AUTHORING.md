@@ -87,7 +87,11 @@ never read translations.
   definition. It must also provide `sample`, small random inputs inside the
   stated constraints.
 - **Meaningful hidden cases.** Visible cases teach; hidden cases
-  discriminate. Cover empty and minimal inputs, duplicates, negatives where
+  discriminate. A visible case shows the task on a real input (not only an
+  empty or one-element one) with an answer a constant would not give, while
+  the reject still passes it; the answers across all cases must differ (the
+  validator refuses a puzzle whose cases all expect one answer). Generated
+  fixtures are a draft: read them before committing (MS14 review). Cover empty and minimal inputs, duplicates, negatives where
   meaningful, near-maximum inputs and the adversarial pattern that breaks
   the tempting wrong strategy. Hidden cases never repeat visible ones.
 - **Rejects.** Prove the traps: each tempting wrong strategy is a reject
