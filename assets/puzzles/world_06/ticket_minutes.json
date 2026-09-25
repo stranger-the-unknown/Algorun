@@ -1,0 +1,261 @@
+{
+  "id": "ticket_minutes",
+  "version": 1,
+  "title": "Ticket Minutes",
+  "world": "world_06",
+  "chapter": "ticket_time_closed_form",
+  "tier": 4,
+  "mode": "budget",
+  "concepts": [
+    "queue"
+  ],
+  "prerequisites": [],
+  "story": "People stand in a line, each holding some tickets. Every minute the person at the front buys one ticket and, if they still need more, goes to the back. Person is a position counting from 0. How many minutes until that person has bought all of their tickets?",
+  "io": {
+    "inputs": [
+      {
+        "name": "tickets",
+        "type": "array<num>"
+      },
+      {
+        "name": "person",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "the person is at the front",
+      "someone holds more tickets than they will get to buy",
+      "simulating one ticket at a time is over budget"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.max",
+      "arith.min",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "arr.set",
+      "cmp.eq",
+      "cmp.gt",
+      "cmp.le",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.bool",
+      "lit.num",
+      "logic.and",
+      "new.queue",
+      "queue.deq",
+      "queue.enq",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 58
+  },
+  "limits": {
+    "maxOps": 768,
+    "maxDepth": 64,
+    "maxAlloc": 200000
+  },
+  "performance": {
+    "required": true
+  },
+  "hints": [
+    "You do not have to simulate every minute.",
+    "Before the person finishes, everyone in front of them can buy at most as many tickets as that person needs.",
+    "Everyone behind them can buy at most one fewer than that."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "tickets": [
+            2,
+            3,
+            2
+          ],
+          "person": 1
+        },
+        "out": 7
+      },
+      {
+        "id": "v2",
+        "in": {
+          "tickets": [
+            3,
+            3,
+            3
+          ],
+          "person": 2
+        },
+        "out": 9
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "tickets": [
+            1
+          ],
+          "person": 0
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "tickets": [
+            3,
+            1,
+            4
+          ],
+          "person": 1
+        },
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {
+          "tickets": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "person": 24
+        },
+        "out": 200
+      },
+      {
+        "id": "h04",
+        "in": {
+          "tickets": [
+            5,
+            5,
+            5,
+            3
+          ],
+          "person": 0
+        },
+        "out": 16
+      },
+      {
+        "id": "h05",
+        "in": {
+          "tickets": [
+            4,
+            2,
+            3,
+            4,
+            5
+          ],
+          "person": 0
+        },
+        "out": 15
+      },
+      {
+        "id": "h06",
+        "in": {
+          "tickets": [
+            4,
+            4,
+            2,
+            5
+          ],
+          "person": 3
+        },
+        "out": 15
+      },
+      {
+        "id": "h07",
+        "in": {
+          "tickets": [
+            2,
+            5,
+            4,
+            2,
+            3
+          ],
+          "person": 2
+        },
+        "out": 15
+      }
+    ]
+  },
+  "edgeCases": [
+    "the person is at the front",
+    "someone holds more tickets than they will get to buy",
+    "simulating one ticket at a time is over budget"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "need",
+        "type": "num"
+      },
+      {
+        "name": "cap",
+        "type": "num"
+      },
+      {
+        "name": "take",
+        "type": "num"
+      },
+      {
+        "name": "time",
+        "type": "num"
+      },
+      {
+        "name": "line",
+        "type": "queue<num>"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "ticket_time_closed_form"
+  }
+}

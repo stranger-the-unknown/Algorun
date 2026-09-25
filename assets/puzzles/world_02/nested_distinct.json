@@ -1,0 +1,228 @@
+{
+  "id": "nested_distinct",
+  "version": 1,
+  "title": "Nested Distinct",
+  "world": "world_02",
+  "chapter": "nested_distinct_count",
+  "tier": 2,
+  "mode": "restricted",
+  "concepts": [
+    "arrays"
+  ],
+  "prerequisites": [],
+  "story": "A shelf lists item codes, with repeats. Report how many different codes appear. Memory is scarce: you may not keep a set or a map of the codes you have already seen. Looking back through the list is allowed.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "all duplicates",
+      "empty shelf",
+      "a set of every code runs out of memory on a long shelf"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "ctrl.for_range",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "new.set",
+      "set.add",
+      "set.size",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 40
+  },
+  "limits": {
+    "maxOps": 568,
+    "maxDepth": 64,
+    "maxAlloc": 4
+  },
+  "hints": [
+    "A code is new when no earlier position holds the same code.",
+    "Count it only the first time it appears.",
+    "A set would remember the codes, but this shelf does not give you that much memory."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [
+            3,
+            3,
+            5,
+            3,
+            5
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            7,
+            2,
+            7,
+            9,
+            2
+          ]
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": []
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            4
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            1,
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            4,
+            4,
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            1,
+            1,
+            0
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            1
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "h08",
+        "in": {
+          "values": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "all duplicates",
+    "empty shelf",
+    "a set of every code runs out of memory on a long shelf"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "seen",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "bag",
+        "type": "set<num>"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "nested_distinct_count"
+  }
+}

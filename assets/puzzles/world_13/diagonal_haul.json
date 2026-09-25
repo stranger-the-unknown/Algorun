@@ -1,0 +1,288 @@
+{
+  "id": "diagonal_haul",
+  "version": 1,
+  "title": "Diagonal Haul",
+  "world": "world_13",
+  "chapter": "max_path_three_directions",
+  "tier": 4,
+  "mode": "edge",
+  "concepts": [
+    "dp"
+  ],
+  "prerequisites": [],
+  "story": "A haul may step right, down, or diagonally down-right. Each square adds its cargo, which may be negative. Start at the top-left and finish at the bottom-right. Report the largest total you can collect.",
+  "io": {
+    "inputs": [
+      {
+        "name": "grid",
+        "type": "array<array<num>>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "negative cargo",
+      "a downward step beats the first row",
+      "a single square"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.max",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "arr.set",
+      "cmp.eq",
+      "cmp.gt",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "logic.and",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 149
+  },
+  "limits": {
+    "maxOps": 830,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "The best total at a square is its cargo plus the best of the three squares you could have come from: left, above, and above-left.",
+    "The first square has no previous square; its total is just its cargo.",
+    "Staying on the first row misses cargo that a downward step would collect."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "grid": [
+            [
+              3,
+              4,
+              5
+            ]
+          ]
+        },
+        "out": 12
+      },
+      {
+        "id": "v2",
+        "in": {
+          "grid": [
+            [
+              2,
+              -1,
+              6,
+              1
+            ]
+          ]
+        },
+        "out": 8
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "grid": [
+            [
+              6
+            ]
+          ]
+        },
+        "out": 6
+      },
+      {
+        "id": "h02",
+        "in": {
+          "grid": [
+            [
+              4
+            ]
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h03",
+        "in": {
+          "grid": [
+            [
+              0
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {
+          "grid": [
+            [
+              4
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "h05",
+        "in": {
+          "grid": [
+            [
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        "out": 6
+      },
+      {
+        "id": "h06",
+        "in": {
+          "grid": [
+            [
+              1
+            ],
+            [
+              4
+            ],
+            [
+              4
+            ]
+          ]
+        },
+        "out": 9
+      },
+      {
+        "id": "h07",
+        "in": {
+          "grid": [
+            [
+              2
+            ],
+            [
+              4
+            ],
+            [
+              1
+            ]
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "h08",
+        "in": {
+          "grid": [
+            [
+              1,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "h09",
+        "in": {
+          "grid": [
+            [
+              1,
+              -9,
+              -9
+            ],
+            [
+              5,
+              -9,
+              -9
+            ],
+            [
+              5,
+              5,
+              1
+            ]
+          ]
+        },
+        "out": 17
+      }
+    ]
+  },
+  "edgeCases": [
+    "negative cargo",
+    "a downward step beats the first row",
+    "a single square"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "r",
+        "type": "num"
+      },
+      {
+        "name": "c",
+        "type": "num"
+      },
+      {
+        "name": "rows",
+        "type": "num"
+      },
+      {
+        "name": "cols",
+        "type": "num"
+      },
+      {
+        "name": "row",
+        "type": "array<num>"
+      },
+      {
+        "name": "above",
+        "type": "array<num>"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      },
+      {
+        "name": "any",
+        "type": "num"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "max_path_three_directions"
+  }
+}

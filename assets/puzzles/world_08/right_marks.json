@@ -1,0 +1,284 @@
+{
+  "id": "right_marks",
+  "version": 1,
+  "title": "Right Marks",
+  "world": "world_08",
+  "chapter": "right_spine_sum",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "tree"
+  ],
+  "prerequisites": [],
+  "story": "Add the marks on the vine that always steps right from the root. Do not add the left children. An empty tree sums to 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "root",
+        "type": "treeNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "adding every mark in the tree",
+      "an empty tree",
+      "negative marks"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.is_not_nothing",
+      "logic.not",
+      "new.stack",
+      "stack.empty",
+      "stack.pop",
+      "stack.push",
+      "tree.left",
+      "tree.right",
+      "tree.value",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 54
+  },
+  "limits": {
+    "maxOps": 76,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "This is the left vine's walk, but you follow RIGHT and you add NODE VALUE instead of counting.",
+    "Stay inside IS NOT NOTHING before you read the mark.",
+    "A left child hanging off the vine is not included."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 3,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 5,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 8
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -2,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 4,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "root": null
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": 5
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 3,
+            "left": {
+              "type": "treeNode",
+              "value": 100,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -3,
+            "left": {
+              "type": "treeNode",
+              "value": -1,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": -3
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 2,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 0,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -1,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": -1
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h09",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 2,
+            "left": {
+              "type": "treeNode",
+              "value": 9,
+              "left": {
+                "type": "treeNode",
+                "value": 8,
+                "left": null,
+                "right": null
+              },
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": -3,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": null,
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 6,
+                "left": null,
+                "right": null
+              }
+            }
+          }
+        },
+        "out": 5
+      }
+    ]
+  },
+  "edgeCases": [
+    "adding every mark in the tree",
+    "an empty tree",
+    "negative marks"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "treeNode?"
+      },
+      {
+        "name": "sum",
+        "type": "num"
+      },
+      {
+        "name": "here",
+        "type": "treeNode"
+      },
+      {
+        "name": "st",
+        "type": "stack<treeNode>"
+      },
+      {
+        "name": "left",
+        "type": "treeNode?"
+      },
+      {
+        "name": "right",
+        "type": "treeNode?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "right_spine_sum"
+  }
+}

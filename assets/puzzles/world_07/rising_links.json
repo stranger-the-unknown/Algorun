@@ -1,0 +1,240 @@
+{
+  "id": "rising_links",
+  "version": 1,
+  "title": "Rising Links",
+  "world": "world_07",
+  "chapter": "linked_list_strict_rises",
+  "tier": 2,
+  "mode": "edge",
+  "concepts": [
+    "linked_list"
+  ],
+  "prerequisites": [],
+  "story": "Count the places where a car's number is strictly higher than the car just before it. Equal neighbours are not a rise. An empty train or a single car has no rise.",
+  "io": {
+    "inputs": [
+      {
+        "name": "head",
+        "type": "listNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "equal neighbours",
+      "a fall",
+      "a single car"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "cmp.eq",
+      "cmp.ge",
+      "cmp.gt",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "ll.next",
+      "ll.value",
+      "logic.is_not_nothing",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 44
+  },
+  "limits": {
+    "maxOps": 259,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Remember the previous number as you step to the next car.",
+    "Compare only neighbours, and only with a strict greater-than.",
+    "The first car has no previous car, so it cannot start a rise by itself."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              4,
+              2,
+              5,
+              6
+            ]
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              5,
+              3,
+              8
+            ]
+          }
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "head": null
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3
+            ]
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -1,
+              -1,
+              -3
+            ]
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -1,
+              -1,
+              1
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -2,
+              -1,
+              -1
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -1,
+              3,
+              3,
+              1
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h08",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "equal neighbours",
+    "a fall",
+    "a single car"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "listNode?"
+      },
+      {
+        "name": "have",
+        "type": "num"
+      },
+      {
+        "name": "prev",
+        "type": "num"
+      },
+      {
+        "name": "value",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "linked_list_strict_rises"
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "id": "tail_lamp",
+  "version": 1,
+  "title": "Tail Lamp",
+  "world": "world_07",
+  "chapter": "linked_list_last_value",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "linked_list"
+  ],
+  "prerequisites": [],
+  "story": "A train is a chain of cars. You can see a car's number and the next car, which may be nothing. Report the number on the last car. An empty train has no lamp; report -1.",
+  "io": {
+    "inputs": [
+      {
+        "name": "head",
+        "type": "listNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "an empty train",
+      "a single car",
+      "reporting the first car"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "cmp.eq",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "ll.next",
+      "ll.value",
+      "logic.is_not_nothing",
+      "logic.is_nothing",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 38
+  },
+  "limits": {
+    "maxOps": 148,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Start at the head. While the car you hold IS NOT NOTHING, remember its number and step to NEXT NODE.",
+    "The last number you were allowed to read is the tail.",
+    "Do not read NODE VALUE on a car that may be empty."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              6,
+              2,
+              9,
+              6
+            ]
+          }
+        },
+        "out": 6
+      },
+      {
+        "id": "v2",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              8,
+              3
+            ]
+          }
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "head": null
+        },
+        "out": -1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              4
+            ]
+          }
+        },
+        "out": 4
+      },
+      {
+        "id": "h03",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              2,
+              9
+            ]
+          }
+        },
+        "out": 9
+      },
+      {
+        "id": "h04",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -1,
+              2,
+              1,
+              -1,
+              4,
+              -3
+            ]
+          }
+        },
+        "out": -3
+      },
+      {
+        "id": "h05",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -5,
+              5
+            ]
+          }
+        },
+        "out": 5
+      },
+      {
+        "id": "h06",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              0,
+              1,
+              2,
+              4,
+              -3,
+              2,
+              -4,
+              3
+            ]
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h07",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -4,
+              2,
+              5
+            ]
+          }
+        },
+        "out": 5
+      },
+      {
+        "id": "h08",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              0,
+              5,
+              5,
+              4,
+              0,
+              4,
+              -2,
+              -3
+            ]
+          }
+        },
+        "out": -3
+      }
+    ]
+  },
+  "edgeCases": [
+    "an empty train",
+    "a single car",
+    "reporting the first car"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "listNode?"
+      },
+      {
+        "name": "last",
+        "type": "num"
+      },
+      {
+        "name": "seen",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "linked_list_last_value"
+  }
+}

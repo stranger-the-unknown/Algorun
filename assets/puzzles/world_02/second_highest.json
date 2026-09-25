@@ -1,0 +1,234 @@
+{
+  "id": "second_highest",
+  "version": 1,
+  "title": "Second Highest",
+  "world": "world_02",
+  "chapter": "strict_second_maximum",
+  "tier": 2,
+  "mode": "edge",
+  "concepts": [
+    "arrays"
+  ],
+  "prerequisites": [],
+  "story": "A judge wants the second-highest distinct score on a board. Equal top scores do not create a runner-up: 9 and 9 still need some lower score to be second. If there is no strictly smaller score, report -1. Fewer than two distinct scores is -1.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a repeated peak is not second",
+      "all scores equal",
+      "negatives",
+      "the runner-up is the last score"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "cmp.eq",
+      "cmp.ge",
+      "cmp.gt",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "logic.and",
+      "logic.or",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 68
+  },
+  "limits": {
+    "maxOps": 1423,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Keep the best score and a separate runner-up, and update the runner-up when the best changes.",
+    "A score equal to the best is not a new runner-up.",
+    "If every score is the same, there is no second place."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [
+            4,
+            9,
+            2,
+            7
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            5,
+            -2,
+            3,
+            1
+          ]
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": []
+        },
+        "out": -1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            4
+          ]
+        },
+        "out": -1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            9,
+            9,
+            9
+          ]
+        },
+        "out": -1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            5,
+            5,
+            5
+          ]
+        },
+        "out": -1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            -2,
+            -5,
+            -2
+          ]
+        },
+        "out": -5
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            8,
+            8,
+            3,
+            8
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h07",
+        "in": {
+          "values": [
+            -3,
+            4,
+            -1,
+            4,
+            0,
+            4,
+            3
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h08",
+        "in": {
+          "values": [
+            6,
+            -4,
+            -3,
+            6,
+            0,
+            1,
+            1
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h09",
+        "in": {
+          "values": [
+            7,
+            3,
+            7,
+            5
+          ]
+        },
+        "out": 5
+      }
+    ]
+  },
+  "edgeCases": [
+    "a repeated peak is not second",
+    "all scores equal",
+    "negatives",
+    "the runner-up is the last score"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      },
+      {
+        "name": "second",
+        "type": "num"
+      },
+      {
+        "name": "haveBest",
+        "type": "num"
+      },
+      {
+        "name": "haveSecond",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "strict_second_maximum"
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "id": "first_descent",
+  "version": 1,
+  "title": "First Descent",
+  "world": "world_02",
+  "chapter": "first_strict_descent",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "arrays"
+  ],
+  "prerequisites": [],
+  "story": "A trail log records heights in the order a walker met them. Report the position, counting from 0, of the first step that is strictly lower than the step just before it. If the trail never drops, report -1. An empty log is -1.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a level step is not a descent",
+      "the descent is the last step",
+      "the trail only rises"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.le",
+      "cmp.lt",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "var.get"
+    ],
+    "maxBlocks": 30
+  },
+  "limits": {
+    "maxOps": 88,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Compare each height only with the one just before it, not with the highest so far.",
+    "A step that stays level is not a descent; only a strictly smaller number counts.",
+    "Stop at the first descent. If the loop finishes, the answer is -1."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [
+            3,
+            5,
+            8,
+            6,
+            9
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            7,
+            9,
+            4,
+            5
+          ]
+        },
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": []
+        },
+        "out": -1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            5
+          ]
+        },
+        "out": -1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            4,
+            4,
+            3
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            3,
+            3,
+            3
+          ]
+        },
+        "out": -1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            4,
+            4,
+            -3,
+            -5,
+            -1,
+            5,
+            1,
+            5
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            2,
+            3,
+            3,
+            2
+          ]
+        },
+        "out": 3
+      },
+      {
+        "id": "h07",
+        "in": {
+          "values": [
+            -1
+          ]
+        },
+        "out": -1
+      },
+      {
+        "id": "h08",
+        "in": {
+          "values": [
+            -2
+          ]
+        },
+        "out": -1
+      },
+      {
+        "id": "h09",
+        "in": {
+          "values": [
+            1,
+            3,
+            3,
+            5,
+            2
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h10",
+        "in": {
+          "values": [
+            2,
+            4,
+            6,
+            8,
+            9,
+            11
+          ]
+        },
+        "out": -1
+      }
+    ]
+  },
+  "edgeCases": [
+    "a level step is not a descent",
+    "the descent is the last step",
+    "the trail only rises"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "first_strict_descent"
+  }
+}

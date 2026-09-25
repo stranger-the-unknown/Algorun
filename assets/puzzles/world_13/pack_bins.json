@@ -1,0 +1,317 @@
+{
+  "id": "pack_bins",
+  "version": 1,
+  "title": "Pack Bins",
+  "world": "world_13",
+  "chapter": "zero_one_knapsack",
+  "tier": 4,
+  "mode": "optimize",
+  "concepts": [
+    "dp"
+  ],
+  "prerequisites": [],
+  "story": "Each crate has a weight and a value, and it may be packed at most once. The bin holds at most the given capacity. Report the largest total value you can pack. No crates, or no capacity, is 0. Weights are at least 1.",
+  "io": {
+    "inputs": [
+      {
+        "name": "weights",
+        "type": "array<num>"
+      },
+      {
+        "name": "values",
+        "type": "array<num>"
+      },
+      {
+        "name": "cap",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a crate heavier than the bin",
+      "using a crate twice",
+      "trying every subset is over budget"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.floor_div",
+      "arith.mod",
+      "arith.mul",
+      "arith.sub",
+      "arr.append",
+      "arr.get",
+      "arr.len",
+      "arr.set",
+      "cmp.eq",
+      "cmp.gt",
+      "cmp.le",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "logic.and",
+      "new.array",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 71
+  },
+  "limits": {
+    "maxOps": 3802,
+    "maxDepth": 64,
+    "maxAlloc": 200000
+  },
+  "performance": {
+    "required": true,
+    "baselineFactor": 8
+  },
+  "hints": [
+    "Keep a list of the best value for every capacity from 0 up to the limit.",
+    "For each crate, walk the capacities downward so the crate is not used twice.",
+    "Trying every subset is correct and far too slow once there are many crates."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "weights": [
+            1,
+            3,
+            4
+          ],
+          "values": [
+            15,
+            20,
+            30
+          ],
+          "cap": 4
+        },
+        "out": 35
+      },
+      {
+        "id": "v2",
+        "in": {
+          "weights": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "values": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "cap": 5
+        },
+        "out": 7
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "weights": [],
+          "values": [],
+          "cap": 0
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "weights": [],
+          "values": [],
+          "cap": 2
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "weights": [
+            1,
+            2,
+            3,
+            4,
+            1,
+            2,
+            3,
+            4,
+            1,
+            2,
+            3,
+            4
+          ],
+          "values": [
+            0,
+            3,
+            0,
+            3,
+            0,
+            3,
+            0,
+            3,
+            0,
+            3,
+            0,
+            3
+          ],
+          "cap": 14
+        },
+        "out": 15
+      },
+      {
+        "id": "h04",
+        "in": {
+          "weights": [
+            1,
+            3,
+            1,
+            1
+          ],
+          "values": [
+            6,
+            0,
+            6,
+            4
+          ],
+          "cap": 3
+        },
+        "out": 16
+      },
+      {
+        "id": "h05",
+        "in": {
+          "weights": [
+            2,
+            3,
+            1,
+            4
+          ],
+          "values": [
+            0,
+            5,
+            6,
+            6
+          ],
+          "cap": 4
+        },
+        "out": 11
+      },
+      {
+        "id": "h06",
+        "in": {
+          "weights": [
+            1,
+            3,
+            4,
+            4
+          ],
+          "values": [
+            3,
+            6,
+            5,
+            1
+          ],
+          "cap": 3
+        },
+        "out": 6
+      },
+      {
+        "id": "h07",
+        "in": {
+          "weights": [
+            2,
+            4,
+            3,
+            4
+          ],
+          "values": [
+            4,
+            0,
+            2,
+            0
+          ],
+          "cap": 2
+        },
+        "out": 4
+      }
+    ]
+  },
+  "edgeCases": [
+    "a crate heavier than the bin",
+    "using a crate twice",
+    "trying every subset is over budget"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "c",
+        "type": "num"
+      },
+      {
+        "name": "w",
+        "type": "num"
+      },
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "withItem",
+        "type": "num"
+      },
+      {
+        "name": "dp",
+        "type": "array<num>"
+      },
+      {
+        "name": "mask",
+        "type": "num"
+      },
+      {
+        "name": "total",
+        "type": "num"
+      },
+      {
+        "name": "m",
+        "type": "num"
+      },
+      {
+        "name": "wsum",
+        "type": "num"
+      },
+      {
+        "name": "vsum",
+        "type": "num"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "zero_one_knapsack"
+  }
+}

@@ -3,8 +3,8 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current state: U1 COMPLETE (English / Turkish, block reference, number entry, puzzle variables) on top of Milestone 13 (mobile UX polish, verified on an Android emulator — no physical device).**
-**Next milestone: 14 — the user decides: a second content batch through the MS12 pipeline (recommended first), or a language milestone (player functions / recursion) that unblocks Backtracking.**
+**Current state: MS14 content batch 2 is in the tree (85 campaign puzzles), reviewed and fixed before the merge (see MILESTONE_14.md, "Review and integration"). Playtest is next. Recursion / player functions are still not built.**
+**Next: real player testing of this batch. Do not grow the corpus toward 300, and do not start recursion, until those playtest notes say what to add.**
 
 Do not implement the next milestone from this file unless the user explicitly asks.
 
@@ -31,9 +31,10 @@ puzzle variables").
 Working title: **Algorun**. Android-first Flutter/Dart algorithm puzzle game.
 
 The player constructs algorithms with Scratch-style typed visual blocks. No
-syntax. No eval of generated Dart/JS/Kotlin. The game ships 38 campaign puzzles
-in 12 worlds (five from MS8, 33 from MS12), tiers 1–5; the campaign keeps
-growing through the MS12 content pipeline.
+syntax. No eval of generated Dart/JS/Kotlin. The game ships 85 campaign puzzles
+in 12 worlds (five from MS8, 33 from MS12, 47 from MS14), tiers 1–5. The
+corpus stops here for a playtest; it is not on the way to 300 until that
+playtest says so. Recursion is still unbuilt, so worlds 09 and 12 stay empty.
 
 There is **no TypeScript / React / web product codebase**. Flutter web exists
 only as a host preview of the same Dart app.
@@ -97,7 +98,7 @@ algorun/                          Flutter app (repository root)
     state/progress_providers.dart progressStoreProvider, campaignProvider, progressProvider (autosave), campaignViewProvider
     state/progress_text.dart      player wording for locks and statuses
   assets/                         bundled with the app
-    worlds.json                   14 worlds, 38 puzzles; 09 (heaps) and 12 (backtracking) have none
+    worlds.json                   14 worlds, 85 puzzles; 09 (heaps) and 12 (backtracking) have none
     l10n/content_tr.json          U1: Turkish world titles, concept words, puzzle titles / stories / hints
     puzzles/world_01/             warm_readings, highest_tide + ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe, ms13_stress_probe (unlisted dev probes)
     puzzles/world_02 … world_14/  the campaign puzzles (list: "Content backlog and coverage")
@@ -147,7 +148,7 @@ algorun/                          Flutter app (repository root)
   test/editor_actions_test.dart   select, move, copy, delete, folds, one undo step each (MS13)
   test/stress_probe_test.dart     the 82-block probe on a 360 × 800 phone (MS13)
   test/responsive_test.dart       the whole flow on 5 phone sizes × 2 font scales (MS13)
-  test/campaign_regression_test.dart  all 38 puzzles: built by taps, saved, run, reported at 360 × 800 (MS13)
+  test/campaign_regression_test.dart  all 85 puzzles: built by taps, saved, run, reported at 360 × 800 (MS13 harness; MS14 added the new puzzles to the same loop)
   test/screens_polish_test.dart   verdicts, next puzzle, world / puzzle wording (MS13)
   test/literal_sheets_test.dart   number pad, name sheet and TRUE / FALSE under the real theme (MS13, U1)
   test/localization_test.dart     U1: ARB parity, engine sentence coverage, Turkish content, block reference coverage
@@ -663,7 +664,7 @@ puzzle app bar and the piece picker. Details:
 | `packages/algorun_engine` `dart test` | **350 passed** |
 | `packages/algorun_content` `dart analyze` | no issues |
 | `packages/algorun_content` `dart test` | **85 passed** |
-| Content validator (assets + worlds + references) | `PIPELINE 38 of 38 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 43 puzzle(s), 7 warning(s)` |
+| Content validator (assets + worlds + references) | `PIPELINE 85 of 85 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 90 puzzle(s), 7 warning(s)` |
 | Flutter `analyze` | no issues |
 | Flutter `test` | **260 passed** (235 at MS13) |
 | `flutter build apk --debug` | built |
@@ -687,6 +688,13 @@ real theme (3). Engine +3 (INCREMENT / DECREMENT placements), content +3
 (replay of an editor-saved ELSE). U1 (+25): localization (9), localization
 UI (7), puzzle variables (4), number pad and TRUE / FALSE (+4), save
 language (+1).
+
+MS14 review (2026-09-25): engine 350, content **86** (+1: a puzzle whose
+cases all expect one answer is refused), Flutter **364** (MS14 added the new
+puzzles to the campaign loops, plus the move-reveal and playtest-unlock
+tests), `flutter analyze` clean, validator 85 of 85 with the seven known
+warnings. A scratch cross-check (story-based solvers against fixtures,
+oracles and references, 14 596 runs) found no disagreement after the fixes.
 
 The seven warnings are known and deliberate: Backtracking (world 12) requires
 `recursion`, which no world teaches (the world has no puzzles; two warnings:
@@ -714,6 +722,7 @@ test waits on it forever.
 - **Random inputs are for checking only (MS12).** Oracles sample small inputs to compare with the reference; nothing generates shipped fixtures. A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
 - **Content pipeline limits (MS12).** Redundancy relies on an honest `pattern` plus program structure — a differently programmed restatement can pass as "related". Oracles are hand-written per puzzle and only as independent as their author made them; sampled inputs are small. Coverage targets are a plan; difficulty advice is a heuristic.
 - **Modes without a UI.** complete, repair, trace, predict, structure and ops need a starter program or an answer input the schema and editor do not have; every shipped puzzle is build-style in its mode (build, budget, optimize, restricted, edge).
+- **World size (MS14).** Completion still needs every listed puzzle: Arrays is 9 puzzles before four worlds open, Graphs 13. Decide on a mastery threshold after the playtest.
 - **World prerequisites.** Backtracking (world 12) requires `recursion`, which no world teaches (warning). Dynamic Programming now requires `greedy` (MS12; its puzzles are iterative).
 
 ### Other
@@ -780,81 +789,63 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | 12 | Content pipeline (oracles, reachability, coverage, redundancy) + 33 new puzzles | complete |
 | 13 | Mobile UX polish and usability (emulator-verified) | complete |
 | U1 | English / Turkish, block reference, number entry, no CREATE VARIABLE | complete |
-| **14** | **Content batch 2 through the MS12 pipeline** (recommended) — or a language milestone | **next, when the user asks** |
-| later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content (see the backlog) |
+| **14** | Content batch 2: 47 puzzles (85 in the campaign). Playtest next. Recursion not started | **complete — waiting on playtest** |
+| later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content; do not start until playtest |
 
-## Content backlog and coverage (MS12)
+## Content backlog and coverage (after MS14 batch 2)
 
-Accepted: **38 campaign puzzles** (+ 5 unlisted probes) against a planning
-target of ~300 (`content/coverage_targets.json`). Source of truth:
-`content/coverage.json` (regenerate with `--coverage`).
+Accepted: **85 campaign puzzles** (+ 5 unlisted probes) against a planning
+target of ~300 (`content/coverage_targets.json`). That target is paused.
+Source of truth: `content/coverage.json`.
 
-| World | Puzzles (tier) | Have / target | Missing tiers |
-|---|---|---|---|
-| 01 Foundations | Warm Readings (1), Highest Tide (1) | 2 / 12 | 2 |
-| 02 Arrays | Lowest Balance (2), Shelf Totals (3), Departure Board (3), The Smallest Cart (3) | 4 / 30 | 1, 4 |
-| 03 Hash Maps | Twin Beacons (2), Loudest Echo (2), Level Stretches (4), Longest Streak (4) | 4 / 25 | 3 |
-| 04 Two Pointers | Matched Pair (2), Widest Basin (4) | 2 / 20 | 3 |
-| 05 Sliding Window | Rush Hour (2), Quota Hours (3), Patchy Signal (3), Market Variety (4) | 4 / 20 | 5 |
-| 06 Stack & Queue | Sealed Crates (2), Undo Button (2), Relay Towers (3), Largest Billboard (5) | 4 / 25 | 4 |
-| 07 Linked Lists | Middle Car (3), Reverse the Train (3), Drop the Faulty Cars (3), Loop Detector (4) | 4 / 20 | 2 |
-| 08 Trees | Canopy Height (3), Busiest Level (4), Trail Sum (4), Sorted Grove (4) | 4 / 30 | 2, 5 |
-| 09 Heaps | — | 0 / 15 | blocked by the language (heap) |
-| 10 Graphs | Fewest Rides (3), Island Count (3), Two Teams (4), Task Order (4), Nearest Depot (4) | 5 / 30 | 2, 5 |
-| 11 Greedy | One Good Trade (2), Fuel Loop (4) | 2 / 20 | 3 |
-| 12 Backtracking | — | 0 / 15 | blocked by the language (recursion) |
-| 13 Dynamic Programming | Quiet Street (3), Exact Change (4) | 2 / 30 | 2, 5 |
-| 14 Advanced | Many Shortest Routes (5) | 1 / 8 | 4 |
+| World | Have / target | MS14 added |
+|---|---|---|
+| 01 Foundations | 2 / 12 | — |
+| 02 Arrays | 9 / 30 | first descent, second highest, even prefixes, nested distinct, loudest pair |
+| 03 Hash Maps | 7 / 25 | pair tickets, same-value span, shared values |
+| 04 Two Pointers | 6 / 20 | exact gaps, pairs under a limit, sorted union, closest gap |
+| 05 Sliding Window | 7 / 20 | windows at least, one dropout, peak windows |
+| 06 Stack & Queue | 8 / 25 | counter sum, josephus line, ticket minutes, stack sorted |
+| 07 Linked Lists | 9 / 20 | tail lamp, cold cars, named car, end gap, rising links |
+| 08 Trees | 10 / 30 | left vine, right marks, lone tree, node census, leaf census, lowest leaf |
+| 09 Heaps | 0 / 15 | blocked by the language (heap) |
+| 10 Graphs | 13 / 30 | platform doors, direct hop, silent stops, scout reach, scout last, biggest patch, source radius, last layer |
+| 11 Greedy | 5 / 20 | cookie gifts, dock overlap, leap reach |
+| 12 Backtracking | 0 / 15 | blocked by the language (recursion) — still empty on purpose |
+| 13 Dynamic Programming | 8 / 30 | plank ways, step toll, aisle cost, open lanes, diagonal haul, pack bins |
+| 14 Advanced | 1 / 8 | — |
 
-By tier: 1: 2 · 2: 8 · 3: 13 · 4: 13 · 5: 2. By mode: build 28 · budget 6 ·
-edge 2 · optimize 1 · restricted 1. By performance class: correctness 21 ·
-budget 15 · optimization 1 · restricted 1. By structure: array 15 · graph 6 ·
-linked list 4 · stack 4 · tree 4 · hash map 3 · hash set 2. 38 distinct
-reasoning patterns; no near duplicates; two related pairs (Two Teams and
-Nearest Depot vs Fewest Rides).
+By tier: 1: 2 · 2: 30 · 3: 32 · 4: 19 · 5: 2. By mode: build 53 · budget 10 ·
+edge 14 · optimize 5 · restricted 3. By performance class: correctness 58 ·
+budget 19 · optimization 5 · restricted 3. Worlds 09 and 12 are unchanged.
 
-**Families with no puzzle yet (expressible today):** plain queue simulation,
-monotonic deque (partial: a list with a head index), iterative graph DFS,
-grid DP. Thin (1–2): topological order, multi-concept, prefix sum, binary
-search, hash set, two pointers, greedy, iterative DP, linked-list families.
-**Modes thin:** optimize (1 / 20), restricted (1 / 15), edge (2 / 20).
+The batch is tier-2 entries for linked lists, trees, graphs and DP, plus
+iterative DFS, grid DP, a queue simulation and a deque-style window, and new
+optimize / restricted / edge puzzles. Details and titles:
+[`MILESTONE_14.md`](MILESTONE_14.md).
 
-**Blocked by the language (record ideas, do not fake them):** heaps / priority
-queues (world 09), recursion and backtracking (world 12), weighted shortest
-paths, building new list or tree nodes, strings, built-in sorting, bit
-manipulation, pairs / tuples. **Blocked by the product:** complete, repair,
-trace, predict, structure and ops modes (no starter program or answer UI);
-complexity mode by design.
+**Still blocked, and not faked:** heaps, recursion, player-defined functions,
+backtracking, weighted shortest paths, building new list or tree nodes,
+strings, built-in sorting, bit manipulation, pairs / tuples. Product modes
+that need a starter program stay blocked.
 
-**Recommended next batches:** tier 2 entries for Linked Lists, Trees, Graphs
-and DP (the curve jumps from Foundations to tier 3 there); tier 3 for Hash
-Maps, Two Pointers and Greedy; iterative DFS, grid DP, queue simulation and
-a deque window; more optimize / restricted / edge puzzles; tier 5 capstones
-for Sliding Window, Trees, Graphs and DP.
+**Next content decision waits on playtest.** Do not add another batch, and do
+not start the language milestone, until the player has tried this one.
 
-## Milestone 14 contract (next — when asked)
+## Milestone 14 (this batch — done)
 
-Recommended: content batch 2 through the MS12 pipeline (the editor can now
-build 80–90-block programs by taps on a 360 dp phone, INCREMENT included).
-Alternative: a language milestone (player functions / recursion) that
-unblocks Backtracking and recursive tree content.
+Content only. The MS12 seven-level pipeline is unchanged. No puzzle that was
+already shipped was edited, so no `version` bump. Unlock rules are unchanged.
+47 new puzzles, each with an independent oracle (not the reference), a
+reference built with the same editor commands the phone uses, one reject that
+passes the visible cases and ends in its declared verdict, and Turkish
+title / story / hints. Block names stay English.
 
-- Content: every candidate goes through `CONTENT_AUTHORING.md` and must be
-  `ACCEPTED` at all seven levels, with an independent oracle; regenerate and
-  commit `content/coverage.json`; aim at the backlog's gaps (tier 2 entries
-  for Linked Lists / Trees / Graphs / DP, iterative DFS, grid DP, queue
-  simulation, deque windows, optimize / restricted / edge modes); never
-  weaken a check or edit an expected answer to make a candidate pass.
-- Every new listed puzzle is covered by `test/campaign_regression_test.dart`
-  automatically: its reference must be buildable through the picker.
-- Every new listed puzzle (and world, and concept) needs its Turkish text in
-  `assets/l10n/content_tr.json`, block names kept English;
-  `test/localization_test.dart` fails until it is there (U1).
-- Bump a puzzle's `version` for any incompatible change to a shipped puzzle
-  (saved best results for it are then cleared, completion kept).
-- Do not change the unlock rules to make content pass; keep the MS11 rule
-  tests on the frozen manifest.
-- Keep every test green and the validator passing with references.
+Authoring helpers under `packages/algorun_content/tool/` are offline. The app
+does not import them. `ms14_emit.dart` wrote the first draft; the review then
+replaced the visible cases, strengthened hidden ones, rewrote twenty oracles
+and fixed four stories — **do not re-run it**, it would overwrite that work.
+Each world now lists its puzzles by tier.
 
 ## Milestone docs
 
@@ -877,4 +868,6 @@ unblocks Backtracking and recursive tree content.
 | [`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md) | the authoring contract (people and AI sessions) |
 | [`MILESTONE_13.md`](MILESTONE_13.md) | complete — mobile UX polish, emulator verification |
 | [`MILESTONE_U1.md`](MILESTONE_U1.md) | complete — Turkish, block reference, number entry, puzzle variables |
-| this file | U1 handoff |
+| [`MILESTONE_14.md`](MILESTONE_14.md) | complete — second content batch (47 puzzles); playtest next |
+| this file | MS14 handoff |
+

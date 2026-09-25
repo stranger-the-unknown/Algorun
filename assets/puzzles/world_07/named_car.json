@@ -1,0 +1,257 @@
+{
+  "id": "named_car",
+  "version": 1,
+  "title": "Named Car",
+  "world": "world_07",
+  "chapter": "linked_list_contains",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "linked_list"
+  ],
+  "prerequisites": [],
+  "story": "A clerk has a target car number and the head of a train. Report whether any car wears that number. The answer is yes or no. An empty train has no cars, so the answer is no.",
+  "io": {
+    "inputs": [
+      {
+        "name": "head",
+        "type": "listNode?"
+      },
+      {
+        "name": "target",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "bool"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "the number is only on the last car",
+      "the number is missing",
+      "looking only at the first car"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "cmp.eq",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.bool",
+      "ll.next",
+      "ll.value",
+      "logic.is_not_nothing",
+      "logic.is_nothing",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 29
+  },
+  "limits": {
+    "maxOps": 128,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Walk the chain while the car IS NOT NOTHING.",
+    "If NODE VALUE equals the target, you can answer yes immediately.",
+    "If the walk ends, the answer is no."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              8,
+              5
+            ]
+          },
+          "target": 3
+        },
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              4,
+              1,
+              6
+            ]
+          },
+          "target": 9
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "head": null,
+          "target": 1
+        },
+        "out": false
+      },
+      {
+        "id": "h02",
+        "in": {
+          "head": null,
+          "target": 3
+        },
+        "out": false
+      },
+      {
+        "id": "h03",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              2,
+              3
+            ]
+          },
+          "target": 3
+        },
+        "out": true
+      },
+      {
+        "id": "h04",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              1,
+              4,
+              0,
+              3,
+              3
+            ]
+          },
+          "target": 4
+        },
+        "out": true
+      },
+      {
+        "id": "h05",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              2,
+              3,
+              3,
+              1,
+              4
+            ]
+          },
+          "target": 4
+        },
+        "out": true
+      },
+      {
+        "id": "h06",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              0,
+              3,
+              1
+            ]
+          },
+          "target": 0
+        },
+        "out": true
+      },
+      {
+        "id": "h07",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              1,
+              3,
+              4,
+              3,
+              3,
+              1,
+              4,
+              0
+            ]
+          },
+          "target": 4
+        },
+        "out": true
+      },
+      {
+        "id": "h08",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              4,
+              2,
+              1,
+              3,
+              2,
+              2
+            ]
+          },
+          "target": 1
+        },
+        "out": true
+      },
+      {
+        "id": "h09",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              2,
+              7,
+              7,
+              9
+            ]
+          },
+          "target": 9
+        },
+        "out": true
+      }
+    ]
+  },
+  "edgeCases": [
+    "the number is only on the last car",
+    "the number is missing",
+    "looking only at the first car"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "listNode?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "linked_list_contains"
+  }
+}

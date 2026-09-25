@@ -1,0 +1,261 @@
+{
+  "id": "cookie_gifts",
+  "version": 1,
+  "title": "Cookie Gifts",
+  "world": "world_11",
+  "chapter": "assign_sorted_cookies",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "greedy"
+  ],
+  "prerequisites": [],
+  "story": "Children and cookies are both listed smallest first. A child is content with any cookie at least as big as their appetite. Each cookie feeds at most one child. How many children can be content?",
+  "io": {
+    "inputs": [
+      {
+        "name": "children",
+        "type": "array<num>"
+      },
+      {
+        "name": "cookies",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a cookie too small must be skipped, not given up on",
+      "no cookies",
+      "every child fed"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.get",
+      "arr.len",
+      "cmp.ge",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.and",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 43
+  },
+  "limits": {
+    "maxOps": 192,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Offer the smallest remaining cookie to the smallest child still waiting.",
+    "If it is too small, that cookie cannot feed any later child either, because later children want at least as much. Skip the cookie.",
+    "If it fits, both the child and the cookie are used."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "children": [
+            1,
+            2,
+            3
+          ],
+          "cookies": [
+            1,
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "children": [
+            1,
+            1,
+            3
+          ],
+          "cookies": [
+            2,
+            3,
+            4
+          ]
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "children": [],
+          "cookies": []
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "children": [],
+          "cookies": [
+            2,
+            5
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "children": [
+            6
+          ],
+          "cookies": [
+            1,
+            1,
+            2,
+            5,
+            7
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "children": [
+            1,
+            5
+          ],
+          "cookies": [
+            3,
+            4,
+            5,
+            8,
+            8
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "children": [
+            1,
+            6
+          ],
+          "cookies": [
+            1,
+            4,
+            6,
+            6,
+            7,
+            7
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "children": [
+            1,
+            3,
+            4,
+            6
+          ],
+          "cookies": [
+            2,
+            2,
+            5,
+            6,
+            8
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h07",
+        "in": {
+          "children": [
+            1,
+            2
+          ],
+          "cookies": []
+        },
+        "out": 0
+      },
+      {
+        "id": "h08",
+        "in": {
+          "children": [
+            1,
+            4,
+            5
+          ],
+          "cookies": []
+        },
+        "out": 0
+      },
+      {
+        "id": "h09",
+        "in": {
+          "children": [
+            2,
+            3,
+            5
+          ],
+          "cookies": [
+            1,
+            2,
+            4,
+            6
+          ]
+        },
+        "out": 3
+      }
+    ]
+  },
+  "edgeCases": [
+    "a cookie too small must be skipped, not given up on",
+    "no cookies",
+    "every child fed"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "fed",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "assign_sorted_cookies"
+  }
+}

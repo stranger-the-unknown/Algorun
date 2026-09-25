@@ -4,113 +4,272 @@
       "id": "world_01",
       "title": "Foundations",
       "index": 1,
-      "concepts": ["variables", "control"],
+      "concepts": [
+        "variables",
+        "control"
+      ],
       "prerequisites": [],
-      "puzzles": ["warm_readings", "highest_tide"]
+      "puzzles": [
+        "warm_readings",
+        "highest_tide"
+      ]
     },
     {
       "id": "world_02",
       "title": "Arrays",
       "index": 2,
-      "concepts": ["arrays", "prefix_sum", "binary_search"],
-      "prerequisites": ["variables"],
-      "puzzles": ["lowest_balance", "shelf_totals", "departure_board", "smallest_cart"]
+      "concepts": [
+        "arrays",
+        "prefix_sum",
+        "binary_search"
+      ],
+      "prerequisites": [
+        "variables"
+      ],
+      "puzzles": [
+        "lowest_balance",
+        "first_descent",
+        "second_highest",
+        "even_prefixes",
+        "nested_distinct",
+        "shelf_totals",
+        "departure_board",
+        "smallest_cart",
+        "max_product_two"
+      ]
     },
     {
       "id": "world_03",
       "title": "Hash Maps",
       "index": 3,
-      "concepts": ["hash_map"],
-      "prerequisites": ["arrays"],
-      "puzzles": ["loudest_echo", "twin_beacons", "level_stretches", "longest_streak"]
+      "concepts": [
+        "hash_map"
+      ],
+      "prerequisites": [
+        "arrays"
+      ],
+      "puzzles": [
+        "loudest_echo",
+        "twin_beacons",
+        "shared_values",
+        "pair_sum_count",
+        "same_value_span",
+        "level_stretches",
+        "longest_streak"
+      ]
     },
     {
       "id": "world_04",
       "title": "Two Pointers",
       "index": 4,
-      "concepts": ["two_pointers"],
-      "prerequisites": ["arrays"],
-      "puzzles": ["matched_pair", "widest_basin"]
+      "concepts": [
+        "two_pointers"
+      ],
+      "prerequisites": [
+        "arrays"
+      ],
+      "puzzles": [
+        "matched_pair",
+        "exact_gaps",
+        "pairs_under",
+        "sorted_union",
+        "widest_basin",
+        "closest_gap"
+      ]
     },
     {
       "id": "world_05",
       "title": "Sliding Window",
       "index": 5,
-      "concepts": ["sliding_window"],
-      "prerequisites": ["two_pointers"],
-      "puzzles": ["rush_hour", "patchy_signal", "quota_hours", "market_variety"]
+      "concepts": [
+        "sliding_window"
+      ],
+      "prerequisites": [
+        "two_pointers"
+      ],
+      "puzzles": [
+        "rush_hour",
+        "windows_at_least",
+        "patchy_signal",
+        "quota_hours",
+        "one_dropout",
+        "market_variety",
+        "peak_windows"
+      ]
     },
     {
       "id": "world_06",
       "title": "Stack & Queue",
       "index": 6,
-      "concepts": ["stack", "queue"],
-      "prerequisites": ["arrays"],
-      "puzzles": ["sealed_crates", "undo_button", "relay_towers", "largest_billboard"]
+      "concepts": [
+        "stack",
+        "queue"
+      ],
+      "prerequisites": [
+        "arrays"
+      ],
+      "puzzles": [
+        "sealed_crates",
+        "undo_button",
+        "counter_sum",
+        "relay_towers",
+        "josephus_line",
+        "stack_sorted",
+        "ticket_minutes",
+        "largest_billboard"
+      ]
     },
     {
       "id": "world_07",
       "title": "Linked Lists",
       "index": 7,
-      "concepts": ["linked_list"],
-      "prerequisites": ["stack"],
-      "puzzles": ["middle_car", "reverse_train", "drop_faulty_cars", "loop_detector"]
+      "concepts": [
+        "linked_list"
+      ],
+      "prerequisites": [
+        "stack"
+      ],
+      "puzzles": [
+        "tail_lamp",
+        "cold_cars",
+        "named_car",
+        "end_gap",
+        "rising_links",
+        "middle_car",
+        "reverse_train",
+        "drop_faulty_cars",
+        "loop_detector"
+      ]
     },
     {
       "id": "world_08",
       "title": "Trees",
       "index": 8,
-      "concepts": ["tree", "bst"],
-      "prerequisites": ["linked_list"],
-      "puzzles": ["canopy_height", "widest_level", "trail_sum", "sorted_grove"]
+      "concepts": [
+        "tree",
+        "bst"
+      ],
+      "prerequisites": [
+        "linked_list"
+      ],
+      "puzzles": [
+        "left_vine",
+        "right_marks",
+        "lone_tree",
+        "node_census",
+        "canopy_height",
+        "leaf_census",
+        "lowest_leaf",
+        "widest_level",
+        "trail_sum",
+        "sorted_grove"
+      ]
     },
     {
       "id": "world_09",
       "title": "Heaps",
       "index": 9,
-      "concepts": ["heap"],
-      "prerequisites": ["tree"],
+      "concepts": [
+        "heap"
+      ],
+      "prerequisites": [
+        "tree"
+      ],
       "puzzles": []
     },
     {
       "id": "world_10",
       "title": "Graphs",
       "index": 10,
-      "concepts": ["graph", "bfs", "dfs"],
-      "prerequisites": ["tree"],
-      "puzzles": ["island_count", "fewest_rides", "two_teams", "task_order", "nearest_depot"]
+      "concepts": [
+        "graph",
+        "bfs",
+        "dfs"
+      ],
+      "prerequisites": [
+        "tree"
+      ],
+      "puzzles": [
+        "platform_doors",
+        "direct_hop",
+        "silent_stops",
+        "island_count",
+        "fewest_rides",
+        "scout_reach",
+        "scout_last",
+        "biggest_patch",
+        "last_layer",
+        "two_teams",
+        "task_order",
+        "nearest_depot",
+        "source_radius"
+      ]
     },
     {
       "id": "world_11",
       "title": "Greedy",
       "index": 11,
-      "concepts": ["greedy"],
-      "prerequisites": ["arrays"],
-      "puzzles": ["one_good_trade", "fuel_loop"]
+      "concepts": [
+        "greedy"
+      ],
+      "prerequisites": [
+        "arrays"
+      ],
+      "puzzles": [
+        "one_good_trade",
+        "cookie_gifts",
+        "dock_overlap",
+        "leap_reach",
+        "fuel_loop"
+      ]
     },
     {
       "id": "world_12",
       "title": "Backtracking",
       "index": 12,
-      "concepts": ["backtracking"],
-      "prerequisites": ["recursion"],
+      "concepts": [
+        "backtracking"
+      ],
+      "prerequisites": [
+        "recursion"
+      ],
       "puzzles": []
     },
     {
       "id": "world_13",
       "title": "Dynamic Programming",
       "index": 13,
-      "concepts": ["dp"],
-      "prerequisites": ["greedy"],
-      "puzzles": ["quiet_street", "exact_change"]
+      "concepts": [
+        "dp"
+      ],
+      "prerequisites": [
+        "greedy"
+      ],
+      "puzzles": [
+        "plank_ways",
+        "step_toll",
+        "quiet_street",
+        "aisle_cost",
+        "open_lanes",
+        "exact_change",
+        "diagonal_haul",
+        "pack_bins"
+      ]
     },
     {
       "id": "world_14",
       "title": "Advanced Algorithms",
       "index": 14,
-      "concepts": ["multi_concept"],
-      "prerequisites": ["dp", "graph"],
-      "puzzles": ["many_shortest_routes"]
+      "concepts": [
+        "multi_concept"
+      ],
+      "prerequisites": [
+        "dp",
+        "graph"
+      ],
+      "puzzles": [
+        "many_shortest_routes"
+      ]
     }
   ]
 }

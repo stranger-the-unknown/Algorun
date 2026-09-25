@@ -1,0 +1,327 @@
+{
+  "id": "pair_sum_count",
+  "version": 1,
+  "title": "Pair Tickets",
+  "world": "world_03",
+  "chapter": "count_pairs_with_sum",
+  "tier": 3,
+  "mode": "optimize",
+  "concepts": [
+    "hash_map"
+  ],
+  "prerequisites": [],
+  "story": "A booth sells tickets whose prices are listed with repeats. How many pairs of tickets, from two different positions, add up to the target price? Order does not matter, and a ticket cannot pair with itself. A price that appears twice can pair with itself only by using both copies.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      },
+      {
+        "name": "target",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a value pairing with itself",
+      "repeated prices",
+      "checking every pair of positions is over budget"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.eq",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "logic.is_nothing",
+      "map.get",
+      "map.set",
+      "new.map",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 54
+  },
+  "limits": {
+    "maxOps": 3292,
+    "maxDepth": 64,
+    "maxAlloc": 200000
+  },
+  "performance": {
+    "required": true,
+    "baselineFactor": 8
+  },
+  "hints": [
+    "As you read each price, ask how many earlier prices would complete the target.",
+    "A map from price to how many times it has already been seen answers that in one look.",
+    "Count the earlier copies before you record the price you are on, or a ticket pairs with itself."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [
+            1,
+            4,
+            2,
+            3,
+            4
+          ],
+          "target": 5
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "target": 6
+        },
+        "out": 6
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": [],
+          "target": 0
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [],
+          "target": 5
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            0,
+            1
+          ],
+          "target": 5
+        },
+        "out": 533
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            1,
+            3,
+            3,
+            -1,
+            -1,
+            -1,
+            3,
+            1
+          ],
+          "target": -1
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            0,
+            3,
+            2,
+            -1,
+            0,
+            -2,
+            -1
+          ],
+          "target": -1
+        },
+        "out": 4
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            -3,
+            -1,
+            2,
+            3,
+            -1,
+            4,
+            3
+          ],
+          "target": 1
+        },
+        "out": 3
+      },
+      {
+        "id": "h07",
+        "in": {
+          "values": [
+            4,
+            4,
+            0,
+            -2,
+            -1,
+            1,
+            2
+          ],
+          "target": 0
+        },
+        "out": 2
+      }
+    ]
+  },
+  "edgeCases": [
+    "a value pairing with itself",
+    "repeated prices",
+    "checking every pair of positions is over budget"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "seen",
+        "type": "map<num,num>"
+      },
+      {
+        "name": "need",
+        "type": "num"
+      },
+      {
+        "name": "found",
+        "type": "num?"
+      },
+      {
+        "name": "cur",
+        "type": "num?"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_pairs_with_sum"
+  }
+}

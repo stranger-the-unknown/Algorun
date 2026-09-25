@@ -1,0 +1,153 @@
+{
+  "id": "plank_ways",
+  "version": 1,
+  "title": "Plank Ways",
+  "world": "world_13",
+  "chapter": "climb_one_or_two",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "dp"
+  ],
+  "prerequisites": [],
+  "story": "A dock is a line of planks. From a plank you may step one or two planks forward. How many ways are there to reach a dock of the given length, starting before the first plank? Length 0 and length 1 each have one way: do nothing, or take the single step.",
+  "io": {
+    "inputs": [
+      {
+        "name": "length",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "length zero",
+      "length one",
+      "answering zero for an empty dock"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "cmp.eq",
+      "cmp.le",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 43
+  },
+  "limits": {
+    "maxOps": 163,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "The ways to reach length n are the ways to reach n-1, then one step, plus the ways to reach n-2, then two steps.",
+    "Keep only the two previous answers, not a whole table, if you like.",
+    "Length 0 is one way. Do not answer 0 for it."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "length": 4
+        },
+        "out": 5
+      },
+      {
+        "id": "v2",
+        "in": {
+          "length": 6
+        },
+        "out": 13
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "length": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "length": 2
+        },
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {
+          "length": 0
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "length": 3
+        },
+        "out": 3
+      },
+      {
+        "id": "h05",
+        "in": {
+          "length": 5
+        },
+        "out": 8
+      },
+      {
+        "id": "h06",
+        "in": {
+          "length": 7
+        },
+        "out": 21
+      }
+    ]
+  },
+  "edgeCases": [
+    "length zero",
+    "length one",
+    "answering zero for an empty dock"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "a",
+        "type": "num"
+      },
+      {
+        "name": "b",
+        "type": "num"
+      },
+      {
+        "name": "c",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "climb_one_or_two"
+  }
+}

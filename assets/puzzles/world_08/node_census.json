@@ -1,0 +1,328 @@
+{
+  "id": "node_census",
+  "version": 1,
+  "title": "Node Census",
+  "world": "world_08",
+  "chapter": "iterative_tree_size",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "tree"
+  ],
+  "prerequisites": [],
+  "story": "Count every node in the tree. There is no recursion: keep a stack of nodes still to visit, and only push a child after you have checked it is not empty. An empty tree is 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "root",
+        "type": "treeNode?"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "an empty tree",
+      "a skewed tree",
+      "counting only one spine"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "logic.is_not_nothing",
+      "logic.not",
+      "new.stack",
+      "stack.empty",
+      "stack.pop",
+      "stack.push",
+      "tree.left",
+      "tree.right",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 50
+  },
+  "limits": {
+    "maxOps": 249,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "If the root IS NOT NOTHING, push it.",
+    "Pop a node, count it, then push LEFT and RIGHT only when each IS NOT NOTHING.",
+    "Counting only the left vine misses the rest of the tree."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 8,
+            "left": {
+              "type": "treeNode",
+              "value": 4,
+              "left": {
+                "type": "treeNode",
+                "value": 1,
+                "left": null,
+                "right": null
+              },
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 6,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "root": null
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": null,
+            "right": null
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -2,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 0,
+              "left": {
+                "type": "treeNode",
+                "value": -3,
+                "left": {
+                  "type": "treeNode",
+                  "value": 3,
+                  "left": null,
+                  "right": null
+                },
+                "right": null
+              },
+              "right": null
+            }
+          }
+        },
+        "out": 4
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 0,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 3,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 1,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -2,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": -2,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -2,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 0,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h09",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": null,
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": null,
+                "right": null
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {
+                  "type": "treeNode",
+                  "value": 7,
+                  "left": null,
+                  "right": null
+                },
+                "right": null
+              }
+            }
+          }
+        },
+        "out": 7
+      }
+    ]
+  },
+  "edgeCases": [
+    "an empty tree",
+    "a skewed tree",
+    "counting only one spine"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "treeNode"
+      },
+      {
+        "name": "st",
+        "type": "stack<treeNode>"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "left",
+        "type": "treeNode?"
+      },
+      {
+        "name": "right",
+        "type": "treeNode?"
+      },
+      {
+        "name": "walk",
+        "type": "treeNode?"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "iterative_tree_size"
+  }
+}

@@ -1,0 +1,460 @@
+{
+  "id": "scout_last",
+  "version": 1,
+  "title": "Scout Last",
+  "world": "world_10",
+  "chapter": "iterative_dfs_last_popped",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": [
+    "graph",
+    "dfs"
+  ],
+  "prerequisites": [],
+  "story": "The same scout walks depth-first with a stack, exactly as in Scout Reach: it marks a stop when it pushes it, so every stop is pushed at most once. Neighbours are pushed in the order NEIGHBORS lists them, so the last neighbour is popped first. Report the number of the last stop the scout pops. The start is always popped.",
+  "io": {
+    "inputs": [
+      {
+        "name": "roads",
+        "type": "graph"
+      },
+      {
+        "name": "start",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "breadth-first pops a different last stop",
+      "a single stop",
+      "neighbour order matters"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "graph.mark",
+      "graph.neighbors",
+      "graph.visited",
+      "lit.num",
+      "logic.not",
+      "new.queue",
+      "new.stack",
+      "queue.deq",
+      "queue.empty",
+      "queue.enq",
+      "stack.empty",
+      "stack.pop",
+      "stack.push",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 51
+  },
+  "limits": {
+    "maxOps": 266,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "This is the reach walk, but you remember the stop you just popped instead of only counting.",
+    "Push neighbours in listed order and do not sort them.",
+    "A queue would pop a different last stop. This scout uses a stack."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 1
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  1,
+                  4
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              },
+              {
+                "id": 4,
+                "neighbors": [
+                  0,
+                  3
+                ]
+              }
+            ]
+          },
+          "start": 4
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              },
+              {
+                "id": 4,
+                "neighbors": [
+                  5
+                ]
+              },
+              {
+                "id": 5,
+                "neighbors": [
+                  3,
+                  2
+                ]
+              }
+            ]
+          },
+          "start": 1
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  0
+                ]
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h08",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  3
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h09",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  3
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          },
+          "start": 0
+        },
+        "out": 3
+      }
+    ]
+  },
+  "edgeCases": [
+    "breadth-first pops a different last stop",
+    "a single stop",
+    "neighbour order matters"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "here",
+        "type": "num"
+      },
+      {
+        "name": "n",
+        "type": "num"
+      },
+      {
+        "name": "last",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      },
+      {
+        "name": "box",
+        "type": "stack<num>"
+      },
+      {
+        "name": "line",
+        "type": "queue<num>"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "iterative_dfs_last_popped"
+  }
+}

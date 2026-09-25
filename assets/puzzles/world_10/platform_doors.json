@@ -1,0 +1,449 @@
+{
+  "id": "platform_doors",
+  "version": 1,
+  "title": "Platform Doors",
+  "world": "world_10",
+  "chapter": "out_degree",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "graph"
+  ],
+  "prerequisites": [],
+  "story": "A station network lists, for each stop, the stops you can ride to directly. Report how many doors the given station has — how many neighbours it lists. Stops are numbered from 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "roads",
+        "type": "graph"
+      },
+      {
+        "name": "station",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a stop with no doors",
+      "treating only stop zero as real"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.len",
+      "cmp.eq",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "graph.neighbors",
+      "lit.num",
+      "var.get"
+    ],
+    "maxBlocks": 24
+  },
+  "limits": {
+    "maxOps": 25,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "NEIGHBORS gives the list of doors from a stop.",
+    "LENGTH of that list is the answer.",
+    "Every stop can have doors, not only stop zero."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  2,
+                  3
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  2
+                ]
+              }
+            ]
+          },
+          "station": 0
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  0
+                ]
+              }
+            ]
+          },
+          "station": 2
+        },
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "station": 2
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  4,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  4
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 4,
+                "neighbors": [
+                  1,
+                  4
+                ]
+              }
+            ]
+          },
+          "station": 1
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "station": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  2,
+                  4
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  4
+                ]
+              },
+              {
+                "id": 4,
+                "neighbors": []
+              }
+            ]
+          },
+          "station": 3
+        },
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          },
+          "station": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0,
+                  1
+                ]
+              }
+            ]
+          },
+          "station": 1
+        },
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  4,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "id": 4,
+                "neighbors": []
+              }
+            ]
+          },
+          "station": 2
+        },
+        "out": 1
+      },
+      {
+        "id": "h08",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          },
+          "station": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h09",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  0,
+                  2,
+                  3
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          },
+          "station": 1
+        },
+        "out": 3
+      }
+    ]
+  },
+  "edgeCases": [
+    "a stop with no doors",
+    "treating only stop zero as real"
+  ],
+  "variables": {
+    "pool": []
+  },
+  "reference": {
+    "strategy": "out_degree"
+  }
+}

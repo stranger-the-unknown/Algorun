@@ -1,0 +1,258 @@
+{
+  "id": "shared_values",
+  "version": 1,
+  "title": "Shared Values",
+  "world": "world_03",
+  "chapter": "count_shared_distinct",
+  "tier": 2,
+  "mode": "edge",
+  "concepts": [
+    "hash_map"
+  ],
+  "prerequisites": [],
+  "story": "Two stalls list item codes, each with its own repeats. How many different codes appear on both stalls? A code that shows up three times on each stall is still one shared code.",
+  "io": {
+    "inputs": [
+      {
+        "name": "left",
+        "type": "array<num>"
+      },
+      {
+        "name": "right",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "repeats on both sides",
+      "no shared code",
+      "an empty stall"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "new.set",
+      "set.add",
+      "set.has",
+      "set.size",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 33
+  },
+  "limits": {
+    "maxOps": 119,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Put one stall's codes into a set so repeats collapse.",
+    "Walk the other stall and collect the codes that the set already holds, again in a set.",
+    "The size of that second set is the answer. Counting every copy would over-count."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "left": [
+            1,
+            2,
+            2,
+            5
+          ],
+          "right": [
+            2,
+            5,
+            9
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "left": [
+            4,
+            4,
+            7
+          ],
+          "right": [
+            7,
+            3
+          ]
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "left": [],
+          "right": []
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "left": [
+            1,
+            1
+          ],
+          "right": []
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "left": [
+            4
+          ],
+          "right": [
+            4,
+            4
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "left": [
+            2,
+            2,
+            1,
+            1
+          ],
+          "right": [
+            3,
+            2,
+            2
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "left": [
+            1,
+            2,
+            2
+          ],
+          "right": [
+            2,
+            2,
+            3,
+            2
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "left": [
+            0,
+            0,
+            3,
+            1,
+            2
+          ],
+          "right": [
+            3,
+            2,
+            4,
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "left": [
+            0,
+            4,
+            2,
+            3
+          ],
+          "right": [
+            2,
+            1,
+            1,
+            1,
+            2
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h08",
+        "in": {
+          "left": [
+            3,
+            3,
+            3
+          ],
+          "right": [
+            3,
+            2,
+            4,
+            3,
+            4,
+            0
+          ]
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "repeats on both sides",
+    "no shared code",
+    "an empty stall"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "leftSet",
+        "type": "set<num>"
+      },
+      {
+        "name": "both",
+        "type": "set<num>"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_shared_distinct"
+  }
+}

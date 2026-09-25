@@ -1,0 +1,338 @@
+{
+  "id": "silent_stops",
+  "version": 1,
+  "title": "Silent Stops",
+  "world": "world_10",
+  "chapter": "count_zero_outdegree",
+  "tier": 2,
+  "mode": "build",
+  "concepts": [
+    "graph"
+  ],
+  "prerequisites": [],
+  "story": "A silent stop lists no outgoing rides. How many stops in the network are silent? Use NODE COUNT to know how many stops exist, numbered from 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "roads",
+        "type": "graph"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "every stop has a door",
+      "every stop is silent",
+      "counting the noisy stops"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.len",
+      "cmp.eq",
+      "cmp.gt",
+      "ctrl.for_range",
+      "ctrl.if",
+      "ctrl.return",
+      "graph.neighbors",
+      "graph.node_count",
+      "lit.num",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 28
+  },
+  "limits": {
+    "maxOps": 88,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "FOR each stop number from 0 up to NODE COUNT.",
+    "A stop is silent when LENGTH of NEIGHBORS is 0.",
+    "Counting the stops that do have a door answers a different question."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": [
+                  3
+                ]
+              },
+              {
+                "id": 3,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              },
+              {
+                "id": 3,
+                "neighbors": [
+                  4
+                ]
+              },
+              {
+                "id": 4,
+                "neighbors": [
+                  5
+                ]
+              },
+              {
+                "id": 5,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  1,
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  0
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        "out": 0
+      },
+      {
+        "id": "h06",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": []
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h07",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": []
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h08",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {
+                "id": 0,
+                "neighbors": [
+                  1
+                ]
+              },
+              {
+                "id": 1,
+                "neighbors": [
+                  2
+                ]
+              },
+              {
+                "id": 2,
+                "neighbors": []
+              }
+            ]
+          }
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "every stop has a door",
+    "every stop is silent",
+    "counting the noisy stops"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_zero_outdegree"
+  }
+}

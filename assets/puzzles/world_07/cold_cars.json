@@ -1,0 +1,246 @@
+{
+  "id": "cold_cars",
+  "version": 1,
+  "title": "Cold Cars",
+  "world": "world_07",
+  "chapter": "linked_list_count_below",
+  "tier": 2,
+  "mode": "edge",
+  "concepts": [
+    "linked_list"
+  ],
+  "prerequisites": [],
+  "story": "Each car carries a temperature. Count the cars whose temperature is strictly below the limit. A car exactly at the limit is not cold. An empty train has no cold cars.",
+  "io": {
+    "inputs": [
+      {
+        "name": "head",
+        "type": "listNode?"
+      },
+      {
+        "name": "limit",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "a car exactly at the limit",
+      "every car cold",
+      "an empty train"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "cmp.le",
+      "cmp.lt",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "ll.next",
+      "ll.value",
+      "logic.is_not_nothing",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 30
+  },
+  "limits": {
+    "maxOps": 148,
+    "maxDepth": 64,
+    "maxAlloc": 100000
+  },
+  "hints": [
+    "Walk NEXT NODE while the car IS NOT NOTHING.",
+    "NODE VALUE is safe only inside that check.",
+    "Count a car only when its temperature is strictly less than the limit."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              5,
+              -2,
+              8,
+              1
+            ]
+          },
+          "limit": 3
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              7,
+              4,
+              9
+            ]
+          },
+          "limit": 5
+        },
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "head": null,
+          "limit": 0
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "head": null,
+          "limit": 1
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3
+            ]
+          },
+          "limit": 3
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              -2
+            ]
+          },
+          "limit": -2
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -4,
+              2
+            ]
+          },
+          "limit": 2
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              -2,
+              0,
+              2
+            ]
+          },
+          "limit": 0
+        },
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              0,
+              -4,
+              2
+            ]
+          },
+          "limit": 2
+        },
+        "out": 2
+      },
+      {
+        "id": "h08",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              2,
+              -2,
+              3,
+              -1
+            ]
+          },
+          "limit": 2
+        },
+        "out": 2
+      },
+      {
+        "id": "h09",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [
+              3,
+              3,
+              1,
+              3
+            ]
+          },
+          "limit": 3
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": [
+    "a car exactly at the limit",
+    "every car cold",
+    "an empty train"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "node",
+        "type": "listNode?"
+      },
+      {
+        "name": "count",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "linked_list_count_below"
+  }
+}

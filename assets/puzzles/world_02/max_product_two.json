@@ -1,0 +1,317 @@
+{
+  "id": "max_product_two",
+  "version": 1,
+  "title": "Loudest Pair",
+  "world": "world_02",
+  "chapter": "max_product_of_two",
+  "tier": 3,
+  "mode": "optimize",
+  "concepts": [
+    "arrays"
+  ],
+  "prerequisites": [],
+  "story": "Two speakers are chosen from a row of volumes, which may be negative. Their combined loudness is the product of the two volumes. Report the largest product any two different speakers can make. Fewer than two speakers is 0.",
+  "io": {
+    "inputs": [
+      {
+        "name": "values",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "n": {
+      "min": 0,
+      "max": 80
+    },
+    "notes": [
+      "two negatives beat two positives",
+      "fewer than two speakers",
+      "comparing every pair is over budget"
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "arith.max",
+      "arith.mul",
+      "arr.get",
+      "arr.len",
+      "cmp.gt",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.for_range",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 67
+  },
+  "limits": {
+    "maxOps": 1256,
+    "maxDepth": 64,
+    "maxAlloc": 200000
+  },
+  "performance": {
+    "required": true,
+    "baselineFactor": 8
+  },
+  "hints": [
+    "The best pair is either the two largest volumes or the two most negative ones.",
+    "Keep the two largest and the two smallest as you walk the row once.",
+    "Comparing every pair is correct and far too slow for a long row."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "values": [
+            3,
+            -7,
+            2,
+            -5,
+            4
+          ]
+        },
+        "out": 35
+      },
+      {
+        "id": "v2",
+        "in": {
+          "values": [
+            6,
+            1,
+            8,
+            3
+          ]
+        },
+        "out": 48
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "values": []
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "values": [
+            7
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "out": 16
+      },
+      {
+        "id": "h04",
+        "in": {
+          "values": [
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2,
+            1,
+            -2
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {
+          "values": [
+            3,
+            5,
+            3,
+            -5,
+            -2,
+            -1,
+            -1,
+            4
+          ]
+        },
+        "out": 20
+      },
+      {
+        "id": "h06",
+        "in": {
+          "values": [
+            6,
+            -4,
+            3,
+            -4,
+            1,
+            6,
+            2,
+            5
+          ]
+        },
+        "out": 36
+      },
+      {
+        "id": "h07",
+        "in": {
+          "values": [
+            3,
+            0,
+            -1,
+            4,
+            2,
+            -4,
+            -5
+          ]
+        },
+        "out": 20
+      }
+    ]
+  },
+  "edgeCases": [
+    "two negatives beat two positives",
+    "fewer than two speakers",
+    "comparing every pair is over budget"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "v",
+        "type": "num"
+      },
+      {
+        "name": "max1",
+        "type": "num"
+      },
+      {
+        "name": "max2",
+        "type": "num"
+      },
+      {
+        "name": "min1",
+        "type": "num"
+      },
+      {
+        "name": "min2",
+        "type": "num"
+      },
+      {
+        "name": "i",
+        "type": "num"
+      },
+      {
+        "name": "j",
+        "type": "num"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "max_product_of_two"
+  }
+}
