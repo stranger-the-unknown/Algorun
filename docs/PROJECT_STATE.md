@@ -8,7 +8,7 @@ anything. It is written so you can continue without any previous conversation.
 
 Do not implement the next milestone from this file unless the user explicitly asks.
 
-**Also complete (UX/playtest):** editor scroll-follows a block moved with UP/DOWN (MS13 reveal path + visibility check); debug/assert builds unlock all campaign puzzles via PlaytestFlags.unlockAllPuzzles set in main (stripped from release). Does not change unlock rules, validators, or budgets.
+**Also complete (UX/playtest):** editor scroll-follows a block moved with UP/DOWN (MS13 reveal path + visibility check); **every build, release included, unlocks all campaign puzzles** (user decision, 2026-09-25: a playtester never re-solves puzzles to reach the ones under test). `main` sets `PlaytestFlags.unlockAllPuzzles = !PlaytestFlags.campaignLocks`; `campaignLocks` is `--dart-define=ALGORUN_LOCKS=true` (default off). The lock rules stay in `evaluateCampaign` and in the tests (which do not run `main`); completions are recorded as usual. When the campaign is ready for players, make `campaignLocks` default to true. Does not change unlock rules, validators, or budgets.
 Do not change the architecture.
 
 Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`,

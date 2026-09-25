@@ -9,7 +9,14 @@ import 'support/progress_fixtures.dart';
 void main() {
   tearDown(() => PlaytestFlags.unlockAllPuzzles = false);
 
-  test('default flag is off so release/tests keep real locks', () {
+  test('builds open every puzzle until the campaign locks are switched on', () {
+    // main() sets unlockAllPuzzles = !campaignLocks; without
+    // --dart-define=ALGORUN_LOCKS=true every build, release included, is
+    // unlocked for playtesting.
+    expect(PlaytestFlags.campaignLocks, isFalse);
+  });
+
+  test('the flag itself defaults to off, so the lock rules stay tested', () {
     expect(PlaytestFlags.unlockAllPuzzles, isFalse);
     final campaign = tinyCampaign([
       ('world_01', ['basics'], [], ['p1']),
