@@ -2,4 +2,6 @@
 <resources>
     <!-- The app's background (AppColors.bg): the window behind Flutter and the launch screen. -->
     <color name="algorun_bg">#FF0A0A0B</color>
+    <!-- Launcher icon ground (branding/algorun_icon.svg). -->
+    <color name="ic_launcher_background">#FFF4F4F5</color>
 </resources>

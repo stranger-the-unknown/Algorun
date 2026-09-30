@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from branding/algorun_icon.svg geometry (Grok variation 4). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#373B44"
+        android:pathData="M34.332,31.803 Q34.332,31 35.134,31 L57.613,31 Q58.415,31 58.415,31.803 L58.415,41.436 Q58.415,42.239 57.613,42.239 L35.134,42.239 Q34.332,42.239 34.332,41.436 Z" />
+    <path
+        android:fillColor="#30353B"
+        android:pathData="M34.332,31.803 Q34.332,31 35.134,31 L37.302,31 L37.302,42.239 L35.134,42.239 Q34.332,42.239 34.332,41.436 Z" />
+    <path
+        android:fillColor="#729577"
+        android:pathData="M34.332,44.567 Q34.332,43.764 35.134,43.764 L58.826,43.764 Q58.977,43.764 59.102,43.851 L72.164,52.988 Q73.668,54.04 72.164,55.093 L59.102,64.229 Q58.977,64.316 58.826,64.316 L35.134,64.316 Q34.332,64.316 34.332,63.513 Z" />
+    <path
+        android:fillColor="#5B7D62"
+        android:pathData="M34.332,44.567 Q34.332,43.764 35.134,43.764 L37.302,43.764 L37.302,64.316 L35.134,64.316 Q34.332,64.316 34.332,63.513 Z" />
+    <path
+        android:fillColor="#373B44"
+        android:pathData="M34.332,66.564 Q34.332,65.761 35.134,65.761 L57.613,65.761 Q58.415,65.761 58.415,66.564 L58.415,76.197 Q58.415,77 57.613,77 L35.134,77 Q34.332,77 34.332,76.197 Z" />
+    <path
+        android:fillColor="#30353B"
+        android:pathData="M34.332,66.564 Q34.332,65.761 35.134,65.761 L37.302,65.761 L37.302,77 L35.134,77 Q34.332,77 34.332,76.197 Z" />
+</vector>
