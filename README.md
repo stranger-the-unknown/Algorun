@@ -23,4 +23,12 @@ cd packages/algorun_engine && dart test
 flutter run
 ```
 
+In a desktop browser (builds when the code changed, serves at
+http://localhost:8080 and opens it; progress is kept by that browser for that
+address):
+
+```bash
+tool/web.sh
+```
+
 Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).

@@ -6,6 +6,7 @@ import '../../dev/stress_probe.dart';
 import '../../l10n/l10n.dart';
 import '../../progress/save_data.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../shared/content_width.dart';
 import '../../state/progress_providers.dart';
 import '../guide/guide_screen.dart';
 
@@ -20,7 +21,7 @@ final class SettingsScreen extends ConsumerWidget {
     void update(PlayerSettings next) => ref.read(progressProvider.notifier).updateSettings(next);
     return Scaffold(
       appBar: AppBar(title: Text(l.settingsTitle)),
-      body: SafeArea(top: false, child: ListView(
+      body: ContentWidth(child: SafeArea(top: false, child: ListView(
         padding: const EdgeInsets.all(AppSpace.s5),
         children: [
           Semantics(header: true, child: Text(l.languageSection, style: AppText.label(context))),
@@ -74,6 +75,10 @@ final class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpace.s4),
           Text(l.privacyNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
+          if (kIsWeb) ...[
+            const SizedBox(height: AppSpace.s2),
+            Text(l.webStorageNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
+          ],
           const SizedBox(height: AppSpace.s3),
           Align(
             alignment: Alignment.centerLeft,
@@ -113,7 +118,7 @@ final class SettingsScreen extends ConsumerWidget {
             ),
           ),
         ],
-      )),
+      ))),
     );
   }
 

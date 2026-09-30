@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
+import 'progress/platform_store.dart';
 import 'progress/playtest_flags.dart';
 import 'state/progress_providers.dart';
 

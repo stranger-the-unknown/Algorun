@@ -255,6 +255,7 @@
   "settingsTitle": "Ayarlar",
   "showBriefSetting": "Bulmaca açılınca görevi göster",
   "privacyNote": "İlerlemen, programların ve en iyi sonuçların yalnızca bu cihaza kaydedilir. Hesap yoktur ve hiçbir şey yüklenmez.",
+  "webStorageNote": "Web tarayıcısında ilerleme o tarayıcıda, bu adres için saklanır. Sitenin verilerini silersen ya da başka bir tarayıcı kullanırsan baştan başlarsın.",
   "resetProgress": "İlerlemeyi sıfırla",
   "resetConfirmTitle": "İlerleme sıfırlansın mı?",
   "resetConfirmBody": "Bu cihazdaki her çözülmüş bulmaca, kayıtlı program ve en iyi sonuç silinir. Bu geri alınamaz.",

@@ -11,6 +11,7 @@ Do not implement the next milestone from this file unless the user explicitly as
 **Also complete (UX/playtest):** editor scroll-follows a block moved with UP/DOWN (MS13 reveal path + visibility check); **every build, release included, unlocks all campaign puzzles** (user decision, 2026-09-25: a playtester never re-solves puzzles to reach the ones under test). `main` sets `PlaytestFlags.unlockAllPuzzles = !PlaytestFlags.campaignLocks`; `campaignLocks` is `--dart-define=ALGORUN_LOCKS=true` (default off). The lock rules stay in `evaluateCampaign` and in the tests (which do not run `main`); completions are recorded as usual. When the campaign is ready for players, make `campaignLocks` default to true. Does not change unlock rules, validators, or budgets.
 **App icon (2026-09-30):** Grok's variation 4 (two graphite blocks and a sage-green play-arrow block on `#F4F4F5`), redrawn as clean geometry; master `branding/algorun_icon.svg`, Android adaptive vector icon with a themed (monochrome) layer, legacy PNGs, iOS and web icons. See [`branding/README.md`](../branding/README.md).
 **Light mode (U2, 2026-09-30):** Settings → APPEARANCE: Light / Dark / System (default System, follows the device), saved in `settings.theme`, kept by reset progress. Colours come from `context.palette` (`AppPalette.light` / `.dark`, a `ThemeExtension`); never write a fixed colour in a widget. Both palettes are held to the MS13 contrast rules by `test/theme_test.dart`. See [`MILESTONE_U2.md`](MILESTONE_U2.md).
+**Web version on a computer (W1, 2026-09-30):** the same Dart app built with Flutter web, played in a desktop browser: progress saved in the browser's local storage (`BrowserProgressStore`), screens kept to a readable width on wide windows (`ContentWidth`), a reload or the browser's forward button opens home instead of a screen without its arguments. `tool/web.sh` builds when the code changed and serves it at http://localhost:8080. Not published anywhere yet. See [`MILESTONE_W1.md`](MILESTONE_W1.md).
 Do not change the architecture.
 
 Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`,
@@ -38,8 +39,8 @@ in 12 worlds (five from MS8, 33 from MS12, 47 from MS14), tiers 1–5. The
 corpus stops here for a playtest; it is not on the way to 300 until that
 playtest says so. Recursion is still unbuilt, so worlds 09 and 12 stay empty.
 
-There is **no TypeScript / React / web product codebase**. Flutter web exists
-only as a host preview of the same Dart app.
+There is **no TypeScript / React / web product codebase**. The web version
+(W1) is the same Dart app built with Flutter web, not a second implementation.
 
 ## Locked decisions (do not reopen)
 
@@ -157,6 +158,7 @@ algorun/                          Flutter app (repository root)
   test/localization_ui_test.dart  U1: language switch, reference in both languages, a Turkish puzzle, Turkish at ×1.6
   test/editor_variables_test.dart U1: puzzle variables declared on open; every reference restores with identical IR
   test/theme_test.dart            U2: both palettes' contrast rules, Light / Dark / System, saved, kept by reset
+  test/web_test.dart              W1: readable widths on 1400 / 1920 px windows, phones unchanged, argument-less routes go home
   test/support/                   shared helpers: campaign from files, progress fixtures, phone sizes, UI replay, results rows
   lib/state/performance_text.dart player wording for budgets (MS10)
 ```
@@ -537,7 +539,10 @@ different `version` keeps `completed` and `draft`, and clears `best`,
 `getApplicationSupportDirectory`, written to `.tmp` then renamed; an unusable
 save is copied to `algorun_save.unreadable-<millis>.json`. `main.dart`
 installs it; the provider default is `MemoryProgressStore`, so tests never
-touch the device. Web (preview) keeps progress in memory.
+touch the device. On the web (W1) `platformProgressStore()` is a
+`BrowserProgressStore`: the same JSON in the `algorun_save` local-storage
+slot of the site, unreadable text copied to `algorun_save.unreadable-<millis>`
+(`lib/progress/platform_store*.dart` picks the store per platform).
 
 **Autosave** (`ProgressNotifier`): a new editor `BlockGraph` updates the draft
 in memory and is written after 800 ms of quiet; opening a puzzle, RUN, a
@@ -722,7 +727,7 @@ test waits on it forever.
 
 - **Narrowing is deliberately small (L1).** No narrowing through OR / NOT or after an IF whose THEN always returns (use IF / ELSE); assigning a real value does not narrow (check again); only plain variables narrow. The editor checks each drop where it is made, so an edit elsewhere can invalidate an earlier drop — lowering reports it before RUN. RETURN is still not checked against the puzzle's output type. Tree traversal beyond one path needs a queue or stack of nodes until recursion exists.
 - **Hints are a metric only.** `hintsUsed` is shown and kept per run (`lastRun`, `best`) but never scored and never blocks anything; revealed hints are not persisted (MS9, MS11).
-- **Progression is deliberately simple (MS11).** A world completes only when every listed puzzle is solved (no mastery threshold yet — worlds with 20–30 puzzles will want one); inconsistent content that would deadlock is caught by the validator since MS12 (level 6); an edit less than 800 ms before a kill without a lifecycle event is lost; one save slot, no export, no per-puzzle reset; the campaign loads every listed puzzle at start-up; unreadable-save copies are never cleaned up; web does not persist.
+- **Progression is deliberately simple (MS11).** A world completes only when every listed puzzle is solved (no mastery threshold yet — worlds with 20–30 puzzles will want one); inconsistent content that would deadlock is caught by the validator since MS12 (level 6); an edit less than 800 ms before a kill without a lifecycle event is lost; one save slot, no export, no per-puzzle reset; the campaign loads every listed puzzle at start-up; unreadable-save copies are never cleaned up; on the web the save belongs to one browser at one address (another port or browser starts fresh).
 - **Performance is counted, not scored.** No stars or scores read the budgets yet. A hopeless solution is only known to be "still running" at the measurement ceiling; its correctness beyond it is not claimed. Memory and depth have no overrun measurement. There is no fixture generator: size profiles are explicit fixtures with optional per-case `maxOps` (MS10).
 - **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale. MS12 authoring used scratch scripts outside the repository.
 - **Random inputs are for checking only (MS12).** Oracles sample small inputs to compare with the reference; nothing generates shipped fixtures. A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
@@ -742,7 +747,7 @@ test waits on it forever.
 - Graph fixtures do not enforce "stations are numbered 0 to n-1"; `fewest_rides` states it and its fixtures follow it.
 - `maxDepth` stays at 1 until player-defined functions ship; `fn.def` / `fn.call` remain unsupported and hidden.
 - Allocation has no collector: an unreachable container keeps its cells for the rest of the run.
-- Generic unification is per-block, not Hindley–Milner. Flutter web is preview-only.
+- Generic unification is per-block, not Hindley–Milner. The web version runs locally (`tool/web.sh`); it is not hosted anywhere.
 - **Editor (MS13).** No drag and drop: blocks move one step at a time (UP / DOWN / OUT / IN). A move is typed by `GraphTyping`, but narrowing that changes with the new position is reported by lowering at RUN. The picker has no search. Landscape phones lose the palette (the picker remains). The stress probe opens from Settings in debug builds only.
 - **Device testing (MS13).** Emulator only (software rendering, three-button navigation); no physical phone, no TalkBack pass, no frame timing on real hardware yet.
 - **Languages (U1).** English and Turkish only. Engine sentences are matched by their English text, so changing one needs its ARB entry (the scan test says which). Fixture values on the results screen are JSON in both languages. Puzzle input and variable names stay English (they are the program's identifiers).
@@ -876,5 +881,6 @@ Each world now lists its puzzles by tier.
 | [`MILESTONE_U1.md`](MILESTONE_U1.md) | complete — Turkish, block reference, number entry, puzzle variables |
 | [`MILESTONE_14.md`](MILESTONE_14.md) | complete — second content batch (47 puzzles); playtest next |
 | [`MILESTONE_U2.md`](MILESTONE_U2.md) | complete — light mode (Light / Dark / System) |
+| [`MILESTONE_W1.md`](MILESTONE_W1.md) | complete — the web version on a computer (browser save, wide windows) |
 | this file | MS14 handoff |
 

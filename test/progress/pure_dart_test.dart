@@ -6,13 +6,13 @@ import 'package:flutter_test/flutter_test.dart';
 /// the file store touches the device. Widgets reach storage through the
 /// progress notifier, never directly.
 void main() {
-  test('lib/progress is pure Dart except the file store', () {
+  test('lib/progress is pure Dart except the device stores (file, browser)', () {
     final files = Directory('lib/progress').listSync().whereType<File>().where((f) => f.path.endsWith('.dart'));
     expect(files, isNotEmpty);
     for (final file in files) {
-      if (file.path.endsWith('file_progress_store.dart')) continue;
+      if (file.path.endsWith('file_progress_store.dart') || file.path.endsWith('platform_store_web.dart')) continue;
       final source = file.readAsStringSync();
-      for (final banned in ['package:flutter', 'dart:io', 'package:path_provider', 'dart:ui']) {
+      for (final banned in ['package:flutter', 'dart:io', 'package:path_provider', 'dart:ui', 'package:web']) {
         expect(source, isNot(contains(banned)), reason: '${file.path} imports $banned');
       }
     }
@@ -25,7 +25,7 @@ void main() {
     ].whereType<File>().where((f) => f.path.endsWith('.dart'));
     for (final file in files) {
       final source = file.readAsStringSync();
-      for (final banned in ['file_progress_store', 'progress_store.dart', 'save_codec', 'dart:io', 'path_provider']) {
+      for (final banned in ['file_progress_store', 'progress_store.dart', 'platform_store', 'save_codec', 'dart:io', 'path_provider', 'package:web']) {
         expect(source, isNot(contains(banned)), reason: '${file.path} uses $banned');
       }
     }

@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../progress/campaign.dart';
-import '../progress/file_progress_store.dart';
 import '../progress/progress_ledger.dart' as ledger;
 import '../progress/progress_store.dart';
 import '../progress/save_codec.dart';
@@ -13,13 +12,9 @@ import '../progress/save_data.dart';
 import 'providers.dart';
 
 /// Where the save lives. In memory unless `main` installs
-/// [platformProgressStore], so tests never touch device storage.
+/// `platformProgressStore()` (a file on the phone, local storage in the
+/// browser), so tests never touch device storage.
 final progressStoreProvider = Provider<ProgressStore>((ref) => MemoryProgressStore());
-
-/// The device store: a JSON file in the app's support directory. Flutter web
-/// is a preview only and keeps progress in memory.
-ProgressStore platformProgressStore() =>
-    kIsWeb ? MemoryProgressStore() : FileProgressStore.appSupport();
 
 /// The worlds manifest and every puzzle a world lists.
 final campaignProvider = FutureProvider<Campaign>((ref) async {

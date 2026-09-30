@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:algorun/progress/browser_progress_store.dart';
 import 'package:algorun/progress/campaign.dart';
 import 'package:algorun/progress/file_progress_store.dart';
 import 'package:algorun/progress/progress_store.dart';
@@ -482,4 +483,76 @@ void main() {
       expect((await store().load()).save.puzzles, isEmpty);
     });
   });
+
+  group('browser store (web)', () {
+    late _Slots slots;
+    setUp(() => slots = _Slots());
+
+    BrowserProgressStore store() => BrowserProgressStore(slots);
+
+    test('writes the same JSON as the file, in one slot, and reads it back after a reload', () async {
+      expect((await store().load()).save.puzzles, isEmpty);
+      await store().save(_richSave());
+      expect(slots.map.keys, [BrowserProgressStore.key]);
+      expect(slots.map[BrowserProgressStore.key], encodeSave(_richSave()));
+      final loaded = await store().load();
+      expect(loaded.issues, isEmpty);
+      expect(encodeSave(loaded.save), encodeSave(_richSave()));
+    });
+
+    test('an unreadable save is copied aside, never deleted', () async {
+      slots.map[BrowserProgressStore.key] = '{"saveVersion": 99}';
+      final loaded = await store().load();
+      expect(loaded.save.puzzles, isEmpty);
+      expect(loaded.issues.single.path, 'saveVersion');
+      final aside = slots.map.keys.where((k) => k.startsWith('${BrowserProgressStore.key}.unreadable-')).toList();
+      expect(aside, hasLength(1));
+      expect(slots.map[aside.single], '{"saveVersion": 99}');
+      expect(slots.map[BrowserProgressStore.key], '{"saveVersion": 99}', reason: 'untouched until the next save');
+    });
+
+    test('blocked storage: play starts fresh and a failed write reaches the caller', () async {
+      slots.blocked = true;
+      final loaded = await store().load();
+      expect(loaded.save.puzzles, isEmpty);
+      expect(loaded.issues, hasLength(1));
+      await expectLater(store().save(_richSave()), throwsA(isA<StateError>()));
+    });
+
+    test('clear removes the save', () async {
+      await store().save(_richSave());
+      await store().clear();
+      expect(slots.map, isEmpty);
+      expect((await store().load()).save.puzzles, isEmpty);
+    });
+  });
+}
+
+/// Local storage in memory; [blocked] makes every access throw, as a browser
+/// with storage switched off does.
+final class _Slots implements TextSlots {
+  final map = <String, String>{};
+  bool blocked = false;
+
+  void _check() {
+    if (blocked) throw StateError('storage blocked');
+  }
+
+  @override
+  String? read(String key) {
+    _check();
+    return map[key];
+  }
+
+  @override
+  void write(String key, String value) {
+    _check();
+    map[key] = value;
+  }
+
+  @override
+  void remove(String key) {
+    _check();
+    map.remove(key);
+  }
 }

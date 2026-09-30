@@ -10,6 +10,7 @@ import '../../l10n/terms.dart';
 import '../../progress/progress_ledger.dart';
 import '../../progress/save_data.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../shared/content_width.dart';
 import '../../state/performance_text.dart';
 
 /// A puzzle to go on to after a solve.
@@ -154,7 +155,7 @@ final class ResultsScreen extends StatelessWidget {
     final next = kind == ResultKind.correct ? args.next : null;
     return Scaffold(
       appBar: AppBar(title: Text(l.resultTitle)),
-      body: SafeArea(
+      body: ContentWidth(child: SafeArea(
         top: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -295,7 +296,7 @@ final class ResultsScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      )),
     );
   }
 }

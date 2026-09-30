@@ -5,6 +5,7 @@ import '../../guide/guide_data.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/terms.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../shared/content_width.dart';
 
 enum GuideTab { basics, concepts, blocks }
 
@@ -55,7 +56,7 @@ final class GuideScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: SafeArea(
+        body: ContentWidth(child: SafeArea(
           top: false,
           child: TabBarView(
             children: [
@@ -80,7 +81,7 @@ final class GuideScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        )),
       ),
     );
   }

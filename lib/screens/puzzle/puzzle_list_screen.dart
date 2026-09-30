@@ -8,6 +8,7 @@ import '../../l10n/content_text.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/terms.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../shared/content_width.dart';
 import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';
 import '../../state/progress_text.dart';
@@ -28,7 +29,7 @@ final class PuzzleListScreen extends ConsumerWidget {
           world == null ? l.puzzlesTitle : l.worldHeading(world.index.toString().padLeft(2, '0'), text.worldTitle(world)),
         ),
       ),
-      body: SafeArea(top: false, child: view.when(
+      body: ContentWidth(child: SafeArea(top: false, child: view.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
         data: (view) {
@@ -77,7 +78,7 @@ final class PuzzleListScreen extends ConsumerWidget {
             },
           );
         },
-      )),
+      ))),
     );
   }
 }

@@ -692,6 +692,7 @@
   "settingsTitle": "Settings",
   "showBriefSetting": "Show the brief when a puzzle opens",
   "privacyNote": "Progress, your programs and your best results are saved on this device only. There is no account and nothing is uploaded.",
+  "webStorageNote": "In a web browser, progress is kept by that browser for this address. Clearing the site's data, or another browser, starts fresh.",
   "resetProgress": "Reset progress",
   "resetConfirmTitle": "Reset progress?",
   "resetConfirmBody": "Every solved puzzle, saved program and best result on this device is deleted. This cannot be undone.",

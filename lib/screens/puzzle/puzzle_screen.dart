@@ -14,6 +14,7 @@ import '../../l10n/terms.dart';
 import '../../progress/campaign.dart';
 import '../../progress/progress_ledger.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../shared/content_width.dart';
 import '../../state/hint_session.dart';
 import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';
@@ -470,7 +471,7 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
             ),
             // Side insets (landscape system bars, cutouts); the RUN bar keeps
             // clear of the bottom one itself.
-            body: SafeArea(
+            body: ContentWidth(maxWidth: ContentWidth.editor, child: SafeArea(
               top: false,
               bottom: false,
               child: Column(
@@ -497,7 +498,7 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
                   RunBar(controller: _controller, onRun: _run, running: _running, saved: widget.save != null),
                 ],
               ),
-            ),
+            )),
           ),
         );
       },

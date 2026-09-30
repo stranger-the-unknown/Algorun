@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/l10n.dart';
 import '../../shared/theme/app_theme.dart';
+import '../../shared/content_width.dart';
 import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';
 import '../guide/guide_screen.dart';
@@ -21,7 +22,7 @@ final class HomeScreen extends ConsumerWidget {
     final current = currentId == null ? null : view!.campaign.puzzles[currentId];
     final currentWorld = currentId == null ? null : view!.campaign.worldOf(currentId);
     return Scaffold(
-      body: SafeArea(
+      body: ContentWidth(child: SafeArea(
         // Tall phones keep the buttons at the bottom; short screens
         // (landscape, large fonts) scroll instead of overflowing.
         child: LayoutBuilder(
@@ -152,7 +153,7 @@ final class HomeScreen extends ConsumerWidget {
             ),
           ),
         ),
-      ),
+      )),
     );
   }
 }

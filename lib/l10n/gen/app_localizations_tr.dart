@@ -906,6 +906,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'İlerlemen, programların ve en iyi sonuçların yalnızca bu cihaza kaydedilir. Hesap yoktur ve hiçbir şey yüklenmez.';
 
   @override
+  String get webStorageNote =>
+      'Web tarayıcısında ilerleme o tarayıcıda, bu adres için saklanır. Sitenin verilerini silersen ya da başka bir tarayıcı kullanırsan baştan başlarsın.';
+
+  @override
   String get resetProgress => 'İlerlemeyi sıfırla';
 
   @override

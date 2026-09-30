@@ -60,16 +60,33 @@ class _AlgorunAppState extends ConsumerState<AlgorunApp> {
         maxScaleFactor: maxTextScale,
         child: AnnotatedRegion(value: overlayStyleFor(Theme.of(context).brightness), child: child!),
       ),
-      initialRoute: '/',
+      // Always open at home. In a browser the address may name a deeper
+      // screen (a reload); home's CONTINUE leads back to the puzzle.
+      onGenerateInitialRoutes: (_) => [_home()],
       routes: {
         '/': (_) => const HomeScreen(),
         '/worlds': (_) => const WorldSelectScreen(),
-        '/puzzles': (_) => const PuzzleListScreen(),
-        '/puzzle': (_) => const PuzzleScreen(),
-        '/results': (_) => const ResultsScreen(),
         '/settings': (_) => const SettingsScreen(),
         '/guide': (_) => const GuideScreen(),
       },
+      onGenerateRoute: _withArguments,
     );
   }
+}
+
+MaterialPageRoute<void> _home() =>
+    MaterialPageRoute(settings: const RouteSettings(name: '/'), builder: (_) => const HomeScreen());
+
+/// Screens that need to know which world, puzzle or run they show. Without
+/// arguments (the browser's forward button) they go home instead of guessing.
+Route<void>? _withArguments(RouteSettings settings) {
+  final page = switch (settings.name) {
+    '/puzzles' => const PuzzleListScreen(),
+    '/puzzle' => const PuzzleScreen(),
+    '/results' => const ResultsScreen(),
+    _ => null,
+  };
+  if (page == null) return null;
+  if (settings.arguments == null) return _home();
+  return MaterialPageRoute(settings: settings, builder: (_) => page);
 }

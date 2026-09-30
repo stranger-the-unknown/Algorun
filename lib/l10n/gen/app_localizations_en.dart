@@ -908,6 +908,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Progress, your programs and your best results are saved on this device only. There is no account and nothing is uploaded.';
 
   @override
+  String get webStorageNote =>
+      'In a web browser, progress is kept by that browser for this address. Clearing the site\'s data, or another browser, starts fresh.';
+
+  @override
   String get resetProgress => 'Reset progress';
 
   @override

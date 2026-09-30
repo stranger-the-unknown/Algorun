@@ -1628,6 +1628,12 @@ abstract class AppLocalizations {
   /// **'Progress, your programs and your best results are saved on this device only. There is no account and nothing is uploaded.'**
   String get privacyNote;
 
+  /// No description provided for @webStorageNote.
+  ///
+  /// In en, this message translates to:
+  /// **'In a web browser, progress is kept by that browser for this address. Clearing the site\'s data, or another browser, starts fresh.'**
+  String get webStorageNote;
+
   /// No description provided for @resetProgress.
   ///
   /// In en, this message translates to:
