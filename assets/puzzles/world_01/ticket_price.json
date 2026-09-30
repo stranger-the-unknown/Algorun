@@ -1,0 +1,95 @@
+{
+  "id": "ticket_price",
+  "version": 1,
+  "title": "Museum Tickets",
+  "world": "world_01",
+  "chapter": "price_by_age_bands",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "The town museum prices tickets by age. Children younger than 6 get in free. Visitors aged 65 or older pay 4 coins. Everyone else pays 10 coins. Report the price for a visitor of the given age.",
+  "io": {
+    "inputs": [
+      {"name": "age", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["Ages are whole numbers from 0 to 120."]},
+  "blocks": {
+    "allow": ["cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "ctrl.else", "ctrl.if", "ctrl.return", "lit.num", "var.get"],
+    "maxBlocks": 23
+  },
+  "limits": {"maxOps": 100, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["There are three prices. Use IF to check one age group at a time and RETURN its price.", "Check the free group first with LESS THAN, then the older visitors with GREATER OR EQUAL; whoever is left pays 10.", "Mind the edges: a 6-year-old already pays 10, and a 65-year-old already pays 4."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"age": 3},
+        "out": 0
+      },
+      {
+        "id": "v2",
+        "in": {"age": 30},
+        "out": 10
+      },
+      {
+        "id": "v3",
+        "in": {"age": 71},
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"age": 0},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"age": 5},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"age": 6},
+        "out": 10
+      },
+      {
+        "id": "h04",
+        "in": {"age": 7},
+        "out": 10
+      },
+      {
+        "id": "h05",
+        "in": {"age": 18},
+        "out": 10
+      },
+      {
+        "id": "h06",
+        "in": {"age": 64},
+        "out": 10
+      },
+      {
+        "id": "h07",
+        "in": {"age": 65},
+        "out": 4
+      },
+      {
+        "id": "h08",
+        "in": {"age": 66},
+        "out": 4
+      },
+      {
+        "id": "h09",
+        "in": {"age": 120},
+        "out": 4
+      }
+    ]
+  },
+  "edgeCases": ["a visitor aged exactly 6", "a visitor aged exactly 65", "a newborn, age 0"],
+  "variables": {"pool": []},
+  "reference": {"strategy": "price_by_age_bands"}
+}

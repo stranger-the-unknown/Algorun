@@ -1,0 +1,95 @@
+{
+  "id": "party_tables",
+  "version": 1,
+  "title": "Party Tables",
+  "world": "world_01",
+  "chapter": "ceiling_division",
+  "tier": 1,
+  "mode": "edge",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "Round tables at a party each seat the same number of guests. How many tables must be set out so that every guest has a seat? A table may be left partly empty, and with no guests no table is needed.",
+  "io": {
+    "inputs": [
+      {"name": "guests", "type": "num"},
+      {"name": "seats", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["There are 0 to 1000 guests.", "A table seats 1 to 20 guests."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.floor_div", "arith.mod", "cmp.eq", "cmp.gt", "cmp.ne", "ctrl.if", "ctrl.return", "lit.num", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 21
+  },
+  "limits": {"maxOps": 100, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["FLOOR DIVIDE tells how many tables are filled completely.", "If the REMAINDER is not 0, some guests are left over and need one more table.", "When the guests fill the tables exactly, no extra table is needed, and 0 guests need 0 tables."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"guests": 10, "seats": 4},
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {"guests": 25, "seats": 6},
+        "out": 5
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"guests": 12, "seats": 4},
+        "out": 3
+      },
+      {
+        "id": "h02",
+        "in": {"guests": 0, "seats": 5},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"guests": 1, "seats": 8},
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {"guests": 8, "seats": 8},
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {"guests": 9, "seats": 8},
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {"guests": 7, "seats": 1},
+        "out": 7
+      },
+      {
+        "id": "h07",
+        "in": {"guests": 13, "seats": 20},
+        "out": 1
+      },
+      {
+        "id": "h08",
+        "in": {"guests": 999, "seats": 20},
+        "out": 50
+      },
+      {
+        "id": "h09",
+        "in": {"guests": 1000, "seats": 20},
+        "out": 50
+      }
+    ]
+  },
+  "edgeCases": ["guests that fill the tables exactly", "no guests", "fewer guests than one table seats"],
+  "variables": {
+    "pool": [
+      {"name": "tables", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "ceiling_division"}
+}

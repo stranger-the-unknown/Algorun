@@ -1,0 +1,96 @@
+{
+  "id": "stair_lights",
+  "version": 1,
+  "title": "Stair Lights",
+  "world": "world_01",
+  "chapter": "count_multiples_up_to",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "A staircase has steps numbered 1, 2, 3 and so on up to the top step. An electrician fits a light on every step whose number is a multiple of the gap: with a gap of 3, steps 3, 6, 9 and so on. How many lights are fitted? The top step counts too.",
+  "io": {
+    "inputs": [
+      {"name": "steps", "type": "num"},
+      {"name": "gap", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["The staircase has 0 to 500 steps.", "The gap is a whole number from 1 to 50."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.mod", "cmp.eq", "ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 26
+  },
+  "limits": {"maxOps": 7100, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Visit every step number from 1 up to the top one and count the steps that get a light.", "A step gets a light when the REMAINDER of its number divided by the gap is 0.", "FOR stops just before its TO value, so to include the top step the loop must run up to one past it."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"steps": 10, "gap": 3},
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {"steps": 17, "gap": 4},
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"steps": 12, "gap": 4},
+        "out": 3
+      },
+      {
+        "id": "h02",
+        "in": {"steps": 0, "gap": 5},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"steps": 4, "gap": 5},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"steps": 5, "gap": 5},
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {"steps": 1, "gap": 1},
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {"steps": 30, "gap": 1},
+        "out": 30
+      },
+      {
+        "id": "h07",
+        "in": {"steps": 100, "gap": 7},
+        "out": 14
+      },
+      {
+        "id": "h08",
+        "in": {"steps": 500, "gap": 25},
+        "out": 20
+      },
+      {
+        "id": "h09",
+        "in": {"steps": 499, "gap": 50},
+        "out": 9
+      }
+    ]
+  },
+  "edgeCases": ["the top step is a multiple of the gap", "a gap larger than the staircase", "no steps at all"],
+  "variables": {
+    "pool": [
+      {"name": "count", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "count_multiples_up_to"}
+}

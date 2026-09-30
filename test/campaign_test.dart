@@ -13,12 +13,15 @@ void main() {
         for (final id in ids) id: const PuzzleProgress(puzzleVersion: 1, completed: true),
       });
 
-  test('85 puzzles load, and a fresh install starts at Foundations', () {
-    expect(campaign.puzzles, hasLength(85));
+  test('95 puzzles load, and a fresh install starts at Foundations', () {
+    expect(campaign.puzzles, hasLength(95));
     final fresh = evaluateCampaign(campaign, PlayerSave.fresh);
     expect(fresh.worldStatus('world_01'), WorldStatus.open);
-    expect([for (final e in fresh.puzzles.entries) if (e.value != PuzzleStatus.locked) e.key],
-        ['warm_readings', 'highest_tide']);
+    // MS15: Foundations holds twelve puzzles, all open from the start.
+    final basics = campaign.manifest.byId('world_01')!.puzzleIds;
+    expect(basics, hasLength(12));
+    expect(basics.take(2), ['warm_readings', 'highest_tide']);
+    expect([for (final e in fresh.puzzles.entries) if (e.value != PuzzleStatus.locked) e.key], basics);
     expect(fresh.missingFor('world_02'), ['variables']);
   });
 
@@ -40,16 +43,19 @@ void main() {
   });
 
   test('Foundations opens Arrays; Arrays opens the next chapters', () {
-    final afterBasics = evaluateCampaign(campaign, solved(['warm_readings', 'highest_tide']));
+    final basics = campaign.manifest.byId('world_01')!.puzzleIds;
+    final almostBasics = evaluateCampaign(campaign, solved(basics.skip(1)));
+    expect(almostBasics.worldStatus('world_02'), WorldStatus.locked, reason: 'one Foundations puzzle is still open');
+    final afterBasics = evaluateCampaign(campaign, solved(basics));
     expect(afterBasics.worldStatus('world_02'), WorldStatus.open);
     expect(afterBasics.worldStatus('world_03'), WorldStatus.locked);
     // A world completes when every puzzle it lists is solved (MS14 made
     // Arrays nine puzzles long).
     final arrays = campaign.manifest.byId('world_02')!.puzzleIds;
     expect(arrays, hasLength(9));
-    final almost = evaluateCampaign(campaign, solved(['warm_readings', 'highest_tide', ...arrays.skip(1)]));
+    final almost = evaluateCampaign(campaign, solved([...basics, ...arrays.skip(1)]));
     expect(almost.worldStatus('world_03'), WorldStatus.locked, reason: 'one Arrays puzzle is still open');
-    final afterArrays = evaluateCampaign(campaign, solved(['warm_readings', 'highest_tide', ...arrays]));
+    final afterArrays = evaluateCampaign(campaign, solved([...basics, ...arrays]));
     for (final world in ['world_03', 'world_04', 'world_06', 'world_11']) {
       expect(afterArrays.worldStatus(world), WorldStatus.open, reason: world);
     }

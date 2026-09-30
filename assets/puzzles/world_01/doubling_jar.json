@@ -1,0 +1,101 @@
+{
+  "id": "doubling_jar",
+  "version": 1,
+  "title": "Doubling Jar",
+  "world": "world_01",
+  "chapter": "repeated_doubling_until_goal",
+  "tier": 1,
+  "mode": "edge",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "A savings jar holds some coins. At the end of every week the number of coins in the jar doubles. After how many weeks does the jar hold at least the goal? If it already holds enough, the answer is 0 weeks.",
+  "io": {
+    "inputs": [
+      {"name": "coins", "type": "num"},
+      {"name": "goal", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["The jar starts with 1 to 1000 coins.", "The goal is 1 to 1000000 coins."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.mul", "cmp.ge", "cmp.le", "cmp.lt", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 24
+  },
+  "limits": {"maxOps": 400, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Keep the coins in the jar and a week counter, and repeat the doubling while there are still too few coins.", "WHILE repeats as long as its condition holds: here, while the jar holds LESS THAN the goal.", "If the jar starts at or above the goal the loop must not run at all, so the answer is 0."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"coins": 1, "goal": 100},
+        "out": 7
+      },
+      {
+        "id": "v2",
+        "in": {"coins": 5, "goal": 30},
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"coins": 10, "goal": 10},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"coins": 12, "goal": 5},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"coins": 1, "goal": 1},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"coins": 1, "goal": 2},
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {"coins": 3, "goal": 4},
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {"coins": 500, "goal": 1000},
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {"coins": 501, "goal": 1000},
+        "out": 1
+      },
+      {
+        "id": "h08",
+        "in": {"coins": 7, "goal": 1000},
+        "out": 8
+      },
+      {
+        "id": "h09",
+        "in": {"coins": 1000, "goal": 1000000},
+        "out": 10
+      },
+      {
+        "id": "h10",
+        "in": {"coins": 1, "goal": 1000000},
+        "out": 20
+      }
+    ]
+  },
+  "edgeCases": ["a jar that already holds the goal", "a jar that reaches the goal exactly", "one coin and a large goal"],
+  "variables": {
+    "pool": [
+      {"name": "jar", "type": "num"},
+      {"name": "weeks", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "repeated_doubling_until_goal"}
+}

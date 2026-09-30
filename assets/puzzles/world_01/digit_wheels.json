@@ -1,0 +1,95 @@
+{
+  "id": "digit_wheels",
+  "version": 1,
+  "title": "Digit Wheels",
+  "world": "world_01",
+  "chapter": "count_decimal_digits",
+  "tier": 1,
+  "mode": "edge",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "A mechanical counter prints a number with one wheel for each digit. How many wheels does it need to print the given number? The number has no leading zeros, and printing 0 still needs one wheel.",
+  "io": {
+    "inputs": [
+      {"name": "number", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["The number is a whole number from 0 to 999999999."]},
+  "blocks": {
+    "allow": ["arith.floor_div", "cmp.eq", "cmp.ge", "cmp.gt", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 24
+  },
+  "limits": {"maxOps": 200, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Count how many times you can chop the last digit off the number.", "FLOOR DIVIDE by 10 drops the last digit; repeat WHILE the number is still 10 or more.", "Remember 0: it is printed as a single digit, so the answer is never 0."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"number": 4096},
+        "out": 4
+      },
+      {
+        "id": "v2",
+        "in": {"number": 70000000},
+        "out": 8
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"number": 0},
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {"number": 5},
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {"number": 9},
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {"number": 10},
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {"number": 99},
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {"number": 100},
+        "out": 3
+      },
+      {
+        "id": "h07",
+        "in": {"number": 1000000},
+        "out": 7
+      },
+      {
+        "id": "h08",
+        "in": {"number": 123456789},
+        "out": 9
+      },
+      {
+        "id": "h09",
+        "in": {"number": 999999999},
+        "out": 9
+      }
+    ]
+  },
+  "edgeCases": ["the number 0", "a round number such as 10 or 1000000", "the largest nine-digit number"],
+  "variables": {
+    "pool": [
+      {"name": "n", "type": "num"},
+      {"name": "wheels", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "count_decimal_digits"}
+}

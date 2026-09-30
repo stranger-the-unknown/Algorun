@@ -1,6 +1,7 @@
 {
   "about": "The language capability audit (MS12). Every campaign puzzle names one family in its reference spec; a blocked family or mode is refused by the content validator. Update this file when the language or the product gains a capability, never to let a puzzle through.",
   "families": {
+    "control_flow": {"status": "supported", "note": "IF / ELSE, WHILE, FOR, REMAINDER, FLOOR DIVIDE and running values on plain numbers, no list needed (Foundations, MS15)."},
     "array_scan": {"status": "supported", "note": "Lists: GET ELEMENT / SET ELEMENT / LENGTH / APPEND / REMOVE / SWAP, FOR, FOR EACH, WHILE."},
     "prefix_sum": {"status": "supported", "note": "Running totals in a list built with APPEND."},
     "binary_search": {"status": "supported", "note": "FLOOR DIVIDE gives whole midpoints (MS7)."},

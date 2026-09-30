@@ -102,12 +102,15 @@ void main() {
     PlayerSave solved(Iterable<String> ids) => PlayerSave(puzzles: {
           for (final id in ids) id: const PuzzleProgress(puzzleVersion: 1, completed: true),
         });
+    final basics = _campaign.manifest.byId('world_01')!.puzzleIds;
     var progress = evaluateCampaign(_campaign, solved(['warm_readings']));
     expect(nextPuzzle(_campaign, progress, 'warm_readings'), 'highest_tide');
     progress = evaluateCampaign(_campaign, solved(['highest_tide']));
-    expect(nextPuzzle(_campaign, progress, 'highest_tide'), 'warm_readings', reason: 'wraps to an unsolved one');
-    progress = evaluateCampaign(_campaign, solved(['warm_readings', 'highest_tide']));
-    expect(nextPuzzle(_campaign, progress, 'highest_tide'), 'lowest_balance', reason: 'Arrays just opened');
+    expect(nextPuzzle(_campaign, progress, 'highest_tide'), 'ticket_price');
+    progress = evaluateCampaign(_campaign, solved(basics.skip(1)));
+    expect(nextPuzzle(_campaign, progress, basics.last), 'warm_readings', reason: 'wraps to an unsolved one');
+    progress = evaluateCampaign(_campaign, solved(basics));
+    expect(nextPuzzle(_campaign, progress, basics.last), 'lowest_balance', reason: 'Arrays just opened');
     progress = evaluateCampaign(_campaign, solved(_campaign.puzzles.keys));
     expect(nextPuzzle(_campaign, progress, 'many_shortest_routes'), isNull);
   });
@@ -132,9 +135,10 @@ void main() {
     await tester.tap(find.byKey(const Key('world-world_01')));
     await tester.pumpAndSettle();
     expect(find.text('01 · Foundations'), findsOneWidget);
-    expect(find.text('0 of 2 solved · teaches variables, control'), findsOneWidget);
-    expect(find.text('Tier 1'), findsNWidgets(2));
+    expect(find.text('0 of 12 solved · teaches variables, control'), findsOneWidget);
+    // Twelve puzzles since MS15; the list builds the rows on screen.
+    expect(find.text('Tier 1'), findsWidgets);
     expect(find.text('In progress'), findsOneWidget);
-    expect(find.text('Not started'), findsOneWidget);
+    expect(find.text('Not started'), findsWidgets);
   });
 }

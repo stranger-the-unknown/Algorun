@@ -11,7 +11,17 @@
       "prerequisites": [],
       "puzzles": [
         "warm_readings",
-        "highest_tide"
+        "highest_tide",
+        "ticket_price",
+        "stair_lights",
+        "party_tables",
+        "doubling_jar",
+        "digit_wheels",
+        "three_planks",
+        "lighthouse_bell",
+        "dry_spell",
+        "hill_tops",
+        "lift_trips"
       ]
     },
     {

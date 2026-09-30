@@ -38,7 +38,7 @@ void main() {
   const repo = AssetPuzzleRepository();
 
   test('the five MS8 puzzles stay in their worlds, and no probe is listed', () async {
-    // Since MS14 the worlds list 85 puzzles (campaign_test.dart); the five
+    // Since MS15 the worlds list 95 puzzles (campaign_test.dart); the five
     // from MS8 keep their places.
     final worlds = await repo.loadWorlds();
     for (final MapEntry(key: world, value: id) in _real.entries) {
@@ -151,7 +151,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('probe'), findsNothing);
-    expect(find.text('0 of 2 solved'), findsOneWidget);
+    expect(find.text('0 of 12 solved'), findsOneWidget);
     expect(find.text('Hash Maps'), findsOneWidget);
     expect(find.text('Locked — learn variables first'), findsOneWidget);
     expect(find.text('Locked — learn arrays first'), findsWidgets);

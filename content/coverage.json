@@ -1,35 +1,36 @@
 {
-  "total": 85,
+  "total": 95,
   "targetTotal": 300,
   "tiers": {
-    "1": 2,
-    "2": 30,
+    "1": 7,
+    "2": 35,
     "3": 32,
     "4": 19,
     "5": 2
   },
   "modes": {
     "budget": 10,
-    "build": 53,
-    "edge": 14,
+    "build": 60,
+    "edge": 17,
     "optimize": 5,
     "restricted": 3
   },
   "structures": {
-    "array": 33,
+    "array": 36,
     "graph": 14,
     "grid": 3,
     "hash_map": 5,
     "hash_set": 3,
     "linked_list": 9,
     "queue": 2,
-    "scalar": 1,
+    "scalar": 8,
     "stack": 5,
     "tree": 10
   },
   "families": {
-    "array_scan": 6,
+    "array_scan": 9,
     "binary_search": 2,
+    "control_flow": 7,
     "dp_grid": 3,
     "dp_iterative": 5,
     "graph_bfs": 4,
@@ -52,7 +53,7 @@
   },
   "performance": {
     "budget": 19,
-    "correctness": 58,
+    "correctness": 68,
     "optimization": 5,
     "restricted": 3
   },
@@ -64,7 +65,7 @@
     "binary_search_answer": 1,
     "bst": 1,
     "complement_lookup": 1,
-    "control": 2,
+    "control": 12,
     "counting": 1,
     "dfs": 4,
     "dp": 9,
@@ -91,7 +92,7 @@
     "topological_order": 1,
     "tree": 10,
     "two_pointers": 11,
-    "variables": 2
+    "variables": 12
   },
   "worlds": [
     {
@@ -101,20 +102,31 @@
         "variables",
         "control"
       ],
-      "count": 2,
+      "count": 12,
       "tiers": {
-        "1": 2,
-        "2": 0,
+        "1": 7,
+        "2": 5,
         "3": 0,
         "4": 0,
         "5": 0
       },
       "families": {
-        "array_scan": 2
+        "array_scan": 5,
+        "control_flow": 7
       },
       "patterns": {
+        "ceiling_division": 1,
         "count_above_threshold": 1,
-        "first_position_of_maximum": 1
+        "count_decimal_digits": 1,
+        "count_exactly_one_of_two_periods": 1,
+        "count_multiples_up_to": 1,
+        "count_strict_local_peaks": 1,
+        "first_position_of_maximum": 1,
+        "longest_run_of_zeros": 1,
+        "next_fit_trips": 1,
+        "price_by_age_bands": 1,
+        "repeated_doubling_until_goal": 1,
+        "triangle_check_all_sides": 1
       },
       "target": 12
     },
@@ -621,6 +633,21 @@
       ]
     },
     {
+      "id": "digit_wheels",
+      "world": "world_01",
+      "tier": 1,
+      "mode": "edge",
+      "family": "control_flow",
+      "pattern": "count_decimal_digits",
+      "structure": "scalar",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
       "id": "direct_hop",
       "world": "world_10",
       "tier": 2,
@@ -651,6 +678,21 @@
       ]
     },
     {
+      "id": "doubling_jar",
+      "world": "world_01",
+      "tier": 1,
+      "mode": "edge",
+      "family": "control_flow",
+      "pattern": "repeated_doubling_until_goal",
+      "structure": "scalar",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
       "id": "drop_faulty_cars",
       "world": "world_07",
       "tier": 3,
@@ -665,6 +707,21 @@
       "concepts": [
         "linked_list",
         "relinking"
+      ]
+    },
+    {
+      "id": "dry_spell",
+      "world": "world_01",
+      "tier": 2,
+      "mode": "build",
+      "family": "array_scan",
+      "pattern": "longest_run_of_zeros",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
       ]
     },
     {
@@ -785,6 +842,21 @@
       "mode": "build",
       "family": "array_scan",
       "pattern": "first_position_of_maximum",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
+      "id": "hill_tops",
+      "world": "world_01",
+      "tier": 2,
+      "mode": "build",
+      "family": "array_scan",
+      "pattern": "count_strict_local_peaks",
       "structure": "array",
       "secondary": [],
       "performance": "correctness",
@@ -915,6 +987,36 @@
       "concepts": [
         "hash_map",
         "prefix_sum"
+      ]
+    },
+    {
+      "id": "lift_trips",
+      "world": "world_01",
+      "tier": 2,
+      "mode": "build",
+      "family": "array_scan",
+      "pattern": "next_fit_trips",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
+      "id": "lighthouse_bell",
+      "world": "world_01",
+      "tier": 2,
+      "mode": "build",
+      "family": "control_flow",
+      "pattern": "count_exactly_one_of_two_periods",
+      "structure": "scalar",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
       ]
     },
     {
@@ -1241,6 +1343,21 @@
       "performance": "correctness",
       "concepts": [
         "two_pointers"
+      ]
+    },
+    {
+      "id": "party_tables",
+      "world": "world_01",
+      "tier": 1,
+      "mode": "edge",
+      "family": "control_flow",
+      "pattern": "ceiling_division",
+      "structure": "scalar",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
       ]
     },
     {
@@ -1610,6 +1727,21 @@
       ]
     },
     {
+      "id": "stair_lights",
+      "world": "world_01",
+      "tier": 1,
+      "mode": "build",
+      "family": "control_flow",
+      "pattern": "count_multiples_up_to",
+      "structure": "scalar",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
       "id": "step_toll",
       "world": "world_13",
       "tier": 2,
@@ -1656,6 +1788,21 @@
       ]
     },
     {
+      "id": "three_planks",
+      "world": "world_01",
+      "tier": 2,
+      "mode": "build",
+      "family": "control_flow",
+      "pattern": "triangle_check_all_sides",
+      "structure": "scalar",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
+      ]
+    },
+    {
       "id": "ticket_minutes",
       "world": "world_06",
       "tier": 4,
@@ -1669,6 +1816,21 @@
       "performance": "budget",
       "concepts": [
         "queue"
+      ]
+    },
+    {
+      "id": "ticket_price",
+      "world": "world_01",
+      "tier": 1,
+      "mode": "build",
+      "family": "control_flow",
+      "pattern": "price_by_age_bands",
+      "structure": "scalar",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "variables",
+        "control"
       ]
     },
     {
@@ -1805,19 +1967,6 @@
     }
   ],
   "gaps": [
-    {
-      "area": "world",
-      "id": "world_01",
-      "have": 2,
-      "want": 12
-    },
-    {
-      "area": "tiers",
-      "id": "world_01",
-      "missing": [
-        2
-      ]
-    },
     {
       "area": "world",
       "id": "world_02",
@@ -1964,7 +2113,7 @@
     {
       "area": "family",
       "id": "array_scan",
-      "have": 6,
+      "have": 9,
       "want": 12
     },
     {
@@ -2117,7 +2266,7 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 53,
+      "have": 60,
       "want": 150
     },
     {
@@ -2141,7 +2290,7 @@
     {
       "area": "mode",
       "id": "edge",
-      "have": 14,
+      "have": 17,
       "want": 20
     },
     {

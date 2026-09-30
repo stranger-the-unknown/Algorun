@@ -815,6 +815,96 @@
         "Her sandık için kapasiteleri aşağı doğru yürü ki sandık iki kez kullanılmasın.",
         "Her alt kümeyi denemek doğrudur ve sandık çoğalınca çok yavaştır."
       ]
+    },
+    "ticket_price": {
+      "title": "Müze Biletleri",
+      "story": "Kasabanın müzesi bilet fiyatını yaşa göre belirliyor. 6 yaşından küçük çocuklar ücretsiz girer. 65 yaş ve üstü ziyaretçiler 4 jeton öder. Diğer herkes 10 jeton öder. Verilen yaştaki bir ziyaretçinin ödeyeceği fiyatı bildir.",
+      "hints": [
+        "Üç fiyat var. Her seferinde bir yaş grubunu IF ile kontrol et ve fiyatını RETURN ile döndür.",
+        "Önce ücretsiz grubu LESS THAN ile, sonra yaşlı ziyaretçileri GREATER OR EQUAL ile kontrol et; geriye kalan herkes 10 öder.",
+        "Sınırlara dikkat: 6 yaşındaki biri artık 10 öder, 65 yaşındaki biri ise artık 4 öder."
+      ]
+    },
+    "stair_lights": {
+      "title": "Merdiven Lambaları",
+      "story": "Bir merdivenin basamakları 1, 2, 3 diye en üst basamağa kadar numaralanmış. Bir elektrikçi, numarası aralığın katı olan her basamağa lamba takıyor: aralık 3 ise 3, 6, 9 ve devamı. Kaç lamba takılır? En üst basamak da sayılır.",
+      "hints": [
+        "1'den en üst basamağa kadar her basamak numarasını dolaş ve lamba alan basamakları say.",
+        "Numarasının aralığa bölümünden kalan (REMAINDER) 0 olan basamak lamba alır.",
+        "FOR, TO değerinin hemen öncesinde durur; en üst basamağı da saymak için döngü bir fazlasına kadar gitmeli."
+      ]
+    },
+    "party_tables": {
+      "title": "Parti Masaları",
+      "story": "Bir partideki yuvarlak masaların her birinde aynı sayıda misafir oturabiliyor. Her misafire yer olması için kaç masa kurulmalı? Bir masa kısmen boş kalabilir; hiç misafir yoksa masa da gerekmez.",
+      "hints": [
+        "FLOOR DIVIDE, kaç masanın tamamen dolduğunu söyler.",
+        "REMAINDER 0 değilse bazı misafirler açıkta kalır ve bir masa daha gerekir.",
+        "Misafirler masaları tam dolduruyorsa fazladan masa gerekmez; 0 misafire de 0 masa gerekir."
+      ]
+    },
+    "doubling_jar": {
+      "title": "İkiye Katlanan Kumbara",
+      "story": "Bir kumbarada birkaç jeton var. Her haftanın sonunda kumbaradaki jeton sayısı iki katına çıkıyor. Kaç hafta sonra kumbarada en az hedef kadar jeton olur? Kumbarada zaten yeterince jeton varsa cevap 0 haftadır.",
+      "hints": [
+        "Kumbaradaki jetonları ve bir hafta sayacını tut; jeton hâlâ azken ikiye katlamayı tekrarla.",
+        "WHILE, koşulu doğru olduğu sürece tekrarlar: burada kumbaradaki jeton hedeften az (LESS THAN) olduğu sürece.",
+        "Kumbara hedefte ya da üstünde başlıyorsa döngü hiç çalışmamalı; cevap 0 olur."
+      ]
+    },
+    "digit_wheels": {
+      "title": "Rakam Çarkları",
+      "story": "Mekanik bir sayaç, her rakam için bir çark kullanarak bir sayı basıyor. Verilen sayıyı basmak için kaç çark gerekir? Sayının başında sıfır yoktur; 0'ı basmak için de bir çark gerekir.",
+      "hints": [
+        "Sayının son rakamını kaç kez kesip atabildiğini say.",
+        "10 ile FLOOR DIVIDE son rakamı atar; sayı 10 ya da daha büyük olduğu sürece (WHILE) tekrarla.",
+        "0'ı unutma: tek rakamla basılır, yani cevap asla 0 olmaz."
+      ]
+    },
+    "three_planks": {
+      "title": "Üç Tahta",
+      "story": "Bir marangoz üç tahtayı çivileyip üçgen bir çerçeve yapmak istiyor. Bu yalnızca her tahta diğer ikisinin toplamından kısaysa olur; bir tahta diğer ikisinin toplamına tam eşitse çerçeve dümdüz çöker. Üç tahta bir çerçeve oluşturabilir mi?",
+      "hints": [
+        "Üç kontrol var: her tahta, diğer ikisinin toplamıyla karşılaştırılır.",
+        "Kontrolleri AND ile birleştir: çerçeve ancak üçü de doğruysa olur.",
+        "GREATER OR EQUAL değil GREATER THAN kullan: eşit uzunluk düz bir çerçeve verir ve sayılmaz."
+      ]
+    },
+    "lighthouse_bell": {
+      "title": "Fener ve Çan",
+      "story": "Bir deniz feneri lambasını birkaç saniyede bir yakıyor, liman çanı da kendi düzeninde çalıyor: 3 saniyede bir ışık ve 5 saniyede bir çan varsa lamba 3, 6, 9 … saniyelerde yanar, çan 5, 10, 15 … saniyelerde çalar. İkisi aynı saniyeye denk gelirse denizciler onları ayırt edemez ve hiçbir şey fark etmez. 1'den son saniyeye kadar (son saniye dahil) saniyeleri sayınca, denizciler kaç saniyede tam olarak tek bir işaret fark eder?",
+      "hints": [
+        "1'den son saniyeye kadar, sonuncusu dahil her saniyeyi kontrol et.",
+        "Işık periyoduna göre REMAINDER 0 ise o saniyede ışık, çan periyoduna göre REMAINDER 0 ise çan vardır.",
+        "Bir saniyeyi yalnızca ikisinden tam biri olduğunda say: ışık AND çan yok, OR çan AND ışık yok."
+      ]
+    },
+    "dry_spell": {
+      "title": "En Uzun Kuraklık",
+      "story": "Bir hava istasyonu her gün kaç milimetre yağmur yağdığını kaydediyor. Kuraklık, hiç yağmur yağmayan (0 mm) art arda günlerden oluşan bir dönemdir. En uzun kuraklık kaç gün sürdü? Hiç kuru gün olmayan bir kayıt 0 bildirir.",
+      "hints": [
+        "Günleri sırayla dolaş ve iki sayı tut: şu anki kuraklığın uzunluğu ve şimdiye kadarki en uzunu.",
+        "Kuru bir gün şu anki kuraklığı bir gün uzatır; yağmurlu bir gün onu 0'a döndürür.",
+        "En uzun kuraklık son güne kadar sürebilir; bu yüzden en iyiyle yalnızca yağmur gelince değil, her kuru günden sonra karşılaştır."
+      ]
+    },
+    "hill_tops": {
+      "title": "Tepeler",
+      "story": "Bir yürüyüş uygulaması bir parkuru, baştan sona eşit aralıklı noktaların yükseklikleri olarak saklıyor. Tepe, hem hemen önceki hem de hemen sonraki noktadan kesinlikle daha yüksek olan bir noktadır. İlk ve son noktaların tek komşusu olduğu için asla tepe olmazlar; komşu iki noktanın aynı yükseklikte olduğu düz bir zirve de tepe sayılmaz. Parkurda kaç tepe var?",
+      "hints": [
+        "Yalnızca iki yanında da komşusu olan noktalar tepe olabilir: 1. konumdan sondan bir öncekine kadar.",
+        "İki komşuya ulaşmak için GET ELEMENT'i konumun MINUS 1 ve PLUS 1 hâliyle kullan.",
+        "İki komşu da kesinlikle daha alçak olmalı: iki tarafta da GREATER THAN, AND ile birleştirilmiş."
+      ]
+    },
+    "lift_trips": {
+      "title": "Asansör Seferleri",
+      "story": "İnsanlar verilen sırayla, her biri kendi ağırlığıyla bir asansör için kuyrukta bekliyor. Asansör, içerideki toplam ağırlık kapasitesini aşmadığı sürece kuyruğun başından insanları alıyor. Sıradaki kişi kapasiteyi aşacaksa asansör kalkar ve geri kalanlar için boş döner. Herkesi taşımak için kaç sefer yapar? Bekleyen kimse yoksa hiç sefer yapmaz.",
+      "hints": [
+        "Kuyruğu sırayla dolaş; şu anki seferdeki ağırlığı ve sefer sayısını tut.",
+        "Sıradaki kişi yükü kapasiteden büyük (GREATER THAN) yapacaksa asansör önce kalkar; sonra o kişi biner.",
+        "Son grubun da kendi seferi olur; boş bir kuyruk ise 0 sefer ister."
+      ]
     }
   }
 }

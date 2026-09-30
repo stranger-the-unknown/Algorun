@@ -1,0 +1,107 @@
+{
+  "id": "lighthouse_bell",
+  "version": 1,
+  "title": "Lighthouse and Bell",
+  "world": "world_01",
+  "chapter": "count_exactly_one_of_two_periods",
+  "tier": 2,
+  "mode": "build",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "A lighthouse flashes its lamp every few seconds, and a harbour bell rings on its own schedule: with a flash every 3 seconds and a ring every 5 seconds, the lamp flashes at 3, 6, 9 … and the bell rings at 5, 10, 15 …. When both happen in the same second the sailors cannot tell them apart and notice nothing. Counting the seconds from 1 up to and including the last one, in how many seconds do the sailors notice exactly one signal?",
+  "io": {
+    "inputs": [
+      {"name": "seconds", "type": "num"},
+      {"name": "flash", "type": "num"},
+      {"name": "ring", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["0 to 600 seconds are counted.", "Both periods are whole numbers from 1 to 20."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.mod", "cmp.eq", "cmp.ne", "ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "logic.and", "logic.not", "logic.or", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 55
+  },
+  "limits": {"maxOps": 20250, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Check every second from 1 up to the last one, including the last.", "A second has a flash when the REMAINDER by the flash period is 0, and a ring when the REMAINDER by the ring period is 0.", "Count a second only when exactly one of them happens: a flash AND no ring, OR a ring AND no flash."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"seconds": 14, "flash": 3, "ring": 5},
+        "out": 6
+      },
+      {
+        "id": "v2",
+        "in": {"seconds": 22, "flash": 4, "ring": 7},
+        "out": 8
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"seconds": 15, "flash": 3, "ring": 5},
+        "out": 6
+      },
+      {
+        "id": "h02",
+        "in": {"seconds": 20, "flash": 4, "ring": 7},
+        "out": 7
+      },
+      {
+        "id": "h03",
+        "in": {"seconds": 30, "flash": 3, "ring": 5},
+        "out": 12
+      },
+      {
+        "id": "h04",
+        "in": {"seconds": 0, "flash": 3, "ring": 5},
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {"seconds": 10, "flash": 2, "ring": 2},
+        "out": 0
+      },
+      {
+        "id": "h06",
+        "in": {"seconds": 12, "flash": 2, "ring": 4},
+        "out": 3
+      },
+      {
+        "id": "h07",
+        "in": {"seconds": 7, "flash": 1, "ring": 7},
+        "out": 6
+      },
+      {
+        "id": "h08",
+        "in": {"seconds": 5, "flash": 6, "ring": 7},
+        "out": 0
+      },
+      {
+        "id": "h09",
+        "in": {"seconds": 1, "flash": 1, "ring": 2},
+        "out": 1
+      },
+      {
+        "id": "h10",
+        "in": {"seconds": 600, "flash": 20, "ring": 19},
+        "out": 59
+      },
+      {
+        "id": "h11",
+        "in": {"seconds": 600, "flash": 6, "ring": 4},
+        "out": 150
+      }
+    ]
+  },
+  "edgeCases": ["a second with both signals", "the last second has a signal", "equal periods, so every signal is shared"],
+  "variables": {
+    "pool": [
+      {"name": "count", "type": "num"},
+      {"name": "s", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "count_exactly_one_of_two_periods"}
+}

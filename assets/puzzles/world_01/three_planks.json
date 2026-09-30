@@ -1,0 +1,97 @@
+{
+  "id": "three_planks",
+  "version": 1,
+  "title": "Three Planks",
+  "world": "world_01",
+  "chapter": "triangle_check_all_sides",
+  "tier": 2,
+  "mode": "build",
+  "concepts": ["variables", "control"],
+  "prerequisites": [],
+  "story": "A carpenter wants to nail three planks into a triangular frame. It works only if every plank is shorter than the other two put together; if one plank is exactly as long as the other two together, the frame collapses flat. Can the three planks make a frame?",
+  "io": {
+    "inputs": [
+      {"name": "a", "type": "num"},
+      {"name": "b", "type": "num"},
+      {"name": "c", "type": "num"}
+    ],
+    "output": {"type": "bool"}
+  },
+  "constraints": {"notes": ["Each plank is 1 to 1000 long."]},
+  "blocks": {
+    "allow": ["arith.add", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "ctrl.if", "ctrl.return", "lit.bool", "logic.and", "logic.or", "var.get"],
+    "maxBlocks": 29
+  },
+  "limits": {"maxOps": 100, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["There are three checks, one for each plank against the sum of the other two.", "Combine the checks with AND: the frame works only if all three hold.", "Use GREATER THAN, not GREATER OR EQUAL: equal lengths make a flat frame, which does not count."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"a": 3, "b": 4, "c": 5},
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {"a": 2, "b": 3, "c": 10},
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"a": 2, "b": 3, "c": 5},
+        "out": false
+      },
+      {
+        "id": "h02",
+        "in": {"a": 10, "b": 3, "c": 5},
+        "out": false
+      },
+      {
+        "id": "h03",
+        "in": {"a": 10, "b": 3, "c": 7},
+        "out": false
+      },
+      {
+        "id": "h04",
+        "in": {"a": 7, "b": 10, "c": 3},
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {"a": 5, "b": 5, "c": 5},
+        "out": true
+      },
+      {
+        "id": "h06",
+        "in": {"a": 1, "b": 1, "c": 1},
+        "out": true
+      },
+      {
+        "id": "h07",
+        "in": {"a": 1, "b": 1, "c": 2},
+        "out": false
+      },
+      {
+        "id": "h08",
+        "in": {"a": 6, "b": 8, "c": 13},
+        "out": true
+      },
+      {
+        "id": "h09",
+        "in": {"a": 1000, "b": 999, "c": 2},
+        "out": true
+      },
+      {
+        "id": "h10",
+        "in": {"a": 1000, "b": 1, "c": 1},
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": ["one plank exactly as long as the other two", "the longest plank given first", "three equal planks"],
+  "variables": {"pool": []},
+  "reference": {"strategy": "triangle_check_all_sides"}
+}
