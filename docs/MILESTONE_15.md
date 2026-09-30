@@ -64,3 +64,44 @@ regression test builds every new reference by taps at 360 × 800. Tests that
 counted 85 puzzles or two Foundations puzzles now read the manifest or say
 95 / 12. A new puzzle with only number inputs and no variables was checked
 in the browser at phone size.
+
+## Part 2 — thin worlds: Arrays, Hash Maps, Two Pointers, Greedy (+12)
+
+Arrays had no tier 1 or tier 4 puzzle; each world gets new reasoning
+patterns, not new stories for old ones. New puzzles are placed by tier
+inside their world (so Arrays now opens on Last Sighting).
+
+| World | Puzzle | Tier | Mode | What it teaches | The trap (its reject) |
+|---|---|---|---|---|---|
+| 02 Arrays | Last Sighting | 1 | build | the last match, not the first | returning at the first sighting |
+| 02 Arrays | Till Totals | 1 | build | building a list with APPEND | reading the first sale before the loop (fails on an empty day) |
+| 02 Arrays | Balance Point | 3 | budget | total − left − crate | re-adding both sides (runs out of steps, 10× the budget); keeping the last balance |
+| 02 Arrays | Landslide | 4 | budget | cancelling vote, then a check | every pair tallied (10×); trusting the survivor; exactly half |
+| 03 Hash Maps | Second Scan | 2 | build | a NEW SET of seen cards | the first card that ever repeats (5, 1, 2, 1, 5) |
+| 03 Hash Maps | Matching Bags | 2 | edge | counts up and down in a NEW MAP | distinct numbers only; equal totals |
+| 03 Hash Maps | Lonely Numbers | 2 | build | real counts | a set that adds and removes (a triple looks lonely) |
+| 04 Two Pointers | Sorted Shelf | 2 | edge | neighbours in a sorted list | an empty shelf counted as one book |
+| 04 Two Pointers | Recipe Steps | 2 | build | a finger on the recipe | every step "somewhere" (order, repeats) |
+| 11 Greedy | Every Rise | 2 | build | sum of daily rises | one trade only |
+| 11 Greedy | One Room | 3 | edge | earliest finish first | back-to-back talks and minute 0 (GREATER THAN) |
+| 11 Greedy | Medals in a Row | 4 | build | two passes with MAX | the left neighbour only |
+
+Oracles in `packages/algorun_content/lib/src/oracles/batch3.dart`: a library
+call (`lastIndexOf`), prefixes added up from scratch, both sides re-added, a
+full tally map, `sublist(…).contains`, sorting, counts by scanning, `toSet`,
+an LCS table, a hold / cash DP, weighted-interval DP, relaxation to a fixed
+point. The budget puzzles record `performance.baselineFactor` 10: the slow
+baseline needs more than ten times the budget on the longest case.
+
+One generated case was replaced before writing: Recipe Steps' reversed
+recipe was still a subsequence of the random 1000-step log, so it could not
+catch the "somewhere" reject; it is now the log itself with two
+neighbouring steps swapped.
+
+### Result
+
+Validator `PIPELINE 107 of 107 campaign puzzle(s) accepted` · `OK 112
+puzzle(s), 7 warning(s)` (the known seven). Content 86, Flutter 429 tests
+pass (the campaign regression test builds and runs all 107 references by
+taps). Tests that counted 95 puzzles, nine Arrays puzzles or took Lowest
+Balance as the first Arrays puzzle now read the manifest.

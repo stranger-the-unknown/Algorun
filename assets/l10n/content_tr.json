@@ -905,6 +905,114 @@
         "Sıradaki kişi yükü kapasiteden büyük (GREATER THAN) yapacaksa asansör önce kalkar; sonra o kişi biner.",
         "Son grubun da kendi seferi olur; boş bir kuyruk ise 0 sefer ister."
       ]
+    },
+    "last_sighting": {
+      "title": "Son Görülme",
+      "story": "Bir kuş gözlemcisi, yemliğe konan her kuşun halka numarasını sırayla yazıyor. Verilen kuşun en son görüldüğü konumu 0'dan sayarak bildir; hiç gelmediyse -1 bildir.",
+      "hints": [
+        "Her konuma bak ve kuşun göründüğü en son konumu hatırla.",
+        "-1 ile başlayan bir cevap tut ve kuş her göründüğünde üzerine yaz; ilk görüldüğü yerde durma.",
+        "Sondan geriye doğru yürüyüp ilk eşleşmede döndürmek de olur: FOR, BY -1 ile geriye sayabilir."
+      ]
+    },
+    "till_totals": {
+      "title": "Kasa Toplamı",
+      "story": "Bir kafe günün satışlarını sırayla yazıyor; bir iade negatif bir satış olarak yazılır. Sahibi, her girişin o satış dahil o ana kadarki toplam olduğu ikinci bir liste istiyor. Satışsız bir gün boş bir liste verir.",
+      "hints": [
+        "Bir NEW LIST oluştur ve 0'dan başlayan bir ara toplam tut.",
+        "Her satışta önce satışı toplama ekle, sonra toplamı yeni listeye APPEND et.",
+        "İlk satışı da diğerleri gibi ele al: satışsız bir gün hata değil, boş bir liste vermeli."
+      ]
+    },
+    "balance_point": {
+      "title": "Denge Noktası",
+      "story": "Uzun bir kalasın üzerinde kasalar sıra hâlinde duruyor. Kalas, bir kasanın solundaki kasalar sağındaki kasalarla tam aynı ağırlıktaysa o kasanın üzerinde dengede durur; kasanın kendisi hiçbir tarafa sayılmaz ve boş bir taraf 0 ağırlığındadır. Kalasın dengede durduğu ilk kasanın konumunu 0'dan sayarak bildir; yoksa -1 bildir. Her kasa için iki tarafı yeniden toplamak en uzun sıralarda çok fazla adım sürer.",
+      "hints": [
+        "Sağdaki ağırlık, toplamdan sol tarafın ve kasanın kendisinin çıkarılmasıdır.",
+        "Her şeyi bir kez topla, sonra soldan yürürken sol tarafın ağırlığını tut.",
+        "Dengeyi, o anki kasayı sol tarafa eklemeden önce kontrol et; ilk kasanın sol tarafı boştur."
+      ]
+    },
+    "landslide": {
+      "title": "Ezici Zafer",
+      "story": "Her oy pusulasında bir adayın kayıt numarası yazıyor. Bir aday ancak tüm oyların yarısından fazlasını alırsa doğrudan kazanır. Doğrudan kazananı bildir; kimse yarıdan fazla almadıysa 0 bildir. Kayıt numaraları yüz binlere uzanıyor ve her oyu diğer her oyla karşılaştırarak saymak en büyük seçimlerde çok fazla adım sürer.",
+      "hints": [
+        "Farklı adaylara verilmiş oyları eşleştirip birbirini götürsün: yarıdan fazla oyu olan aday bu eşleştirmeden hep sağ çıkar.",
+        "Bir aday ve bir sayaç tut: tutulan adaya verilen oy 1 ekler, başka her oy 1 çıkarır; sayaç 0 olunca sıradaki oy yeni tutulan aday olur.",
+        "Sağ çıkmak yetmez: tutulan adayın oylarını ikinci bir geçişte say ve gerçekten yarıdan fazla olduğunu kontrol et."
+      ]
+    },
+    "second_scan": {
+      "title": "İkinci Okutma",
+      "story": "Bir kütüphane girişi, her ziyaretçinin kart numarasını sırayla kaydediyor. Bir kartın ikinci kez okutulduğu ilk anı bul: o okutmanın konumunu 0'dan sayarak bildir; her kart yalnızca bir kez okutulduysa -1 bildir.",
+      "hints": [
+        "Daha önce gördüğün her kartı hatırla.",
+        "Okutmaları sırayla dolaş: kart zaten NEW SET'inde varsa cevap bu okutmadır; yoksa onu ADD ile ekle.",
+        "Cevap, kayıtta ilk tekrar eden kart değil, en erken tekrar okutmadır: 5, 1, 2, 1, 5 için konum 3'tür."
+      ]
+    },
+    "matching_bags": {
+      "title": "Eşleşen Torbalar",
+      "story": "Numaralı bilyelerden oluşan iki torba geliyor. Torbalar tam olarak aynı bilyeleri içeriyorsa eşleşir: her numara iki torbada da aynı sayıda bulunur, sıra fark etmez. Torbalar eşleşiyor mu?",
+      "hints": [
+        "İlk torbada her numaradan kaç bilye olduğunu say.",
+        "Numaradan sayıya giden bir NEW MAP kullan: ilk torbanın her bilyesi için sayı + 1 PUT et, sonra ikinci torbanın her bilyesi için 1 çıkar.",
+        "Aynı numaralar yetmez: 1, 1, 2 ile 1, 2, 2 eşleşmez. LENGTH'i farklı torbalar hiç eşleşmez."
+      ]
+    },
+    "lonely_numbers": {
+      "title": "Yalnız Sayılar",
+      "story": "Bir çekiliş kutusunda bilet koçanları var ve bazı numaralar yanlışlıkla birden fazla kez basılmış. Kaç bilet numarası kutuda tam olarak bir kez geçiyor?",
+      "hints": [
+        "Her numaranın kaç kez geçtiğini say.",
+        "Numaradan sayıya giden bir NEW MAP bunu tek geçişte yapar; biletler üzerinde ikinci bir geçiş, sayısı 1 olanları sayar.",
+        "Üç kez basılmış bir numara da yalnız değildir: yalnızca görüldü ya da görülmedi değil, gerçek bir sayı tut."
+      ]
+    },
+    "sorted_shelf": {
+      "title": "Sıralı Raf",
+      "story": "Kütüphane kitapları bir rafta katalog numarasına göre sıralı duruyor ve aynı kitabın kopyaları yan yana duruyor. Rafta kaç farklı kitap var?",
+      "hints": [
+        "Kopyalar yan yana durduğu için yeni bir kitap tam olarak numaranın değiştiği yerde başlar.",
+        "Her kitabı hemen öncekiyle karşılaştır ve değişimleri say.",
+        "İlk kitap her zaman yeni sayılır; boş bir rafta 0 kitap vardır."
+      ]
+    },
+    "recipe_steps": {
+      "title": "Tarif Adımları",
+      "story": "Bir aşçı robot, yaptığı her adımın numarasını sırayla kaydediyor. Bir tarif, gereken adımları sırayla listeliyor. Arada başka adımlar olabilir, ama tarifin adımları kayıtta tarifin sırasıyla ve her biri ayrı bir kayıt olarak geçmeli. Robot tarife uydu mu?",
+      "hints": [
+        "Kaydı bir kez dolaş ve beklediğin sıradaki tarif adımını parmağınla işaretle.",
+        "Bir kayıt o adımla eşleşince parmağını tarifin bir sonraki adımına kaydır.",
+        "Parmak son adımı geçtiyse tarife uyulmuştur. Boş bir tarife her zaman uyulur; parmağın tarifin sonunu aşmamasına dikkat et."
+      ]
+    },
+    "every_rise": {
+      "title": "Her Yükseliş",
+      "story": "Bir yatırımcı aynı anda en fazla bir hisse tutabilir, ama istediği kadar alıp satabilir; aynı gün satıp yeniden alabilir de. Her günün hisse fiyatı verildiğinde en fazla ne kadar kâr edebilir? Fiyat yalnızca düşüyorsa en iyisi 0'dır.",
+      "hints": [
+        "Bir günden ertesi güne her yükseliş, önceki gün alıp o gün satarak yakalanabilir.",
+        "Bir günle önceki gün arasındaki her pozitif farkı topla.",
+        "Düşüşler ve değişmeyen günler bir şey katmaz; iki günden azsa kâr yoktur."
+      ]
+    },
+    "one_room": {
+      "title": "Tek Salon",
+      "story": "Bir konferansın tek salonu var. Her konuşmanın bir başlangıç ve bir bitiş dakikası var ve konuşmalar bitiş dakikasına göre, en erken biten önce olacak şekilde listelenmiş. Bir konuşma, seçilmiş konuşmalarla çakışmıyorsa yapılabilir; bir konuşma öncekinin bittiği dakikada başlayabilir. Salonda en fazla kaç konuşma yapılabilir?",
+      "hints": [
+        "Hâlâ sığan konuşmalar arasında en erken biteni tutmak, geri kalanlara en çok yeri bırakır.",
+        "Konuşmaları verilen sırayla dolaş ve son seçilen konuşmanın ne zaman bittiğini hatırla; bundan önce başlamayan konuşmayı al.",
+        "Önceki konuşmanın bittiği anda başlamak serbest, bu yüzden GREATER OR EQUAL ile karşılaştır."
+      ]
+    },
+    "medal_row": {
+      "title": "Madalya Sırası",
+      "story": "Koşucular, her biri kendi yarış süresiyle, bir sıra hâlinde duruyor. Her koşucu en az bir madalya alır. Hemen yanında duran bir komşusundan daha hızlı (süresi daha küçük) olan koşucu, o komşudan daha fazla madalya almalıdır; eşit süreler bir şey gerektirmez. En az kaç madalya dağıtılmalı?",
+      "hints": [
+        "Herkese 1 madalya ver, sonra kuralı her seferinde bir taraf için düzelt.",
+        "Soldan sağa: solundakinden hızlı olan koşucu o komşudan bir fazla alır. Sonra sağdan sola: sağındakinden hızlı olan koşucu o komşudan fazlasına ihtiyaç duyar; iki sayıdan büyük olanı tut.",
+        "Madalyaları APPEND ile kurulan bir NEW LIST içinde tut; ikinci geçiş bir sayıyı yalnızca artırabilir, asla azaltamaz."
+      ]
     }
   }
 }

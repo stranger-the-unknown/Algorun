@@ -1,4 +1,5 @@
 import 'batch2.dart';
+import 'batch3.dart';
 import 'arrays.dart';
 import 'foundations.dart';
 import 'graphs.dart';
@@ -25,4 +26,5 @@ const Map<String, Oracle> oracleRegistry = {
   ...graphOracles,
   ...greedyDpOracles,
   ...batch2Oracles,
+  ...batch3Oracles,
 };

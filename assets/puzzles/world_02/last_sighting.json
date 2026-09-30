@@ -1,0 +1,100 @@
+{
+  "id": "last_sighting",
+  "version": 1,
+  "title": "Last Sighting",
+  "world": "world_02",
+  "chapter": "last_index_of_value",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["arrays"],
+  "prerequisites": [],
+  "story": "A bird watcher writes down the ring number of every bird that lands at the feeder, in order. Report the position, counting from 0, where the given bird was seen for the last time, or -1 if it never came.",
+  "io": {
+    "inputs": [
+      {"name": "sightings", "type": "array<num>"},
+      {"name": "bird", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 300},
+    "notes": ["Ring numbers are whole numbers from 1 to 50."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "arr.get", "arr.len", "cmp.eq", "ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "var.get", "var.set"],
+    "maxBlocks": 26
+  },
+  "limits": {"maxOps": 4250, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Look at every position and remember the latest one where the bird appears.", "Keep an answer that starts at -1 and overwrite it each time the bird turns up; do not stop at the first sighting.", "Walking backwards from the end and returning at the first match also works: FOR can count down with a BY of -1."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"sightings": [4, 7, 2, 9, 5], "bird": 9},
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {"sightings": [3, 8, 1], "bird": 6},
+        "out": -1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"sightings": [2, 5, 2, 5, 2], "bird": 2},
+        "out": 4
+      },
+      {
+        "id": "h02",
+        "in": {"sightings": [], "bird": 3},
+        "out": -1
+      },
+      {
+        "id": "h03",
+        "in": {"sightings": [7], "bird": 7},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"sightings": [7, 7, 7], "bird": 7},
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {"sightings": [1, 2, 3, 4, 1], "bird": 1},
+        "out": 4
+      },
+      {
+        "id": "h06",
+        "in": {"sightings": [5, 6, 7], "bird": 7},
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {
+          "sightings": [19, 1, 18, 42, 21, 46, 15, 40, 32, 37, 16, 8, 37, 42, 4, 4, 8, 16, 4, 35, 26, 17, 11, 17, 45, 47, 14, 43, 13, 48, 5, 28, 23, 1, 37, 20, 38, 14, 11, 20, 18, 11, 11, 47, 12, 19, 12, 12, 39, 37, 7, 11, 8, 13, 49, 44, 32, 3, 11, 19, 4, 5, 44, 6, 41, 31, 50, 37, 41, 3, 30, 11, 31, 14, 22, 13, 20, 35, 41, 20, 23, 10, 12, 15, 14, 38, 6, 25, 12, 9, 32, 23, 28, 46, 42, 27, 32, 2, 42, 10, 38, 42, 29, 20, 43, 6, 19, 27, 25, 13, 37, 7, 6, 6, 3, 4, 46, 6, 13, 22, 39, 24, 25, 4, 10, 21, 11, 12, 8, 30, 47, 35, 23, 21, 31, 18, 15, 20, 35, 14, 22, 22, 36, 42, 47, 25, 16, 24, 24, 46, 50, 20, 42, 37, 12, 30, 48, 44, 30, 16, 42, 23, 33, 26, 26, 44, 33, 24, 24, 46, 7, 10, 3, 23, 25, 43, 30, 4, 29, 9, 32, 25, 50, 7, 12, 38, 43, 12, 13, 34, 15, 31, 39, 36, 42, 20, 48, 25, 27, 40, 13, 29, 1, 48, 29, 13, 6, 27, 9, 29, 31, 24, 44, 16, 16, 50, 42, 45, 21, 5, 6, 8, 36, 24, 6, 8, 25, 14, 4, 46, 1, 47, 1, 6, 48, 19, 16, 21, 4, 35, 6, 1, 37, 25, 4, 8, 13, 28, 3, 16, 17, 37, 3, 19, 13, 40, 33, 49, 43, 48, 2, 38, 18, 43, 6, 16, 28, 4, 31, 29, 6, 43, 32, 20, 32, 12, 14, 5, 11, 38, 16, 17, 25, 27, 18, 22, 23, 37, 23, 40, 37, 21, 6, 20, 4, 11, 18, 6, 11, 20],
+          "bird": 17
+        },
+        "out": 281
+      },
+      {
+        "id": "h08",
+        "in": {
+          "sightings": [3, 25, 32, 49, 18, 24, 38, 21, 28, 33, 29, 5, 44, 43, 18, 43, 47, 15, 13, 13, 6, 34, 11, 46, 31, 38, 19, 34, 18, 9, 27, 3, 32, 19, 30, 22, 36, 16, 4, 39, 44, 43, 20, 49, 34, 35, 16, 27, 46, 13, 7, 23, 45, 22, 13, 42, 41, 43, 13, 48, 6, 7, 6, 3, 7, 7, 19, 28, 17, 40, 5, 47, 14, 6, 9, 12, 23, 4, 12, 13, 40, 23, 29, 39, 1, 28, 37, 21, 13, 20, 26, 39, 7, 22, 26, 11, 45, 22, 29, 26, 26, 26, 24, 39, 37, 42, 41, 14, 36, 16, 10, 22, 5, 10, 30, 26, 18, 43, 27, 38, 46, 26, 2, 19, 19, 12, 28, 10, 9, 37, 48, 32, 26, 18, 38, 10, 23, 38, 13, 39, 17, 42, 46, 24, 15, 48, 14, 2, 4, 18, 18, 47, 10, 4, 39, 1, 26, 38, 38, 38, 18, 8, 48, 16, 33, 37, 3, 2, 12, 14, 41, 20, 20, 8, 30, 26, 43, 13, 9, 36, 45, 31, 47, 19, 33, 47, 35, 6, 9, 1, 21, 12, 6, 29, 44, 16, 17, 11, 43, 27, 41, 41, 9, 17, 17, 19, 15, 21, 1, 45, 23, 17, 45, 3, 20, 38, 18, 44, 25, 10, 2, 14, 28, 37, 49, 7, 22, 7, 17, 39, 5, 42, 43, 46, 7, 20, 8, 18, 25, 17, 46, 48, 37, 35, 31, 16, 8, 10, 40, 9, 19, 5, 49, 45, 42, 29, 20, 18, 43, 35, 16, 28, 26, 25, 37, 2, 37, 8, 39, 7, 14, 43, 5, 16, 22, 33, 9, 44, 4, 44, 41, 10, 30, 27, 7, 10, 43, 30, 33, 4, 37, 31, 18, 40, 39, 8, 29, 8, 36, 13],
+          "bird": 50
+        },
+        "out": -1
+      }
+    ]
+  },
+  "edgeCases": ["the bird came more than once", "the bird never came", "an empty log"],
+  "variables": {
+    "pool": [
+      {"name": "last", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "last_index_of_value"}
+}

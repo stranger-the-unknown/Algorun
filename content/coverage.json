@@ -1,26 +1,26 @@
 {
-  "total": 95,
+  "total": 107,
   "targetTotal": 300,
   "tiers": {
-    "1": 7,
-    "2": 35,
-    "3": 32,
-    "4": 19,
+    "1": 9,
+    "2": 41,
+    "3": 34,
+    "4": 21,
     "5": 2
   },
   "modes": {
-    "budget": 10,
-    "build": 60,
-    "edge": 17,
+    "budget": 12,
+    "build": 67,
+    "edge": 20,
     "optimize": 5,
     "restricted": 3
   },
   "structures": {
-    "array": 36,
+    "array": 45,
     "graph": 14,
     "grid": 3,
-    "hash_map": 5,
-    "hash_set": 3,
+    "hash_map": 7,
+    "hash_set": 4,
     "linked_list": 9,
     "queue": 2,
     "scalar": 8,
@@ -28,7 +28,7 @@
     "tree": 10
   },
   "families": {
-    "array_scan": 9,
+    "array_scan": 11,
     "binary_search": 2,
     "control_flow": 7,
     "dp_grid": 3,
@@ -36,30 +36,30 @@
     "graph_bfs": 4,
     "graph_connectivity": 6,
     "graph_dfs_iterative": 2,
-    "greedy": 5,
-    "hash_map": 4,
-    "hash_set": 3,
+    "greedy": 8,
+    "hash_map": 6,
+    "hash_set": 4,
     "linked_list_relink": 2,
     "linked_list_traversal": 7,
     "monotonic_stack": 2,
     "multi_concept": 1,
-    "prefix_sum": 3,
+    "prefix_sum": 5,
     "queue": 3,
     "sliding_window": 7,
     "stack": 3,
     "topological_order": 1,
     "tree_traversal": 10,
-    "two_pointers": 6
+    "two_pointers": 8
   },
   "performance": {
-    "budget": 19,
-    "correctness": 68,
+    "budget": 21,
+    "correctness": 78,
     "optimization": 5,
     "restricted": 3
   },
   "concepts": {
     "array_scan": 11,
-    "arrays": 8,
+    "arrays": 12,
     "bfs": 8,
     "binary_search": 2,
     "binary_search_answer": 1,
@@ -74,16 +74,16 @@
     "graph": 14,
     "graph_bfs": 3,
     "graph_dfs_iterative": 1,
-    "greedy": 7,
+    "greedy": 10,
     "greedy_choice": 1,
-    "hash_map": 7,
+    "hash_map": 10,
     "hash_set": 2,
     "linked_list": 9,
     "monotonic_stack": 2,
     "multi_concept": 1,
     "neighbour_order": 1,
     "nullable_check": 11,
-    "prefix_sum": 5,
+    "prefix_sum": 7,
     "queue": 11,
     "relinking": 2,
     "shortest_path": 1,
@@ -91,7 +91,7 @@
     "stack": 7,
     "topological_order": 1,
     "tree": 10,
-    "two_pointers": 11,
+    "two_pointers": 13,
     "variables": 12
   },
   "worlds": [
@@ -138,28 +138,32 @@
         "prefix_sum",
         "binary_search"
       ],
-      "count": 9,
+      "count": 13,
       "tiers": {
-        "1": 0,
+        "1": 2,
         "2": 5,
-        "3": 4,
-        "4": 0,
+        "3": 5,
+        "4": 1,
         "5": 0
       },
       "families": {
-        "array_scan": 4,
+        "array_scan": 6,
         "binary_search": 2,
-        "prefix_sum": 3
+        "prefix_sum": 5
       },
       "patterns": {
         "binary_search_on_answer": 1,
         "even_prefix_count": 1,
+        "first_balance_index": 1,
         "first_strict_descent": 1,
+        "last_index_of_value": 1,
         "lower_bound_sorted": 1,
+        "majority_vote_cancelling": 1,
         "max_product_of_two": 1,
         "nested_distinct_count": 1,
         "prefix_sum_range_queries": 1,
         "running_minimum_of_prefix": 1,
+        "running_total_list": 1,
         "strict_second_maximum": 1
       },
       "target": 30
@@ -170,25 +174,28 @@
       "concepts": [
         "hash_map"
       ],
-      "count": 7,
+      "count": 10,
       "tiers": {
         "1": 0,
-        "2": 3,
+        "2": 6,
         "3": 2,
         "4": 2,
         "5": 0
       },
       "families": {
-        "hash_map": 4,
-        "hash_set": 3
+        "hash_map": 6,
+        "hash_set": 4
       },
       "patterns": {
         "complement_lookup_first_pair": 1,
         "consecutive_run_from_starts": 1,
         "count_pairs_with_sum": 1,
         "count_shared_distinct": 1,
+        "count_values_seen_once": 1,
+        "first_repeated_scan": 1,
         "frequency_mode_smallest_tie": 1,
         "prefix_sum_count_map": 1,
+        "same_multiset_counts": 1,
         "widest_equal_span": 1
       },
       "target": 25
@@ -199,23 +206,25 @@
       "concepts": [
         "two_pointers"
       ],
-      "count": 6,
+      "count": 8,
       "tiers": {
         "1": 0,
-        "2": 1,
+        "2": 3,
         "3": 3,
         "4": 2,
         "5": 0
       },
       "families": {
-        "two_pointers": 6
+        "two_pointers": 8
       },
       "patterns": {
         "closest_pair_sum_to_target": 1,
+        "count_distinct_sorted_neighbours": 1,
         "count_exact_gap_sorted": 1,
         "count_pairs_under_limit": 1,
         "count_sorted_union": 1,
         "opposite_ends_pair_sum": 1,
+        "ordered_subsequence_check": 1,
         "shrink_shorter_side": 1
       },
       "target": 20
@@ -406,23 +415,26 @@
       "concepts": [
         "greedy"
       ],
-      "count": 5,
+      "count": 8,
       "tiers": {
         "1": 0,
-        "2": 2,
-        "3": 2,
-        "4": 1,
+        "2": 3,
+        "3": 3,
+        "4": 2,
         "5": 0
       },
       "families": {
-        "greedy": 5
+        "greedy": 8
       },
       "patterns": {
         "assign_sorted_cookies": 1,
         "circuit_start_reset": 1,
+        "earliest_finish_selection": 1,
         "jump_game_reach": 1,
         "max_overlap_two_pointers": 1,
-        "running_min_profit": 1
+        "running_min_profit": 1,
+        "sum_of_daily_rises": 1,
+        "two_pass_neighbour_rewards": 1
       },
       "target": 20
     },
@@ -510,6 +522,21 @@
       "performance": "correctness",
       "concepts": [
         "dp"
+      ]
+    },
+    {
+      "id": "balance_point",
+      "world": "world_02",
+      "tier": 3,
+      "mode": "budget",
+      "family": "prefix_sum",
+      "pattern": "first_balance_index",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "arrays",
+        "prefix_sum"
       ]
     },
     {
@@ -756,6 +783,20 @@
       ]
     },
     {
+      "id": "every_rise",
+      "world": "world_11",
+      "tier": 2,
+      "mode": "build",
+      "family": "greedy",
+      "pattern": "sum_of_daily_rises",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "greedy"
+      ]
+    },
+    {
       "id": "exact_change",
       "world": "world_13",
       "tier": 4,
@@ -898,6 +939,20 @@
       ]
     },
     {
+      "id": "landslide",
+      "world": "world_02",
+      "tier": 4,
+      "mode": "budget",
+      "family": "array_scan",
+      "pattern": "majority_vote_cancelling",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "arrays"
+      ]
+    },
+    {
       "id": "largest_billboard",
       "world": "world_06",
       "tier": 5,
@@ -927,6 +982,20 @@
       "concepts": [
         "graph",
         "bfs"
+      ]
+    },
+    {
+      "id": "last_sighting",
+      "world": "world_02",
+      "tier": 1,
+      "mode": "build",
+      "family": "array_scan",
+      "pattern": "last_index_of_value",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "arrays"
       ]
     },
     {
@@ -1031,6 +1100,20 @@
       "performance": "correctness",
       "concepts": [
         "tree"
+      ]
+    },
+    {
+      "id": "lonely_numbers",
+      "world": "world_03",
+      "tier": 2,
+      "mode": "build",
+      "family": "hash_map",
+      "pattern": "count_values_seen_once",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "hash_map"
       ]
     },
     {
@@ -1169,6 +1252,20 @@
       ]
     },
     {
+      "id": "matching_bags",
+      "world": "world_03",
+      "tier": 2,
+      "mode": "edge",
+      "family": "hash_map",
+      "pattern": "same_multiset_counts",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "hash_map"
+      ]
+    },
+    {
       "id": "max_product_two",
       "world": "world_02",
       "tier": 3,
@@ -1180,6 +1277,20 @@
       "performance": "optimization",
       "concepts": [
         "arrays"
+      ]
+    },
+    {
+      "id": "medal_row",
+      "world": "world_11",
+      "tier": 4,
+      "mode": "build",
+      "family": "greedy",
+      "pattern": "two_pass_neighbour_rewards",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "greedy"
       ]
     },
     {
@@ -1285,6 +1396,20 @@
         "array_scan"
       ],
       "performance": "budget",
+      "concepts": [
+        "greedy"
+      ]
+    },
+    {
+      "id": "one_room",
+      "world": "world_11",
+      "tier": 3,
+      "mode": "edge",
+      "family": "greedy",
+      "pattern": "earliest_finish_selection",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
       "concepts": [
         "greedy"
       ]
@@ -1453,6 +1578,20 @@
       ]
     },
     {
+      "id": "recipe_steps",
+      "world": "world_04",
+      "tier": 2,
+      "mode": "build",
+      "family": "two_pointers",
+      "pattern": "ordered_subsequence_check",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "two_pointers"
+      ]
+    },
+    {
       "id": "relay_towers",
       "world": "world_06",
       "tier": 3,
@@ -1603,6 +1742,20 @@
       ]
     },
     {
+      "id": "second_scan",
+      "world": "world_03",
+      "tier": 2,
+      "mode": "build",
+      "family": "hash_set",
+      "pattern": "first_repeated_scan",
+      "structure": "hash_set",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "hash_map"
+      ]
+    },
+    {
       "id": "shared_values",
       "world": "world_03",
       "tier": 2,
@@ -1681,6 +1834,20 @@
       "concepts": [
         "tree",
         "bst"
+      ]
+    },
+    {
+      "id": "sorted_shelf",
+      "world": "world_04",
+      "tier": 2,
+      "mode": "edge",
+      "family": "two_pointers",
+      "pattern": "count_distinct_sorted_neighbours",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "two_pointers"
       ]
     },
     {
@@ -1834,6 +2001,21 @@
       ]
     },
     {
+      "id": "till_totals",
+      "world": "world_02",
+      "tier": 1,
+      "mode": "build",
+      "family": "prefix_sum",
+      "pattern": "running_total_list",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "arrays",
+        "prefix_sum"
+      ]
+    },
+    {
       "id": "trail_sum",
       "world": "world_08",
       "tier": 4,
@@ -1970,27 +2152,19 @@
     {
       "area": "world",
       "id": "world_02",
-      "have": 9,
+      "have": 13,
       "want": 30
-    },
-    {
-      "area": "tiers",
-      "id": "world_02",
-      "missing": [
-        1,
-        4
-      ]
     },
     {
       "area": "world",
       "id": "world_03",
-      "have": 7,
+      "have": 10,
       "want": 25
     },
     {
       "area": "world",
       "id": "world_04",
-      "have": 6,
+      "have": 8,
       "want": 20
     },
     {
@@ -2064,7 +2238,7 @@
     {
       "area": "world",
       "id": "world_11",
-      "have": 5,
+      "have": 8,
       "want": 20
     },
     {
@@ -2113,13 +2287,13 @@
     {
       "area": "family",
       "id": "array_scan",
-      "have": 9,
+      "have": 11,
       "want": 12
     },
     {
       "area": "family",
       "id": "prefix_sum",
-      "have": 3,
+      "have": 5,
       "want": 8
     },
     {
@@ -2131,19 +2305,19 @@
     {
       "area": "family",
       "id": "hash_map",
-      "have": 4,
+      "have": 6,
       "want": 12
     },
     {
       "area": "family",
       "id": "hash_set",
-      "have": 3,
+      "have": 4,
       "want": 8
     },
     {
       "area": "family",
       "id": "two_pointers",
-      "have": 6,
+      "have": 8,
       "want": 15
     },
     {
@@ -2221,7 +2395,7 @@
     {
       "area": "family",
       "id": "greedy",
-      "have": 5,
+      "have": 8,
       "want": 20
     },
     {
@@ -2266,13 +2440,13 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 60,
+      "have": 67,
       "want": 150
     },
     {
       "area": "mode",
       "id": "budget",
-      "have": 10,
+      "have": 12,
       "want": 30
     },
     {
@@ -2286,12 +2460,6 @@
       "id": "restricted",
       "have": 3,
       "want": 15
-    },
-    {
-      "area": "mode",
-      "id": "edge",
-      "have": 17,
-      "want": 20
     },
     {
       "area": "mode",

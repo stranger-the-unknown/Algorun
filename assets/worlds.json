@@ -37,6 +37,8 @@
         "variables"
       ],
       "puzzles": [
+        "last_sighting",
+        "till_totals",
         "lowest_balance",
         "first_descent",
         "second_highest",
@@ -45,7 +47,9 @@
         "shelf_totals",
         "departure_board",
         "smallest_cart",
-        "max_product_two"
+        "max_product_two",
+        "balance_point",
+        "landslide"
       ]
     },
     {
@@ -62,6 +66,9 @@
         "loudest_echo",
         "twin_beacons",
         "shared_values",
+        "second_scan",
+        "matching_bags",
+        "lonely_numbers",
         "pair_sum_count",
         "same_value_span",
         "level_stretches",
@@ -80,6 +87,8 @@
       ],
       "puzzles": [
         "matched_pair",
+        "sorted_shelf",
+        "recipe_steps",
         "exact_gaps",
         "pairs_under",
         "sorted_union",
@@ -228,9 +237,12 @@
       "puzzles": [
         "one_good_trade",
         "cookie_gifts",
+        "every_rise",
         "dock_overlap",
         "leap_reach",
-        "fuel_loop"
+        "one_room",
+        "fuel_loop",
+        "medal_row"
       ]
     },
     {

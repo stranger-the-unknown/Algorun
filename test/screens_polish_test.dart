@@ -110,7 +110,8 @@ void main() {
     progress = evaluateCampaign(_campaign, solved(basics.skip(1)));
     expect(nextPuzzle(_campaign, progress, basics.last), 'warm_readings', reason: 'wraps to an unsolved one');
     progress = evaluateCampaign(_campaign, solved(basics));
-    expect(nextPuzzle(_campaign, progress, basics.last), 'lowest_balance', reason: 'Arrays just opened');
+    expect(nextPuzzle(_campaign, progress, basics.last), _campaign.manifest.byId('world_02')!.puzzleIds.first,
+        reason: 'Arrays just opened');
     progress = evaluateCampaign(_campaign, solved(_campaign.puzzles.keys));
     expect(nextPuzzle(_campaign, progress, 'many_shortest_routes'), isNull);
   });
