@@ -1013,6 +1013,114 @@
         "Soldan sağa: solundakinden hızlı olan koşucu o komşudan bir fazla alır. Sonra sağdan sola: sağındakinden hızlı olan koşucu o komşudan fazlasına ihtiyaç duyar; iki sayıdan büyük olanı tut.",
         "Madalyaları APPEND ile kurulan bir NEW LIST içinde tut; ikinci geçiş bir sayıyı yalnızca artırabilir, asla azaltamaz."
       ]
+    },
+    "calm_stretches": {
+      "title": "Sakin Aralıklar",
+      "story": "Bir yürüyüşçü, günlük yağış kaydına bakarak yürüyüş planlıyor. Sakin aralık, yağışları toplamı en fazla sınır kadar olan bir ya da daha çok ardışık gündür. Kayıtta kaç sakin aralık var? Üst üste binen aralıklar ayrı sayılır. Her aralığı tek tek denemek en uzun kayıtlarda çok fazla adım sürer.",
+      "hints": [
+        "Bir aralık sakinse, aynı günde biten her daha kısa aralık da sakindir.",
+        "Sol kenarı ve toplamı olan bir pencere tut: yeni günü ekle, sonra toplam sınırın üstünde olduğu sürece (WHILE) soldan gün çıkar.",
+        "Sol kenardan bugüne kadar her başlangıç günü bir sakin aralık verir: bugün MINUS sol PLUS 1 ekle. Tek başına sınırın üstündeki bir gün boş bir pencere bırakır."
+      ]
+    },
+    "window_variety": {
+      "title": "Pencere Çeşitliliği",
+      "story": "Bir radyo istasyonu her kuşakta çalan şarkıyı kaydediyor. Program yöneticisi, ilkinden sonuncusuna kadar art arda k kuşaktan oluşan her dizide kaç farklı şarkı olduğunu istiyor. k'dan az kuşak varsa liste boştur. Her diziyi baştan saymak en uzun kayıtlarda çok fazla adım sürer.",
+      "hints": [
+        "Bir sonraki diziye geçmek sağa bir kuşak ekler ve soldan bir kuşak çıkarır.",
+        "Şarkıdan o anki dizide kaç kez çaldığına giden bir NEW MAP ve sayısı 0'dan büyük olan şarkıların sayısını tut.",
+        "Bir şarkının sayısı 0'a düştüğünde diziden çıkmıştır: onu sayıdan düş. İlk dizi tamamlanınca sayıyı APPEND et."
+      ]
+    },
+    "plate_minimum": {
+      "title": "Tabak Minimumu",
+      "story": "Bir mutfakta tek bir tabak yığını var. Pozitif bir sayı o boyda bir tabağı en üste koyar; 0 en üstteki tabağı alır (boş yığından asla). Bulaşıkçı her hamleden sonra yığında kalan en küçük tabağın boyunu, yığın boşsa 0'ı istiyor. Bu boyları her hamle için bir tane olacak şekilde listele.",
+      "hints": [
+        "Bir tabak alındığında en küçük tabak eski hâline dönebilir; bu yüzden her yükseklikteki en küçük tabağı hatırla.",
+        "Bir \"şimdiye kadarki en küçük\" yığını tut: bir tabak konunca tabakla o anki en küçüğün MIN'ini PUSH et.",
+        "Bir tabak alınınca o yığını da POP et; PEEK o anki en küçüğü verir, boş yığın 0 bildirir."
+      ]
+    },
+    "snowball_clash": {
+      "title": "Kartopu Çarpışması",
+      "story": "Kartopları dar bir patikada, hepsi aynı hızla yuvarlanıyor. Pozitif bir sayı sağa yuvarlanan o boyda bir topu, negatif bir sayı ise boyu eksisiz yazılmış, sola yuvarlanan bir topu gösterir. Sağa giden bir top sola giden bir topla karşılaşınca küçüğü kırılır; eşit boydakilerin ikisi de kırılır. Aynı yöne giden toplar asla karşılaşmaz. Tüm karşılaşmalar bitince kaç top kalır?",
+      "hints": [
+        "Yalnızca sağa giden bir top, kendisinden sonra gelen sola giden bir topla karşılaşabilir; bu yüzden oyunda kalan sağa gidenleri bir yığında tut.",
+        "Sola giden bir top, yığının tepesindeki daha küçük sağa gidenleri art arda kırar (WHILE); daha büyük ya da eşit birine rastlayana ya da yığın boşalana kadar.",
+        "Eşit boylar birbirini kırar; yığını temizleyen sola giden top güvenle uzaklaşır ve sayılır. Yığında kalan toplar da sayılır."
+      ]
+    },
+    "kth_from_end": {
+      "title": "Sondan Saymak",
+      "story": "Bir yük treni, her birinin bir yük numarası olan vagonlardan oluşan bir zincir; tren yalnızca önden dolaşılabilir. Arkadan sayınca k'ıncı vagonun yük numarasını bildir (son vagon 1'dir); trende k'dan az vagon varsa -1 bildir.",
+      "hints": [
+        "Önce bir öncü parmağı k vagon ileri gönder; sondan düşerse tren çok kısadır.",
+        "Sonra ikinci bir parmağı önden, öncüyle birlikte birer vagon ilerlet; öncü sondan düşene kadar.",
+        "İkinci parmak artık arkadan k'ıncı vagondadır. k vagon sayısına eşitse bu ilk vagondur."
+      ]
+    },
+    "no_repeats": {
+      "title": "Tekrar Yok",
+      "story": "Bir trenin vagonları numaralı kasalar taşıyor ve tren, eşit numaralar yan yana duracak şekilde sıralı. Önündeki vagonun numarasını tekrarlayan her vagonu ayır ki her numara bir kez geçsin, sonra treni döndür. Boş bir tren boş kalır.",
+      "hints": [
+        "Treni tek parmakla dolaş ve her vagonu hemen arkasındaki vagonla karşılaştır.",
+        "Sonraki vagon numarayı tekrarlıyorsa şu anki vagonun SET NEXT'ini ondan sonraki vagona bağla ve yerinde kal: yeni komşu da numarayı tekrarlıyor olabilir.",
+        "Yalnızca sonraki vagonun numarası farklıysa ya da sonraki vagon yoksa ilerle."
+      ]
+    },
+    "mirror_tree": {
+      "title": "Ayna Ağaç",
+      "story": "Bir bahçıvan bir ağacı aynada aynı görünecek biçimde budamış: sol taraf, dal dal ve aynı etiketlerle, sağ tarafın ters çevrilmişi. Ağaç aynada aynı görünüyor mu? Boş bir ağaç görünür.",
+      "hints": [
+        "Sol dalı sağ dalla ayna görüntüsü olarak karşılaştır: dış dış ile, iç iç ile.",
+        "Karşılaştırılacak dallar için iki yığın tut; eksik bir dal da yığına konabilir. Eşleşen bir çiftten sonra birincinin LEFT'ini ikincinin RIGHT'ı ile, RIGHT'ını da diğerinin LEFT'i ile PUSH et.",
+        "Bir tarafı IS NOTHING olup diğeri olmayan ya da etiketleri farklı bir çift aynayı bozar; iki eksik dal eşleşir."
+      ]
+    },
+    "range_count": {
+      "title": "Katalog Aralığı",
+      "story": "Bir kütüphane kataloğu bir arama ağacı olarak saklanıyor: bir düğümün sol dalındaki her etiket düğümün etiketinden küçük, sağ dalındaki her etiket ise büyük. low ile high arasında, ikisi de dahil, kaç etiket var? Her düğümü ziyaret etmek en büyük kataloglarda çok fazla adım sürer; ağacın düzeni hangi dalların atlanabileceğini söyler.",
+      "hints": [
+        "Etiketi low'un üstünde olmayan bir düğümün LEFT'inde işe yarar bir şey yoktur; etiketi high'ın altında olmayan bir düğümün RIGHT'ında da.",
+        "Ağacı bir yığınla dolaş ve yalnızca aralıkta etiket barındırabilecek bir dalı PUSH et.",
+        "İki uç da sayılır: low'a ya da high'a eşit bir etiket aralığın içindedir."
+      ]
+    },
+    "ring_road": {
+      "title": "Çevre Yolu",
+      "story": "Bir ilçenin köylerini yollar birbirine bağlıyor. Her yol iki yönde de kullanılabiliyor ve bağladığı iki köyün listesinde de geçiyor; hiçbir yol bir köyü kendine bağlamıyor ve hiçbir iki yol aynı çifti bağlamıyor. Bir çevre yolu var mı: bir köyden çıkıp hiçbir yolu iki kez kullanmadan ona geri dönmenin bir yolu? Bazı köyler diğerlerine bağlı olmayabilir.",
+      "hints": [
+        "Halkası olmayan, v köylü bağlı bir parçada tam olarak v − 1 yol vardır.",
+        "Her parçayı bir yığınla dolaş; köylerini ve yol listelerindeki kayıtları say (her yol iki kez listelenir).",
+        "Yol sayısı köy sayısı kadar ya da fazla olan bir parçada halka vardır. Yalnızca ilkini değil, her parçayı kontrol et."
+      ]
+    },
+    "hop_radius": {
+      "title": "Yolculuk Sınırı",
+      "story": "Bir ulaşım kartı en fazla belirli sayıda yolculuğa izin veriyor ve yolculuklar listelenen bağlantılar boyunca tek yönlü. En fazla o kadar yolculukla başlangıçtan kaç istasyona ulaşılabilir? Başlangıç da sayılır; 0 yolculukla yalnızca o vardır.",
+      "hints": [
+        "Başlangıçtan halka halka keşfet: önce bir yolculuk uzaktaki istasyonlar, sonra iki yolculuk, ve böyle devam.",
+        "Bir kuyruk ve -1 ile başlayan, istasyon başına yolculuk sayısını tutan bir NEW LIST her istasyonun en az yolculuk sayısını verir.",
+        "Zaten sınırda olan bir istasyondan devam etme; sonra ulaşılan istasyonları say."
+      ]
+    },
+    "best_stretch": {
+      "title": "En İyi Dönem",
+      "story": "Bir pazar tezgâhı her günün kârını kaydediyor; zarar edilen günde kâr negatiftir. Bir ya da daha fazla ardışık günden oluşan en iyi dönemi bul: bir dönemin ulaşabileceği en büyük toplamı. Her gün zarar edilmiş olsa bile sahibi en iyi dönemi istiyor; o zaman bu, en küçük tek günlük zarardır.",
+      "hints": [
+        "Belirli bir günde biten en iyi dönem ya o gün yeniden başlar ya da önceki günde biten en iyi dönemi uzatır.",
+        "Bu toplamı günün tek başına değeri ile gün PLUS dünkü toplamın MAX'ıyla tut; genel en iyiyi de tut.",
+        "İkisini de 0'dan değil ilk günden başlat: yalnızca zarar varken 0 kimsenin sahip olabileceği bir dönem değildir."
+      ]
+    },
+    "rising_line": {
+      "title": "Yükselen Sıra",
+      "story": "İnsanlar, her biri kendi boyuyla, tek tek bir kuyruğa giriyor. Bir fotoğrafçı, kuyruğun sırasını koruyarak bazılarını seçmek istiyor; öyle ki boylar önden arkaya kesinlikle yükselsin. Seçilebilecek en büyük grup kaç kişidir? Eşit boylar yükselmiş sayılmaz; boş bir kuyruk 0 verir.",
+      "hints": [
+        "Her kişi için, o kişiyle biten en büyük yükselen grubu bul.",
+        "Bu, kendisinden önce gelen ve kesinlikle daha kısa olanların en iyisine PLUS 1'dir; bu sayıları bir NEW LIST içinde tut.",
+        "Cevap o listedeki en büyük sayıdır. En son seçilenden uzun olan herkesi almak yetmez."
+      ]
     }
   }
 }

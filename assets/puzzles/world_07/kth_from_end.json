@@ -1,0 +1,130 @@
+{
+  "id": "kth_from_end",
+  "version": 1,
+  "title": "From the Back",
+  "world": "world_07",
+  "chapter": "kth_from_end_gap",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["linked_list"],
+  "prerequisites": [],
+  "story": "A freight train is a chain of cars, each with a load number, and it can only be walked from the front. Report the load of the k-th car counting from the back (the last car is 1), or -1 if the train has fewer than k cars.",
+  "io": {
+    "inputs": [
+      {"name": "head", "type": "listNode?"},
+      {"name": "k", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 300},
+    "notes": ["Loads are whole numbers from 1 to 99.", "k is at least 1."]
+  },
+  "blocks": {
+    "allow": ["arith.sub", "cmp.ge", "ctrl.else", "ctrl.for_range", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "ll.next", "ll.value", "logic.is_not_nothing", "logic.is_nothing", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 58
+  },
+  "limits": {"maxOps": 6250, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Send a lead finger k cars ahead first; if it falls off the end, the train is too short.", "Then move a second finger from the front together with the lead, one car at a time, until the lead falls off the end.", "The second finger is then on the k-th car from the back. When k equals the number of cars, that is the first car."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "head": {"type": "listNode", "values": [4, 8, 15, 16, 23, 42]},
+          "k": 2
+        },
+        "out": 23
+      },
+      {
+        "id": "v2",
+        "in": {
+          "head": {"type": "listNode", "values": [7, 9]},
+          "k": 5
+        },
+        "out": -1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"head": null, "k": 1},
+        "out": -1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "head": {"type": "listNode", "values": [5]},
+          "k": 1
+        },
+        "out": 5
+      },
+      {
+        "id": "h03",
+        "in": {
+          "head": {"type": "listNode", "values": [1, 2, 3]},
+          "k": 3
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "head": {"type": "listNode", "values": [1, 2, 3]},
+          "k": 4
+        },
+        "out": -1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "head": {"type": "listNode", "values": [6, 6, 6]},
+          "k": 2
+        },
+        "out": 6
+      },
+      {
+        "id": "h06",
+        "in": {
+          "head": {"type": "listNode", "values": [9, 8, 7, 6]},
+          "k": 1
+        },
+        "out": 6
+      },
+      {
+        "id": "h07",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [26, 67, 86, 96, 2, 18, 66, 44, 66, 57, 68, 76, 77, 93, 70, 63, 27, 99, 47, 51, 72, 19, 37, 88, 81, 90, 17, 20, 89, 7, 30, 10, 77, 14, 91, 72, 97, 90, 92, 50, 80, 86, 60, 60, 66, 50, 62, 71, 93, 73, 56, 97, 56, 91, 90, 13, 17, 17, 89, 39, 99, 37, 32, 22, 86, 58, 89, 40, 1, 12, 34, 96, 44, 41, 29, 85, 80, 51, 96, 97, 49, 61, 33, 86, 49, 88, 43, 52, 55, 34, 95, 92, 62, 75, 13, 89, 79, 68, 30, 55, 54, 89, 17, 35, 76, 64, 1, 85, 8, 77, 71, 97, 29, 36, 45, 38, 41, 12, 71, 78, 65, 17, 15, 59, 11, 95, 50, 67, 62, 36, 75, 21, 9, 25, 45, 76, 52, 84, 44, 70, 39, 2, 25, 15, 20, 97, 89, 90, 50, 5, 19, 46, 87, 67, 40, 21, 74, 30, 44, 38, 21, 55, 72, 24, 27, 92, 32, 40, 3, 11, 70, 85, 65, 56, 39, 57, 91, 54, 16, 33, 42, 12, 89, 29, 65, 66, 2, 37, 94, 61, 20, 31, 15, 83, 87, 62, 65, 77, 89, 35, 4, 79, 85, 75, 15, 68, 99, 39, 14, 65, 96, 60, 87, 29, 82, 23, 3, 9, 32, 13, 58, 20, 10, 6, 31, 27, 72, 24, 73, 17, 66, 5, 26, 4, 56, 98, 16, 9, 83, 4, 98, 40, 91, 45, 68, 81, 10, 23, 2, 11, 59, 18, 28, 92, 25, 26, 21, 48, 76, 28, 95, 49, 61, 31, 14, 70, 20, 28, 37, 78, 30, 61, 94, 71, 2, 94, 59, 92, 25, 72, 26, 68, 79, 22, 64, 65, 18, 73, 87, 82, 5, 85, 18, 53, 6, 45, 26, 78, 83, 20]
+          },
+          "k": 100
+        },
+        "out": 4
+      },
+      {
+        "id": "h08",
+        "in": {
+          "head": {
+            "type": "listNode",
+            "values": [40, 61, 63, 91, 82, 44, 19, 55, 61, 74, 74, 70, 8, 61, 6, 50, 35, 40, 97, 37, 43, 89, 47, 8, 60, 23, 8, 46, 86, 81, 32, 98, 15, 67, 2, 91, 2, 94, 33, 91, 16, 57, 33, 50, 3, 94, 81, 71, 5, 6, 82, 1, 39, 16, 26, 69, 45, 24, 4, 62, 26, 12, 75, 26, 48, 83, 4, 80, 36, 25, 2, 91, 57, 11, 98, 78, 15, 64, 27, 73, 59, 60, 72, 23, 89, 16, 99, 63, 76, 62, 15, 69, 92, 36, 71, 98, 67, 39, 43, 12, 56, 2, 51, 37, 64, 6, 52, 43, 39, 9, 23, 27, 7, 52, 69, 43, 87, 99, 52, 64, 89, 79, 62, 4, 90, 14, 20, 23, 93, 74, 42, 86, 51, 87, 35, 53, 82, 43, 22, 49, 65, 10, 68, 93, 76, 33, 7, 68, 40, 49, 12, 93, 3, 28, 30, 75, 26, 1, 56, 8, 87, 5, 91, 22, 17, 2, 71, 28, 69, 8, 31, 13, 8, 62, 78, 44, 98, 32, 7, 86, 28, 30, 16, 24, 37, 83, 17, 97, 36, 95, 14, 87, 9, 54, 41, 69, 93, 97, 45, 44, 72, 32, 41, 19, 58, 73, 25, 20, 38, 50, 33, 63, 95, 5, 84, 52, 76, 31, 4, 6, 17, 41, 61, 84, 90, 47, 61, 23, 45, 44, 54, 47, 39, 44, 9, 23, 17, 24, 64, 45, 95, 32, 97, 38, 39, 6, 60, 85, 78, 92, 67, 55, 93, 55, 67, 75, 93, 61, 15, 79, 24, 71, 14, 48, 93, 65, 3, 46, 36, 15, 25, 38, 89, 87, 41, 76, 9, 28, 54, 58, 34, 50, 25, 6, 91, 14, 12, 40, 22, 70, 15, 69, 55, 74, 44, 54, 75, 42, 18, 43]
+          },
+          "k": 300
+        },
+        "out": 40
+      }
+    ]
+  },
+  "edgeCases": ["k equal to the number of cars", "k larger than the train", "an empty train", "k of 1"],
+  "variables": {
+    "pool": [
+      {"name": "lead", "type": "listNode?"},
+      {"name": "back", "type": "listNode?"},
+      {"name": "i", "type": "num"},
+      {"name": "node", "type": "listNode?"},
+      {"name": "n", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "kth_from_end_gap"}
+}

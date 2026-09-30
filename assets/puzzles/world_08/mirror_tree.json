@@ -1,0 +1,952 @@
+{
+  "id": "mirror_tree",
+  "version": 1,
+  "title": "Mirror Tree",
+  "world": "world_08",
+  "chapter": "mirror_pairs_stack",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["tree"],
+  "prerequisites": [],
+  "story": "A gardener shapes a tree so that it looks the same in a mirror: the left side is the right side flipped, branch for branch, with the same labels. Does the tree look the same in the mirror? An empty tree does.",
+  "io": {
+    "inputs": [
+      {"name": "root", "type": "treeNode?"}
+    ],
+    "output": {"type": "bool"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 130},
+    "notes": ["Labels are whole numbers from 1 to 10."]
+  },
+  "blocks": {
+    "allow": ["cmp.eq", "cmp.ne", "ctrl.else", "ctrl.if", "ctrl.return", "ctrl.while", "lit.bool", "lit.num", "logic.is_not_nothing", "logic.is_nothing", "logic.not", "new.stack", "stack.empty", "stack.pop", "stack.push", "tree.left", "tree.right", "tree.value", "var.get", "var.set"],
+    "maxBlocks": 111
+  },
+  "limits": {"maxOps": 6900, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Compare the left branch with the right branch as mirror images: outside with outside, inside with inside.", "Keep two stacks of branches still to compare; a missing branch can go on a stack too. After a matching pair, PUSH the first one's LEFT with the second one's RIGHT, and its RIGHT with the other's LEFT.", "A pair where one side IS NOTHING and the other is not, or where the labels differ, breaks the mirror; two missing branches match."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {"type": "treeNode", "value": 2},
+            "right": {"type": "treeNode", "value": 2}
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {"type": "treeNode", "value": 2},
+            "right": {"type": "treeNode", "value": 3}
+          }
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"root": null},
+        "out": true
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {"type": "treeNode", "value": 5}
+        },
+        "out": true
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 3},
+              "right": {"type": "treeNode", "value": 4}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 4},
+              "right": {"type": "treeNode", "value": 3}
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 3},
+              "right": {"type": "treeNode", "value": 4}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 3},
+              "right": {"type": "treeNode", "value": 4}
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "right": {"type": "treeNode", "value": 3}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "right": {"type": "treeNode", "value": 3}
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 3}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "right": {"type": "treeNode", "value": 3}
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {"type": "treeNode", "value": 2}
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {
+                "type": "treeNode",
+                "value": 9,
+                "left": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": {"type": "treeNode", "value": 7}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 5,
+                      "left": {"type": "treeNode", "value": 5},
+                      "right": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 7,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 3,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 5,
+                              "left": {"type": "treeNode", "value": 4}
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 3,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 9,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 7,
+                            "left": {"type": "treeNode", "value": 1}
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 2,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 8,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 8,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 3,
+                                "right": {"type": "treeNode", "value": 4}
+                              },
+                              "right": {"type": "treeNode", "value": 7}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 1,
+                              "left": {"type": "treeNode", "value": 4}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 9,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 1,
+                                "right": {"type": "treeNode", "value": 9}
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 8,
+                                "right": {"type": "treeNode", "value": 5}
+                              }
+                            },
+                            "right": {"type": "treeNode", "value": 6}
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "left": {"type": "treeNode", "value": 3}
+                      }
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 7,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 2,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 8,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "left": {"type": "treeNode", "value": 9},
+                          "right": {"type": "treeNode", "value": 6}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 4,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 4,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "right": {"type": "treeNode", "value": 6}
+                          }
+                        }
+                      }
+                    },
+                    "right": {"type": "treeNode", "value": 6}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 4,
+                    "left": {"type": "treeNode", "value": 8},
+                    "right": {
+                      "type": "treeNode",
+                      "value": 9,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 1,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 8,
+                          "left": {"type": "treeNode", "value": 6}
+                        },
+                        "right": {"type": "treeNode", "value": 2}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 1,
+                          "right": {"type": "treeNode", "value": 1}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "right": {"type": "treeNode", "value": 5}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 1,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "right": {"type": "treeNode", "value": 3}
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 1,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "left": {"type": "treeNode", "value": 3}
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 7,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 4,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 9,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "left": {"type": "treeNode", "value": 5}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 1,
+                          "left": {"type": "treeNode", "value": 1}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 1,
+                        "left": {"type": "treeNode", "value": 2},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 8,
+                          "right": {"type": "treeNode", "value": 6}
+                        }
+                      }
+                    },
+                    "right": {"type": "treeNode", "value": 8}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {"type": "treeNode", "value": 6},
+                    "right": {
+                      "type": "treeNode",
+                      "value": 2,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 4,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 4,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "left": {"type": "treeNode", "value": 6}
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 8,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "left": {"type": "treeNode", "value": 6},
+                          "right": {"type": "treeNode", "value": 9}
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 9,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 3,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "right": {"type": "treeNode", "value": 3}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 2,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "left": {"type": "treeNode", "value": 6},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 9,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 8,
+                                "left": {"type": "treeNode", "value": 5}
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 1,
+                                "left": {"type": "treeNode", "value": 9}
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 8,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 1,
+                              "right": {"type": "treeNode", "value": 4}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 8,
+                              "left": {"type": "treeNode", "value": 7},
+                              "right": {
+                                "type": "treeNode",
+                                "value": 3,
+                                "left": {"type": "treeNode", "value": 4}
+                              }
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 9,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 7,
+                            "right": {"type": "treeNode", "value": 1}
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 5,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 7,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 3,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 5,
+                              "right": {"type": "treeNode", "value": 4}
+                            }
+                          }
+                        }
+                      },
+                      "right": {"type": "treeNode", "value": 5}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "right": {"type": "treeNode", "value": 7}
+                }
+              }
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h09",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {
+                "type": "treeNode",
+                "value": 9,
+                "left": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": {"type": "treeNode", "value": 7}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 5,
+                      "left": {"type": "treeNode", "value": 5},
+                      "right": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 7,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 3,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 5,
+                              "left": {"type": "treeNode", "value": 4}
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 3,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 9,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 7,
+                            "left": {"type": "treeNode", "value": 1}
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 2,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 8,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 8,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 3,
+                                "right": {"type": "treeNode", "value": 4}
+                              },
+                              "right": {"type": "treeNode", "value": 7}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 1,
+                              "left": {"type": "treeNode", "value": 4}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 9,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 1,
+                                "right": {"type": "treeNode", "value": 9}
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 8,
+                                "right": {"type": "treeNode", "value": 5}
+                              }
+                            },
+                            "right": {"type": "treeNode", "value": 6}
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "left": {"type": "treeNode", "value": 3}
+                      }
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 7,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 2,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 8,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "left": {"type": "treeNode", "value": 9},
+                          "right": {"type": "treeNode", "value": 6}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 4,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 4,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "right": {"type": "treeNode", "value": 6}
+                          }
+                        }
+                      }
+                    },
+                    "right": {"type": "treeNode", "value": 6}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 4,
+                    "left": {"type": "treeNode", "value": 8},
+                    "right": {
+                      "type": "treeNode",
+                      "value": 9,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 1,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 8,
+                          "left": {"type": "treeNode", "value": 6}
+                        },
+                        "right": {"type": "treeNode", "value": 2}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 1,
+                          "right": {"type": "treeNode", "value": 1}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "right": {"type": "treeNode", "value": 5}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 1,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "right": {"type": "treeNode", "value": 3}
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 1,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "left": {"type": "treeNode", "value": 4}
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 7,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 4,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 9,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "left": {"type": "treeNode", "value": 5}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 1,
+                          "left": {"type": "treeNode", "value": 1}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 1,
+                        "left": {"type": "treeNode", "value": 2},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 8,
+                          "right": {"type": "treeNode", "value": 6}
+                        }
+                      }
+                    },
+                    "right": {"type": "treeNode", "value": 8}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {"type": "treeNode", "value": 6},
+                    "right": {
+                      "type": "treeNode",
+                      "value": 2,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 4,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 4,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "left": {"type": "treeNode", "value": 6}
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 8,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "left": {"type": "treeNode", "value": 6},
+                          "right": {"type": "treeNode", "value": 9}
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 9,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 2,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 3,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "right": {"type": "treeNode", "value": 3}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 2,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 2,
+                            "left": {"type": "treeNode", "value": 6},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 9,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 8,
+                                "left": {"type": "treeNode", "value": 5}
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 1,
+                                "left": {"type": "treeNode", "value": 9}
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 8,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 1,
+                              "right": {"type": "treeNode", "value": 4}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 8,
+                              "left": {"type": "treeNode", "value": 7},
+                              "right": {
+                                "type": "treeNode",
+                                "value": 3,
+                                "left": {"type": "treeNode", "value": 4}
+                              }
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 9,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 7,
+                            "right": {"type": "treeNode", "value": 1}
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 5,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 7,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 3,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 5,
+                              "right": {"type": "treeNode", "value": 4}
+                            }
+                          }
+                        }
+                      },
+                      "right": {"type": "treeNode", "value": 5}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "right": {"type": "treeNode", "value": 7}
+                }
+              }
+            }
+          }
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": ["branches that are copies but not mirrors", "the same labels in a different shape", "an empty tree", "one node"],
+  "variables": {
+    "pool": [
+      {"name": "a", "type": "stack<treeNode?>"},
+      {"name": "b", "type": "stack<treeNode?>"},
+      {"name": "x", "type": "treeNode?"},
+      {"name": "y", "type": "treeNode?"}
+    ]
+  },
+  "reference": {"strategy": "mirror_pairs_stack"}
+}

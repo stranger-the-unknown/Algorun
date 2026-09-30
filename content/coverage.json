@@ -1,84 +1,84 @@
 {
-  "total": 107,
+  "total": 119,
   "targetTotal": 300,
   "tiers": {
     "1": 9,
     "2": 41,
-    "3": 34,
-    "4": 21,
+    "3": 40,
+    "4": 27,
     "5": 2
   },
   "modes": {
-    "budget": 12,
-    "build": 67,
-    "edge": 20,
+    "budget": 15,
+    "build": 74,
+    "edge": 22,
     "optimize": 5,
     "restricted": 3
   },
   "structures": {
-    "array": 45,
-    "graph": 14,
+    "array": 48,
+    "graph": 16,
     "grid": 3,
-    "hash_map": 7,
+    "hash_map": 8,
     "hash_set": 4,
-    "linked_list": 9,
+    "linked_list": 11,
     "queue": 2,
     "scalar": 8,
-    "stack": 5,
-    "tree": 10
+    "stack": 7,
+    "tree": 12
   },
   "families": {
     "array_scan": 11,
     "binary_search": 2,
     "control_flow": 7,
     "dp_grid": 3,
-    "dp_iterative": 5,
-    "graph_bfs": 4,
-    "graph_connectivity": 6,
+    "dp_iterative": 7,
+    "graph_bfs": 5,
+    "graph_connectivity": 7,
     "graph_dfs_iterative": 2,
     "greedy": 8,
     "hash_map": 6,
     "hash_set": 4,
-    "linked_list_relink": 2,
-    "linked_list_traversal": 7,
+    "linked_list_relink": 3,
+    "linked_list_traversal": 8,
     "monotonic_stack": 2,
     "multi_concept": 1,
     "prefix_sum": 5,
     "queue": 3,
-    "sliding_window": 7,
-    "stack": 3,
+    "sliding_window": 9,
+    "stack": 5,
     "topological_order": 1,
-    "tree_traversal": 10,
+    "tree_traversal": 12,
     "two_pointers": 8
   },
   "performance": {
-    "budget": 21,
-    "correctness": 78,
+    "budget": 24,
+    "correctness": 87,
     "optimization": 5,
     "restricted": 3
   },
   "concepts": {
     "array_scan": 11,
     "arrays": 12,
-    "bfs": 8,
+    "bfs": 9,
     "binary_search": 2,
     "binary_search_answer": 1,
-    "bst": 1,
+    "bst": 2,
     "complement_lookup": 1,
     "control": 12,
     "counting": 1,
-    "dfs": 4,
-    "dp": 9,
+    "dfs": 5,
+    "dp": 11,
     "dp_iterative": 1,
     "fast_slow_pointers": 2,
-    "graph": 14,
+    "graph": 16,
     "graph_bfs": 3,
     "graph_dfs_iterative": 1,
     "greedy": 10,
     "greedy_choice": 1,
     "hash_map": 10,
     "hash_set": 2,
-    "linked_list": 9,
+    "linked_list": 11,
     "monotonic_stack": 2,
     "multi_concept": 1,
     "neighbour_order": 1,
@@ -87,10 +87,10 @@
     "queue": 11,
     "relinking": 2,
     "shortest_path": 1,
-    "sliding_window": 7,
-    "stack": 7,
+    "sliding_window": 9,
+    "stack": 9,
     "topological_order": 1,
-    "tree": 10,
+    "tree": 12,
     "two_pointers": 13,
     "variables": 12
   },
@@ -235,19 +235,21 @@
       "concepts": [
         "sliding_window"
       ],
-      "count": 7,
+      "count": 9,
       "tiers": {
         "1": 0,
         "2": 2,
-        "3": 3,
-        "4": 2,
+        "3": 4,
+        "4": 3,
         "5": 0
       },
       "families": {
-        "sliding_window": 7
+        "sliding_window": 9
       },
       "patterns": {
         "count_fixed_windows_at_least": 1,
+        "count_windows_sum_at_most": 1,
+        "distinct_count_per_window": 1,
         "fixed_window_max_sum": 1,
         "longest_window_at_most_k_bad": 1,
         "longest_window_k_distinct": 1,
@@ -264,24 +266,26 @@
         "stack",
         "queue"
       ],
-      "count": 8,
+      "count": 10,
       "tiers": {
         "1": 0,
         "2": 3,
-        "3": 3,
-        "4": 1,
+        "3": 4,
+        "4": 2,
         "5": 1
       },
       "families": {
         "monotonic_stack": 2,
         "queue": 3,
-        "stack": 3
+        "stack": 5
       },
       "patterns": {
         "counting_out_queue": 1,
         "matching_pairs_stack": 1,
         "next_greater_distance": 1,
         "queue_serve_positive_enqueue": 1,
+        "running_min_stack": 1,
+        "stack_collisions": 1,
         "stack_largest_rectangle": 1,
         "stack_permutation_123": 1,
         "ticket_time_closed_form": 1,
@@ -295,27 +299,29 @@
       "concepts": [
         "linked_list"
       ],
-      "count": 9,
+      "count": 11,
       "tiers": {
         "1": 0,
         "2": 5,
-        "3": 3,
+        "3": 5,
         "4": 1,
         "5": 0
       },
       "families": {
-        "linked_list_relink": 2,
-        "linked_list_traversal": 7
+        "linked_list_relink": 3,
+        "linked_list_traversal": 8
       },
       "patterns": {
         "fast_slow_middle": 1,
         "floyd_cycle": 1,
+        "kth_from_end_gap": 1,
         "linked_list_contains": 1,
         "linked_list_count_below": 1,
         "linked_list_last_minus_first": 1,
         "linked_list_last_value": 1,
         "linked_list_strict_rises": 1,
         "relink_filter": 1,
+        "relink_skip_sorted_duplicates": 1,
         "reverse_in_place": 1
       },
       "target": 20
@@ -327,25 +333,27 @@
         "tree",
         "bst"
       ],
-      "count": 10,
+      "count": 12,
       "tiers": {
         "1": 0,
         "2": 4,
         "3": 3,
-        "4": 3,
+        "4": 5,
         "5": 0
       },
       "families": {
-        "tree_traversal": 10
+        "tree_traversal": 12
       },
       "patterns": {
         "bfs_depth_levels": 1,
         "bfs_level_width": 1,
+        "bst_range_pruning": 1,
         "inorder_stack_check": 1,
         "iterative_leaf_count": 1,
         "iterative_tree_size": 1,
         "left_spine_length": 1,
         "minimum_leaf_value": 1,
+        "mirror_pairs_stack": 1,
         "right_spine_sum": 1,
         "root_to_leaf_state": 1,
         "single_node_tree": 1
@@ -378,17 +386,17 @@
         "bfs",
         "dfs"
       ],
-      "count": 13,
+      "count": 15,
       "tiers": {
         "1": 0,
         "2": 3,
-        "3": 6,
-        "4": 4,
+        "3": 7,
+        "4": 5,
         "5": 0
       },
       "families": {
-        "graph_bfs": 4,
-        "graph_connectivity": 6,
+        "graph_bfs": 5,
+        "graph_connectivity": 7,
         "graph_dfs_iterative": 2,
         "topological_order": 1
       },
@@ -397,8 +405,10 @@
         "bfs_farthest_layer_width": 1,
         "bfs_shortest_path": 1,
         "bfs_two_coloring": 1,
+        "bfs_within_hops": 1,
         "count_components": 1,
         "count_zero_outdegree": 1,
+        "cycle_by_edge_count": 1,
         "direct_edge_exists": 1,
         "iterative_dfs_last_popped": 1,
         "iterative_dfs_reachable_count": 1,
@@ -462,22 +472,24 @@
       "concepts": [
         "dp"
       ],
-      "count": 8,
+      "count": 10,
       "tiers": {
         "1": 0,
         "2": 2,
-        "3": 3,
-        "4": 3,
+        "3": 4,
+        "4": 4,
         "5": 0
       },
       "families": {
         "dp_grid": 3,
-        "dp_iterative": 5
+        "dp_iterative": 7
       },
       "patterns": {
         "climb_one_or_two": 1,
         "count_paths_with_walls": 1,
+        "longest_rising_subsequence": 1,
         "max_path_three_directions": 1,
+        "max_run_ending_here": 1,
         "min_coins_table": 1,
         "min_cost_one_or_two": 1,
         "min_path_right_down": 1,
@@ -540,6 +552,20 @@
       ]
     },
     {
+      "id": "best_stretch",
+      "world": "world_13",
+      "tier": 3,
+      "mode": "edge",
+      "family": "dp_iterative",
+      "pattern": "max_run_ending_here",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "dp"
+      ]
+    },
+    {
       "id": "biggest_patch",
       "world": "world_10",
       "tier": 3,
@@ -554,6 +580,20 @@
       "concepts": [
         "graph",
         "dfs"
+      ]
+    },
+    {
+      "id": "calm_stretches",
+      "world": "world_05",
+      "tier": 3,
+      "mode": "budget",
+      "family": "sliding_window",
+      "pattern": "count_windows_sum_at_most",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "sliding_window"
       ]
     },
     {
@@ -907,6 +947,21 @@
       ]
     },
     {
+      "id": "hop_radius",
+      "world": "world_10",
+      "tier": 3,
+      "mode": "edge",
+      "family": "graph_bfs",
+      "pattern": "bfs_within_hops",
+      "structure": "graph",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "bfs"
+      ]
+    },
+    {
       "id": "island_count",
       "world": "world_10",
       "tier": 3,
@@ -936,6 +991,20 @@
       "performance": "correctness",
       "concepts": [
         "queue"
+      ]
+    },
+    {
+      "id": "kth_from_end",
+      "world": "world_07",
+      "tier": 3,
+      "mode": "build",
+      "family": "linked_list_traversal",
+      "pattern": "kth_from_end_gap",
+      "structure": "linked_list",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "linked_list"
       ]
     },
     {
@@ -1312,6 +1381,20 @@
       ]
     },
     {
+      "id": "mirror_tree",
+      "world": "world_08",
+      "tier": 4,
+      "mode": "build",
+      "family": "tree_traversal",
+      "pattern": "mirror_pairs_stack",
+      "structure": "tree",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "tree"
+      ]
+    },
+    {
       "id": "named_car",
       "world": "world_07",
       "tier": 2,
@@ -1354,6 +1437,20 @@
       "performance": "restricted",
       "concepts": [
         "arrays"
+      ]
+    },
+    {
+      "id": "no_repeats",
+      "world": "world_07",
+      "tier": 3,
+      "mode": "build",
+      "family": "linked_list_relink",
+      "pattern": "relink_skip_sorted_duplicates",
+      "structure": "linked_list",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "linked_list"
       ]
     },
     {
@@ -1531,6 +1628,20 @@
       ]
     },
     {
+      "id": "plate_minimum",
+      "world": "world_06",
+      "tier": 3,
+      "mode": "build",
+      "family": "stack",
+      "pattern": "running_min_stack",
+      "structure": "stack",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "stack"
+      ]
+    },
+    {
       "id": "platform_doors",
       "world": "world_10",
       "tier": 2,
@@ -1575,6 +1686,21 @@
       "concepts": [
         "sliding_window",
         "two_pointers"
+      ]
+    },
+    {
+      "id": "range_count",
+      "world": "world_08",
+      "tier": 4,
+      "mode": "budget",
+      "family": "tree_traversal",
+      "pattern": "bst_range_pruning",
+      "structure": "tree",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "tree",
+        "bst"
       ]
     },
     {
@@ -1637,6 +1763,35 @@
       "performance": "correctness",
       "concepts": [
         "tree"
+      ]
+    },
+    {
+      "id": "ring_road",
+      "world": "world_10",
+      "tier": 4,
+      "mode": "build",
+      "family": "graph_connectivity",
+      "pattern": "cycle_by_edge_count",
+      "structure": "graph",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "dfs"
+      ]
+    },
+    {
+      "id": "rising_line",
+      "world": "world_13",
+      "tier": 4,
+      "mode": "build",
+      "family": "dp_iterative",
+      "pattern": "longest_rising_subsequence",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "dp"
       ]
     },
     {
@@ -1815,6 +1970,20 @@
       "concepts": [
         "binary_search",
         "binary_search_answer"
+      ]
+    },
+    {
+      "id": "snowball_clash",
+      "world": "world_06",
+      "tier": 4,
+      "mode": "build",
+      "family": "stack",
+      "pattern": "stack_collisions",
+      "structure": "stack",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "stack"
       ]
     },
     {
@@ -2134,6 +2303,20 @@
       ]
     },
     {
+      "id": "window_variety",
+      "world": "world_05",
+      "tier": 4,
+      "mode": "budget",
+      "family": "sliding_window",
+      "pattern": "distinct_count_per_window",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "sliding_window"
+      ]
+    },
+    {
       "id": "windows_at_least",
       "world": "world_05",
       "tier": 2,
@@ -2170,7 +2353,7 @@
     {
       "area": "world",
       "id": "world_05",
-      "have": 7,
+      "have": 9,
       "want": 20
     },
     {
@@ -2183,19 +2366,19 @@
     {
       "area": "world",
       "id": "world_06",
-      "have": 8,
+      "have": 10,
       "want": 25
     },
     {
       "area": "world",
       "id": "world_07",
-      "have": 9,
+      "have": 11,
       "want": 20
     },
     {
       "area": "world",
       "id": "world_08",
-      "have": 10,
+      "have": 12,
       "want": 30
     },
     {
@@ -2225,7 +2408,7 @@
     {
       "area": "world",
       "id": "world_10",
-      "have": 13,
+      "have": 15,
       "want": 30
     },
     {
@@ -2261,7 +2444,7 @@
     {
       "area": "world",
       "id": "world_13",
-      "have": 8,
+      "have": 10,
       "want": 30
     },
     {
@@ -2323,13 +2506,13 @@
     {
       "area": "family",
       "id": "sliding_window",
-      "have": 7,
+      "have": 9,
       "want": 15
     },
     {
       "area": "family",
       "id": "stack",
-      "have": 3,
+      "have": 5,
       "want": 10
     },
     {
@@ -2353,25 +2536,25 @@
     {
       "area": "family",
       "id": "linked_list_traversal",
-      "have": 7,
+      "have": 8,
       "want": 10
     },
     {
       "area": "family",
       "id": "linked_list_relink",
-      "have": 2,
+      "have": 3,
       "want": 10
     },
     {
       "area": "family",
       "id": "tree_traversal",
-      "have": 10,
+      "have": 12,
       "want": 25
     },
     {
       "area": "family",
       "id": "graph_bfs",
-      "have": 4,
+      "have": 5,
       "want": 10
     },
     {
@@ -2383,7 +2566,7 @@
     {
       "area": "family",
       "id": "graph_connectivity",
-      "have": 6,
+      "have": 7,
       "want": 8
     },
     {
@@ -2401,7 +2584,7 @@
     {
       "area": "family",
       "id": "dp_iterative",
-      "have": 5,
+      "have": 7,
       "want": 20
     },
     {
@@ -2440,13 +2623,13 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 67,
+      "have": 74,
       "want": 150
     },
     {
       "area": "mode",
       "id": "budget",
-      "have": 12,
+      "have": 15,
       "want": 30
     },
     {

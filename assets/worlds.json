@@ -112,8 +112,10 @@
         "patchy_signal",
         "quota_hours",
         "one_dropout",
+        "calm_stretches",
         "market_variety",
-        "peak_windows"
+        "peak_windows",
+        "window_variety"
       ]
     },
     {
@@ -134,7 +136,9 @@
         "relay_towers",
         "josephus_line",
         "stack_sorted",
+        "plate_minimum",
         "ticket_minutes",
+        "snowball_clash",
         "largest_billboard"
       ]
     },
@@ -157,6 +161,8 @@
         "middle_car",
         "reverse_train",
         "drop_faulty_cars",
+        "kth_from_end",
+        "no_repeats",
         "loop_detector"
       ]
     },
@@ -181,7 +187,9 @@
         "lowest_leaf",
         "widest_level",
         "trail_sum",
-        "sorted_grove"
+        "sorted_grove",
+        "mirror_tree",
+        "range_count"
       ]
     },
     {
@@ -218,10 +226,12 @@
         "scout_last",
         "biggest_patch",
         "last_layer",
+        "hop_radius",
         "two_teams",
         "task_order",
         "nearest_depot",
-        "source_radius"
+        "source_radius",
+        "ring_road"
       ]
     },
     {
@@ -273,9 +283,11 @@
         "quiet_street",
         "aisle_cost",
         "open_lanes",
+        "best_stretch",
         "exact_change",
         "diagonal_haul",
-        "pack_bins"
+        "pack_bins",
+        "rising_line"
       ]
     },
     {

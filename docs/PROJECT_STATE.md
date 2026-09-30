@@ -3,7 +3,7 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current state: MS15 content batch 3 in progress (107 campaign puzzles so far): Foundations 2 → 12; Arrays, Hash Maps, Two Pointers and Greedy +12. Recursion / player functions are still not built.**
+**Current state: MS15 content batch 3 in progress (119 campaign puzzles so far): Foundations 2 → 12; +12 in Arrays, Hash Maps, Two Pointers and Greedy; +12 in Sliding Window, Stack & Queue, Linked Lists, Trees, Graphs and DP. Recursion / player functions are still not built.**
 **Why the corpus grows before the playtest (user decision, 2026-09-30):** the user's subscription ends around 2026-10-10; they want the game developed as far as possible now, and will playtest afterwards and bring notes to the next development month. Plan: MS15 content (Foundations, then thin worlds) → recursion and player functions only if content is done by 2026-10-05 → freeze on 2026-10-09 / 10 (tests, APK, web build, a test checklist in `bekleyen-isler.md`). See [`MILESTONE_15.md`](MILESTONE_15.md).
 
 Do not implement the next milestone from this file unless the user explicitly asks.
@@ -34,7 +34,7 @@ puzzle variables").
 Working title: **Algorun**. Android-first Flutter/Dart algorithm puzzle game.
 
 The player constructs algorithms with Scratch-style typed visual blocks. No
-syntax. No eval of generated Dart/JS/Kotlin. The game ships 107 campaign puzzles
+syntax. No eval of generated Dart/JS/Kotlin. The game ships 119 campaign puzzles
 in 12 worlds (five from MS8, 33 from MS12, 47 from MS14), tiers 1–5. The
 corpus stops here for a playtest; it is not on the way to 300 until that
 playtest says so. Recursion is still unbuilt, so worlds 09 and 12 stay empty.
@@ -101,7 +101,7 @@ algorun/                          Flutter app (repository root)
     state/progress_providers.dart progressStoreProvider, campaignProvider, progressProvider (autosave), campaignViewProvider
     state/progress_text.dart      player wording for locks and statuses
   assets/                         bundled with the app
-    worlds.json                   14 worlds, 107 puzzles; 09 (heaps) and 12 (backtracking) have none
+    worlds.json                   14 worlds, 119 puzzles; 09 (heaps) and 12 (backtracking) have none
     l10n/content_tr.json          U1: Turkish world titles, concept words, puzzle titles / stories / hints
     puzzles/world_01/             warm_readings, highest_tide + ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe, ms13_stress_probe (unlisted dev probes)
     puzzles/world_02 … world_14/  the campaign puzzles (list: "Content backlog and coverage")
@@ -151,7 +151,7 @@ algorun/                          Flutter app (repository root)
   test/editor_actions_test.dart   select, move, copy, delete, folds, one undo step each (MS13)
   test/stress_probe_test.dart     the 82-block probe on a 360 × 800 phone (MS13)
   test/responsive_test.dart       the whole flow on 5 phone sizes × 2 font scales (MS13)
-  test/campaign_regression_test.dart  all 107 puzzles: built by taps, saved, run, reported at 360 × 800 (MS13 harness; MS14 added the new puzzles to the same loop)
+  test/campaign_regression_test.dart  all 119 puzzles: built by taps, saved, run, reported at 360 × 800 (MS13 harness; MS14 added the new puzzles to the same loop)
   test/screens_polish_test.dart   verdicts, next puzzle, world / puzzle wording (MS13)
   test/literal_sheets_test.dart   number pad, name sheet and TRUE / FALSE under the real theme (MS13, U1)
   test/localization_test.dart     U1: ARB parity, engine sentence coverage, Turkish content, block reference coverage
@@ -673,7 +673,7 @@ puzzle app bar and the piece picker. Details:
 | `packages/algorun_engine` `dart test` | **350 passed** |
 | `packages/algorun_content` `dart analyze` | no issues |
 | `packages/algorun_content` `dart test` | **86 passed** (MS15) |
-| Content validator (assets + worlds + references) | `PIPELINE 107 of 107 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 112 puzzle(s), 7 warning(s)` (MS15) |
+| Content validator (assets + worlds + references) | `PIPELINE 119 of 119 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 124 puzzle(s), 7 warning(s)` (MS15) |
 | Flutter `analyze` | no issues |
 | Flutter `test` | **260 passed** (235 at MS13) |
 | `flutter build apk --debug` | built |
@@ -801,12 +801,12 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | 13 | Mobile UX polish and usability (emulator-verified) | complete |
 | U1 | English / Turkish, block reference, number entry, no CREATE VARIABLE | complete |
 | 14 | Content batch 2: 47 puzzles (85 in the campaign) | complete |
-| **15** | Content batch 3: Foundations 2 → 12, thin worlds (107 in the campaign so far) | **in progress** |
+| **15** | Content batch 3: Foundations 2 → 12, +24 across ten worlds (119 in the campaign) | **in progress** |
 | later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content; do not start until playtest |
 
 ## Content backlog and coverage (MS15 batch 3, in progress)
 
-Accepted: **107 campaign puzzles** (+ 5 unlisted probes) against a planning
+Accepted: **119 campaign puzzles** (+ 5 unlisted probes) against a planning
 target of ~300 (`content/coverage_targets.json`). That target is paused.
 Source of truth: `content/coverage.json`.
 
@@ -816,15 +816,15 @@ Source of truth: `content/coverage.json`.
 | 02 Arrays | 13 / 30 | first descent, second highest, even prefixes, nested distinct, loudest pair; MS15: last sighting, till totals, balance point, landslide |
 | 03 Hash Maps | 10 / 25 | pair tickets, same-value span, shared values; MS15: second scan, matching bags, lonely numbers |
 | 04 Two Pointers | 8 / 20 | exact gaps, pairs under a limit, sorted union, closest gap; MS15: sorted shelf, recipe steps |
-| 05 Sliding Window | 7 / 20 | windows at least, one dropout, peak windows |
-| 06 Stack & Queue | 8 / 25 | counter sum, josephus line, ticket minutes, stack sorted |
-| 07 Linked Lists | 9 / 20 | tail lamp, cold cars, named car, end gap, rising links |
-| 08 Trees | 10 / 30 | left vine, right marks, lone tree, node census, leaf census, lowest leaf |
+| 05 Sliding Window | 9 / 20 | windows at least, one dropout, peak windows; MS15: calm stretches, window variety |
+| 06 Stack & Queue | 10 / 25 | counter sum, josephus line, ticket minutes, stack sorted; MS15: plate minimum, snowball clash |
+| 07 Linked Lists | 11 / 20 | tail lamp, cold cars, named car, end gap, rising links; MS15: from the back, no repeats |
+| 08 Trees | 12 / 30 | left vine, right marks, lone tree, node census, leaf census, lowest leaf; MS15: mirror tree, catalogue range |
 | 09 Heaps | 0 / 15 | blocked by the language (heap) |
-| 10 Graphs | 13 / 30 | platform doors, direct hop, silent stops, scout reach, scout last, biggest patch, source radius, last layer |
+| 10 Graphs | 15 / 30 | platform doors, direct hop, silent stops, scout reach, scout last, biggest patch, source radius, last layer; MS15: ring road, ride limit |
 | 11 Greedy | 8 / 20 | cookie gifts, dock overlap, leap reach; MS15: every rise, one room, medals in a row |
 | 12 Backtracking | 0 / 15 | blocked by the language (recursion) — still empty on purpose |
-| 13 Dynamic Programming | 8 / 30 | plank ways, step toll, aisle cost, open lanes, diagonal haul, pack bins |
+| 13 Dynamic Programming | 10 / 30 | plank ways, step toll, aisle cost, open lanes, diagonal haul, pack bins; MS15: best stretch, rising line |
 | 14 Advanced | 1 / 8 | — |
 
 By tier: 1: 2 · 2: 30 · 3: 32 · 4: 19 · 5: 2. By mode: build 53 · budget 10 ·

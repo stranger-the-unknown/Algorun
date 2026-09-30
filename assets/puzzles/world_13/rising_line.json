@@ -1,0 +1,96 @@
+{
+  "id": "rising_line",
+  "version": 1,
+  "title": "Rising Line",
+  "world": "world_13",
+  "chapter": "longest_rising_subsequence",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["dp"],
+  "prerequisites": [],
+  "story": "People join a queue one by one, each with their height. A photographer wants to pick some of them, keeping the queue's order, so that the heights strictly rise from front to back. What is the largest group that can be picked? Equal heights do not count as rising, and an empty queue gives 0.",
+  "io": {
+    "inputs": [
+      {"name": "heights", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 300},
+    "notes": ["Heights are whole numbers from 1 to 1000."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.max", "arr.append", "arr.get", "arr.len", "cmp.gt", "cmp.le", "cmp.lt", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "lit.num", "new.array", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 61
+  },
+  "limits": {"maxOps": 1186500, "maxDepth": 32, "maxAlloc": 650},
+  "hints": ["For each person, work out the largest rising group that ends with them.", "It is 1 PLUS the best among the earlier people who are strictly shorter; keep these numbers in a NEW LIST.", "The answer is the largest number in that list. Taking whoever is taller than the last one taken is not enough."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"heights": [3, 1, 4, 1, 5, 9, 2, 6]},
+        "out": 4
+      },
+      {
+        "id": "v2",
+        "in": {"heights": [5, 4, 3]},
+        "out": 1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"heights": []},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"heights": [7]},
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {"heights": [2, 2, 2]},
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {"heights": [1, 5, 2, 3]},
+        "out": 3
+      },
+      {
+        "id": "h05",
+        "in": {"heights": [11, 8, 3, 6, 4, 9, 120, 20]},
+        "out": 4
+      },
+      {
+        "id": "h06",
+        "in": {"heights": [1, 2, 3, 4, 5]},
+        "out": 5
+      },
+      {
+        "id": "h07",
+        "in": {
+          "heights": [133, 213, 31, 90, 623, 441, 119, 355, 399, 448, 100, 152, 816, 883, 582, 858, 647, 921, 136, 381, 726, 544, 399, 639, 301, 181, 274, 415, 885, 352, 765, 512, 418, 495, 721, 626, 935, 695, 660, 859, 632, 982, 393, 23, 503, 817, 825, 326, 505, 812, 792, 91, 558, 674, 969, 959, 316, 437, 375, 363, 225, 441, 845, 702, 289, 864, 385, 412, 39, 456, 192, 745, 413, 337, 221, 547, 666, 238, 836, 416, 458, 593, 708, 909, 100, 22, 715, 25, 78, 753, 694, 310, 719, 693, 820, 738, 698, 729, 868, 69, 556, 285, 868, 486, 218, 629, 118, 227, 878, 441, 496, 704, 159, 799, 761, 461, 127, 407, 763, 587, 984, 225, 918, 115, 89, 741, 627, 55, 147, 204, 244, 679, 475, 453, 314, 169, 222, 185, 680, 602, 648, 399, 958, 613, 720, 99, 759, 680, 514, 138, 317, 804, 131, 900, 433, 565, 811, 342, 792, 201, 987, 219, 563, 794, 339, 419, 469, 201, 492, 533, 769, 683, 127, 968, 243, 461, 662, 95, 837, 512, 54, 835, 224, 903, 692, 229, 811, 215, 185, 439, 696, 338, 621, 623, 458, 55, 227, 964, 746, 795, 357, 627, 342, 209, 436, 364, 488, 106, 740, 254, 386, 580, 573, 721, 573, 68, 640, 570, 835, 742, 351, 258, 946, 993, 372, 540, 908, 853, 537, 777, 119, 1000, 639, 921, 691, 660, 605, 708, 703, 675, 826, 291, 554, 804, 138, 897, 608, 511, 84, 578, 322, 883, 724, 575, 515, 137, 503, 914, 752, 301, 197, 754, 736, 792, 229, 757, 848, 803, 359, 442, 227, 364, 716, 278, 195, 785, 563, 364, 834, 519, 302, 744, 23, 467, 208, 463, 857, 575, 401, 179, 127, 861, 657, 491, 732, 560, 61, 338, 751, 401]
+        },
+        "out": 32
+      }
+    ]
+  },
+  "edgeCases": ["an early tall person who blocks a longer group", "equal heights", "an empty queue"],
+  "variables": {
+    "pool": [
+      {"name": "best", "type": "array<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "j", "type": "num"},
+      {"name": "b", "type": "num"},
+      {"name": "answer", "type": "num"},
+      {"name": "last", "type": "num"},
+      {"name": "count", "type": "num"},
+      {"name": "x", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "longest_rising_subsequence"}
+}

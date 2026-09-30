@@ -105,3 +105,40 @@ puzzle(s), 7 warning(s)` (the known seven). Content 86, Flutter 429 tests
 pass (the campaign regression test builds and runs all 107 references by
 taps). Tests that counted 95 puzzles, nine Arrays puzzles or took Lowest
 Balance as the first Arrays puzzle now read the manifest.
+
+## Part 3 — Sliding Window, Stack & Queue, Linked Lists, Trees, Graphs, DP (+12)
+
+| World | Puzzle | Tier | Mode | What it teaches | The trap (its reject) |
+|---|---|---|---|---|---|
+| 05 Sliding Window | Calm Stretches | 3 | budget | counting windows: right − left + 1 | every stretch added up (10×) |
+| 05 Sliding Window | Window Variety | 4 | budget | a count map in a moving window (needs hash maps) | every run recounted (10×); a song that left still counted |
+| 06 Stack & Queue | Plate Minimum | 3 | build | a stack of running minimums | one running minimum that never goes back up |
+| 06 Stack & Queue | Snowball Clash | 4 | build | WHILE on a stack top | one clash per ball (IF) |
+| 07 Linked Lists | From the Back | 3 | build | a lead finger k cars ahead | k equal to the length called too short |
+| 07 Linked Lists | No Repeats | 3 | build | SET NEXT and stay | moving on after every removal (runs of three) |
+| 08 Trees | Mirror Tree | 4 | build | mirrored pairs on two stacks of maybe-missing branches | copies instead of mirrors |
+| 08 Trees | Catalogue Range | 4 | budget | pruning a search tree | every node visited (10×); strict ends |
+| 10 Graphs | Ring Road | 4 | build | villages vs roads per connected part | counting the whole county at once |
+| 10 Graphs | Ride Limit | 3 | edge | BFS that stops at the limit | exploring past the limit |
+| 13 DP | Best Stretch | 3 | edge | best run ending here, from the first day | starting from 0 (all losses) |
+| 13 DP | Rising Line | 4 | build | O(n²) table of rising groups | greedy taking; equal heights |
+
+Oracles in `packages/algorun_content/lib/src/oracles/batch4.dart`: brute
+force, a set per window, the stack as a list, pairwise collision
+simulation, list indexing, recursion, union-find, reachable sets grown ride
+by ride, patience sorting.
+
+Two fixes before writing: Window Variety's slow baseline first built a
+fresh set per run and hit the memory cap instead of the step budget (now
+nested loops without memory); Plate Minimum's reject used 1000000, which the
+number pad cannot enter (validator L3) — now 1001, just above the largest
+plate. Mirror Tree's first reference needed 111 blocks (three copies of a
+pair check with non-empty stacks); a stack of maybe-missing branches
+(`stack<treeNode?>`) brings it to 69.
+
+### Result
+
+Validator `PIPELINE 119 of 119 campaign puzzle(s) accepted` · `OK 124
+puzzle(s), 7 warning(s)` (the known seven). Content 86, Flutter 453 tests
+pass; the campaign regression test builds and runs all 119 references by
+taps.
