@@ -10,6 +10,7 @@ Do not implement the next milestone from this file unless the user explicitly as
 
 **Also complete (UX/playtest):** editor scroll-follows a block moved with UP/DOWN (MS13 reveal path + visibility check); **every build, release included, unlocks all campaign puzzles** (user decision, 2026-09-25: a playtester never re-solves puzzles to reach the ones under test). `main` sets `PlaytestFlags.unlockAllPuzzles = !PlaytestFlags.campaignLocks`; `campaignLocks` is `--dart-define=ALGORUN_LOCKS=true` (default off). The lock rules stay in `evaluateCampaign` and in the tests (which do not run `main`); completions are recorded as usual. When the campaign is ready for players, make `campaignLocks` default to true. Does not change unlock rules, validators, or budgets.
 **App icon (2026-09-30):** Grok's variation 4 (two graphite blocks and a sage-green play-arrow block on `#F4F4F5`), redrawn as clean geometry; master `branding/algorun_icon.svg`, Android adaptive vector icon with a themed (monochrome) layer, legacy PNGs, iOS and web icons. See [`branding/README.md`](../branding/README.md).
+**Light mode (U2, 2026-09-30):** Settings → APPEARANCE: Light / Dark / System (default System, follows the device), saved in `settings.theme`, kept by reset progress. Colours come from `context.palette` (`AppPalette.light` / `.dark`, a `ThemeExtension`); never write a fixed colour in a widget. Both palettes are held to the MS13 contrast rules by `test/theme_test.dart`. See [`MILESTONE_U2.md`](MILESTONE_U2.md).
 Do not change the architecture.
 
 Milestone commits: MS5 `06e2037c5d4841a33d69763d2385e0a8f834dc9c`,
@@ -155,6 +156,7 @@ algorun/                          Flutter app (repository root)
   test/localization_test.dart     U1: ARB parity, engine sentence coverage, Turkish content, block reference coverage
   test/localization_ui_test.dart  U1: language switch, reference in both languages, a Turkish puzzle, Turkish at ×1.6
   test/editor_variables_test.dart U1: puzzle variables declared on open; every reference restores with identical IR
+  test/theme_test.dart            U2: both palettes' contrast rules, Light / Dark / System, saved, kept by reset
   test/support/                   shared helpers: campaign from files, progress fixtures, phone sizes, UI replay, results rows
   lib/state/performance_text.dart player wording for budgets (MS10)
 ```
@@ -487,7 +489,7 @@ Details: [`MILESTONE_L1.md`](MILESTONE_L1.md).
 
 **State.** `PlayerSave` (stored) = `puzzles` (per puzzle `PuzzleProgress`:
 `puzzleVersion`, `completed`, `best`, `solution`, `draft`, `lastRun`,
-`editedSinceRun`) + `settings` (`PlayerSettings.showBriefOnOpen`) + `session`
+`editedSinceRun`) + `settings` (`PlayerSettings.showBriefOnOpen`, `language` (U1), `theme` (U2)) + `session`
 (`CurrentSession`: last world and puzzle). `CampaignProgress` (unlocked
 worlds, mastered concepts, statuses, what a lock waits for, the current
 puzzle) is **derived** by `evaluateCampaign(campaign, save)` every time and
@@ -631,13 +633,14 @@ drag, no TextField (names are chips, numbers a pad). Labels via
   it), ⌫ deletes the last digit, CLEAR empties it, +/− with a "negative" tag;
   no ±1 buttons; never the system keyboard.
 
-Details: [`MILESTONE_13.md`](MILESTONE_13.md), [`MILESTONE_U1.md`](MILESTONE_U1.md).
+Details: [`MILESTONE_13.md`](MILESTONE_13.md), [`MILESTONE_U1.md`](MILESTONE_U1.md), [`MILESTONE_U2.md`](MILESTONE_U2.md).
 
 ### Android shell (MS13)
 
-Edge to edge on every version (`SystemUiMode.edgeToEdge`), light system-bar
-icons, no navigation-bar scrim, dark window theme and launch background
-(`android/app/src/main/res`). Every screen keeps its content inside the side
+Edge to edge on every version (`SystemUiMode.edgeToEdge`), system-bar icons
+that read on the theme (dark on light, light on dark; U2), no navigation-bar
+scrim, a window theme and launch background that follow the device's dark
+mode (`android/app/src/main/res/values` light, `values-night` dark; U2). Every screen keeps its content inside the side
 insets; the RUN bar and results buttons stay above the navigation bar.
 Verified on the emulator: back, background autosave, process death and
 restore, no keyboard ever.
@@ -703,8 +706,10 @@ it never opens, and the prerequisite is untaught), and the five dev probes
 are unlisted.
 
 **Widget tests and the theme:** a test that opens sheets or buttons must use
-`buildAppTheme()` (or `AlgorunApp`): the MS12 number-pad failure only showed
-under the real theme.
+`buildAppTheme(AppPalette.light or .dark)` (or `AlgorunApp`): the MS12
+number-pad failure only showed under the real theme. The test device is
+light, so `AlgorunApp` tests run the light theme; set
+`tester.platformDispatcher.platformBrightnessTestValue` for dark.
 
 **Widget tests and assets:** load the campaign from the repository files
 (`test/support/campaign_files.dart`), never through `rootBundle` inside a
@@ -870,5 +875,6 @@ Each world now lists its puzzles by tier.
 | [`MILESTONE_13.md`](MILESTONE_13.md) | complete — mobile UX polish, emulator verification |
 | [`MILESTONE_U1.md`](MILESTONE_U1.md) | complete — Turkish, block reference, number entry, puzzle variables |
 | [`MILESTONE_14.md`](MILESTONE_14.md) | complete — second content batch (47 puzzles); playtest next |
+| [`MILESTONE_U2.md`](MILESTONE_U2.md) | complete — light mode (Light / Dark / System) |
 | this file | MS14 handoff |
 

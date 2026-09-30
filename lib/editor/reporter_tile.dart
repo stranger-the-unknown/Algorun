@@ -37,7 +37,7 @@ final class ReporterTile extends StatelessWidget {
       container: true,
       selected: selected,
       child: Material(
-        color: EditorTheme.surface(BlockRole.expression),
+        color: EditorTheme.surface(context, BlockRole.expression),
         borderRadius: BorderRadius.circular(radius),
         child: InkWell(
           borderRadius: BorderRadius.circular(radius),
@@ -60,7 +60,7 @@ final class ReporterTile extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(radius),
               border: Border.all(
-                color: selected ? AppColors.accent : AppColors.borderStrong,
+                color: selected ? context.palette.accent : context.palette.borderStrong,
                 width: selected ? 2 : 1,
               ),
             ),
@@ -137,11 +137,11 @@ final class ReporterTile extends StatelessWidget {
 
     final label = Text(
       chrome.label,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w700,
         letterSpacing: 0.8,
-        color: AppColors.muted,
+        color: context.palette.muted,
       ),
     );
 

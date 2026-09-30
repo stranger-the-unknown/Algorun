@@ -23,10 +23,10 @@ final class SettingsScreen extends ConsumerWidget {
       body: SafeArea(top: false, child: ListView(
         padding: const EdgeInsets.all(AppSpace.s5),
         children: [
-          Semantics(header: true, child: Text(l.languageSection, style: AppText.label)),
+          Semantics(header: true, child: Text(l.languageSection, style: AppText.label(context))),
           const SizedBox(height: AppSpace.s2),
           for (final (code, name) in [('en', l.languageEnglish), ('tr', l.languageTurkish)])
-            _LanguageOption(
+            _ChoiceOption(
               key: Key('settings-language-$code'),
               name: name,
               selected: settings.language == code,
@@ -36,7 +36,7 @@ final class SettingsScreen extends ConsumerWidget {
                   : () => update(settings.copyWith(language: code)),
             ),
           const SizedBox(height: AppSpace.s2),
-          Text(l.languageNote, style: const TextStyle(color: AppColors.muted, height: 1.5)),
+          Text(l.languageNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
           const SizedBox(height: AppSpace.s3),
           Align(
             alignment: Alignment.centerLeft,
@@ -52,6 +52,19 @@ final class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpace.s5),
+          Semantics(header: true, child: Text(l.themeSection, style: AppText.label(context))),
+          const SizedBox(height: AppSpace.s2),
+          for (final (code, name) in [('light', l.themeLight), ('dark', l.themeDark), ('system', l.themeSystem)])
+            _ChoiceOption(
+              key: Key('settings-theme-$code'),
+              name: name,
+              selected: settings.theme == code,
+              selectedWord: l.languageSelected,
+              onTap: save == null || settings.theme == code ? null : () => update(settings.copyWith(theme: code)),
+            ),
+          const SizedBox(height: AppSpace.s2),
+          Text(l.themeNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
+          const SizedBox(height: AppSpace.s5),
           SwitchListTile(
             key: const Key('settings-brief'),
             contentPadding: EdgeInsets.zero,
@@ -60,7 +73,7 @@ final class SettingsScreen extends ConsumerWidget {
             onChanged: save == null ? null : (value) => update(settings.copyWith(showBriefOnOpen: value)),
           ),
           const SizedBox(height: AppSpace.s4),
-          Text(l.privacyNote, style: const TextStyle(color: AppColors.muted, height: 1.5)),
+          Text(l.privacyNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
           const SizedBox(height: AppSpace.s3),
           Align(
             alignment: Alignment.centerLeft,
@@ -71,12 +84,12 @@ final class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpace.s5),
-          Text(l.platformNote, style: const TextStyle(color: AppColors.muted, height: 1.5)),
+          Text(l.platformNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
           if (kDebugMode) ...[
             const SizedBox(height: AppSpace.s5),
-            Text(l.developerSection, style: AppText.label),
+            Text(l.developerSection, style: AppText.label(context)),
             const SizedBox(height: AppSpace.s2),
-            Text(l.developerNote, style: const TextStyle(color: AppColors.muted, height: 1.5)),
+            Text(l.developerNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
             const SizedBox(height: AppSpace.s2),
             Align(
               alignment: Alignment.centerLeft,
@@ -94,8 +107,8 @@ final class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: AppSpace.s5),
           Text(
             l.versionLine('0.1.0  ·  Milestone 13 · U1'),
-            style: const TextStyle(
-              color: AppColors.muted,
+            style: TextStyle(
+              color: context.palette.muted,
               fontFeatures: [FontFeature.tabularFigures()],
             ),
           ),
@@ -125,10 +138,10 @@ final class SettingsScreen extends ConsumerWidget {
   }
 }
 
-/// One language to choose. The chosen one says so in words and with a
-/// filled mark, not by colour alone.
-class _LanguageOption extends StatelessWidget {
-  const _LanguageOption({
+/// One choice of several (a language, a theme). The chosen one says so in
+/// words and with a filled mark, not by colour alone.
+class _ChoiceOption extends StatelessWidget {
+  const _ChoiceOption({
     super.key,
     required this.name,
     required this.selected,
@@ -150,14 +163,14 @@ class _LanguageOption extends StatelessWidget {
         inMutuallyExclusiveGroup: true,
         button: true,
         child: Material(
-          color: selected ? AppColors.subtle : Colors.transparent,
+          color: selected ? context.palette.subtle : Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadius.md),
-            side: BorderSide(color: selected ? AppColors.accent : AppColors.border, width: selected ? 1.5 : 1),
+            side: BorderSide(color: selected ? context.palette.accent : context.palette.border, width: selected ? 1.5 : 1),
           ),
           child: InkWell(
             borderRadius: BorderRadius.circular(AppRadius.md),
-            // The chosen language stays enabled-looking; tapping it again
+            // The chosen option stays enabled-looking; tapping it again
             // simply does nothing.
             onTap: onTap ?? () {},
             child: ConstrainedBox(
@@ -168,7 +181,7 @@ class _LanguageOption extends StatelessWidget {
                   children: [
                     Icon(
                       selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-                      color: selected ? AppColors.fg : AppColors.muted,
+                      color: selected ? context.palette.fg : context.palette.muted,
                       size: 22,
                     ),
                     const SizedBox(width: AppSpace.s3),
@@ -176,7 +189,7 @@ class _LanguageOption extends StatelessWidget {
                       child: Text(
                         name,
                         style: TextStyle(
-                          color: AppColors.fg,
+                          color: context.palette.fg,
                           fontSize: 16,
                           fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                         ),
@@ -185,7 +198,7 @@ class _LanguageOption extends StatelessWidget {
                     if (selected)
                       Text(
                         selectedWord,
-                        style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                        style: TextStyle(color: context.palette.muted, fontSize: 13),
                       ),
                   ],
                 ),

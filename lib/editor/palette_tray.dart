@@ -71,11 +71,11 @@ class _PaletteTrayState extends State<PaletteTray> {
     ];
     if (widget.vertical) {
       return Material(
-        color: AppColors.elevated,
+        color: context.palette.elevated,
         child: ListView(
           padding: const EdgeInsets.all(12),
           children: [
-            Text(l.paletteBlocks, style: AppText.label),
+            Text(l.paletteBlocks, style: AppText.label(context)),
             const SizedBox(height: 8),
             Wrap(spacing: 8, runSpacing: 8, children: filters),
             const SizedBox(height: 12),
@@ -85,7 +85,7 @@ class _PaletteTrayState extends State<PaletteTray> {
       );
     }
     return Material(
-      color: AppColors.elevated,
+      color: context.palette.elevated,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
         child: Column(
@@ -134,9 +134,9 @@ class _CatChip extends StatelessWidget {
       selected: selected,
       onSelected: (_) => onTap(),
       showCheckmark: false,
-      selectedColor: AppColors.accent,
+      selectedColor: context.palette.accent,
       labelStyle: TextStyle(
-        color: selected ? AppColors.accentFg : AppColors.fg,
+        color: selected ? context.palette.accentFg : context.palette.fg,
         fontWeight: FontWeight.w600,
         fontSize: 12,
         letterSpacing: 0.6,
@@ -167,7 +167,7 @@ class _BlockChip extends StatelessWidget {
       ),
     );
     return Material(
-      color: AppColors.subtle,
+      color: context.palette.subtle,
       borderRadius: BorderRadius.circular(AppRadius.sm),
       child: InkWell(
         onTap: onTap,
@@ -177,7 +177,7 @@ class _BlockChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.sm),
-            border: Border.all(color: AppColors.borderStrong),
+            border: Border.all(color: context.palette.borderStrong),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -185,7 +185,7 @@ class _BlockChip extends StatelessWidget {
               Container(
                 width: 4,
                 height: 18,
-                color: EditorTheme.strip(chrome.category),
+                color: EditorTheme.strip(context, chrome.category),
               ),
               const SizedBox(width: 8),
               if (wraps) Flexible(child: label) else label,

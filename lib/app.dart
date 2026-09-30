@@ -12,6 +12,10 @@ import 'screens/world_select/world_select_screen.dart';
 import 'shared/theme/app_theme.dart';
 import 'state/l10n_providers.dart';
 import 'state/progress_providers.dart';
+import 'state/theme_providers.dart';
+
+final _lightTheme = buildAppTheme(AppPalette.light);
+final _darkTheme = buildAppTheme(AppPalette.dark);
 
 final class AlgorunApp extends ConsumerStatefulWidget {
   const AlgorunApp({super.key});
@@ -43,7 +47,10 @@ class _AlgorunAppState extends ConsumerState<AlgorunApp> {
     return MaterialApp(
       title: 'Algorun',
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
+      // Light, dark or the device's setting, as chosen in Settings.
+      theme: _lightTheme,
+      darkTheme: _darkTheme,
+      themeMode: ref.watch(themeModeProvider),
       // English by default; Turkish when the player chooses it in Settings.
       locale: Locale(ref.watch(languageProvider)),
       supportedLocales: AppLocalizations.supportedLocales,
@@ -51,7 +58,7 @@ class _AlgorunAppState extends ConsumerState<AlgorunApp> {
       // Honour the system font size, up to what the block editor can hold.
       builder: (context, child) => MediaQuery.withClampedTextScaling(
         maxScaleFactor: maxTextScale,
-        child: AnnotatedRegion(value: appOverlayStyle, child: child!),
+        child: AnnotatedRegion(value: overlayStyleFor(Theme.of(context).brightness), child: child!),
       ),
       initialRoute: '/',
       routes: {

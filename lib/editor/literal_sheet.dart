@@ -19,7 +19,7 @@ abstract final class LiteralSheet {
   ) {
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.elevated,
+      backgroundColor: context.palette.elevated,
       isScrollControlled: true,
       builder: (_) => SizedBox(
         width: double.infinity,
@@ -36,7 +36,7 @@ abstract final class LiteralSheet {
     final current = controller.graph.blocks[blockId]?.literals['value'] == true;
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.elevated,
+      backgroundColor: context.palette.elevated,
       builder: (context) {
         final l = context.l10n;
         Widget choice(bool value, String label) {
@@ -47,9 +47,9 @@ abstract final class LiteralSheet {
               child: OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size.fromHeight(52),
-                  backgroundColor: selected ? AppColors.subtle : null,
+                  backgroundColor: selected ? context.palette.subtle : null,
                   side: BorderSide(
-                    color: selected ? AppColors.accent : AppColors.borderStrong,
+                    color: selected ? context.palette.accent : context.palette.borderStrong,
                     width: selected ? 2 : 1,
                   ),
                 ),
@@ -89,7 +89,7 @@ abstract final class LiteralSheet {
   }) {
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.elevated,
+      backgroundColor: context.palette.elevated,
       builder: (_) => SizedBox(
         width: double.infinity,
         child: _VariableChips(
@@ -199,10 +199,10 @@ class _NumberPadState extends State<NumberPad> {
                   constraints: const BoxConstraints(minHeight: 72),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: AppColors.bg,
+                    color: context.palette.bg,
                     borderRadius: BorderRadius.circular(AppRadius.md),
                     border: Border.all(
-                      color: _selected ? AppColors.accent : AppColors.borderStrong,
+                      color: _selected ? context.palette.accent : context.palette.borderStrong,
                       width: _selected ? 2 : 1,
                     ),
                   ),
@@ -216,14 +216,14 @@ class _NumberPadState extends State<NumberPad> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6),
                               // A selection highlight, like a text field's.
-                              color: _selected ? AppColors.accent.withValues(alpha: 0.28) : null,
+                              color: _selected ? context.palette.accent.withValues(alpha: 0.28) : null,
                               child: Text(
                                 text,
                                 key: const Key('pad-value'),
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w600,
-                                  color: _digits.isEmpty && !_selected ? AppColors.muted : AppColors.fg,
+                                  color: _digits.isEmpty && !_selected ? context.palette.muted : context.palette.fg,
                                   fontFeatures: const [FontFeature.tabularFigures()],
                                 ),
                               ),
@@ -234,10 +234,10 @@ class _NumberPadState extends State<NumberPad> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.borderStrong),
+                                border: Border.all(color: context.palette.borderStrong),
                                 borderRadius: BorderRadius.circular(AppRadius.xs),
                               ),
-                              child: Text(l.padNegative, style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+                              child: Text(l.padNegative, style: TextStyle(fontSize: 12, color: context.palette.muted)),
                             ),
                           ],
                         ],
@@ -246,7 +246,7 @@ class _NumberPadState extends State<NumberPad> {
                       Text(
                         _selected ? l.padSelectedHint : l.padEditHint,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(color: AppColors.muted, fontSize: 12),
+                        style: TextStyle(color: context.palette.muted, fontSize: 12),
                       ),
                     ],
                   ),
@@ -380,7 +380,7 @@ class _VariableChips extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               l.namesFromPuzzle,
-              style: const TextStyle(color: AppColors.muted, fontSize: 13),
+              style: TextStyle(color: context.palette.muted, fontSize: 13),
             ),
             const SizedBox(height: 12),
             Wrap(

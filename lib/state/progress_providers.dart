@@ -159,14 +159,15 @@ final class ProgressNotifier extends AsyncNotifier<PlayerSave> {
   /// Deletes every saved result, program and setting, except the language:
   /// that is how the player reads the game, not progress.
   Future<void> reset() async {
-    final language = _current.settings.language;
+    // The language and the theme are the player's, not progress: they stay.
+    final kept = PlayerSettings(language: _current.settings.language, theme: _current.settings.theme);
     _timer?.cancel();
     _dirty = false;
     await _writing;
     await _store.clear();
     state = const AsyncData(PlayerSave.fresh);
-    if (language != PlayerSettings.defaults.language) {
-      _set(PlayerSave(settings: PlayerSettings(language: language)), now: true);
+    if (kept.language != PlayerSettings.defaults.language || kept.theme != PlayerSettings.defaults.theme) {
+      _set(PlayerSave(settings: kept), now: true);
       await flush();
     }
   }

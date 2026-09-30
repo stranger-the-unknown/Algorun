@@ -40,14 +40,14 @@ final class GuideScreen extends StatelessWidget {
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             // The open tab is bright, bold and underlined; the others muted.
-            labelColor: AppColors.fg,
-            unselectedLabelColor: AppColors.muted,
+            labelColor: context.palette.fg,
+            unselectedLabelColor: context.palette.muted,
             labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             unselectedLabelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-            indicatorColor: AppColors.fg,
+            indicatorColor: context.palette.fg,
             indicatorWeight: 3,
             indicatorSize: TabBarIndicatorSize.label,
-            dividerColor: AppColors.border,
+            dividerColor: context.palette.border,
             tabs: [
               Tab(key: const Key('guide-tab-basics'), height: 48, text: l.guideTabBasics),
               Tab(key: const Key('guide-tab-concepts'), height: 48, text: l.guideTabConcepts),
@@ -143,9 +143,9 @@ class _Basics extends StatelessWidget {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.borderStrong),
+                      border: Border.all(color: context.palette.borderStrong),
                     ),
-                    child: Text('${i + 1}', style: const TextStyle(color: AppColors.fg, fontWeight: FontWeight.w600)),
+                    child: Text('${i + 1}', style: TextStyle(color: context.palette.fg, fontWeight: FontWeight.w600)),
                   ),
                 ),
                 const SizedBox(width: AppSpace.s3),
@@ -157,11 +157,11 @@ class _Basics extends StatelessWidget {
                         header: true,
                         child: Text(
                           steps[i].$1,
-                          style: const TextStyle(color: AppColors.fg, fontWeight: FontWeight.w600, fontSize: 16),
+                          style: TextStyle(color: context.palette.fg, fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                       ),
                       const SizedBox(height: AppSpace.s1),
-                      Text(steps[i].$2, style: const TextStyle(color: AppColors.muted, height: 1.45)),
+                      Text(steps[i].$2, style: TextStyle(color: context.palette.muted, height: 1.45)),
                     ],
                   ),
                 ),
@@ -193,13 +193,13 @@ class _EntryList extends StatelessWidget {
         if (note != null)
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpace.s4),
-            child: Text(note!, style: const TextStyle(color: AppColors.muted, height: 1.45)),
+            child: Text(note!, style: TextStyle(color: context.palette.muted, height: 1.45)),
           ),
         for (final section in sections) ...[
           if (section.label != null)
             Padding(
               padding: const EdgeInsets.only(top: AppSpace.s2, bottom: AppSpace.s2),
-              child: Semantics(header: true, child: Text(section.label!, style: AppText.label)),
+              child: Semantics(header: true, child: Text(section.label!, style: AppText.label(context))),
             ),
           for (final item in section.entries)
             Padding(
@@ -229,9 +229,9 @@ final class GuideCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpace.s4),
       decoration: BoxDecoration(
-        color: AppColors.elevated,
+        color: context.palette.elevated,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,8 +243,8 @@ final class GuideCard extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: entry.term,
-                    style: const TextStyle(
-                      color: AppColors.fg,
+                    style: TextStyle(
+                      color: context.palette.fg,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.6,
                       fontSize: 16,
@@ -252,7 +252,7 @@ final class GuideCard extends StatelessWidget {
                   ),
                   TextSpan(
                     text: '  —  ${entry.tr}',
-                    style: const TextStyle(color: AppColors.muted, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: context.palette.muted, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -264,19 +264,19 @@ final class GuideCard extends StatelessWidget {
           _Meaning(tag: other.toUpperCase(), text: entry.text(other), primary: false),
           if (example != null) ...[
             const SizedBox(height: AppSpace.s3),
-            Text(l.upper(l.guideExample), style: AppText.label),
+            Text(l.upper(l.guideExample), style: AppText.label(context)),
             const SizedBox(height: AppSpace.s1),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: AppSpace.s3, vertical: AppSpace.s2),
               decoration: BoxDecoration(
-                color: AppColors.subtle,
+                color: context.palette.subtle,
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Text(
                 example,
-                style: const TextStyle(
-                  color: AppColors.fg,
+                style: TextStyle(
+                  color: context.palette.fg,
                   fontFamily: 'monospace',
                   fontSize: 13,
                   height: 1.5,
@@ -307,12 +307,12 @@ class _Meaning extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.xs),
-            border: Border.all(color: primary ? AppColors.borderStrong : AppColors.border),
+            border: Border.all(color: primary ? context.palette.borderStrong : context.palette.border),
           ),
           child: Text(
             tag,
             style: TextStyle(
-              color: primary ? AppColors.fg : AppColors.faint,
+              color: primary ? context.palette.fg : context.palette.faint,
               fontSize: 10,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.8,
@@ -323,7 +323,7 @@ class _Meaning extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(
-              color: primary ? AppColors.fg : AppColors.muted,
+              color: primary ? context.palette.fg : context.palette.muted,
               fontSize: primary ? 14 : 13,
               height: 1.45,
             ),

@@ -68,8 +68,8 @@ final class ScriptView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(
                       color: controller.activeHole == PortRef.mainBody
-                          ? AppColors.accent
-                          : AppColors.border,
+                          ? context.palette.accent
+                          : context.palette.border,
                     ),
                   ),
                   child: AddStepButton(
@@ -101,7 +101,7 @@ class _EmptyProgram extends StatelessWidget {
       label: l.addStep,
       excludeSemantics: true,
       child: Material(
-        color: AppColors.elevated,
+        color: context.palette.elevated,
         borderRadius: BorderRadius.circular(AppRadius.md),
         child: InkWell(
           onTap: onTap,
@@ -110,14 +110,14 @@ class _EmptyProgram extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppRadius.md),
-              border: Border.all(color: active ? AppColors.accent : AppColors.holeOutline),
+              border: Border.all(color: active ? context.palette.accent : context.palette.holeOutline),
             ),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.add, size: 20, color: AppColors.fg),
+                    Icon(Icons.add, size: 20, color: context.palette.fg),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(l.addStep, style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.6)),
@@ -128,7 +128,7 @@ class _EmptyProgram extends StatelessWidget {
                 Text(
                   l.emptyProgram,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: AppColors.muted, height: 1.4),
+                  style: TextStyle(color: context.palette.muted, height: 1.4),
                 ),
               ],
             ),

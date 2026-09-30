@@ -942,6 +942,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get languageSelected => 'seçili';
 
   @override
+  String get themeSection => 'GÖRÜNÜM';
+
+  @override
+  String get themeLight => 'Açık';
+
+  @override
+  String get themeDark => 'Koyu';
+
+  @override
+  String get themeSystem => 'Sistem';
+
+  @override
+  String get themeNote => 'Sistem, cihazının açık ya da koyu ayarını izler.';
+
+  @override
   String get developerSection => 'GELİŞTİRİCİ';
 
   @override

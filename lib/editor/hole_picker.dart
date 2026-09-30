@@ -34,7 +34,7 @@ abstract final class HolePicker {
     final placements = controller.placementsFor(hole);
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.elevated,
+      backgroundColor: context.palette.elevated,
       builder: (context) {
         return _PickerBody(
           controller: controller,
@@ -125,7 +125,7 @@ class _PickerBody extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           l.pickerFor(describeHole(controller.graph, hole, l)),
-                          style: const TextStyle(color: AppColors.muted, fontSize: 13, height: 1.35),
+                          style: TextStyle(color: context.palette.muted, fontSize: 13, height: 1.35),
                         ),
                       ],
                     ),
@@ -141,12 +141,12 @@ class _PickerBody extends StatelessWidget {
                       arguments: GuideArgs(allow: controller.paletteIds, tab: GuideTab.blocks),
                     );
                   },
-                  icon: const Icon(Icons.menu_book_outlined, color: AppColors.muted),
+                  icon: Icon(Icons.menu_book_outlined, color: context.palette.muted),
                 ),
                 IconButton(
                   tooltip: l.close,
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close, color: AppColors.muted),
+                  icon: Icon(Icons.close, color: context.palette.muted),
                 ),
               ],
             ),
@@ -156,7 +156,7 @@ class _PickerBody extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
                   l.nothingFits,
-                  style: const TextStyle(color: AppColors.muted),
+                  style: TextStyle(color: context.palette.muted),
                 ),
               )
             else
@@ -166,7 +166,7 @@ class _PickerBody extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 12),
                   children: [
                     for (final entry in groups.entries) ...[
-                      Text(categoryText(entry.key, l), style: AppText.label),
+                      Text(categoryText(entry.key, l), style: AppText.label(context)),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -233,7 +233,7 @@ class _PlacementChip extends StatelessWidget {
       _ => chrome.label,
     };
     return Material(
-      color: AppColors.subtle,
+      color: context.palette.subtle,
       borderRadius: BorderRadius.circular(AppRadius.sm),
       child: InkWell(
         onTap: onTap,
@@ -243,7 +243,7 @@ class _PlacementChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.sm),
-            border: Border.all(color: AppColors.borderStrong),
+            border: Border.all(color: context.palette.borderStrong),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -252,7 +252,7 @@ class _PlacementChip extends StatelessWidget {
                 width: 4,
                 height: 18,
                 decoration: BoxDecoration(
-                  color: EditorTheme.strip(chrome.category),
+                  color: EditorTheme.strip(context, chrome.category),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

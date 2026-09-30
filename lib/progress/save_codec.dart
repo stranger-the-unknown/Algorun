@@ -20,7 +20,7 @@ import 'save_data.dart';
 ///       "editedSinceRun": false
 ///     }
 ///   },
-///   "settings": {"language": "en", "showBriefOnOpen": true},
+///   "settings": {"language": "en", "showBriefOnOpen": true, "theme": "system"},
 ///   "session": {"worldId": "world_02", "puzzleId": "smallest_cart"}
 /// }
 /// ```
@@ -48,7 +48,11 @@ Map<String, Object?> saveToJson(PlayerSave save) => {
       'puzzles': {
         for (final e in save.puzzles.entries) e.key: _puzzleToJson(e.value),
       },
-      'settings': {'showBriefOnOpen': save.settings.showBriefOnOpen, 'language': save.settings.language},
+      'settings': {
+        'showBriefOnOpen': save.settings.showBriefOnOpen,
+        'language': save.settings.language,
+        'theme': save.settings.theme,
+      },
       if (save.session case final session?)
         'session': {'worldId': session.worldId, 'puzzleId': session.puzzleId},
     };
@@ -286,9 +290,15 @@ final class _Reader {
     if (language != null && !PlayerSettings.languages.contains(language)) {
       issue('settings.language', 'Not a supported language; English used.');
     }
+    // Saves before the theme setting have none: the device's, silently.
+    final theme = raw['theme'];
+    if (theme != null && !PlayerSettings.themes.contains(theme)) {
+      issue('settings.theme', 'Not light, dark or system; system used.');
+    }
     return PlayerSettings(
       showBriefOnOpen: brief is bool ? brief : PlayerSettings.defaults.showBriefOnOpen,
       language: PlayerSettings.languages.contains(language) ? language as String : PlayerSettings.defaults.language,
+      theme: PlayerSettings.themes.contains(theme) ? theme as String : PlayerSettings.defaults.theme,
     );
   }
 

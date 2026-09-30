@@ -28,7 +28,7 @@ PlayerSave _richSave() => PlayerSave(
         ),
         'smallest_cart': PuzzleProgress(puzzleVersion: 1, draft: lengthGraph()),
       },
-      settings: const PlayerSettings(showBriefOnOpen: false, language: 'tr'),
+      settings: const PlayerSettings(showBriefOnOpen: false, language: 'tr', theme: 'light'),
       session: const CurrentSession(worldId: 'world_03', puzzleId: 'twin_beacons'),
     );
 
@@ -72,6 +72,7 @@ void main() {
       expect(read.save['smallest_cart']!.completed, isFalse);
       expect(read.save.settings.showBriefOnOpen, isFalse);
       expect(read.save.settings.language, 'tr');
+      expect(read.save.settings.theme, 'light');
       expect(read.save.session!.puzzleId, 'twin_beacons');
       expect(encodeSave(read.save), encodeSave(_richSave()));
     });
@@ -99,7 +100,7 @@ void main() {
       expect(_json(encodeSave(PlayerSave.fresh)), {
         'puzzles': <String, Object?>{},
         'saveVersion': 1,
-        'settings': {'language': 'en', 'showBriefOnOpen': true},
+        'settings': {'language': 'en', 'showBriefOnOpen': true, 'theme': 'system'},
       });
     });
 
@@ -254,7 +255,26 @@ void main() {
       final turkish = decodeSave(_with((json) => json['settings'] = {'showBriefOnOpen': true, 'language': 'tr'}));
       expect(turkish.issues, isEmpty);
       expect(turkish.save.settings.language, 'tr');
-      expect(_json(encodeSave(turkish.save))['settings'], {'language': 'tr', 'showBriefOnOpen': true});
+      expect(_json(encodeSave(turkish.save))['settings'], {'language': 'tr', 'showBriefOnOpen': true, 'theme': 'system'});
+    });
+
+    test('light mode: the theme setting is read back; old saves and unknown themes follow the device', () {
+      final old = decodeSave(_with((json) => json['settings'] = {'showBriefOnOpen': false, 'language': 'tr'}));
+      expect(old.issues, isEmpty, reason: 'a save from before the theme setting is not damaged');
+      expect(old.save.settings.theme, 'system');
+      expect(old.save.settings.language, 'tr');
+
+      final sepia = decodeSave(_with((json) => json['settings'] = {'language': 'tr', 'theme': 'sepia'}));
+      expect(sepia.save.settings.theme, 'system');
+      expect(sepia.save.settings.language, 'tr', reason: 'the other settings stand');
+      expect(sepia.issues.map((i) => i.path), ['settings.theme']);
+
+      for (final theme in PlayerSettings.themes) {
+        final read = decodeSave(_with((json) => json['settings'] = {'theme': theme}));
+        expect(read.issues, isEmpty);
+        expect(read.save.settings.theme, theme);
+        expect(_json(encodeSave(read.save))['settings'], {'language': 'en', 'showBriefOnOpen': true, 'theme': theme});
+      }
     });
 
     test('unknown fields are read past and not written back', () {

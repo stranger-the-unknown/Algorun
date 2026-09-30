@@ -42,7 +42,7 @@ final class PuzzleListScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(AppSpace.s5),
                 child: Text(
                   lockedText(view.progress.missingFor(world.id), l, text),
-                  style: const TextStyle(color: AppColors.muted),
+                  style: TextStyle(color: context.palette.muted),
                 ),
               ),
             );
@@ -60,7 +60,7 @@ final class PuzzleListScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: 2),
                   child: Text(
                     l.puzzleListHeader(solved, world.puzzleIds.length, text.concepts(world.concepts)),
-                    style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                    style: TextStyle(color: context.palette.muted, fontSize: 13),
                   ),
                 );
               }
@@ -106,7 +106,7 @@ class _PuzzleRow extends StatelessWidget {
     final locked = status == PuzzleStatus.locked;
     final l = context.l10n;
     return Material(
-      color: AppColors.elevated,
+      color: context.palette.elevated,
       borderRadius: BorderRadius.circular(AppRadius.md),
       child: InkWell(
         key: Key('puzzle-${puzzle.id}'),
@@ -130,7 +130,7 @@ class _PuzzleRow extends StatelessWidget {
                   PuzzleStatus.completed => Icons.check_circle,
                 },
                 size: 22,
-                color: status == PuzzleStatus.completed ? AppColors.ok : AppColors.muted,
+                color: status == PuzzleStatus.completed ? context.palette.ok : context.palette.muted,
                 // The status line below says it in words.
                 semanticLabel: null,
               ),
@@ -146,7 +146,7 @@ class _PuzzleRow extends StatelessWidget {
                             text.puzzleTitle(puzzle),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: locked ? AppColors.muted : AppColors.fg,
+                              color: locked ? context.palette.muted : context.palette.fg,
                             ),
                           ),
                         ),
@@ -154,8 +154,8 @@ class _PuzzleRow extends StatelessWidget {
                           const SizedBox(width: AppSpace.s2),
                           Text(
                             l.tagCurrent,
-                            style: const TextStyle(
-                              color: AppColors.accent,
+                            style: TextStyle(
+                              color: context.palette.accent,
                               fontSize: 11,
                               letterSpacing: 1.2,
                               fontWeight: FontWeight.w600,
@@ -168,7 +168,7 @@ class _PuzzleRow extends StatelessWidget {
                     Text(
                       puzzleStatusText(status, saved, missing, l, text),
                       style: TextStyle(
-                        color: status == PuzzleStatus.completed ? AppColors.fg : AppColors.muted,
+                        color: status == PuzzleStatus.completed ? context.palette.fg : context.palette.muted,
                         fontSize: 13,
                       ),
                     ),
@@ -177,12 +177,12 @@ class _PuzzleRow extends StatelessWidget {
                       puzzle.mode == PuzzleMode.build
                           ? l.tierLabel(puzzle.tier.index + 1)
                           : l.tierWithMode(puzzle.tier.index + 1, modeText(puzzle.mode, l)),
-                      style: const TextStyle(color: AppColors.muted, fontSize: 12),
+                      style: TextStyle(color: context.palette.muted, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              if (!locked) const Icon(Icons.chevron_right, color: AppColors.muted),
+              if (!locked) Icon(Icons.chevron_right, color: context.palette.muted),
             ],
           ),
         ),

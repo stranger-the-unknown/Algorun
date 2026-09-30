@@ -127,7 +127,7 @@ final class PuzzleProgress {
 
 /// Player preferences.
 final class PlayerSettings {
-  const PlayerSettings({this.showBriefOnOpen = true, this.language = 'en'});
+  const PlayerSettings({this.showBriefOnOpen = true, this.language = 'en', this.theme = 'system'});
 
   /// Whether a puzzle opens with its BRIEF expanded.
   final bool showBriefOnOpen;
@@ -138,11 +138,18 @@ final class PlayerSettings {
 
   static const languages = ['en', 'tr'];
 
+  /// Light or dark screens: `light`, `dark`, or `system` (the device's
+  /// setting, the default).
+  final String theme;
+
+  static const themes = ['light', 'dark', 'system'];
+
   static const defaults = PlayerSettings();
 
-  PlayerSettings copyWith({bool? showBriefOnOpen, String? language}) => PlayerSettings(
+  PlayerSettings copyWith({bool? showBriefOnOpen, String? language, String? theme}) => PlayerSettings(
         showBriefOnOpen: showBriefOnOpen ?? this.showBriefOnOpen,
         language: language ?? this.language,
+        theme: theme ?? this.theme,
       );
 }
 

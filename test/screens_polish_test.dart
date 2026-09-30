@@ -5,6 +5,7 @@ import 'package:algorun/progress/progress_store.dart';
 import 'package:algorun/progress/save_codec.dart';
 import 'package:algorun/progress/save_data.dart';
 import 'package:algorun/screens/results/results_screen.dart';
+import 'package:algorun/shared/theme/app_theme.dart';
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,7 +53,7 @@ Future<void> _results(WidgetTester tester, SuiteResult suite, {NextPuzzle? next}
 
 void main() {
   test('every verdict has its own icon and sentence', () {
-    final styles = [for (final k in ResultKind.values) verdictStyle(k)];
+    final styles = [for (final k in ResultKind.values) verdictStyle(k, AppPalette.light)];
     expect({for (final s in styles) s.icon}.length, ResultKind.values.length);
     expect({for (final s in styles) s.meaning}.length, ResultKind.values.length);
   });
@@ -77,8 +78,8 @@ void main() {
         ),
       );
       expect(find.text(kind.label.toUpperCase()), findsOneWidget);
-      expect(find.byIcon(verdictStyle(kind).icon), findsOneWidget);
-      expect(find.text(verdictStyle(kind).meaning), findsOneWidget);
+      expect(find.byIcon(verdictStyle(kind, AppPalette.light).icon), findsOneWidget);
+      expect(find.text(verdictStyle(kind, AppPalette.light).meaning), findsOneWidget);
       expect(find.text('1 of 2 hidden cases passed.'), findsOneWidget);
       expect(find.text('BACK TO PUZZLE'), findsOneWidget);
       expect(find.byKey(const Key('results-next')), findsNothing);

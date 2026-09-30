@@ -42,15 +42,15 @@ final class HomeScreen extends ConsumerWidget {
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               letterSpacing: 6,
-                              color: AppColors.fg,
+                              color: context.palette.fg,
                             ),
                       ),
                     ),
                     const SizedBox(height: AppSpace.s3),
                     Text(
                       l.homeTagline,
-                      style: const TextStyle(
-                        color: AppColors.muted,
+                      style: TextStyle(
+                        color: context.palette.muted,
                         height: 1.45,
                         fontSize: 16,
                       ),
@@ -73,18 +73,18 @@ final class HomeScreen extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(AppSpace.s4),
                         decoration: BoxDecoration(
-                          color: AppColors.elevated,
+                          color: context.palette.elevated,
                           borderRadius: BorderRadius.circular(AppRadius.xl),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: context.palette.border),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(l.homeProgress, style: AppText.label),
+                            Text(l.homeProgress, style: AppText.label(context)),
                             const SizedBox(height: AppSpace.s2),
                             Text(
                               l.homeSolvedCount(view.progress.solvedCount, view.progress.puzzleCount),
-                              style: const TextStyle(color: AppColors.fg),
+                              style: TextStyle(color: context.palette.fg),
                             ),
                             const SizedBox(height: AppSpace.s2),
                             // The words above already say it.
@@ -103,7 +103,7 @@ final class HomeScreen extends ConsumerWidget {
                               const SizedBox(height: AppSpace.s3),
                               Text(
                                 l.homeLastPlayed(text.puzzleTitle(current), text.worldTitle(currentWorld)),
-                                style: const TextStyle(color: AppColors.muted, height: 1.45),
+                                style: TextStyle(color: context.palette.muted, height: 1.45),
                               ),
                             ],
                           ],

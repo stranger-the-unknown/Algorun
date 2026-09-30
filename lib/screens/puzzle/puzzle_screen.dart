@@ -93,11 +93,11 @@ class _PuzzleScreenState extends ConsumerState<PuzzleScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.error_outline, color: AppColors.danger),
+                  Icon(Icons.error_outline, color: context.palette.danger),
                   const SizedBox(height: AppSpace.s3),
                   Text(l.puzzleCouldNotOpen, style: const TextStyle(fontWeight: FontWeight.w600)),
                   const SizedBox(height: AppSpace.s2),
-                  Text('${snap.error}', style: const TextStyle(color: AppColors.muted, fontSize: 13)),
+                  Text('${snap.error}', style: TextStyle(color: context.palette.muted, fontSize: 13)),
                 ],
               ),
             ),
@@ -113,7 +113,7 @@ class _PuzzleScreenState extends ConsumerState<PuzzleScreen> {
                 children: [
                   const CircularProgressIndicator(),
                   const SizedBox(height: AppSpace.s3),
-                  Text(l.puzzleOpening, style: const TextStyle(color: AppColors.muted)),
+                  Text(l.puzzleOpening, style: TextStyle(color: context.palette.muted)),
                 ],
               ),
             ),
@@ -153,14 +153,14 @@ class _LockedPuzzle extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.lock_outline, color: AppColors.muted, size: 28, semanticLabel: l.locked),
+              Icon(Icons.lock_outline, color: context.palette.muted, size: 28, semanticLabel: l.locked),
               const SizedBox(height: AppSpace.s3),
               Text(
                 missing.isEmpty ? l.puzzleLocked : l.puzzleLockedLearn(text.concepts(missing)),
-                style: const TextStyle(color: AppColors.fg, height: 1.45),
+                style: TextStyle(color: context.palette.fg, height: 1.45),
               ),
               const SizedBox(height: AppSpace.s2),
-              Text(l.puzzleLockedHow, style: const TextStyle(color: AppColors.muted, height: 1.45)),
+              Text(l.puzzleLockedHow, style: TextStyle(color: context.palette.muted, height: 1.45)),
               const SizedBox(height: AppSpace.s5),
               OutlinedButton(
                 onPressed: () => Navigator.maybePop(context),
@@ -409,7 +409,7 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
           GivensBar(controller: _controller),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            child: Text(l.program, style: AppText.label),
+            child: Text(l.program, style: AppText.label(context)),
           ),
         ];
         final script = ScriptView(controller: _controller, header: header);
@@ -428,7 +428,7 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
                   Flexible(child: Text(text.puzzleTitle(widget.puzzle), overflow: TextOverflow.ellipsis)),
                   if (solved) ...[
                     const SizedBox(width: 8),
-                    Icon(Icons.check_circle, size: 18, color: AppColors.ok, semanticLabel: l.solved),
+                    Icon(Icons.check_circle, size: 18, color: context.palette.ok, semanticLabel: l.solved),
                   ],
                 ],
               ),
@@ -491,7 +491,7 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
                     BlockActionsBar(controller: _controller, info: selection)
                   else if (!wide && !short)
                     DecoratedBox(
-                      decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+                      decoration: BoxDecoration(border: Border(top: BorderSide(color: context.palette.border))),
                       child: PaletteTray(controller: _controller),
                     ),
                   RunBar(controller: _controller, onRun: _run, running: _running, saved: widget.save != null),
@@ -517,9 +517,9 @@ class _SolvedLine extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
       child: Row(
         children: [
-          const Icon(Icons.task_alt, size: 18, color: AppColors.ok),
+          Icon(Icons.task_alt, size: 18, color: context.palette.ok),
           const SizedBox(width: 8),
-          Expanded(child: Text(l.solvedLine, style: const TextStyle(color: AppColors.fg))),
+          Expanded(child: Text(l.solvedLine, style: TextStyle(color: context.palette.fg))),
           if (onLoadBest != null)
             Tooltip(
               message: l.loadBest,
@@ -566,16 +566,16 @@ class _Brief extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Text(l.brief, style: AppText.label),
+                  Text(l.brief, style: AppText.label(context)),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       tag,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: AppColors.muted, fontSize: 11, letterSpacing: 1.1),
+                      style: TextStyle(color: context.palette.muted, fontSize: 11, letterSpacing: 1.1),
                     ),
                   ),
-                  Icon(open ? Icons.expand_less : Icons.expand_more, size: 22, color: AppColors.muted),
+                  Icon(open ? Icons.expand_less : Icons.expand_more, size: 22, color: context.palette.muted),
                 ],
               ),
             ),
@@ -584,7 +584,7 @@ class _Brief extends StatelessWidget {
         if (open) ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: Text(story, style: const TextStyle(color: AppColors.fg, height: 1.5, fontSize: 15)),
+            child: Text(story, style: TextStyle(color: context.palette.fg, height: 1.5, fontSize: 15)),
           ),
           _InputsAndOutput(puzzle: puzzle),
         ],
@@ -602,22 +602,22 @@ class _InputsAndOutput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    const name = TextStyle(color: AppColors.fg, fontWeight: FontWeight.w600);
-    const words = TextStyle(color: AppColors.muted);
+    final name = TextStyle(color: context.palette.fg, fontWeight: FontWeight.w600);
+    final words = TextStyle(color: context.palette.muted);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.elevated,
+          color: context.palette.elevated,
           borderRadius: BorderRadius.circular(AppRadius.sm),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.palette.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (puzzle.io.inputs.isNotEmpty) ...[
-              Text(l.ioInputs, style: AppText.label),
+              Text(l.ioInputs, style: AppText.label(context)),
               const SizedBox(height: 4),
               for (final input in puzzle.io.inputs)
                 Padding(
@@ -631,7 +631,7 @@ class _InputsAndOutput extends StatelessWidget {
                 ),
               const SizedBox(height: 8),
             ],
-            Text(l.ioReturns, style: AppText.label),
+            Text(l.ioReturns, style: AppText.label(context)),
             const SizedBox(height: 4),
             Text(typeText(puzzle.io.output, l), style: words),
           ],
@@ -684,18 +684,18 @@ class _HintBar extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 16),
                       child: Row(
                         children: [
-                          Text(l.hints, style: AppText.label),
+                          Text(l.hints, style: AppText.label(context)),
                           const SizedBox(width: 8),
                           Flexible(
                             child: Text(
                               '${hints.used}/${hints.total}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: AppColors.muted, fontSize: 12),
+                              style: TextStyle(color: context.palette.muted, fontSize: 12),
                             ),
                           ),
                           const Spacer(),
-                          Icon(open ? Icons.expand_less : Icons.expand_more, size: 22, color: AppColors.muted),
+                          Icon(open ? Icons.expand_less : Icons.expand_more, size: 22, color: context.palette.muted),
                         ],
                       ),
                     ),
@@ -726,18 +726,18 @@ class _HintBar extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-                    decoration: const BoxDecoration(
-                      color: AppColors.elevated,
-                      border: Border(left: BorderSide(color: AppColors.warn, width: 2)),
+                    decoration: BoxDecoration(
+                      color: context.palette.elevated,
+                      border: Border(left: BorderSide(color: context.palette.warn, width: 2)),
                     ),
-                    child: Text('${i + 1}. ${texts[i]}', style: const TextStyle(color: AppColors.fg, height: 1.45)),
+                    child: Text('${i + 1}. ${texts[i]}', style: TextStyle(color: context.palette.fg, height: 1.45)),
                   ),
                 ),
               ),
           if (open && hints.used == 0)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 8, 8),
-              child: Text(l.hintsIntro, style: const TextStyle(color: AppColors.muted, height: 1.45)),
+              child: Text(l.hintsIntro, style: TextStyle(color: context.palette.muted, height: 1.45)),
             ),
         ],
       ),

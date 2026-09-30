@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Algorun — construct the algorithm, never type it.">
-  <meta name="theme-color" content="#0A0A0B">
+  <meta name="theme-color" content="#F4F4F5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0A0A0B" media="(prefers-color-scheme: dark)">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Algorun">
@@ -14,7 +15,9 @@
   <title>Algorun</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    html, body { margin: 0; height: 100%; background: #0A0A0B; }
+    /* Before Flutter draws: the device's light or dark background. */
+    html, body { margin: 0; height: 100%; background: #F4F4F5; }
+    @media (prefers-color-scheme: dark) { html, body { background: #0A0A0B; } }
   </style>
 </head>
 <body>

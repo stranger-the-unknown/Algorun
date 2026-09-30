@@ -25,7 +25,7 @@ final class WorldSelectScreen extends ConsumerWidget {
         error: (e, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(AppSpace.s5),
-            child: Text('$e', style: const TextStyle(color: AppColors.danger)),
+            child: Text('$e', style: TextStyle(color: context.palette.danger)),
           ),
         ),
         data: (view) {
@@ -83,7 +83,7 @@ class _WorldCard extends StatelessWidget {
     final dim = !_playable;
     final l = context.l10n;
     return Material(
-      color: AppColors.elevated,
+      color: context.palette.elevated,
       borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(
         key: Key('world-${world.id}'),
@@ -103,9 +103,9 @@ class _WorldCard extends StatelessWidget {
                 width: 44,
                 child: Text(
                   world.index.toString().padLeft(2, '0'),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFeatures: [FontFeature.tabularFigures()],
-                    color: AppColors.muted,
+                    color: context.palette.muted,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
@@ -123,7 +123,7 @@ class _WorldCard extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
-                              color: dim ? AppColors.muted : AppColors.fg,
+                              color: dim ? context.palette.muted : context.palette.fg,
                             ),
                           ),
                         ),
@@ -137,7 +137,7 @@ class _WorldCard extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        color: status == WorldStatus.locked ? AppColors.muted : AppColors.fg,
+                        color: status == WorldStatus.locked ? context.palette.muted : context.palette.fg,
                         fontSize: 13,
                       ),
                     ),
@@ -145,7 +145,7 @@ class _WorldCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         l.worldTeaches(text.concepts(world.concepts)),
-                        style: const TextStyle(color: AppColors.muted, fontSize: 12),
+                        style: TextStyle(color: context.palette.muted, fontSize: 12),
                       ),
                     ],
                     if (status == WorldStatus.open && total > 0) ...[
@@ -168,7 +168,7 @@ class _WorldCard extends StatelessWidget {
                   WorldStatus.empty => Icons.hourglass_empty,
                   WorldStatus.open => Icons.chevron_right,
                 },
-                color: status == WorldStatus.completed ? AppColors.ok : AppColors.muted,
+                color: status == WorldStatus.completed ? context.palette.ok : context.palette.muted,
                 semanticLabel: switch (status) {
                   WorldStatus.locked => l.locked,
                   WorldStatus.completed => l.stateCompleted,
@@ -194,12 +194,12 @@ final class _Tag extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.borderStrong),
+        border: Border.all(color: context.palette.borderStrong),
         borderRadius: BorderRadius.circular(AppRadius.xs),
       ),
       child: Text(
         text,
-        style: const TextStyle(color: AppColors.accent, fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.w600),
+        style: TextStyle(color: context.palette.accent, fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.w600),
       ),
     );
   }

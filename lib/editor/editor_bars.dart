@@ -23,23 +23,23 @@ final class FlashBanner extends StatelessWidget {
     return Semantics(
       liveRegion: true,
       child: Material(
-        color: AppColors.subtle,
+        color: context.palette.subtle,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 2, 4, 2),
           child: Row(
             children: [
-              const Icon(Icons.info_outline, size: 18, color: AppColors.muted),
+              Icon(Icons.info_outline, size: 18, color: context.palette.muted),
               const SizedBox(width: 10),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(text, style: const TextStyle(color: AppColors.fg, height: 1.35)),
+                  child: Text(text, style: TextStyle(color: context.palette.fg, height: 1.35)),
                 ),
               ),
               IconButton(
                 tooltip: l.dismiss,
                 onPressed: controller.dismissFlash,
-                icon: const Icon(Icons.close, size: 18, color: AppColors.muted),
+                icon: Icon(Icons.close, size: 18, color: context.palette.muted),
               ),
             ],
           ),
@@ -124,9 +124,9 @@ final class BlockActionsBar extends StatelessWidget {
       ),
     ];
     return Material(
-      color: AppColors.elevated,
+      color: context.palette.elevated,
       child: DecoratedBox(
-        decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderStrong))),
+        decoration: BoxDecoration(border: Border(top: BorderSide(color: context.palette.borderStrong))),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 0, 4, 4),
           child: Column(
@@ -135,7 +135,7 @@ final class BlockActionsBar extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(l.selected, style: AppText.label),
+                  Text(l.selected, style: AppText.label(context)),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -148,7 +148,7 @@ final class BlockActionsBar extends StatelessWidget {
                   IconButton(
                     tooltip: l.done,
                     onPressed: controller.clearSelection,
-                    icon: const Icon(Icons.close, color: AppColors.muted),
+                    icon: Icon(Icons.close, color: context.palette.muted),
                   ),
                 ],
               ),
@@ -180,7 +180,7 @@ class _BarAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null;
-    final color = enabled ? AppColors.fg : AppColors.faint.withValues(alpha: 0.55);
+    final color = enabled ? context.palette.fg : context.palette.faint.withValues(alpha: 0.55);
     return Tooltip(
       message: tooltip,
       child: Semantics(
@@ -235,9 +235,9 @@ final class RunBar extends StatelessWidget {
     final max = controller.puzzle.blocks.maxBlocks;
     final over = max != null && count > max;
     return Material(
-      color: AppColors.bg,
+      color: context.palette.bg,
       child: DecoratedBox(
-        decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.border))),
+        decoration: BoxDecoration(border: Border(top: BorderSide(color: context.palette.border))),
         child: SafeArea(
           top: false,
           child: Padding(
@@ -268,7 +268,7 @@ final class RunBar extends StatelessWidget {
                         Row(
                           children: [
                             if (over) ...[
-                              const Icon(Icons.warning_amber_rounded, size: 16, color: AppColors.warn),
+                              Icon(Icons.warning_amber_rounded, size: 16, color: context.palette.warn),
                               const SizedBox(width: 4),
                             ],
                             Flexible(
@@ -278,7 +278,7 @@ final class RunBar extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: over ? AppColors.warn : AppColors.fg,
+                                  color: over ? context.palette.warn : context.palette.fg,
                                   fontFeatures: const [FontFeature.tabularFigures()],
                                   fontWeight: FontWeight.w600,
                                   fontSize: 13,
@@ -291,7 +291,7 @@ final class RunBar extends StatelessWidget {
                           saved ? l.savedOnDevice : l.practiceNotSaved,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: AppColors.muted, fontSize: 12),
+                          style: TextStyle(color: context.palette.muted, fontSize: 12),
                         ),
                       ],
                     ),
@@ -302,9 +302,9 @@ final class RunBar extends StatelessWidget {
                   style: FilledButton.styleFrom(minimumSize: const Size(112, 48)),
                   onPressed: running ? null : onRun,
                   icon: running
-                      ? const SizedBox.square(
+                      ? SizedBox.square(
                           dimension: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.muted),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: context.palette.muted),
                         )
                       : const Icon(Icons.play_arrow_rounded),
                   label: Text(running ? l.running : l.run),

@@ -45,13 +45,13 @@ final class GivensBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (givens.isNotEmpty) ...[
-            Text(l.givens, style: AppText.label),
+            Text(l.givens, style: AppText.label(context)),
             const SizedBox(height: 8),
             _Names(names: givens, onTap: _place),
           ],
           if (pool.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Text(l.variables, style: AppText.label),
+            Text(l.variables, style: AppText.label(context)),
             const SizedBox(height: 8),
             _Names(names: pool, onTap: _place),
           ],

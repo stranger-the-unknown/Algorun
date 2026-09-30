@@ -46,7 +46,7 @@ final class HoleWidget extends StatelessWidget {
       selected: selected,
       excludeSemantics: true,
       child: Material(
-        color: selected ? AppColors.subtle : Colors.transparent,
+        color: selected ? context.palette.subtle : Colors.transparent,
         borderRadius: BorderRadius.circular(20),
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
@@ -55,7 +55,7 @@ final class HoleWidget extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: 40, minWidth: 64),
             child: CustomPaint(
               painter: _DashedHolePainter(
-                color: selected ? AppColors.accent : AppColors.holeOutline,
+                color: selected ? context.palette.accent : context.palette.holeOutline,
                 width: selected ? 2 : 1.2,
               ),
               child: Padding(
@@ -63,13 +63,13 @@ final class HoleWidget extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.add, size: 14, color: AppColors.muted),
+                    Icon(Icons.add, size: 14, color: context.palette.muted),
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
                         caption,
-                        style: const TextStyle(
-                          color: AppColors.muted,
+                        style: TextStyle(
+                          color: context.palette.muted,
                           fontSize: 13,
                           letterSpacing: 0.3,
                         ),

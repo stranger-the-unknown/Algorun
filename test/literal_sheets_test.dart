@@ -24,7 +24,7 @@ Finder _inSheet(String text) => find.descendant(of: find.byType(BottomSheet), ma
 Future<void> _open(WidgetTester tester, [Puzzle? puzzle]) async {
   usePhone(tester, 360, 800, dpr: 2);
   await tester.pumpWidget(ProviderScope(
-    child: MaterialApp(theme: buildAppTheme(), home: PuzzleEditor(puzzle: puzzle ?? _warm, briefOpen: false)),
+    child: MaterialApp(theme: buildAppTheme(AppPalette.dark), home: PuzzleEditor(puzzle: puzzle ?? _warm, briefOpen: false)),
   ));
   await tester.pumpAndSettle();
 }
@@ -217,7 +217,7 @@ void main() {
     usePhone(tester, 360, 800, dpr: 2);
     await tester.pumpWidget(ProviderScope(
       child: MaterialApp(
-        theme: buildAppTheme(),
+        theme: buildAppTheme(AppPalette.dark),
         home: PuzzleEditor(puzzle: _warm, briefOpen: false),
         routes: {'/results': (_) => const ResultsScreen()},
       ),

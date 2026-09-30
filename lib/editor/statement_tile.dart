@@ -112,12 +112,12 @@ class _Hat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selected = controller.selectedBlockId == block.id;
-    final strip = EditorTheme.strip(chrome.category);
+    final strip = EditorTheme.strip(context, chrome.category);
     return Semantics(
       container: true,
       selected: selected,
       child: Material(
-        color: AppColors.elevated,
+        color: context.palette.elevated,
         borderRadius: BorderRadius.circular(AppRadius.md),
         child: InkWell(
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -128,7 +128,7 @@ class _Hat extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(
-                color: selected ? AppColors.accent : AppColors.border,
+                color: selected ? context.palette.accent : context.palette.border,
                 width: selected ? 2 : 1,
               ),
             ),
@@ -223,7 +223,7 @@ class _CBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     final selected = controller.selectedBlockId == block.id;
     final collapsed = controller.isCollapsed(block.id);
-    final strip = EditorTheme.strip(chrome.category);
+    final strip = EditorTheme.strip(context, chrome.category);
     final elseIds = controller.graph.slotList(block.id, 'else');
     final elseBlock = elseIds.isEmpty
         ? null
@@ -236,10 +236,10 @@ class _CBlock extends StatelessWidget {
       selected: selected,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.elevated,
+          color: context.palette.elevated,
           borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(
-            color: selected ? AppColors.accent : AppColors.border,
+            color: selected ? context.palette.accent : context.palette.border,
             width: selected ? 2 : 1,
           ),
         ),
@@ -282,7 +282,7 @@ class _CBlock extends StatelessWidget {
                         onPressed: () => controller.toggleCollapsed(block.id),
                         icon: Icon(
                           collapsed ? Icons.unfold_more : Icons.unfold_less,
-                          color: AppColors.muted,
+                          color: context.palette.muted,
                           size: 22,
                         ),
                       ),
@@ -397,12 +397,12 @@ class _FoldedSummary extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            const Icon(Icons.more_horiz, size: 18, color: AppColors.muted),
+            Icon(Icons.more_horiz, size: 18, color: context.palette.muted),
             const SizedBox(width: 8),
             Flexible(
               child: Text(
                 text,
-                style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                style: TextStyle(color: context.palette.muted, fontSize: 13),
               ),
             ),
           ],
@@ -447,21 +447,21 @@ class _Well extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 6, top: 6, bottom: 4),
-                child: Text(label, style: AppText.label),
+                child: Text(label, style: AppText.label(context)),
               ),
               const Spacer(),
               if (onRemove != null)
                 IconButton(
                   tooltip: context.l10n.removeElse,
                   onPressed: onRemove,
-                  icon: const Icon(Icons.close, size: 18, color: AppColors.muted),
+                  icon: Icon(Icons.close, size: 18, color: context.palette.muted),
                 ),
             ],
           ),
           Container(
             decoration: BoxDecoration(
               border: Border(
-                left: BorderSide(color: active ? AppColors.accent : rail, width: 2),
+                left: BorderSide(color: active ? context.palette.accent : rail, width: 2),
               ),
             ),
             padding: const EdgeInsets.only(left: 8, bottom: 2),
@@ -533,13 +533,13 @@ final class AddStepButton extends StatelessWidget {
             child: Row(
               mainAxisAlignment: compact ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
-                const Icon(Icons.add, size: 18, color: AppColors.muted),
+                Icon(Icons.add, size: 18, color: context.palette.muted),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     context.l10n.addStep,
-                    style: const TextStyle(
-                      color: AppColors.muted,
+                    style: TextStyle(
+                      color: context.palette.muted,
                       letterSpacing: 0.6,
                       fontSize: 13,
                     ),
@@ -581,7 +581,7 @@ final class BlockWord extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(color: AppColors.muted, fontSize: 12, letterSpacing: 0.8),
+      style: TextStyle(color: context.palette.muted, fontSize: 12, letterSpacing: 0.8),
     );
   }
 }
@@ -601,7 +601,7 @@ final class NameChip extends StatelessWidget {
       label: context.l10n.variableChange(name),
       excludeSemantics: true,
       child: Material(
-        color: AppColors.subtle,
+        color: context.palette.subtle,
         borderRadius: BorderRadius.circular(AppRadius.xs),
         child: InkWell(
           onTap: onTap,
@@ -610,7 +610,7 @@ final class NameChip extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: 40, minWidth: 48),
             padding: const EdgeInsets.fromLTRB(10, 6, 4, 6),
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppColors.accent.withValues(alpha: 0.7), width: 2)),
+              border: Border(bottom: BorderSide(color: context.palette.accent.withValues(alpha: 0.7), width: 2)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -621,7 +621,7 @@ final class NameChip extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                   ),
                 ),
-                const Icon(Icons.arrow_drop_down, size: 20, color: AppColors.muted),
+                Icon(Icons.arrow_drop_down, size: 20, color: context.palette.muted),
               ],
             ),
           ),

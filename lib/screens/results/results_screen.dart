@@ -83,48 +83,53 @@ String _metricWords(BestMetric metric, AppLocalizations l) => switch (metric) {
     };
 
 /// How each verdict looks: an icon and a sentence, so nothing depends on
-/// colour alone. [strings] sets the sentence's language (English if none).
-({IconData icon, Color color, String meaning}) verdictStyle(ResultKind kind, [AppLocalizations? strings]) {
+/// colour alone. [palette] gives the colour; [strings] sets the sentence's
+/// language (English if none).
+({IconData icon, Color color, String meaning}) verdictStyle(
+  ResultKind kind,
+  AppPalette palette, [
+  AppLocalizations? strings,
+]) {
   final meaning = verdictMeaning(kind, strings ?? englishStrings);
   return switch (kind) {
       ResultKind.correct => (
           icon: Icons.check_circle,
-          color: AppColors.ok,
+          color: palette.ok,
           meaning: meaning,
         ),
       ResultKind.wrongAnswer => (
           icon: Icons.cancel_outlined,
-          color: AppColors.danger,
+          color: palette.danger,
           meaning: meaning,
         ),
       ResultKind.runtimeError => (
           icon: Icons.error_outline,
-          color: AppColors.danger,
+          color: palette.danger,
           meaning: meaning,
         ),
       ResultKind.operationLimit => (
           icon: Icons.speed,
-          color: AppColors.warn,
+          color: palette.warn,
           meaning: meaning,
         ),
       ResultKind.timeLimit => (
           icon: Icons.hourglass_bottom,
-          color: AppColors.warn,
+          color: palette.warn,
           meaning: meaning,
         ),
       ResultKind.memoryLimit => (
           icon: Icons.memory,
-          color: AppColors.warn,
+          color: palette.warn,
           meaning: meaning,
         ),
       ResultKind.depthLimit => (
           icon: Icons.layers_outlined,
-          color: AppColors.warn,
+          color: palette.warn,
           meaning: meaning,
         ),
       ResultKind.invalidProgram => (
           icon: Icons.build_outlined,
-          color: AppColors.warn,
+          color: palette.warn,
           meaning: meaning,
         ),
     };
@@ -142,7 +147,7 @@ final class ResultsScreen extends StatelessWidget {
     }
     final suite = args.suite;
     final kind = suite.kind;
-    final style = verdictStyle(kind, l);
+    final style = verdictStyle(kind, context.palette, l);
     final progress = progressLines(args.progress, l, args.text);
     final engineDetail = suite.message ?? (args.validation.ok ? null : args.validation.messages.first.message);
     final detail = performanceMessage(suite, l) ?? (engineDetail == null ? null : engineText(engineDetail, l));
@@ -163,7 +168,7 @@ final class ResultsScreen extends StatelessWidget {
                     child: Container(
                     padding: const EdgeInsets.all(AppSpace.s4),
                     decoration: BoxDecoration(
-                      color: AppColors.elevated,
+                      color: context.palette.elevated,
                       border: Border(left: BorderSide(color: style.color, width: 4)),
                     ),
                     child: Column(
@@ -187,10 +192,10 @@ final class ResultsScreen extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: AppSpace.s2),
-                        Text(style.meaning, style: const TextStyle(color: AppColors.fg, height: 1.45)),
+                        Text(style.meaning, style: TextStyle(color: context.palette.fg, height: 1.45)),
                         if (detail != null && detail != style.meaning) ...[
                           const SizedBox(height: AppSpace.s2),
-                          Text(detail, style: const TextStyle(color: AppColors.muted, height: 1.45)),
+                          Text(detail, style: TextStyle(color: context.palette.muted, height: 1.45)),
                         ],
                       ],
                     ),
@@ -205,12 +210,12 @@ final class ResultsScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 2),
-                              child: Icon(Icons.arrow_forward, size: 16, color: AppColors.ok),
+                              child: Icon(Icons.arrow_forward, size: 16, color: context.palette.ok),
                             ),
                             const SizedBox(width: AppSpace.s2),
-                            Expanded(child: Text(line, style: const TextStyle(color: AppColors.fg))),
+                            Expanded(child: Text(line, style: TextStyle(color: context.palette.fg))),
                           ],
                         ),
                       ),
@@ -223,7 +228,7 @@ final class ResultsScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(top: AppSpace.s2),
                         child: Text(
                           engineText(m.message, l),
-                          style: const TextStyle(color: AppColors.fg, height: 1.4),
+                          style: TextStyle(color: context.palette.fg, height: 1.4),
                         ),
                       ),
                   ],
@@ -240,7 +245,7 @@ final class ResultsScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: AppSpace.s2),
                       child: Text(
                         l.hiddenPassed(suite.hiddenSummary!.passed, suite.hiddenSummary!.total),
-                        style: const TextStyle(color: AppColors.fg),
+                        style: TextStyle(color: context.palette.fg),
                       ),
                     ),
                   ],
@@ -253,13 +258,13 @@ final class ResultsScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: AppSpace.s2),
                       child: Text(
                         l.stoppedAfterStep(suite.firstFailureOpIndex!),
-                        style: const TextStyle(color: AppColors.muted),
+                        style: TextStyle(color: context.palette.muted),
                       ),
                     ),
                   const SizedBox(height: AppSpace.s4),
                   Text(
                     l.hiddenNotShown,
-                    style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                    style: TextStyle(color: context.palette.muted, fontSize: 13),
                   ),
                 ],
               ),
@@ -300,7 +305,7 @@ class _SectionLabel extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => Text(text, style: AppText.label);
+  Widget build(BuildContext context) => Text(text, style: AppText.label(context));
 }
 
 /// What the run used against what the puzzle allows, one row per budget.
@@ -323,9 +328,9 @@ class _CostTable extends StatelessWidget {
     final hints = m.hintsUsed;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.elevated,
+        color: context.palette.elevated,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       padding: const EdgeInsets.symmetric(horizontal: AppSpace.s3, vertical: AppSpace.s1),
       child: Column(
@@ -389,9 +394,9 @@ class _CostRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final valueStyle = header
-        ? AppText.label
+        ? AppText.label(context)
         : TextStyle(
-            color: over ? AppColors.warn : AppColors.fg,
+            color: over ? context.palette.warn : context.palette.fg,
             fontWeight: FontWeight.w600,
             fontFeatures: const [FontFeature.tabularFigures()],
           );
@@ -404,7 +409,7 @@ class _CostRow extends StatelessWidget {
           children: [
             Expanded(
               flex: 5,
-              child: Text(label, style: const TextStyle(color: AppColors.muted)),
+              child: Text(label, style: TextStyle(color: context.palette.muted)),
             ),
             Expanded(
               flex: 4,
@@ -412,7 +417,7 @@ class _CostRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   if (over) ...[
-                    const Icon(Icons.warning_amber_rounded, size: 16, color: AppColors.warn),
+                    Icon(Icons.warning_amber_rounded, size: 16, color: context.palette.warn),
                     const SizedBox(width: 4),
                   ],
                   Flexible(child: Text(used, textAlign: TextAlign.end, style: valueStyle)),
@@ -424,7 +429,7 @@ class _CostRow extends StatelessWidget {
               child: Text(
                 budget,
                 textAlign: TextAlign.end,
-                style: header ? AppText.label : const TextStyle(color: AppColors.muted),
+                style: header ? AppText.label(context) : TextStyle(color: context.palette.muted),
               ),
             ),
           ],
@@ -453,13 +458,13 @@ class _CaseRow extends StatelessWidget {
               Icon(
                 ok ? Icons.check_circle_outline : Icons.cancel_outlined,
                 size: 18,
-                color: ok ? AppColors.ok : AppColors.danger,
+                color: ok ? context.palette.ok : context.palette.danger,
               ),
               const SizedBox(width: AppSpace.s2),
               Text(
                 result.id,
-                style: const TextStyle(
-                  color: AppColors.fg,
+                style: TextStyle(
+                  color: context.palette.fg,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -468,29 +473,29 @@ class _CaseRow extends StatelessWidget {
                 child: Text(
                   ok ? l.casePassed : kindText(result.run.kind, l),
                   style: TextStyle(
-                    color: ok ? AppColors.muted : AppColors.warn,
+                    color: ok ? context.palette.muted : context.palette.warn,
                   ),
                 ),
               ),
             ],
           ),
           if (!ok) ...[
-            _detail(l.caseGiven, result.input),
-            _detail(l.caseExpected, result.expected),
-            _detail(l.caseYouGave, result.actual),
+            _detail(context, l.caseGiven, result.input),
+            _detail(context, l.caseExpected, result.expected),
+            _detail(context, l.caseYouGave, result.actual),
           ],
         ],
       ),
     );
   }
 
-  Widget _detail(String label, Object? value) {
+  Widget _detail(BuildContext context, String label, Object? value) {
     if (value == null) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(left: 26, top: 4),
       child: Text(
         '$label: ${jsonEncode(value)}',
-        style: const TextStyle(color: AppColors.muted, fontSize: 13, height: 1.4),
+        style: TextStyle(color: context.palette.muted, fontSize: 13, height: 1.4),
       ),
     );
   }
