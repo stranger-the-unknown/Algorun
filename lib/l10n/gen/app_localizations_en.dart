@@ -353,6 +353,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String typeHeapOf(String item) {
+    return 'heap of $item';
+  }
+
+  @override
   String typeDequeOf(String item) {
     return 'deque of $item';
   }
@@ -565,6 +570,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get captionQueue => 'queue';
+
+  @override
+  String get captionHeap => 'heap';
 
   @override
   String get captionKey => 'key';
@@ -1122,6 +1130,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get engineThisBlockNeedsAQueue => 'This block needs a queue.';
 
   @override
+  String get engineThisBlockNeedsAHeap => 'This block needs a heap.';
+
+  @override
   String get engineThisBlockNeedsAValue => 'This block needs a value.';
 
   @override
@@ -1245,6 +1256,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get engineThisStackIsEmpty => 'This stack is empty.';
+
+  @override
+  String get engineThisHeapGotTooBig => 'This heap got too big.';
+
+  @override
+  String get engineThisHeapIsEmpty => 'This heap is empty.';
 
   @override
   String get engineThisQueueGotTooBig => 'This queue got too big.';

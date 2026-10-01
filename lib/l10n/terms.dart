@@ -15,6 +15,7 @@ String holeCaptionText(String port, AppLocalizations l) => switch (BlockChrome.h
       'set' => l.captionSet,
       'stack' => l.captionStack,
       'queue' => l.captionQueue,
+      'heap' => l.captionHeap,
       'key' => l.captionKey,
       'node' => l.captionNode,
       'graph' => l.captionGraph,
@@ -93,7 +94,8 @@ String typeText(ValueType type, AppLocalizations l) {
     TypeAtom.queue => l.typeQueueOf(_itemText(type.param, l)),
     TypeAtom.deque => l.typeDequeOf(_itemText(type.param, l)),
     TypeAtom.map => l.typeMapOf(_itemText(type.param, l), _itemText(type.param2, l)),
-    TypeAtom.heap || TypeAtom.pair => l.typeCollection,
+    TypeAtom.heap => l.typeHeapOf(_itemText(type.param, l)),
+    TypeAtom.pair => l.typeCollection,
     TypeAtom.generic => l.typeValue,
   };
   return type.nullable && type.atom != TypeAtom.nil ? l.typeMaybe(base) : base;

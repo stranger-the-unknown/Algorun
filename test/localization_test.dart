@@ -105,6 +105,18 @@ void main() {
     expect(formatCount(12345), '12,345');
   });
 
+  test('a heap (H) has its own words; in Turkish it is not the stack\'s "yığın"', () {
+    const heap = ValueType(TypeAtom.heap, param: ValueType.number);
+    expect(typeText(heap, english), 'heap of numbers');
+    expect(typeText(heap, turkish), 'sayı öncelik kuyruğu');
+    expect(holeCaptionText('heap', turkish), 'öncelik kuyruğu');
+    expect(engineText('This heap is empty.', turkish), 'Bu öncelik kuyruğu boş.');
+    expect(engineText('This block needs a heap.', english), 'This block needs a heap.');
+    for (final id in [BlockIds.newMinHeap, BlockIds.heapInsert, BlockIds.heapTake, BlockIds.heapTop]) {
+      expect(blockGuide[id]!.trText, isNot(contains('yığın')), reason: id);
+    }
+  });
+
   test('every engine message a player can see has Turkish; English passes through', () {
     final sentences = _engineSentences();
     expect(sentences.length, greaterThan(60));

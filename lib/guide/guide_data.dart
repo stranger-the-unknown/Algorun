@@ -514,6 +514,56 @@ const Map<String, GuideEntry> blockGuide = {
     trText: 'Yeni ve boş bir kuyruk.',
     example: 'SET line TO NEW QUEUE',
   ),
+  // ---- heaps (H) ----
+  BlockIds.newMinHeap: GuideEntry(
+    term: 'NEW MIN HEAP',
+    tr: 'YENİ MİN ÖNCELİK KUYRUĞU',
+    en: 'A new, empty heap that always has its smallest number on top.',
+    trText: 'Yeni ve boş bir öncelik kuyruğu; en küçük sayı hep tepededir.',
+    example: 'SET waiting TO NEW MIN HEAP',
+  ),
+  BlockIds.newMaxHeap: GuideEntry(
+    term: 'NEW MAX HEAP',
+    tr: 'YENİ MAKS ÖNCELİK KUYRUĞU',
+    en: 'A new, empty heap that always has its largest number on top.',
+    trText: 'Yeni ve boş bir öncelik kuyruğu; en büyük sayı hep tepededir.',
+    example: 'SET best TO NEW MAX HEAP',
+  ),
+  BlockIds.heapInsert: GuideEntry(
+    term: 'INSERT',
+    tr: 'ÖNCELİK KUYRUĞUNA EKLE',
+    en: 'Puts a number into a heap. The heap keeps its smallest (or largest) number on top, whatever order they come in.',
+    trText: 'Öncelik kuyruğuna bir sayı ekler. Sayılar hangi sırayla gelirse gelsin, en küçük (ya da en büyük) sayı tepede kalır.',
+    example: 'INSERT waiting cost',
+  ),
+  BlockIds.heapTake: GuideEntry(
+    term: 'TAKE TOP',
+    tr: 'TEPEDEKİNİ AL',
+    en: 'Takes the top number out of a heap and gives it: the smallest for a MIN heap, the largest for a MAX heap. An empty heap is an error: check IS EMPTY first.',
+    trText: 'Tepedeki sayıyı öncelik kuyruğundan çıkarır ve verir: MIN için en küçüğü, MAX için en büyüğü. Boş öncelik kuyruğu hatadır: önce IS EMPTY ile kontrol et.',
+    example: 'SET cheapest TO (waiting TAKE TOP)',
+  ),
+  BlockIds.heapTop: GuideEntry(
+    term: 'TOP',
+    tr: 'TEPEYE BAK',
+    en: 'The top number of a heap, without taking it out.',
+    trText: 'Öncelik kuyruğunun tepesindeki sayı; çıkarmadan bakar.',
+    example: 'IF (best TOP) LESS THAN x',
+  ),
+  BlockIds.heapSize: GuideEntry(
+    term: 'SIZE (heap)',
+    tr: 'ÖNCELİK KUYRUĞU BOYUTU',
+    en: 'How many numbers a heap holds.',
+    trText: 'Öncelik kuyruğunun kaç sayı tuttuğu.',
+    example: 'IF (best SIZE) GREATER THAN k',
+  ),
+  BlockIds.heapEmpty: GuideEntry(
+    term: 'IS EMPTY (heap)',
+    tr: 'ÖNCELİK KUYRUĞU BOŞ MU',
+    en: 'TRUE when the heap holds nothing.',
+    trText: 'Öncelik kuyruğu hiçbir şey tutmuyorsa TRUE olur.',
+    example: 'WHILE NOT (waiting IS EMPTY)',
+  ),
   // ---- structures ----
   BlockIds.llValue: GuideEntry(
     term: 'NODE VALUE (chain)',
@@ -650,6 +700,12 @@ const List<GuideEntry> conceptGuide = [
     tr: 'Yığın / Kuyruk',
     en: 'A stack gives back the last value put in (PUSH / POP); a queue gives back the first (ENQUEUE / DEQUEUE).',
     trText: 'Yığın en son konan değeri geri verir (PUSH / POP); kuyruk ise ilk konanı (ENQUEUE / DEQUEUE).',
+  ),
+  GuideEntry(
+    term: 'Heap',
+    tr: 'Öncelik kuyruğu',
+    en: 'A heap gives back its smallest number first (MIN) or its largest (MAX), whatever order the numbers were put in (INSERT / TAKE TOP).',
+    trText: 'Öncelik kuyruğu, sayılar hangi sırayla konmuş olursa olsun önce en küçüğünü (MIN) ya da en büyüğünü (MAX) geri verir (INSERT / TAKE TOP).',
   ),
   GuideEntry(
     term: 'Node',

@@ -279,6 +279,14 @@
       }
     }
   },
+  "typeHeapOf": "heap of {item}",
+  "@typeHeapOf": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
   "typeDequeOf": "deque of {item}",
   "@typeDequeOf": {
     "placeholders": {
@@ -477,6 +485,7 @@
   "captionSet": "set",
   "captionStack": "stack",
   "captionQueue": "queue",
+  "captionHeap": "heap",
   "captionKey": "key",
   "captionNode": "node",
   "captionGraph": "graph",
@@ -833,6 +842,10 @@
   "@engineThisBlockNeedsAQueue": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
   },
+  "engineThisBlockNeedsAHeap": "This block needs a heap.",
+  "@engineThisBlockNeedsAHeap": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
   "engineThisBlockNeedsAValue": "This block needs a value.",
   "@engineThisBlockNeedsAValue": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
@@ -975,6 +988,14 @@
   },
   "engineThisStackIsEmpty": "This stack is empty.",
   "@engineThisStackIsEmpty": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisHeapGotTooBig": "This heap got too big.",
+  "@engineThisHeapGotTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisHeapIsEmpty": "This heap is empty.",
+  "@engineThisHeapIsEmpty": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
   },
   "engineThisQueueGotTooBig": "This queue got too big.",

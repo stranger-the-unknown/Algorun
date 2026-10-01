@@ -354,6 +354,11 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String typeHeapOf(String item) {
+    return '$item öncelik kuyruğu';
+  }
+
+  @override
   String typeDequeOf(String item) {
     return '$item çift uçlu kuyruğu';
   }
@@ -565,6 +570,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get captionQueue => 'kuyruk';
+
+  @override
+  String get captionHeap => 'öncelik kuyruğu';
 
   @override
   String get captionKey => 'anahtar';
@@ -1120,6 +1128,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get engineThisBlockNeedsAQueue => 'Bu blok bir kuyruk bekliyor.';
 
   @override
+  String get engineThisBlockNeedsAHeap =>
+      'Bu blok bir öncelik kuyruğu bekliyor.';
+
+  @override
   String get engineThisBlockNeedsAValue => 'Bu blok bir değer bekliyor.';
 
   @override
@@ -1242,6 +1254,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get engineThisStackIsEmpty => 'Bu yığın boş.';
+
+  @override
+  String get engineThisHeapGotTooBig => 'Bu öncelik kuyruğu çok büyüdü.';
+
+  @override
+  String get engineThisHeapIsEmpty => 'Bu öncelik kuyruğu boş.';
 
   @override
   String get engineThisQueueGotTooBig => 'Bu kuyruk çok büyüdü.';

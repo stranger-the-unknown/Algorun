@@ -45,7 +45,7 @@ into `main` only when complete and green. If it is not done by the freeze,
 ## Status
 
 - [x] 1 engine — `HeapValue`, seven blocks, `test/heap_test.dart` (engine 381)
-- [ ] 2 app
+- [x] 2 app — Block Reference (7 blocks + the Heap concept), EN/TR terms and messages (Flutter 487)
 - [ ] 3 content tooling
 - [ ] 4 world 09 batch 1
 - [ ] 5 world 09 batch 2

@@ -686,6 +686,12 @@ abstract class AppLocalizations {
   /// **'queue of {item}'**
   String typeQueueOf(String item);
 
+  /// No description provided for @typeHeapOf.
+  ///
+  /// In en, this message translates to:
+  /// **'heap of {item}'**
+  String typeHeapOf(String item);
+
   /// No description provided for @typeDequeOf.
   ///
   /// In en, this message translates to:
@@ -1033,6 +1039,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'queue'**
   String get captionQueue;
+
+  /// No description provided for @captionHeap.
+  ///
+  /// In en, this message translates to:
+  /// **'heap'**
+  String get captionHeap;
 
   /// No description provided for @captionKey.
   ///
@@ -2015,6 +2027,12 @@ abstract class AppLocalizations {
   /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
   ///
   /// In en, this message translates to:
+  /// **'This block needs a heap.'**
+  String get engineThisBlockNeedsAHeap;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
   /// **'This block needs a value.'**
   String get engineThisBlockNeedsAValue;
 
@@ -2227,6 +2245,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This stack is empty.'**
   String get engineThisStackIsEmpty;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This heap got too big.'**
+  String get engineThisHeapGotTooBig;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This heap is empty.'**
+  String get engineThisHeapIsEmpty;
 
   /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
   ///
