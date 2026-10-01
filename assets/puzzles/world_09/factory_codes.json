@@ -1,0 +1,86 @@
+{
+  "id": "factory_codes",
+  "version": 1,
+  "title": "Factory Codes",
+  "world": "world_09",
+  "chapter": "generate_in_order_with_heap",
+  "tier": 4,
+  "mode": "budget",
+  "concepts": ["heap", "hash_set"],
+  "prerequisites": [],
+  "story": "A factory stamps codes that have no prime factors other than 2, 3 and 5: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 and so on (7 and 14 are skipped). What is the n-th code? For n up to 1500 the codes reach the hundreds of millions, so testing every number in turn takes far too long. Every code after 1 is a smaller code times 2, 3 or 5.",
+  "io": {
+    "inputs": [
+      {"name": "n", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["n is 1 to 1500."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.floor_div", "arith.mod", "arith.mul", "cmp.eq", "cmp.lt", "ctrl.for_range", "ctrl.if", "ctrl.return", "ctrl.while", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "logic.not", "new.max_heap", "new.min_heap", "new.set", "set.add", "set.has", "var.get", "var.set"],
+    "maxBlocks": 111
+  },
+  "limits": {"maxOps": 111700, "maxDepth": 32, "maxAlloc": 4350},
+  "performance": {"required": true, "baselineFactor": 10},
+  "hints": ["Start a NEW MIN HEAP with 1 in it. TAKE TOP n times: the n-th number taken is the answer.", "Each time you take a code x, INSERT x TIMES 2, x TIMES 3 and x TIMES 5: they are codes too, and larger.", "The same code can be made twice (6 is 2 × 3 and 3 × 2). Keep a NEW SET of codes already put in, and INSERT one only IF the set does NOT HAS it."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"n": 10},
+        "out": 12
+      },
+      {
+        "id": "v2",
+        "in": {"n": 15},
+        "out": 24
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"n": 1},
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {"n": 2},
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {"n": 7},
+        "out": 8
+      },
+      {
+        "id": "h04",
+        "in": {"n": 100},
+        "out": 1536
+      },
+      {
+        "id": "h05",
+        "in": {"n": 1000},
+        "out": 51200000
+      },
+      {
+        "id": "h06",
+        "in": {"n": 1500},
+        "out": 859963392
+      }
+    ]
+  },
+  "edgeCases": ["the same code made twice", "n of 1", "a large n"],
+  "variables": {
+    "pool": [
+      {"name": "todo", "type": "heap<num>"},
+      {"name": "seen", "type": "set<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "x", "type": "num"},
+      {"name": "count", "type": "num"},
+      {"name": "m", "type": "num"},
+      {"name": "y", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "generate_in_order_with_heap"}
+}

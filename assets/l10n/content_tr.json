@@ -1328,6 +1328,69 @@
         "Yeni sayı, IF low IS EMPTY OR sayı TOP low'dan küçük ya da eşitse (LESS OR EQUAL) low'a girer; ELSE high'a.",
         "Sonra dengele: IF low'da high'dan birden fazla sayı fazlaysa TAKE TOP low'u high'a taşı; IF high'da low'dan fazla sayı varsa TAKE TOP high'ı low'a taşı. Sonra TOP low'u APPEND et."
       ]
+    },
+    "halving_piles": {
+      "title": "Yarıya İnen Yığınlar",
+      "story": "Taş yığınları var. Her turda en büyük yığını al ve yarısını, aşağı yuvarlayarak, kaldır: 9'luk bir yığın 5 olur. k turdan sonra toplam kaç taş kalır? En büyük yığın daha önce yarıladığın bir yığın olabilir.",
+      "hints": [
+        "Yığınları bir NEW MAX HEAP içinde tut: TOP hep en büyük yığındır.",
+        "Her turda: en büyüğü TAKE TOP ile al, sonra ondan kalanı INSERT et: yığın MINUS (yığın FLOOR DIVIDE 2).",
+        "Sonda, öncelik kuyruğu boş değilken (WHILE … NOT … IS EMPTY) her yığını TAKE TOP ile al ve topla."
+      ]
+    },
+    "deadline_jobs": {
+      "title": "Son Tarihli İşler",
+      "story": "Bir işçi günde bir iş yapabilir: 1., 2., 3. gün ve böyle devam eder. i. iş pays[i] öder, ama yalnızca deadlines[i]. günde ya da daha önce yapılırsa; işler son tarihe göre sıralıdır. İşçi en fazla ne kazanabilir? Son tarihleri 1 1 ve ücretleri 3 7 olan iki işte tek işe vakit var: 7'yi al.",
+      "hints": [
+        "İşleri son tarihe göre dolaş ve yapmayı planladığın işlerin ücretlerini bir NEW MIN HEAP içinde tut.",
+        "Her işin ücretini INSERT et. IF planlanan iş sayısı artık bu son tarihe kadarki gün sayısından fazlaysa (SIZE GREATER THAN son tarih), en az ödeyeni atmak için TAKE TOP yap.",
+        "Sonda öncelik kuyruğunda kalanları topla. Erken alınan bir iş, daha iyisi için yine de bırakılabilir."
+      ]
+    },
+    "bricks_ladders": {
+      "title": "Tuğlalar ve Merdivenler",
+      "story": "Bir sıra binanın üzerinde, 0. binadan başlayarak çatıdan çatıya yürüyorsun. Aşağı inmek ya da aynı yükseklikte kalmak bedava. Yukarı çıkmak ya bir merdiven ya da yükseklik farkı kadar tuğla ister. Ne kadar uzağa gidebilirsin? Ulaştığın son binanın sırasını döndür.",
+      "hints": [
+        "Merdivenleri en büyük tırmanışlara saklamak en iyisi, ama hangilerinin en büyük olduğunu ancak sonra bilirsin. Şimdiye kadar merdiven kullanan tırmanışları bir NEW MIN HEAP içinde tut.",
+        "Her tırmanışı INSERT et. IF tırmanış sayısı artık merdiven sayısından fazlaysa, bunların en küçüğü merdiven yerine tuğla kullanmalı: onu TAKE TOP ile al ve o kadar tuğlayı düş.",
+        "IF tuğlalar 0'ın altına inerse bir sonraki binaya ulaşamazsın: bulunduğun yeri RETURN et."
+      ]
+    },
+    "print_shop": {
+      "title": "Baskı Dükkânı",
+      "story": "Baskı işleri, dakikada bir sayfa basan tek yazıcılı bir dükkâna geliyor. i. iş arrive[i]. dakikada gelir ve pages[i] sayfadır; işler geliş sırasına göre listelidir. Yazıcı her boşaldığında bekleyen işlerden sayfası en az olanı, eşitlikte listede önce geleni başlatır; bekleyen yoksa bir sonraki işi bekler. İşler hangi sırayla basılır? Öncelik kuyruğu yalnızca sayı tutar; o yüzden sayfa × 1000 + işin numarasını koy: en küçüğü, sayfası en az olan iştir, eşitlikte numarası küçük olan.",
+      "hints": [
+        "Zamanı tut. Basılmamış iş varken (WHILE): önce şimdiye kadar gelmiş her işi INSERT et (sayfa TIMES 1000 PLUS numarası).",
+        "IF bekleyen yoksa (IS EMPTY) zamanı bir sonraki işin gelişine atlat. ELSE TAKE TOP yap: işin numarası bunun REMAINDER 1000'idir.",
+        "İşi sıraya APPEND et ve zamanı sayfası kadar ilerlet."
+      ]
+    },
+    "factory_codes": {
+      "title": "Fabrika Kodları",
+      "story": "Bir fabrika, 2, 3 ve 5'ten başka asal çarpanı olmayan kodlar basıyor: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 ve böyle devam eder (7 ve 14 atlanır). n. kod nedir? n 1500'e kadar çıkabilir ve kodlar yüz milyonları bulur; her sayıyı sırayla denemek çok uzun sürer. 1'den sonraki her kod, daha küçük bir kodun 2, 3 ya da 5 katıdır.",
+      "hints": [
+        "İçinde 1 olan bir NEW MIN HEAP ile başla. n kez TAKE TOP yap: alınan n. sayı cevaptır.",
+        "Her x kodunu aldığında x TIMES 2, x TIMES 3 ve x TIMES 5'i INSERT et: bunlar da koddur ve daha büyüktür.",
+        "Aynı kod iki kez üretilebilir (6, hem 2 × 3 hem 3 × 2). Konmuş kodlar için bir NEW SET tut ve bir kodu yalnızca IF küme onu NOT HAS ise INSERT et."
+      ]
+    },
+    "fuel_stops": {
+      "title": "Yakıt Molaları",
+      "story": "Bir araba target kilometre gitmeli ve fuel litre yakıtla başlıyor; kilometrede bir litre yakar. Benzin istasyonları at[i]. kilometrelerde duruyor (sıralı) ve birinde durmak gives[i] litre ekliyor. Varmak için en az kaç mola gerekir? Varamıyorsa cevap -1'dir. Nerede duracağına ancak yakıt bitince karar verirsin: o zamana kadar geçtiğin her istasyonu bilirsin.",
+      "hints": [
+        "Yakıtın yettiği kadar sür ve geçtiğin her istasyonun yakıtını bir NEW MAX HEAP'e INSERT et.",
+        "Hedefe henüz yetişemiyorsan geçtiğin en iyi istasyonda dur: TAKE TOP en çok yakıtı ekler. Molayı say.",
+        "Yakıta ihtiyacın varken IF öncelik kuyruğu IS EMPTY ise hiçbir istasyon yardım edemez: RETURN -1."
+      ]
+    },
+    "cheapest_crossing": {
+      "title": "En Ucuz Geçiş",
+      "story": "Bir tarla karelerden oluşan bir ızgara; her karenin 1'den 9'a kadar bir geçiş ücreti var. Sol üst kareden sağ alt kareye, her adımda yukarı, aşağı, sola ya da sağa bir kare giderek yürü; üzerinde durduğun her kare, ilki ve sonuncusu da, ücretini alır. En ucuz yürüyüş ne kadar tutar? Pahalı karelerin etrafından dolaşmak için yukarı ya da sola da gidebilir. r, c karesinin numarası r × cols + c'dir ve öncelik kuyruğu tek sayı tutar; o yüzden maliyet × 1000 + kare koy.",
+      "hints": [
+        "İlk kareyle bir NEW MIN HEAP başlat: ücreti × 1000 + 0. TAKE TOP her zaman şimdiye kadar bulunan en ucuz yürüyüşü verir: maliyeti sayı FLOOR DIVIDE 1000, karesi ise REMAINDER'dır.",
+        "Her kare için bir tane olmak üzere 0'lardan oluşan bir done listesi tut. Bir kare öncelik kuyruğundan ilk kez çıktığında maliyeti en ucuzdur: done'ı SET ELEMENT ile 1 yap. IF son kareyse maliyeti RETURN et.",
+        "Bir kareden dört adımı dene (1, -1, 0, 0 tutan dr ve dc listeleri işe yarar): tarlanın içindeki ve done olmayan her komşu için (maliyet PLUS ücreti) × 1000 PLUS numarasını INSERT et. Bir kare birkaç kez girebilir; yalnızca ilk çıkışı sayılır."
+      ]
     }
   }
 }

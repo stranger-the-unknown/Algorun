@@ -1,0 +1,90 @@
+{
+  "id": "halving_piles",
+  "version": 1,
+  "title": "Halving Piles",
+  "world": "world_09",
+  "chapter": "repeat_on_largest",
+  "tier": 2,
+  "mode": "build",
+  "concepts": ["heap"],
+  "prerequisites": [],
+  "story": "There are piles of stones. Each turn, take the biggest pile and remove half of it, rounded down: a pile of 9 becomes 5. After k turns, how many stones are left in all? The biggest pile may be one you halved before.",
+  "io": {
+    "inputs": [
+      {"name": "piles", "type": "array<num>"},
+      {"name": "k", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 200},
+    "notes": ["1 to 200 piles of 1 to 10000 stones.", "k is 0 to 500."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.floor_div", "arith.mod", "arith.sub", "arr.get", "arr.len", "arr.set", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "logic.not", "new.max_heap", "new.min_heap", "var.get", "var.set"],
+    "maxBlocks": 53
+  },
+  "limits": {"maxOps": 16250, "maxDepth": 32, "maxAlloc": 450},
+  "hints": ["Keep the piles in a NEW MAX HEAP: TOP is always the biggest pile.", "Each turn: TAKE TOP the biggest, then INSERT what is left of it: the pile MINUS (the pile FLOOR DIVIDE 2).", "At the end, TAKE TOP every pile WHILE the heap is NOT EMPTY and add them up."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"piles": [10], "k": 2},
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {"piles": [9, 4], "k": 1},
+        "out": 9
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"piles": [4, 9], "k": 1},
+        "out": 9
+      },
+      {
+        "id": "h02",
+        "in": {"piles": [5, 4, 9], "k": 2},
+        "out": 12
+      },
+      {
+        "id": "h03",
+        "in": {"piles": [7, 7], "k": 0},
+        "out": 14
+      },
+      {
+        "id": "h04",
+        "in": {"piles": [1, 1], "k": 5},
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {"piles": [100, 3, 60], "k": 4},
+        "out": 43
+      },
+      {
+        "id": "h06",
+        "in": {
+          "piles": [4834, 6683, 2956, 8418, 4595, 7445, 3611, 150, 630, 1873, 5453, 5117, 8216, 5142, 811, 8275, 3839, 8728, 6490, 6452, 760, 2921, 9078, 2777, 713, 185, 608, 1658, 3361, 5339, 550, 1155, 3305, 477, 4701, 8782, 3057, 8246, 2419, 4713, 7884, 9388, 2010, 5390, 3766, 9418, 6460, 8028, 6761, 4906, 2153, 1105, 7438, 8113, 3600, 8947, 9006, 1869, 4833, 1925, 5192, 3341, 8007, 9949, 3065, 5316, 170, 7954, 6133, 9821, 3774, 6138, 6413, 7408, 8616, 2121, 9403, 8469, 9878, 1561, 3894, 4715, 2497, 2378, 3705, 675, 9338, 4406, 1744, 2268, 3218, 6073, 1779, 9335, 3931, 1799, 7571, 8132, 7559, 6881, 3775, 1932, 1654, 9161, 2873, 2233, 820, 2819, 4996, 2447, 1811, 3637, 4500, 7093, 5394, 1721, 5414, 3746, 3597, 1447, 799, 8294, 3998, 7708, 6605, 442, 6837, 3975, 8287, 8571, 2218, 8687, 1411, 1241, 9190, 1442, 6133, 9090, 9006, 3363, 8037, 5694, 1140, 8831, 7044, 3836, 167, 515, 9684, 375, 6471, 8242, 2097, 9609, 4603, 5592, 358, 8495, 3559, 7518, 9256, 605, 9206, 7419, 4728, 3561, 5336, 4221, 7943, 4100, 4445, 3974, 3836, 8446, 9288, 184, 2767, 2322, 6704, 9636, 4087, 2437, 5971, 7694, 3914, 2897, 3273, 7411, 7608, 1076, 5195, 7581, 1717, 8104, 1041, 2346, 5228, 1643, 8468, 7097],
+          "k": 500
+        },
+        "out": 133572
+      }
+    ]
+  },
+  "edgeCases": ["the same pile twice", "k of 0", "a pile of 1"],
+  "variables": {
+    "pool": [
+      {"name": "big", "type": "heap<num>"},
+      {"name": "x", "type": "num"},
+      {"name": "i", "type": "num"},
+      {"name": "total", "type": "num"},
+      {"name": "j", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "repeat_on_largest"}
+}

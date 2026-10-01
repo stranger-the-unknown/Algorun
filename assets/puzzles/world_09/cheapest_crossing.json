@@ -1,0 +1,167 @@
+{
+  "id": "cheapest_crossing",
+  "version": 1,
+  "title": "Cheapest Crossing",
+  "world": "world_09",
+  "chapter": "dijkstra_on_grid_encoded",
+  "tier": 5,
+  "mode": "build",
+  "concepts": ["heap", "graph"],
+  "prerequisites": [],
+  "story": "A field is a grid of squares, each with a toll from 1 to 9. Walk from the top-left square to the bottom-right one, a step at a time up, down, left or right; every square you stand on, the first and last too, costs its toll. What is the cheapest walk? It may go up or left to get round expensive squares. Square r, c is number r × cols + c, and a heap holds one number, so put in cost × 1000 + square.",
+  "io": {
+    "inputs": [
+      {"name": "grid", "type": "array<array<num>>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 20},
+    "notes": ["1 to 20 rows and 1 to 20 columns; every row is the same length.", "Tolls are 1 to 9."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.floor_div", "arith.min", "arith.mod", "arith.mul", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.lt", "ctrl.else", "ctrl.for_range", "ctrl.if", "ctrl.return", "ctrl.while", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "logic.and", "logic.not", "new.array", "new.max_heap", "new.min_heap", "var.get", "var.set"],
+    "maxBlocks": 256
+  },
+  "limits": {"maxOps": 200800, "maxDepth": 32, "maxAlloc": 1000},
+  "hints": ["Start a NEW MIN HEAP with the first square: its toll × 1000 + 0. TAKE TOP always gives the cheapest walk found so far: its cost is the number FLOOR DIVIDE 1000, its square the REMAINDER.", "Keep a list done of 0s, one per square. The first time a square comes out of the heap, its cost is the cheapest: SET ELEMENT done to 1. IF it is the last square, RETURN the cost.", "From a square, try the four steps (two lists dr and dc of 1, -1, 0, 0 help): for each neighbour inside the field that is not done, INSERT (cost PLUS its toll) × 1000 PLUS its number. A square may go in several times; only the first one out counts."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "grid": [
+            [1, 3, 1],
+            [1, 5, 1],
+            [4, 2, 1]
+          ]
+        },
+        "out": 7
+      },
+      {
+        "id": "v2",
+        "in": {
+          "grid": [
+            [1, 2],
+            [1, 1]
+          ]
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "grid": [
+            [1, 1, 1, 1, 1],
+            [9, 9, 9, 9, 1],
+            [1, 1, 1, 1, 1],
+            [1, 9, 9, 9, 9],
+            [1, 1, 1, 1, 1]
+          ]
+        },
+        "out": 17
+      },
+      {
+        "id": "h02",
+        "in": {
+          "grid": [
+            [4]
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h03",
+        "in": {
+          "grid": [
+            [2, 3, 1, 5]
+          ]
+        },
+        "out": 11
+      },
+      {
+        "id": "h04",
+        "in": {
+          "grid": [
+            [1, 9, 1, 1, 1],
+            [1, 9, 1, 9, 1],
+            [1, 1, 1, 9, 1]
+          ]
+        },
+        "out": 11
+      },
+      {
+        "id": "h05",
+        "in": {
+          "grid": [
+            [4, 8, 6, 2, 9, 5, 2, 6, 8, 6, 7, 8, 7, 8, 3, 3, 4, 1, 4, 5],
+            [7, 7, 4, 3, 1, 3, 7, 2, 8, 4, 6, 9, 2, 5, 5, 4, 1, 8, 6, 6],
+            [7, 7, 2, 6, 4, 5, 9, 2, 2, 3, 3, 6, 8, 8, 2, 1, 2, 5, 7, 3],
+            [6, 9, 8, 5, 4, 7, 9, 2, 4, 7, 5, 3, 2, 7, 8, 2, 8, 8, 2, 2],
+            [7, 7, 6, 9, 4, 9, 5, 9, 9, 7, 6, 3, 4, 6, 8, 3, 7, 4, 4, 1],
+            [3, 1, 8, 3, 8, 6, 3, 6, 6, 9, 4, 5, 4, 3, 5, 7, 1, 2, 4, 2],
+            [1, 8, 4, 4, 6, 2, 2, 6, 1, 6, 5, 5, 7, 2, 4, 5, 2, 9, 4, 5],
+            [3, 9, 2, 6, 2, 3, 1, 3, 3, 4, 7, 8, 4, 8, 8, 1, 2, 9, 9, 2],
+            [6, 4, 1, 7, 4, 5, 9, 2, 8, 7, 4, 4, 8, 4, 2, 7, 1, 8, 1, 2],
+            [7, 7, 5, 5, 5, 4, 4, 4, 3, 6, 4, 7, 4, 2, 9, 6, 5, 4, 1, 3],
+            [8, 6, 8, 9, 7, 5, 2, 4, 9, 3, 3, 4, 3, 1, 1, 3, 9, 5, 2, 7],
+            [6, 9, 1, 1, 7, 6, 2, 5, 3, 9, 1, 4, 1, 3, 8, 2, 7, 9, 5, 9],
+            [1, 9, 2, 8, 7, 6, 1, 3, 5, 4, 5, 9, 8, 9, 1, 8, 7, 9, 9, 4],
+            [3, 3, 6, 9, 6, 8, 2, 3, 7, 4, 2, 7, 8, 4, 8, 1, 3, 9, 2, 1],
+            [9, 3, 4, 1, 6, 1, 3, 3, 2, 9, 4, 5, 4, 3, 4, 5, 9, 5, 4, 2],
+            [6, 1, 4, 6, 3, 2, 6, 9, 9, 4, 1, 2, 6, 7, 8, 4, 3, 3, 4, 1],
+            [8, 7, 8, 5, 4, 7, 3, 7, 8, 1, 4, 3, 1, 9, 2, 4, 6, 7, 5, 7],
+            [4, 4, 5, 5, 8, 2, 7, 8, 1, 3, 8, 4, 8, 5, 6, 2, 7, 8, 2, 2],
+            [1, 8, 4, 1, 9, 8, 3, 3, 3, 5, 6, 6, 8, 4, 1, 6, 6, 9, 8, 2],
+            [6, 8, 6, 3, 4, 8, 4, 8, 6, 9, 8, 5, 2, 2, 6, 7, 4, 2, 3, 9]
+          ]
+        },
+        "out": 134
+      },
+      {
+        "id": "h06",
+        "in": {
+          "grid": [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1]
+          ]
+        },
+        "out": 39
+      }
+    ]
+  },
+  "edgeCases": ["a cheap way round that goes up or left", "a single square", "one row"],
+  "variables": {
+    "pool": [
+      {"name": "rows", "type": "num"},
+      {"name": "cols", "type": "num"},
+      {"name": "done", "type": "array<num>"},
+      {"name": "todo", "type": "heap<num>"},
+      {"name": "cost", "type": "num"},
+      {"name": "cell", "type": "num"},
+      {"name": "r", "type": "num"},
+      {"name": "c", "type": "num"},
+      {"name": "i", "type": "num"},
+      {"name": "dr", "type": "array<num>"},
+      {"name": "dc", "type": "array<num>"},
+      {"name": "nr", "type": "num"},
+      {"name": "nc", "type": "num"},
+      {"name": "best", "type": "array<num>"},
+      {"name": "from", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "dijkstra_on_grid_encoded"}
+}

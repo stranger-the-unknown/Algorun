@@ -38,7 +38,7 @@ void main() {
   const repo = AssetPuzzleRepository();
 
   test('the five MS8 puzzles stay in their worlds, and no probe is listed', () async {
-    // Since MS15 the worlds list 142 puzzles (campaign_test.dart); the five
+    // Since MS15 the worlds list 149 puzzles (campaign_test.dart); the five
     // from MS8 keep their places.
     final worlds = await repo.loadWorlds();
     for (final MapEntry(key: world, value: id) in _real.entries) {

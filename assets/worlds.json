@@ -204,13 +204,20 @@
       ],
       "puzzles": [
         "top_scores",
+        "halving_piles",
         "ticket_order",
         "rope_joining",
         "last_stone",
         "seat_desk",
         "meeting_rooms",
         "podium_place",
-        "running_median"
+        "deadline_jobs",
+        "bricks_ladders",
+        "print_shop",
+        "factory_codes",
+        "running_median",
+        "fuel_stops",
+        "cheapest_crossing"
       ]
     },
     {

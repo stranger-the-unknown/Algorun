@@ -71,7 +71,7 @@ void main() {
     await _launch(tester, store);
     expect(find.text('ENTER'), findsOneWidget);
     expect(find.text('Block reference'), findsOneWidget);
-    expect(find.text('0 of 142 puzzles solved'), findsOneWidget);
+    expect(find.text('0 of 149 puzzles solved'), findsOneWidget);
 
     await _tap(tester, find.text('Settings'));
     expect(find.text('LANGUAGE'), findsOneWidget);
@@ -93,7 +93,7 @@ void main() {
     await _tap(tester, find.byType(BackButton));
     expect(find.text('BAŞLA'), findsOneWidget);
     expect(find.text('Blok Rehberi'), findsOneWidget);
-    expect(find.text('142 bulmacadan 0 tanesi çözüldü'), findsOneWidget);
+    expect(find.text('149 bulmacadan 0 tanesi çözüldü'), findsOneWidget);
 
     await _tap(tester, find.text('BAŞLA'));
     expect(find.text('Dünyalar'), findsOneWidget);

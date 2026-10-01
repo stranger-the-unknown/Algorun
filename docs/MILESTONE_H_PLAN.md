@@ -48,5 +48,5 @@ into `main` only when complete and green. If it is not done by the freeze,
 - [x] 2 app — Block Reference (7 blocks + the Heap concept), EN/TR terms and messages (Flutter 487)
 - [x] 3 content tooling — capability `heap` supported, structure `heap`, generator helpers, `oracles/heaps.dart`
 - [x] 4 world 09 batch 1 — top scores, ticket order, rope joining, last stone, seat desk, meeting rooms, podium place, running median (142 puzzles; Flutter 503)
-- [ ] 5 world 09 batch 2
+- [x] 5 world 09 batch 2 — halving piles, deadline jobs, bricks and ladders, print shop, factory codes, fuel stops, cheapest crossing (149 puzzles; Flutter 517)
 - [ ] 6 docs, checks, merge

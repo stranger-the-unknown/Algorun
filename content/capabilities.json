@@ -22,7 +22,7 @@
     "graph_dfs_iterative": {"status": "supported", "note": "Depth-first with an explicit stack."},
     "graph_connectivity": {"status": "supported", "note": "Components, two-colouring, reachability."},
     "topological_order": {"status": "supported", "note": "In-degree counts in a list and a queue (Kahn)."},
-    "weighted_shortest_path": {"status": "blocked", "note": "Graphs carry no edge weights and there is no priority queue."},
+    "weighted_shortest_path": {"status": "supported", "note": "Graphs carry no edge weights, so costs live in a grid; a heap of numbers holds cost and square as one number (H)."},
     "greedy": {"status": "supported", "note": "Single passes with running state."},
     "dp_iterative": {"status": "supported", "note": "Tables in lists, filled in order."},
     "dp_grid": {"status": "supported", "note": "Lists of lists as input; rows read with GET ELEMENT twice."},
