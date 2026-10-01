@@ -262,6 +262,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get variables => 'DEĞİŞKENLER';
 
   @override
+  String insideFunction(String name) {
+    return '$name İÇİNDE';
+  }
+
+  @override
   String get variablesNote =>
       'Bu adları bulmaca sağlar; önce bir yuvaya, sonra bir ada dokun.';
 

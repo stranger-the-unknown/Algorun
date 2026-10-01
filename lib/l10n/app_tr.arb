@@ -71,6 +71,7 @@
   "hintsIntro": "İpuçları fikirden yönteme doğru, birer birer gelir. Sayılırlar ama hiçbir şeye mal olmazlar.",
   "givens": "VERİLENLER",
   "variables": "DEĞİŞKENLER",
+  "insideFunction": "{name} İÇİNDE",
   "variablesNote": "Bu adları bulmaca sağlar; önce bir yuvaya, sonra bir ada dokun.",
   "program": "PROGRAM",
   "tapSlotThenName": "Önce bir değer yuvasına, sonra bir ada dokun.",

@@ -38,7 +38,8 @@ final class GivensBar extends StatelessWidget {
     final l = context.l10n;
     final givens = controller.givens;
     final pool = controller.poolVariables;
-    if (givens.isEmpty && pool.isEmpty) return const SizedBox.shrink();
+    final functions = controller.puzzle.functions;
+    if (givens.isEmpty && pool.isEmpty && functions.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: Column(
@@ -55,6 +56,14 @@ final class GivensBar extends StatelessWidget {
             const SizedBox(height: 8),
             _Names(names: pool, onTap: _place),
           ],
+          // L2: each function's parameters, usable inside that FUNCTION.
+          for (final f in functions)
+            if (f.params.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(l.insideFunction(f.name), style: AppText.label(context)),
+              const SizedBox(height: 8),
+              _Names(names: [for (final p in f.params) IoBinding(name: p.name, type: p.type)], onTap: _place),
+            ],
         ],
       ),
     );

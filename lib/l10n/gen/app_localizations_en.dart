@@ -261,6 +261,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get variables => 'VARIABLES';
 
   @override
+  String insideFunction(String name) {
+    return 'INSIDE $name';
+  }
+
+  @override
   String get variablesNote =>
       'The puzzle provides these names; tap a slot, then a name.';
 

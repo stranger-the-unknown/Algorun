@@ -524,6 +524,12 @@ abstract class AppLocalizations {
   /// **'VARIABLES'**
   String get variables;
 
+  /// No description provided for @insideFunction.
+  ///
+  /// In en, this message translates to:
+  /// **'INSIDE {name}'**
+  String insideFunction(String name);
+
   /// No description provided for @variablesNote.
   ///
   /// In en, this message translates to:

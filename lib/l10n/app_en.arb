@@ -217,6 +217,14 @@
   "hintsIntro": "Hints go from the idea to the approach, one at a time. They are counted, never charged.",
   "givens": "GIVENS",
   "variables": "VARIABLES",
+  "insideFunction": "INSIDE {name}",
+  "@insideFunction": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "variablesNote": "The puzzle provides these names; tap a slot, then a name.",
   "program": "PROGRAM",
   "tapSlotThenName": "Tap a value slot, then a name.",

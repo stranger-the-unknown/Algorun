@@ -148,12 +148,26 @@ final class EditorController extends ChangeNotifier {
       ];
 
   List<Placement> placementsFor(PortRef hole, {int? index}) {
-    return GraphTyping.compatiblePlacements(
+    final all = GraphTyping.compatiblePlacements(
       graph,
       to: hole,
       allow: paletteIds,
       index: index,
     );
+    // Inside a FUNCTION only its own values are known (L2): a given that is
+    // not one of its parameters is not offered there.
+    final owner = graph.blocks[hole.blockId];
+    final fn = owner?.catalogId == BlockIds.fnDef ? owner : FunctionTable.enclosing(graph, hole.blockId);
+    final sig = fn == null ? null : FunctionSignature.of(fn);
+    if (sig == null) return all;
+    final unseen = {
+      for (final input in puzzle.io.inputs)
+        if (!sig.params.any((p) => p.name == input.name)) input.name,
+    };
+    return [
+      for (final p in all)
+        if (p.catalogId != BlockIds.varGet || !unseen.contains(p.literals['name'])) p,
+    ];
   }
 
   void showFlash(EditorNotice notice) {
