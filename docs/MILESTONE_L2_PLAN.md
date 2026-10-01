@@ -62,6 +62,12 @@ tree puzzles. Heaps stay blocked (a separate value type).
 
 ## Status
 
-- 2026-09-30: branch and tag created, this plan written. Nothing
-  implemented yet. Next: step 1's open questions (mutual recursion, how the
-  editor shows several FUNCTION blocks), then step 2.
+- 2026-09-30: branch and tag created, this plan written.
+- 2026-10-01: steps 1–9 done on the branch — engine (`85a79e8`), editor and
+  pipeline (`dbc1e74`), world 12 with six puzzles (`1d8c24a`), editor polish
+  (`a99ccb0`), docs; merged into `main`. Decisions taken in step 1: the
+  puzzle declares each function (name, at most 3 typed parameters, return
+  type) and the player writes the body; FUNCTION blocks sit at the top of the
+  program; one CALL block per arity; a function sees only its parameters and
+  its own variables; mutual recursion works (any FUNCTION may CALL any
+  other). Details: [`MILESTONE_L2.md`](MILESTONE_L2.md).
