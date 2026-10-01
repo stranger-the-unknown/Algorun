@@ -74,8 +74,9 @@ never read translations.
   honest.
 - **No unsupported language features.** Only blocks in the catalog, only
   families and modes the capability audit marks supported or partial. No
-  recursion, player-defined functions, heaps, weighted graphs, text
-  operations or starter programs until the language or product has them. A
+  weighted graph edges, text operations, pairs or starter programs until the
+  language or product has them (recursion and player functions came with
+  L2, heaps of numbers with H). A
   family the language cannot express is a gap to record, not a problem to
   weaken until it fits.
 - **No redundant variants.** A new story, new names, new number ranges or

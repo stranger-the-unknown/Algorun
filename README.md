@@ -4,7 +4,7 @@ Android-first algorithm puzzle game. Construct the algorithm with typed blocks. 
 
 Engine is pure Dart (`packages/algorun_engine`). Content validation is a separate package (`packages/algorun_content`) and is not shipped as app UI logic.
 
-**Status:** L2 is in: players write functions with blocks and CALL them, recursion included, and world 12 (Recursion & Backtracking) is full with 15 puzzles — 134 campaign puzzles in all. Every listed puzzle passes the seven-level content pipeline with an independent oracle; the game plays in English or Turkish. See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing, and [`docs/MILESTONE_L2.md`](docs/MILESTONE_L2.md) for the latest milestone.
+**Status:** H is in: heaps of numbers (NEW MIN HEAP / NEW MAX HEAP, INSERT, TAKE TOP…) and world 09 (Heaps) with 15 puzzles; before it, L2 brought player functions, recursion and world 12 (Recursion & Backtracking, 15 puzzles) — 149 campaign puzzles in all. Every listed puzzle passes the seven-level content pipeline with an independent oracle; the game plays in English or Turkish. See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing, and [`docs/MILESTONE_H.md`](docs/MILESTONE_H.md) for the latest milestone.
 
 Validate content before committing it:
 

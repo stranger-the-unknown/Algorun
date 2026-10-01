@@ -3,7 +3,7 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current state: L2 — player functions and recursion — is in (see MILESTONE_L2.md): world 12 Recursion & Backtracking is full with 15 puzzles; 134 campaign puzzles. MS15 added 34 puzzles before it (Foundations 2 → 12, +24 across ten worlds). The version before L2 is tagged `v0.2-ms15`.**
+**Current state: H — heaps — is in (see MILESTONE_H.md): heaps of numbers (NEW MIN HEAP / NEW MAX HEAP, INSERT, TAKE TOP, TOP, SIZE, IS EMPTY) and world 09 Heaps with 15 puzzles; 149 campaign puzzles. Before it, L2 (MILESTONE_L2.md) brought player functions, recursion and world 12 (15 puzzles). Versions before: tag `v0.3-l2` (before H), `v0.2-ms15` (before L2).**
 **Why the corpus grows before the playtest (user decision, 2026-09-30):** the user's subscription ends around 2026-10-10; they want the game developed as far as possible now, and will playtest afterwards and bring notes to the next development month. Plan: MS15 content (Foundations, then thin worlds) → recursion and player functions only if content is done by 2026-10-05 → freeze on 2026-10-09 / 10 (tests, APK, web build, a test checklist in `bekleyen-isler.md`). See [`MILESTONE_15.md`](MILESTONE_15.md).
 
 Do not implement the next milestone from this file unless the user explicitly asks.
@@ -37,8 +37,8 @@ The player constructs algorithms with Scratch-style typed visual blocks. No
 syntax. No eval of generated Dart/JS/Kotlin. The game ships 119 campaign puzzles
 in 12 worlds (five from MS8, 33 from MS12, 47 from MS14), tiers 1–5. The
 corpus stops here for a playtest; it is not on the way to 300 until that
-playtest says so. Since L2 world 12 (recursion) has 15 puzzles; world 09
-(heaps) stays empty until the language has heaps.
+playtest says so. Since L2 world 12 (recursion) has 15 puzzles; since H
+world 09 (heaps) has 15.
 
 There is **no TypeScript / React / web product codebase**. The web version
 (W1) is the same Dart app built with Flutter web, not a second implementation.
@@ -102,7 +102,7 @@ algorun/                          Flutter app (repository root)
     state/progress_providers.dart progressStoreProvider, campaignProvider, progressProvider (autosave), campaignViewProvider
     state/progress_text.dart      player wording for locks and statuses
   assets/                         bundled with the app
-    worlds.json                   14 worlds, 119 puzzles; 09 (heaps) and 12 (backtracking) have none
+    worlds.json                   14 worlds, 149 puzzles (09 heaps and 12 recursion full since H / L2)
     l10n/content_tr.json          U1: Turkish world titles, concept words, puzzle titles / stories / hints
     puzzles/world_01/             warm_readings, highest_tide + ms1_contract_probe, ms3_editor_probe, l1_list_probe, l1_tree_probe, ms13_stress_probe (unlisted dev probes)
     puzzles/world_02 … world_14/  the campaign puzzles (list: "Content backlog and coverage")
@@ -671,12 +671,12 @@ puzzle app bar and the piece picker. Details:
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **371 passed** (L2, world 12 batch 2) |
+| `packages/algorun_engine` `dart test` | **381 passed** (H) |
 | `packages/algorun_content` `dart analyze` | no issues |
 | `packages/algorun_content` `dart test` | **86 passed** (MS15) |
-| Content validator (assets + worlds + references) | `PIPELINE 134 of 134 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 139 puzzle(s), 5 warning(s)` (L2, world 12 full) |
+| Content validator (assets + worlds + references) | `PIPELINE 149 of 149 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 154 puzzle(s), 5 warning(s)` (H) |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **486 passed** (L2, world 12 full; 260 at MS14 review time of this table) |
+| Flutter `test` | **517 passed** (H; 260 at MS14 review time of this table) |
 | `flutter build apk --debug` | built |
 | Emulator checklist (18 steps, MILESTONE_13.md) | passed on Android 15 emulator, 360 / 390 / 412 dp, landscape (MS13) |
 | U1 emulator pass (MILESTONE_U1.md) | English and Turkish at 360 × 800 dp: home, reference, settings, worlds, puzzle, picker, pad, results |
@@ -739,7 +739,7 @@ test waits on it forever.
 
 ### Other
 
-- Graph nodes carry no values (the runtime graph has none). `heap` / `pair` have no fixture form, runtime values or blocks.
+- Graph nodes carry no values (the runtime graph has none). `pair` has no fixture form, runtime values or blocks; `heap` (H) has values and blocks but no fixture form, so no puzzle takes or returns one.
 - A graph whose program marked a node it does not have cannot be written as canonical JSON; the results screen falls back to the display form.
 - `constraints.n` is recorded but not checked against fixture sizes.
 - `hintsUsed` is 0 until hints ship (MS9). The suite runs every case even after a failure.
@@ -803,12 +803,13 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | U1 | English / Turkish, block reference, number entry, no CREATE VARIABLE | complete |
 | 14 | Content batch 2: 47 puzzles (85 in the campaign) | complete |
 | 15 | Content batch 3: Foundations 2 → 12, +24 across ten worlds (119 in the campaign) | complete |
-| **L2** | Player functions and recursion; world 12 Recursion & Backtracking with 15 puzzles (134 in the campaign) | **complete** |
-| later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content; do not start until playtest |
+| L2 | Player functions and recursion; world 12 Recursion & Backtracking with 15 puzzles (134 in the campaign) | complete |
+| **H** | Heaps of numbers; world 09 Heaps with 15 puzzles (149 in the campaign) | **complete** |
+| later | Language: starter programs for complete / repair modes, pairs, text | planned, each unblocks content; do not start until playtest |
 
-## Content backlog and coverage (MS15 batch 3, in progress)
+## Content backlog and coverage (after H)
 
-Accepted: **119 campaign puzzles** (+ 5 unlisted probes) against a planning
+Accepted: **149 campaign puzzles** (+ 5 unlisted probes) against a planning
 target of ~300 (`content/coverage_targets.json`). That target is paused.
 Source of truth: `content/coverage.json`.
 
@@ -822,7 +823,7 @@ Source of truth: `content/coverage.json`.
 | 06 Stack & Queue | 10 / 25 | counter sum, josephus line, ticket minutes, stack sorted; MS15: plate minimum, snowball clash |
 | 07 Linked Lists | 11 / 20 | tail lamp, cold cars, named car, end gap, rising links; MS15: from the back, no repeats |
 | 08 Trees | 12 / 30 | left vine, right marks, lone tree, node census, leaf census, lowest leaf; MS15: mirror tree, catalogue range |
-| 09 Heaps | 0 / 15 | blocked by the language (heap) |
+| 09 Heaps | 15 / 15 | H: top scores, halving piles, ticket order, rope joining, last stone, seat desk, meeting rooms, podium place, deadline jobs, bricks and ladders, print shop, factory codes, running median, fuel stops, cheapest crossing |
 | 10 Graphs | 15 / 30 | platform doors, direct hop, silent stops, scout reach, scout last, biggest patch, source radius, last layer; MS15: ring road, ride limit |
 | 11 Greedy | 8 / 20 | cookie gifts, dock overlap, leap reach; MS15: every rise, one room, medals in a row |
 | 12 Recursion & Backtracking | 15 / 15 | L2: stack of coins, tree total, exact weight, even branches, change ways, watchtowers; batch 2: digit root, lucky picks, lantern rows, catalogue check, island size, power steps, rabbit months, maze paths, seating plan |
@@ -838,10 +839,10 @@ iterative DFS, grid DP, a queue simulation and a deque-style window, and new
 optimize / restricted / edge puzzles. Details and titles:
 [`MILESTONE_14.md`](MILESTONE_14.md).
 
-**Still blocked, and not faked:** heaps, recursion, player-defined functions,
-backtracking, weighted shortest paths, building new list or tree nodes,
-strings, built-in sorting, bit manipulation, pairs / tuples. Product modes
-that need a starter program stay blocked.
+**Still blocked, and not faked:** building new list or tree nodes, strings,
+built-in sorting, bit manipulation, pairs / tuples, edge weights on graphs
+(weighted shortest paths use a grid of costs since H). Product modes that
+need a starter program stay blocked.
 
 **Next content decision waits on playtest.** Do not add another batch, and do
 not start the language milestone, until the player has tried this one.
