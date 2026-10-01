@@ -280,7 +280,8 @@
         "power_steps",
         "rabbit_months",
         "watchtowers",
-        "maze_paths"
+        "maze_paths",
+        "seating_plan"
       ]
     },
     {

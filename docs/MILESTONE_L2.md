@@ -38,7 +38,7 @@ Oracles in `packages/algorun_content/lib/src/oracles/batch5.dart` (a fold,
 an explicit stack, heights per node, bit masks, a DP table, permutations).
 `maxDepth` is set per puzzle (32–80).
 
-### Second batch (2026-10-01): 6 → 14 of 15
+### Second batch and the finale (2026-10-01): 6 → 15 of 15
 
 | Puzzle | Tier | Function(s) | What it teaches | The trap (its reject) |
 |---|---|---|---|---|
@@ -50,10 +50,12 @@ an explicit stack, heights per node, bit masks, a DP table, permutations).
 | Power Steps | 4 (budget) | `power(b, e)` | halving the exponent, the half kept in a variable | one step per exponent; the half CALLed twice (both OPERATION LIMIT) |
 | Rabbit Months | 4 (budget) | `pairs(month, memo)` | memo in a map passed by reference | no memo (OPERATION LIMIT) |
 | Maze Paths | 5 | `walk(g, r, c)` | mark, try four ways, unmark | never clearing a square |
+| Seating Plan | 5 | `seat(table, last, used)` | orders of guests with a used list; a dead end is not a plan | a guest never stands up again |
 
 Oracles in `oracles/batch6.dart`: a closed form (digit root), bit masks,
 an off/on table, an in-order walk, BFS with a queue, `modPow`, iteration,
-and every simple path on an explicit stack.
+every simple path on an explicit stack, and a table over sets of guests
+(bit masks) for Seating Plan.
 
 Two engine fixes came out of this batch:
 
@@ -76,21 +78,23 @@ factorial with depth 6, tree height, depth limit, own variables per call and
 a shared list, every lowering error, a missing RETURN; +4 with the second
 batch: GET ELEMENT into LENGTH OF, RETURN out of nested loops, BREAK leaves
 only its own loop, BREAK outside a loop). Content **86**.
-Flutter **484**: `test/functions_editor_test.dart` (the FUNCTION on open,
+Flutter **486**: `test/functions_editor_test.dart` (the FUNCTION on open,
 not counted, not removable, kept by CLEAR PROGRAM; the picker inside it),
-the campaign regression test builds all fourteen world 12 references tap by
+the campaign regression test builds all fifteen world 12 references tap by
 tap (FUNCTION bodies included), runs, saves and restores them, and renders
-each at 360 × 800. Validator `PIPELINE 133 of 133 campaign puzzle(s)
-accepted` · `OK 138 puzzle(s), 5 warning(s)` (the five unlisted probes).
+each at 360 × 800. Validator `PIPELINE 134 of 134 campaign puzzle(s)
+accepted` · `OK 139 puzzle(s), 5 warning(s)` (the five unlisted probes).
 
 Checked by hand: in the browser at phone size (the brief, the FUNCTION
 block, a RETURN in its body, the picker's `CALL sum_from`, no givens
 inside) and on the Android emulator (Stack of Coins opens with its function;
-RUN on an empty program gives WRONG ANSWER, no crash).
+RUN on an empty program gives WRONG ANSWER, no crash). Seating Plan in the
+web build at 375 × 812: the brief, `FUNCTION seat (table, last, used)` on
+one line, the INSIDE seat row, and WRONG ANSWER with both visible cases.
 
 ## Not done
 
-- World 12 has 14 of its 15 planned puzzles; heaps (world 9) stay blocked.
+- World 12 is full (15 of 15); heaps (world 9) stay blocked.
 - Functions are declared by the puzzle; a player cannot add a function or
   change a signature.
 - The palette chip CALL places the first function of its arity when a

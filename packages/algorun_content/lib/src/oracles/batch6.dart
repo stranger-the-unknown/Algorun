@@ -5,7 +5,8 @@ import 'oracle.dart';
 
 // L2, world 12 second batch. The references recurse; these answers come
 // another way: a closed form, bit masks, iteration, an in-order walk, BFS
-// with a queue, modPow, and every path explored on a copy.
+// with a queue, modPow, every path explored on a copy, and a table over
+// sets of guests.
 
 // Digit Root — the closed form 1 + (n - 1) mod 9.
 Object? digitRoot(Map<String, Object?> input) {
@@ -165,6 +166,38 @@ Map<String, Object?> mazePathsSample(Random r) {
   };
 }
 
+// Seating Plan — orders counted over sets of seated guests (bit masks):
+// ways[mask][last] = orders of the guests in mask that end with last.
+Object? seatingPlan(Map<String, Object?> input) {
+  final clash = intRows(input['clash']);
+  final n = clash.length;
+  final ways = List.generate(1 << n, (_) => List.filled(n, 0));
+  for (var g = 0; g < n; g++) {
+    ways[1 << g][g] = 1;
+  }
+  for (var mask = 1; mask < 1 << n; mask++) {
+    for (var last = 0; last < n; last++) {
+      final here = ways[mask][last];
+      if (here == 0) continue;
+      for (var g = 0; g < n; g++) {
+        if (mask & (1 << g) == 0 && clash[last][g] == 0) ways[mask | (1 << g)][g] += here;
+      }
+    }
+  }
+  return ways[(1 << n) - 1].fold<int>(0, (a, b) => a + b);
+}
+
+Map<String, Object?> seatingPlanSample(Random r) {
+  final n = between(r, 1, 5);
+  final clash = List.generate(n, (_) => List.filled(n, 0));
+  for (var a = 0; a < n; a++) {
+    for (var b = a + 1; b < n; b++) {
+      if (r.nextInt(10) < 3) clash[a][b] = clash[b][a] = 1;
+    }
+  }
+  return {'clash': clash};
+}
+
 const batch6Oracles = {
   'digit_root': Oracle(id: 'digit_root', solve: digitRoot, sample: digitRootSample),
   'lucky_picks': Oracle(id: 'lucky_picks', solve: luckyPicks, sample: luckyPicksSample),
@@ -174,4 +207,5 @@ const batch6Oracles = {
   'power_steps': Oracle(id: 'power_steps', solve: powerSteps, sample: powerStepsSample),
   'rabbit_months': Oracle(id: 'rabbit_months', solve: rabbitMonths, sample: rabbitMonthsSample),
   'maze_paths': Oracle(id: 'maze_paths', solve: mazePaths, sample: mazePathsSample),
+  'seating_plan': Oracle(id: 'seating_plan', solve: seatingPlan, sample: seatingPlanSample),
 };

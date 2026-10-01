@@ -93,7 +93,7 @@ void main() {
         await _tap(tester, find.byType(BackButton));
         expect(find.text('CONTINUE'), findsOneWidget);
         expect(find.text('Last played: Highest Tide · Foundations'), findsOneWidget);
-        expect(find.text('1 of 133 puzzles solved'), findsOneWidget);
+        expect(find.text('1 of 134 puzzles solved'), findsOneWidget);
         expect(decodeSave(store.text!).save['warm_readings']!.completed, isTrue);
       });
     }

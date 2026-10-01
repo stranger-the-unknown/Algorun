@@ -591,7 +591,7 @@ void main() {
     test('every campaign puzzle is accepted at every level', () {
       expect(report.errors, isEmpty, reason: report.errors.join('\n'));
       final campaign = report.verdicts.where((v) => v.campaign).toList();
-      expect(campaign, hasLength(133));
+      expect(campaign, hasLength(134));
       expect(campaign.where((v) => !v.accepted), isEmpty);
     });
 

@@ -1247,6 +1247,15 @@
         "walk(g, r, c): dışarısı ya da duvar 0'dır; sağ alt kare 1 yürüyüştür. Değilse kareyi işaretle, dört komşu için walk'ları topla, sonra toplamı RETURN et.",
         "RETURN etmeden önce kareyi SET ELEMENT ile yeniden 1 yap: başka bir yürüyüş daha sonra oradan geçebilir. Bunu unutmak yürüyüş kaybettirir."
       ]
+    },
+    "seating_plan": {
+      "title": "Oturma Planı",
+      "story": "0'dan başlayarak numaralanmış misafirler bir sıraya, her biri bir sandalyeye oturuyor. Bazıları küs: a ve b misafirleri yan yana oturamıyorsa clash[a][b] 1'dir (o zaman clash[b][a] da 1'dir). Kaç farklı oturma sırası vardır? 0 ile 1'in küs olduğu üç misafirde yalnızca 0 2 1 ve 1 2 0 olur: 2 sıra. seat(table, last, used), last misafiri az önce oturmuşken hâlâ ayakta olan herkesi oturtmanın yollarını sayar; table, aktarılan küslük tablosudur ve used[g], oturmuş bir misafir için 1'dir.",
+      "hints": [
+        "Program her misafiri ilk oturan olarak dener: oturanlar listesindeki yerini SET ELEMENT ile 1 yapar, seat'i CALL ile çağırır, sonra yeniden 0 yapar.",
+        "seat: hâlâ ayakta olan her g misafiri için (FOR), IF table[last][g] 0 ise g'yi oturt (SET ELEMENT ile used[g] = 1), CALL seat(table, g, used) sonucunu sayıya ekle ve g'yi yeniden ayağa kaldır (SET ELEMENT ile used[g] = 0).",
+        "Giderken ayakta kalanları say: IF ayakta kimse yoksa herkes oturmuştur ve bu 1 sıradır. Sırası bittikten sonra oturmaya devam eden bir misafir, sonraki bütün sıralardan eksik kalır."
+      ]
     }
   }
 }

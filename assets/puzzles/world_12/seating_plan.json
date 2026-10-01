@@ -1,0 +1,216 @@
+{
+  "id": "seating_plan",
+  "version": 1,
+  "title": "Seating Plan",
+  "world": "world_12",
+  "chapter": "permutations_with_used_flags",
+  "tier": 5,
+  "mode": "build",
+  "concepts": ["backtracking"],
+  "prerequisites": [],
+  "story": "Guests numbered from 0 sit in a row, one chair each. Some of them have quarrelled: clash[a][b] is 1 when guests a and b must not sit side by side (and then clash[b][a] is 1 too). How many different seating orders are there? With three guests where 0 and 1 have quarrelled, only 0 2 1 and 1 2 0 work: 2 orders. seat(table, last, used) counts the ways to seat everyone still standing when guest last has just sat down; table is the clash table passed along, and used[g] is 1 for a guest already seated.",
+  "io": {
+    "inputs": [
+      {"name": "clash", "type": "array<array<num>>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 6},
+    "notes": ["There are 1 to 6 guests; clash has a row and a column for each.", "clash[a][a] is 0."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "ctrl.for_range", "ctrl.if", "ctrl.return", "fn.call3", "lit.num", "logic.and", "new.array", "var.get", "var.set"],
+    "maxBlocks": 132
+  },
+  "limits": {"maxOps": 324650, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["The program tries every guest as the first to sit: SET ELEMENT their place in a list of seated guests to 1, CALL seat, then set it back to 0.", "seat: FOR every guest g still standing, IF table[last][g] is 0, sit g down (SET ELEMENT used[g] to 1), add CALL seat(table, g, used) to the count, and stand g up again (SET ELEMENT used[g] to 0).", "Count the guests still standing as you go: IF nobody is standing, everyone is seated and that is 1 order. A guest who stays seated after their turn is missing from every later order."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "clash": [
+            [0, 1, 0],
+            [1, 0, 0],
+            [0, 0, 0]
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "clash": [
+            [0, 0, 1, 1],
+            [0, 0, 0, 0],
+            [1, 0, 0, 0],
+            [1, 0, 0, 0]
+          ]
+        },
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "clash": [
+            [0, 1, 0, 0],
+            [1, 0, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 0]
+          ]
+        },
+        "out": 8
+      },
+      {
+        "id": "h02",
+        "in": {
+          "clash": [
+            [0]
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "clash": [
+            [0, 1],
+            [1, 0]
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "clash": [
+            [0, 0],
+            [0, 0]
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h05",
+        "in": {
+          "clash": [
+            [0, 1, 1, 1],
+            [1, 0, 1, 1],
+            [1, 1, 0, 1],
+            [1, 1, 1, 0]
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h06",
+        "in": {
+          "clash": [
+            [0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0]
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h07",
+        "in": {
+          "clash": [
+            [0, 1, 0, 0, 0],
+            [1, 0, 1, 0, 0],
+            [0, 1, 0, 1, 0],
+            [0, 0, 1, 0, 1],
+            [0, 0, 0, 1, 0]
+          ]
+        },
+        "out": 14
+      },
+      {
+        "id": "h08",
+        "in": {
+          "clash": [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
+          ]
+        },
+        "out": 120
+      },
+      {
+        "id": "h09",
+        "in": {
+          "clash": [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+          ]
+        },
+        "out": 720
+      },
+      {
+        "id": "h10",
+        "in": {
+          "clash": [
+            [0, 0, 0, 0, 0, 1],
+            [0, 0, 1, 0, 0, 0],
+            [0, 1, 0, 1, 0, 0],
+            [0, 0, 1, 0, 0, 1],
+            [0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 1, 0, 0]
+          ]
+        },
+        "out": 124
+      },
+      {
+        "id": "h11",
+        "in": {
+          "clash": [
+            [0, 1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1],
+            [0, 0, 0, 1, 0, 0],
+            [0, 0, 1, 0, 1, 0],
+            [0, 0, 0, 1, 0, 0],
+            [0, 1, 0, 0, 0, 0]
+          ]
+        },
+        "out": 152
+      }
+    ]
+  },
+  "edgeCases": ["a guest who never stands up again", "one guest who clashes with everyone", "no clashes at all"],
+  "variables": {
+    "pool": [
+      {"name": "count", "type": "num"},
+      {"name": "free", "type": "num"},
+      {"name": "g", "type": "num"},
+      {"name": "seated", "type": "array<num>"},
+      {"name": "first", "type": "num"},
+      {"name": "total", "type": "num"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "seat",
+      "params": [
+        {"name": "table", "type": "array<array<num>>"},
+        {"name": "last", "type": "num"},
+        {"name": "used", "type": "array<num>"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "permutations_with_used_flags"}
+}

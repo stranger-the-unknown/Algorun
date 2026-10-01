@@ -1,22 +1,22 @@
 {
-  "total": 133,
+  "total": 134,
   "targetTotal": 300,
   "tiers": {
     "1": 9,
     "2": 41,
     "3": 46,
     "4": 33,
-    "5": 4
+    "5": 5
   },
   "modes": {
     "budget": 17,
-    "build": 85,
+    "build": 86,
     "edge": 23,
     "optimize": 5,
     "restricted": 3
   },
   "structures": {
-    "array": 54,
+    "array": 55,
     "graph": 16,
     "grid": 3,
     "hash_map": 9,
@@ -29,7 +29,7 @@
   },
   "families": {
     "array_scan": 11,
-    "backtracking": 5,
+    "backtracking": 6,
     "binary_search": 2,
     "control_flow": 7,
     "dp_grid": 3,
@@ -55,14 +55,14 @@
   },
   "performance": {
     "budget": 26,
-    "correctness": 99,
+    "correctness": 100,
     "optimization": 5,
     "restricted": 3
   },
   "concepts": {
     "array_scan": 11,
     "arrays": 12,
-    "backtracking": 5,
+    "backtracking": 6,
     "bfs": 9,
     "binary_search": 2,
     "binary_search_answer": 1,
@@ -459,16 +459,16 @@
         "recursion",
         "backtracking"
       ],
-      "count": 14,
+      "count": 15,
       "tiers": {
         "1": 0,
         "2": 0,
         "3": 6,
         "4": 6,
-        "5": 2
+        "5": 3
       },
       "families": {
-        "backtracking": 5,
+        "backtracking": 6,
         "recursion": 9
       },
       "patterns": {
@@ -481,6 +481,7 @@
         "flood_fill_recursive": 1,
         "mark_unmark_paths": 1,
         "memo_map_recursion": 1,
+        "permutations_with_used_flags": 1,
         "place_undo_queens": 1,
         "recursive_list_sum": 1,
         "recursive_tree_sum": 1,
@@ -2074,6 +2075,20 @@
       ]
     },
     {
+      "id": "seating_plan",
+      "world": "world_12",
+      "tier": 5,
+      "mode": "build",
+      "family": "backtracking",
+      "pattern": "permutations_with_used_flags",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "backtracking"
+      ]
+    },
+    {
       "id": "second_highest",
       "world": "world_02",
       "tier": 2,
@@ -2645,12 +2660,6 @@
     },
     {
       "area": "world",
-      "id": "world_12",
-      "have": 14,
-      "want": 15
-    },
-    {
-      "area": "world",
       "id": "world_13",
       "have": 10,
       "want": 30
@@ -2817,7 +2826,7 @@
     {
       "area": "family",
       "id": "backtracking",
-      "have": 5,
+      "have": 6,
       "want": 15
     },
     {
@@ -2830,7 +2839,7 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 85,
+      "have": 86,
       "want": 150
     },
     {
