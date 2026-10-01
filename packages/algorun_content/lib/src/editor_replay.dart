@@ -20,6 +20,7 @@ const _namedBlocks = {
   BlockIds.varDec,
   BlockIds.ctrlForRange,
   BlockIds.ctrlForEach,
+  ...BlockIds.calls,
 };
 
 /// Rebuild [target] the way a player would: start from the puzzle's givens,
@@ -37,9 +38,12 @@ List<ReplayIssue> replayInEditor(BlockGraph target, Puzzle puzzle) {
 
 final class _Replay {
   _Replay(this.target, this.puzzle)
-      : history = GraphHistory(BlockGraph(
-          blocks: const {},
-          variables: {for (final b in puzzle.io.inputs) b.name: b.type},
+      : history = GraphHistory(FunctionSetup.ensure(
+          BlockGraph(
+            blocks: const {},
+            variables: {for (final b in puzzle.io.inputs) b.name: b.type},
+          ),
+          puzzle.functions,
         ));
 
   final BlockGraph target;
@@ -69,8 +73,20 @@ final class _Replay {
   void _declareVariables() {
     final givens = {for (final b in puzzle.io.inputs) b.name: b.type};
     final pool = {for (final b in puzzle.variablePool) b.name: b.type};
+    // Parameters come with the puzzle's functions (L2), already declared.
+    final params = {
+      for (final f in puzzle.functions)
+        for (final p in f.params) p.name: p.type,
+    };
     for (final entry in target.variables.entries) {
       final path = 'variables.${entry.key}';
+      final param = params[entry.key];
+      if (param != null && !pool.containsKey(entry.key)) {
+        if (param != entry.value) {
+          issues.add(ReplayIssue(path, 'The puzzle\'s function makes "${entry.key}" a $param, not ${entry.value}.'));
+        }
+        continue;
+      }
       final given = givens[entry.key];
       if (given != null) {
         if (given != entry.value) {
@@ -121,6 +137,22 @@ final class _Replay {
       value is int && value.abs() <= editorNumberLimit;
 
   bool _statement(String id, PortRef well, int index) {
+    // A FUNCTION is not placed: the editor put it there when the puzzle
+    // opened (L2). Its body is built like any other list.
+    final given = target.blocks[id];
+    if (given != null && given.catalogId == BlockIds.fnDef) {
+      final opened = history.current.blocks[id];
+      final at = history.current.entryIds.indexOf(id);
+      if (opened == null || FunctionSignature.of(opened) != FunctionSignature.of(given) || well != PortRef.mainBody || at != index) {
+        issues.add(ReplayIssue('blocks.$id', 'This FUNCTION is not one the puzzle gives, where the editor puts it.'));
+        return false;
+      }
+      if (!placed.add(id)) {
+        issues.add(ReplayIssue('blocks.$id', 'This block is plugged in twice.'));
+        return false;
+      }
+      return _fill(given);
+    }
     final block = _add(id);
     if (block == null) return false;
     if (!_apply(AttachStatementCommand(blockId: id, to: well, index: index), 'blocks.$id')) {

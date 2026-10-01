@@ -46,6 +46,7 @@ final class SelectionInfo {
     required this.isStatement,
     required this.canDuplicate,
     required this.moves,
+    this.canDelete = true,
   });
 
   final String blockId;
@@ -58,6 +59,9 @@ final class SelectionInfo {
   final bool isStatement;
   final bool canDuplicate;
   final Set<MoveDirection> moves;
+
+  /// A FUNCTION comes from the puzzle (L2): it stays where it is.
+  final bool canDelete;
 }
 
 /// Owns [GraphHistory]. Pointer / sheet UI does not go through Riverpod.
@@ -76,13 +80,14 @@ final class EditorController extends ChangeNotifier {
     required this.puzzle,
     bool seedExample = false,
     BlockGraph? initialGraph,
-  }) : _history = GraphHistory(
+  }) : _history = GraphHistory(FunctionSetup.ensure(
           initialGraph == null
               ? BlockGraph(blocks: const {}, variables: _names(puzzle))
               : withoutStrays(initialGraph).copyWith(
                   variables: {...initialGraph.variables, ..._names(puzzle)},
                 ),
-        ) {
+          puzzle.functions,
+        )) {
     collapsedIds.addAll(_foldsOf(graph));
     if (seedExample && initialGraph == null) {
       seedWorkingExample();
@@ -425,18 +430,21 @@ final class EditorController extends ChangeNotifier {
     final block = id == null ? null : graph.blocks[id];
     if (id == null || block == null) return null;
     final statement = isStatement(id);
+    final given = isFunction(id);
     return SelectionInfo(
       blockId: id,
       label: _labelOf(block),
       size: subtreeOf(id).length,
       isStatement: statement,
-      canDuplicate: statement,
-      moves: statement ? _moves(id) : const {},
+      canDuplicate: statement && !given,
+      moves: statement && !given ? _moves(id) : const {},
+      canDelete: !given,
     );
   }
 
   String _labelOf(BlockInstance block) {
     final name = block.literals['name'];
+    if (block.catalogId == BlockIds.fnDef && name is String) return 'FUNCTION $name';
     if (block.catalogId == BlockIds.varGet && name is String) return name;
     if (block.catalogId == BlockIds.litNum) return '${block.literals['value'] ?? 0}';
     final label = BlockChrome.labelOf(block.catalogId);
@@ -473,7 +481,11 @@ final class EditorController extends ChangeNotifier {
     return deleteTree(id);
   }
 
+  /// A FUNCTION block the puzzle gave (L2).
+  bool isFunction(String id) => graph.blocks[id]?.catalogId == BlockIds.fnDef;
+
   bool deleteTree(String id) {
+    if (isFunction(id)) return false;
     final tree = subtreeOf(id);
     final label = _labelOf(graph.blocks[id]!);
     final ok = apply(_Batch([
@@ -623,9 +635,10 @@ final class EditorController extends ChangeNotifier {
   /// Replace the whole program (e.g. with the saved best solution). One undo
   /// step brings the previous program back.
   void replaceGraph(BlockGraph graph) {
-    apply(_ReplaceGraphCommand(
+    apply(_ReplaceGraphCommand(FunctionSetup.ensure(
       withoutStrays(graph).copyWith(variables: {...graph.variables, ..._names(puzzle)}),
-    ));
+      puzzle.functions,
+    )));
     _clearSelection();
     collapsedIds
       ..clear()

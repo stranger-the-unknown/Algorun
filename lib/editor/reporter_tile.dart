@@ -135,8 +135,10 @@ final class ReporterTile extends StatelessWidget {
           port: port.name,
         );
 
+    // CALL says which function it runs (L2).
+    final called = BlockIds.isCall(block.catalogId) ? block.literals['name'] : null;
     final label = Text(
-      chrome.label,
+      called is String ? '${chrome.label} $called' : chrome.label,
       style: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w700,

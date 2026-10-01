@@ -117,10 +117,12 @@ final class BlockActionsBar extends StatelessWidget {
         icon: Icons.delete_outline,
         label: l.actionDelete,
         tooltip: size > 1 ? l.deleteWithInside(blocksText(size - 1, l)) : l.delete,
-        onPressed: () {
-          HapticFeedback.mediumImpact();
-          controller.deleteSelected();
-        },
+        onPressed: info.canDelete
+            ? () {
+                HapticFeedback.mediumImpact();
+                controller.deleteSelected();
+              }
+            : null,
       ),
     ];
     return Material(

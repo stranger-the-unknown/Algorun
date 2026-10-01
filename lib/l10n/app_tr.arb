@@ -64,6 +64,7 @@
   "briefTierMode": "SEVİYE {tier} · {mode}",
   "ioInputs": "GİRDİLER",
   "ioReturns": "DÖNDÜRÜR",
+  "ioFunctions": "YAZACAĞIN FONKSİYONLAR",
   "hints": "İPUÇLARI",
   "showHint": "{n}. İPUCU",
   "noMoreHints": "BAŞKA İPUCU YOK",

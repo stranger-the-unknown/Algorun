@@ -327,6 +327,12 @@ class _CBlock extends StatelessWidget {
     final exprIns = def.inputs.where((p) => p.isExpr).toList();
     final name = block.literals['name'] as String?;
     final children = <Widget>[BlockLabel(chrome.label)];
+    // FUNCTION name (parameters): given by the puzzle, not editable (L2).
+    final signature = FunctionSignature.of(block);
+    if (signature != null) {
+      children.add(Text(signature.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)));
+      children.add(BlockWord('(${signature.params.map((p) => p.name).join(', ')})'));
+    }
     if (block.catalogId == BlockIds.ctrlForRange ||
         block.catalogId == BlockIds.ctrlForEach) {
       children.add(NameChip(

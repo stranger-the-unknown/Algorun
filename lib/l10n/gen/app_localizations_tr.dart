@@ -238,6 +238,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ioReturns => 'DÖNDÜRÜR';
 
   @override
+  String get ioFunctions => 'YAZACAĞIN FONKSİYONLAR';
+
+  @override
   String get hints => 'İPUÇLARI';
 
   @override

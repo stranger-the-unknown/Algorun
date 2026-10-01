@@ -43,6 +43,15 @@ final class GuideEntry {
 /// One entry per block a puzzle can offer (a test checks that every block
 /// the campaign allows has one). SWAP, COPY and TEXT are left out: no puzzle
 /// offers them and they have nothing to plug in yet.
+/// CALL, whatever the number of values it passes (one entry in the guide).
+const _call = GuideEntry(
+  term: 'CALL',
+  tr: 'ÇAĞIR',
+  en: 'Runs a FUNCTION with the values in its slots and stands for the value it RETURNs. Every call has its own variables; a list passed in is the same list, not a copy.',
+  trText: 'Bir FUNCTION\'ı yuvalarındaki değerlerle çalıştırır ve onun RETURN ettiği değerin yerine geçer. Her çağrının kendi değişkenleri vardır; içeri verilen bir liste kopya değil, aynı listedir.',
+  example: 'RETURN CALL fact (n)',
+);
+
 const Map<String, GuideEntry> blockGuide = {
   // ---- control ----
   BlockIds.ctrlIf: GuideEntry(
@@ -97,10 +106,22 @@ const Map<String, GuideEntry> blockGuide = {
   BlockIds.ctrlReturn: GuideEntry(
     term: 'RETURN',
     tr: 'DÖNDÜR',
-    en: 'Ends the program and gives back its answer. The answer must be what the puzzle asks for (RETURNS in the brief).',
-    trText: 'Programı bitirir ve cevabını geri verir. Cevap bulmacanın istediği şey olmalı (görevdeki DÖNDÜRÜR).',
+    en: 'Ends the program and gives back its answer. The answer must be what the puzzle asks for (RETURNS in the brief). Inside a FUNCTION it ends only that function and gives its value back to the CALL.',
+    trText: 'Programı bitirir ve cevabını geri verir. Cevap bulmacanın istediği şey olmalı (görevdeki DÖNDÜRÜR). Bir FUNCTION içinde yalnızca o fonksiyonu bitirir ve değerini CALL\'a geri verir.',
     example: 'RETURN count',
   ),
+  // ---- functions (L2) ----
+  BlockIds.fnDef: GuideEntry(
+    term: 'FUNCTION',
+    tr: 'FONKSİYON',
+    en: 'A function the puzzle asks you to write: its name and the values it takes are given. Build its steps inside it; RETURN gives its answer back to whoever CALLed it. A function may CALL itself: give it a case that RETURNs without calling again, or it never ends.',
+    trText: 'Bulmacanın senden yazmanı istediği bir fonksiyon: adı ve aldığı değerler verilmiştir. Adımlarını içine kur; RETURN cevabını onu CALL ile çağırana geri verir. Bir fonksiyon kendini de CALL ile çağırabilir: ona yeniden çağırmadan RETURN eden bir durum ver, yoksa hiç bitmez.',
+    example: 'FUNCTION fact (k)\n  IF k LESS OR EQUAL 1\n    THEN  RETURN 1\n  RETURN k TIMES CALL fact (k MINUS 1)',
+  ),
+  BlockIds.fnCall: _call,
+  BlockIds.fnCall1: _call,
+  BlockIds.fnCall2: _call,
+  BlockIds.fnCall3: _call,
   // ---- values and variables ----
   BlockIds.varSet: GuideEntry(
     term: 'SET',

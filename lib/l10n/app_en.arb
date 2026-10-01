@@ -203,6 +203,7 @@
   },
   "ioInputs": "INPUTS",
   "ioReturns": "RETURNS",
+  "ioFunctions": "FUNCTIONS YOU WRITE",
   "hints": "HINTS",
   "showHint": "SHOW HINT {n}",
   "@showHint": {

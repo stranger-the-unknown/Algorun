@@ -237,6 +237,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ioReturns => 'RETURNS';
 
   @override
+  String get ioFunctions => 'FUNCTIONS YOU WRITE';
+
+  @override
   String get hints => 'HINTS';
 
   @override

@@ -635,6 +635,26 @@ class _InputsAndOutput extends StatelessWidget {
             Text(l.ioReturns, style: AppText.label(context)),
             const SizedBox(height: 4),
             Text(typeText(puzzle.io.output, l), style: words),
+            // L2: the functions the player writes, with what each one takes
+            // and gives back.
+            if (puzzle.functions.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(l.ioFunctions, style: AppText.label(context)),
+              for (final fn in puzzle.functions)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text.rich(
+                    TextSpan(children: [
+                      TextSpan(text: fn.name, style: name),
+                      TextSpan(
+                        text: ' (${[for (final p in fn.params) '${p.name} — ${typeText(p.type, l)}'].join(', ')}) → '
+                            '${typeText(fn.returns, l)}',
+                        style: words,
+                      ),
+                    ]),
+                  ),
+                ),
+            ],
           ],
         ),
       ),

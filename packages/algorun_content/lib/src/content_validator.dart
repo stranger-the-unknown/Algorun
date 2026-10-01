@@ -335,9 +335,16 @@ final class ContentValidator {
         }
       }
     }
-    for (final id in const [BlockIds.fnDef, BlockIds.fnCall]) {
-      if (puzzle.blocks.allow.contains(id)) {
-        add(Severity.warning, Level.blocks, 'blocks.allow', '"$id" is hidden from the editor and cannot run yet.');
+    // FUNCTION comes from the puzzle's `functions`, never the palette; CALL
+    // needs a function to call (L2).
+    if (puzzle.blocks.allow.contains(BlockIds.fnDef)) {
+      add(Severity.warning, Level.blocks, 'blocks.allow',
+          '"${BlockIds.fnDef}" is never in the palette: declare the function in "functions".');
+    }
+    for (final id in BlockIds.calls) {
+      if (puzzle.blocks.allow.contains(id) &&
+          !puzzle.functions.any((f) => f.params.length == BlockIds.callArity(id))) {
+        add(Severity.warning, Level.blocks, 'blocks.allow', '"$id" has no function with that many values to call.');
       }
     }
     if (puzzle.blocks.allow.length == BlockIds.all.length) {

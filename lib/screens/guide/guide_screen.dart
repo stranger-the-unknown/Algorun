@@ -93,9 +93,13 @@ typedef _Section = ({String? label, List<_Keyed> entries});
 List<_Section> _blockSections(List<String>? allow, AppLocalizations l) {
   // In the reference's own order (control first), not the puzzle file's.
   final allowed = {...?allow};
+  // CALL has one block per number of values (L2) but one entry: show each
+  // entry once per section.
+  bool once(Set<GuideEntry> seen, GuideEntry entry) => seen.add(entry);
+  final hereSeen = <GuideEntry>{};
   final here = [
     for (final e in blockGuide.entries)
-      if (allowed.contains(e.key)) (key: 'block-here-${e.key}', entry: e.value),
+      if (allowed.contains(e.key) && once(hereSeen, e.value)) (key: 'block-here-${e.key}', entry: e.value),
   ];
   return [
     if (here.isNotEmpty) (label: l.guideInThisPuzzle, entries: here),
@@ -104,10 +108,14 @@ List<_Section> _blockSections(List<String>? allow, AppLocalizations l) {
         label: category == BlockCategory.values.first
             ? '${l.guideAllBlocks} · ${categoryText(category, l)}'
             : categoryText(category, l),
-        entries: [
-          for (final e in blockGuide.entries)
-            if (BlockChrome.of(e.key).category == category) (key: 'block-${e.key}', entry: e.value),
-        ],
+        entries: () {
+          final seen = <GuideEntry>{};
+          return [
+            for (final e in blockGuide.entries)
+              if (BlockChrome.of(e.key).category == category && once(seen, e.value))
+                (key: 'block-${e.key}', entry: e.value),
+          ];
+        }(),
       ),
   ].where((s) => s.entries.isNotEmpty).toList();
 }

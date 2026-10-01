@@ -482,6 +482,12 @@ abstract class AppLocalizations {
   /// **'RETURNS'**
   String get ioReturns;
 
+  /// No description provided for @ioFunctions.
+  ///
+  /// In en, this message translates to:
+  /// **'FUNCTIONS YOU WRITE'**
+  String get ioFunctions;
+
   /// No description provided for @hints.
   ///
   /// In en, this message translates to:
