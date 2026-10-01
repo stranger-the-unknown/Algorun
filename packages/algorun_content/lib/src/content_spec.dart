@@ -28,6 +28,7 @@ const structures = {
   'hash_set',
   'stack',
   'queue',
+  'heap',
   'linked_list',
   'tree',
   'graph',

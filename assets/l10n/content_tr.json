@@ -1256,6 +1256,78 @@
         "seat: hâlâ ayakta olan her g misafiri için (FOR), IF table[last][g] 0 ise g'yi oturt (SET ELEMENT ile used[g] = 1), CALL seat(table, g, used) sonucunu sayıya ekle ve g'yi yeniden ayağa kaldır (SET ELEMENT ile used[g] = 0).",
         "Giderken ayakta kalanları say: IF ayakta kimse yoksa herkes oturmuştur ve bu 1 sıradır. Sırası bittikten sonra oturmaya devam eden bir misafir, sonraki bütün sıralardan eksik kalır."
       ]
+    },
+    "top_scores": {
+      "title": "En İyi Skorlar",
+      "story": "Skor tablosu gecenin en iyi k skorunu toplar. k'dan az skor geldiyse hepsini toplar. MAX öncelik kuyruğunun tepesinde hep en büyük sayı durur: bütün skorları içine koy, sonra k kez TAKE TOP yap.",
+      "hints": [
+        "SET best TO NEW MAX HEAP yap, sonra her skor için (FOR EACH) onu best'e INSERT et.",
+        "FOR i FROM 0 TO k ile toplama TAKE TOP best ekle: önce en büyük skor çıkar, sonra bir sonraki.",
+        "Boş öncelik kuyruğunda TAKE TOP hatadır. Skorlar k'dan önce biterse, IF best IS EMPTY ise eklemeyi bırak."
+      ]
+    },
+    "ticket_order": {
+      "title": "Bilet Sırası",
+      "story": "Bir makine numaralı biletleri karışık sırayla basıyor. Onları sırayla, en küçük numaradan başlayarak dağıt. 1500 bilet olabilir: kalan biletlerin hepsine bakıp en küçüğünü tekrar tekrar aramak çok fazla adım sürer. MIN öncelik kuyruğu en küçük sayısını tek adımda geri verir.",
+      "hints": [
+        "Her bileti bir NEW MIN HEAP'e INSERT et.",
+        "WHILE NOT (waiting IS EMPTY) iken, TAKE TOP waiting'i döndüreceğin listeye APPEND et.",
+        "Her TAKE TOP, kaç bilet beklerse beklesin tek adımdır; en küçüğü aramak ise bilet başına bir adımdır."
+      ]
+    },
+    "rope_joining": {
+      "title": "Halat Birleştirme",
+      "story": "Bir denizci halatları ikişer ikişer birleştirip tek uzun halat yapıyor. İki halatı birleştirmek, uzunluklarının toplamı kadar tutar ve yeni halat yeniden birleştirilebilir. En ucuz toplam maliyet nedir? 1, 1, 1 ve 1'i her seferinde en kısa ikisini birleştirerek bağlamak 8 tutar (2, 2, sonra 4); ama art arda bağlamak 9 tutar (2, 3, 4).",
+      "hints": [
+        "Uzun halatlar olabildiğince az birleştirilmeli; bu yüzden her seferinde o anki en kısa iki halatı birleştir.",
+        "Halatları bir NEW MIN HEAP içinde tut. SIZE GREATER THAN 1 iken (WHILE): iki kez TAKE TOP yap, ikisini maliyete ekle ve birleşen halatı geri INSERT et.",
+        "Birleşen halat öncelik kuyruğuna geri döner: bir sonraki seferde en kısa iki halattan biri olabilir."
+      ]
+    },
+    "last_stone": {
+      "title": "Son Taş",
+      "story": "Taşlar ikişer ikişer, her seferinde en ağır iki taş olmak üzere birbirine vurulur. Ağırlıkları aynıysa ikisi de yok olur; değilse hafif olan yok olur, ağır olan da o kadar hafifleyip geri döner. Son taş ne kadar ağırdır? Hiç taş kalmadıysa cevap 0'dır.",
+      "hints": [
+        "Taşları bir NEW MAX HEAP içinde tut; en ağırı hep tepede olsun.",
+        "En az iki taş varken (WHILE): iki kez TAKE TOP yap, önce x sonra y; IF x, y'den büyükse (GREATER THAN) x MINUS y'yi INSERT et.",
+        "Bittiğinde bir taş kalır ya da hiç kalmaz. IF öncelik kuyruğu IS EMPTY ise RETURN 0; boş öncelik kuyruğunun TOP'una bakmak hatadır."
+      ]
+    },
+    "seat_desk": {
+      "title": "Koltuk Masası",
+      "story": "Bir masa 1'den başlayarak numaralanmış koltukları dağıtıyor. Her istek bir sayıdır: 0 \"bana bir koltuk ver\" demektir ve masa boştaki en küçük numaralı koltuğu verir; başka bir sayı geri verilen bir koltuktur ve o koltuk yeniden boştur. Masa hangi koltukları hangi sırayla verir? 3 koltuk ve 0 0 1 0 isteklerinde 1 ve 2'yi verir, 1'i geri alır ve 1'i yeniden verir: 1 2 1.",
+      "hints": [
+        "Boş koltukları bir NEW MIN HEAP içinde tut: başta 1'den seats'e kadar bütün koltukları koy.",
+        "Her istek için (FOR EACH): IF 0 ise TAKE TOP free'yi listeye APPEND et; ELSE geri gelen koltuğu INSERT et.",
+        "Geri gelen bir koltuk daha yüksek numaralılardan önce verilmeli: yukarı doğru saymak onu hiç fark etmez."
+      ]
+    },
+    "meeting_rooms": {
+      "title": "Toplantı Odaları",
+      "story": "Toplantılar başlama saatine göre sıralı: i. toplantı starts[i]'den ends[i]'ye kadar sürer. Bir oda, toplantısı biter bitmez yeniden boştur; yani bir toplantı, bir odada başka bir toplantının bittiği dakikada başlayabilir. Bütün toplantılar için kaç oda gerekir?",
+      "hints": [
+        "Odalardaki toplantıların bitiş saatlerini bir NEW MIN HEAP içinde tut: TOP, ilk boşalacak odadır.",
+        "Her toplantı için, IF NOT (ending IS EMPTY) AND TOP ending başlangıçtan küçük ya da eşitse (LESS OR EQUAL) o oda boştur: onu TAKE TOP ile al. Sonra toplantının bitişini INSERT et.",
+        "Sonda kullanımda olan odalar, gereken bütün odalardır: öncelik kuyruğunun SIZE'ını RETURN et. Bir toplantının bittiği anda başlayan toplantıya yeni oda gerekmez."
+      ]
+    },
+    "podium_place": {
+      "title": "Kürsü Sırası",
+      "story": "Uzun bir yarış süreleri listesi tek tek geliyor. k. en büyük hangisi? Küçük bir ekran cevabı güncel tutuyor, ama yalnızca 100 bellek hücresi var ve 300 ölçüm gelebilir: hepsini tutamaz. Şimdiye kadarki en büyük k ölçümü tut, yeter.",
+      "hints": [
+        "Şimdiye kadarki en büyük k ölçümü bir NEW MIN HEAP içinde tut: TOP'u bunların en küçüğüdür, yani k. en büyük.",
+        "Her ölçümü INSERT et; IF öncelik kuyruğunun SIZE'ı artık k'dan büyükse (GREATER THAN), en küçüğü atmak için TAKE TOP yap.",
+        "Sonda TOP'u RETURN et. Bütün ölçümleri tutan bir MAX öncelik kuyruğu doğru cevabı verir, ama her ölçüm için bir hücre ister."
+      ]
+    },
+    "running_median": {
+      "title": "Akan Ortanca",
+      "story": "Sayılar birer birer geliyor. Her birinden sonra şimdiye kadarki bütün sayıların ortancasını söyle: sıralı hâldeki ortadaki sayı, sayı adedi çiftse ortadaki iki sayının küçüğü. 1500 sayı gelebilir; hepsini sıralı tutmak çok fazla adım tutar. İki öncelik kuyruğu ortayı el altında tutar: küçük yarı bir MAX, büyük yarı bir MIN öncelik kuyruğunda.",
+      "hints": [
+        "low küçük yarı için bir NEW MAX HEAP, high büyük yarı için bir NEW MIN HEAP olsun. Ortanca TOP low'dur.",
+        "Yeni sayı, IF low IS EMPTY OR sayı TOP low'dan küçük ya da eşitse (LESS OR EQUAL) low'a girer; ELSE high'a.",
+        "Sonra dengele: IF low'da high'dan birden fazla sayı fazlaysa TAKE TOP low'u high'a taşı; IF high'da low'dan fazla sayı varsa TAKE TOP high'ı low'a taşı. Sonra TOP low'u APPEND et."
+      ]
     }
   }
 }

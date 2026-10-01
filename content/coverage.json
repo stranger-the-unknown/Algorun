@@ -1,19 +1,19 @@
 {
-  "total": 134,
+  "total": 142,
   "targetTotal": 300,
   "tiers": {
     "1": 9,
-    "2": 41,
-    "3": 46,
+    "2": 42,
+    "3": 52,
     "4": 33,
-    "5": 5
+    "5": 6
   },
   "modes": {
-    "budget": 17,
-    "build": 86,
-    "edge": 23,
+    "budget": 19,
+    "build": 89,
+    "edge": 25,
     "optimize": 5,
-    "restricted": 3
+    "restricted": 4
   },
   "structures": {
     "array": 55,
@@ -21,6 +21,7 @@
     "grid": 3,
     "hash_map": 9,
     "hash_set": 4,
+    "heap": 8,
     "linked_list": 11,
     "queue": 2,
     "scalar": 12,
@@ -40,6 +41,7 @@
     "greedy": 8,
     "hash_map": 6,
     "hash_set": 4,
+    "heap": 8,
     "linked_list_relink": 3,
     "linked_list_traversal": 8,
     "monotonic_stack": 2,
@@ -54,8 +56,8 @@
     "two_pointers": 8
   },
   "performance": {
-    "budget": 26,
-    "correctness": 100,
+    "budget": 28,
+    "correctness": 106,
     "optimization": 5,
     "restricted": 3
   },
@@ -81,6 +83,7 @@
     "greedy_choice": 1,
     "hash_map": 10,
     "hash_set": 2,
+    "heap": 8,
     "linked_list": 11,
     "monotonic_stack": 2,
     "multi_concept": 1,
@@ -370,16 +373,27 @@
       "concepts": [
         "heap"
       ],
-      "count": 0,
+      "count": 8,
       "tiers": {
         "1": 0,
-        "2": 0,
-        "3": 0,
+        "2": 1,
+        "3": 6,
         "4": 0,
-        "5": 0
+        "5": 1
       },
-      "families": {},
-      "patterns": {},
+      "families": {
+        "heap": 8
+      },
+      "patterns": {
+        "bounded_min_heap_kth": 1,
+        "combine_two_smallest": 1,
+        "heap_sort": 1,
+        "lowest_free_slot": 1,
+        "rooms_by_earliest_end": 1,
+        "smash_two_largest": 1,
+        "take_k_from_max_heap": 1,
+        "two_heaps_median": 1
+      },
       "target": 15
     },
     {
@@ -1204,6 +1218,20 @@
       ]
     },
     {
+      "id": "last_stone",
+      "world": "world_09",
+      "tier": 3,
+      "mode": "edge",
+      "family": "heap",
+      "pattern": "smash_two_largest",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "heap"
+      ]
+    },
+    {
       "id": "leaf_census",
       "world": "world_08",
       "tier": 3,
@@ -1527,6 +1555,20 @@
       ]
     },
     {
+      "id": "meeting_rooms",
+      "world": "world_09",
+      "tier": 3,
+      "mode": "edge",
+      "family": "heap",
+      "pattern": "rooms_by_earliest_end",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "heap"
+      ]
+    },
+    {
       "id": "middle_car",
       "world": "world_07",
       "tier": 3,
@@ -1820,6 +1862,20 @@
       ]
     },
     {
+      "id": "podium_place",
+      "world": "world_09",
+      "tier": 3,
+      "mode": "restricted",
+      "family": "heap",
+      "pattern": "bounded_min_heap_kth",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "heap"
+      ]
+    },
+    {
       "id": "power_steps",
       "world": "world_12",
       "tier": 4,
@@ -2001,6 +2057,34 @@
       ]
     },
     {
+      "id": "rope_joining",
+      "world": "world_09",
+      "tier": 3,
+      "mode": "build",
+      "family": "heap",
+      "pattern": "combine_two_smallest",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "heap"
+      ]
+    },
+    {
+      "id": "running_median",
+      "world": "world_09",
+      "tier": 5,
+      "mode": "budget",
+      "family": "heap",
+      "pattern": "two_heaps_median",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "heap"
+      ]
+    },
+    {
       "id": "rush_hour",
       "world": "world_05",
       "tier": 2,
@@ -2072,6 +2156,20 @@
       "performance": "correctness",
       "concepts": [
         "stack"
+      ]
+    },
+    {
+      "id": "seat_desk",
+      "world": "world_09",
+      "tier": 3,
+      "mode": "build",
+      "family": "heap",
+      "pattern": "lowest_free_slot",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "heap"
       ]
     },
     {
@@ -2361,6 +2459,20 @@
       ]
     },
     {
+      "id": "ticket_order",
+      "world": "world_09",
+      "tier": 3,
+      "mode": "budget",
+      "family": "heap",
+      "pattern": "heap_sort",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "heap"
+      ]
+    },
+    {
       "id": "ticket_price",
       "world": "world_01",
       "tier": 1,
@@ -2388,6 +2500,20 @@
       "concepts": [
         "arrays",
         "prefix_sum"
+      ]
+    },
+    {
+      "id": "top_scores",
+      "world": "world_09",
+      "tier": 2,
+      "mode": "build",
+      "family": "heap",
+      "pattern": "take_k_from_max_heap",
+      "structure": "heap",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "heap"
       ]
     },
     {
@@ -2625,19 +2751,15 @@
     {
       "area": "world",
       "id": "world_09",
-      "have": 0,
-      "want": 15,
-      "note": "blocked by the language: heap"
+      "have": 8,
+      "want": 15
     },
     {
       "area": "tiers",
       "id": "world_09",
       "missing": [
-        3,
-        4,
-        5
-      ],
-      "note": "blocked by the language: heap"
+        4
+      ]
     },
     {
       "area": "world",
@@ -2819,9 +2941,8 @@
     {
       "area": "family",
       "id": "heap",
-      "have": 0,
-      "want": 15,
-      "note": "blocked by the language"
+      "have": 8,
+      "want": 15
     },
     {
       "area": "family",
@@ -2839,13 +2960,13 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 86,
+      "have": 89,
       "want": 150
     },
     {
       "area": "mode",
       "id": "budget",
-      "have": 17,
+      "have": 19,
       "want": 30
     },
     {
@@ -2857,7 +2978,7 @@
     {
       "area": "mode",
       "id": "restricted",
-      "have": 3,
+      "have": 4,
       "want": 15
     },
     {

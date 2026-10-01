@@ -1,0 +1,87 @@
+{
+  "id": "last_stone",
+  "version": 1,
+  "title": "Last Stone",
+  "world": "world_09",
+  "chapter": "smash_two_largest",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": ["heap"],
+  "prerequisites": [],
+  "story": "Stones are smashed together two at a time, always the two heaviest. If they weigh the same, both are gone; if not, the lighter one is gone and the heavier one loses that much weight and goes back. What does the last stone weigh? If no stone is left, the answer is 0.",
+  "io": {
+    "inputs": [
+      {"name": "stones", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 100},
+    "notes": ["1 to 100 stones; weights are whole numbers from 1 to 1000."]
+  },
+  "blocks": {
+    "allow": ["arith.sub", "cmp.eq", "cmp.gt", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "new.max_heap", "new.min_heap", "var.get", "var.set"],
+    "maxBlocks": 56
+  },
+  "limits": {"maxOps": 3800, "maxDepth": 32, "maxAlloc": 250},
+  "hints": ["Keep the stones in a NEW MAX HEAP, so the heaviest is always on top.", "WHILE there are at least two stones: TAKE TOP twice, x and then y; IF x is GREATER THAN y, INSERT x MINUS y.", "When it ends there is one stone or none. IF the heap IS EMPTY, RETURN 0; reading TOP of an empty heap is an error."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"stones": [2, 7, 4, 1, 8, 1]},
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {"stones": [3, 9]},
+        "out": 6
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"stones": [5, 5]},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"stones": [4]},
+        "out": 4
+      },
+      {
+        "id": "h03",
+        "in": {"stones": [1, 1, 1]},
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {"stones": [2, 2, 3, 3]},
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {"stones": [10, 4, 4, 2]},
+        "out": 0
+      },
+      {
+        "id": "h06",
+        "in": {
+          "stones": [542, 84, 742, 637, 536, 557, 478, 363, 43, 957, 362, 789, 546, 605, 658, 68, 165, 291, 565, 495, 662, 367, 372, 356, 660, 356, 678, 11, 675, 346, 418, 322, 390, 755, 198, 607, 462, 28, 341, 761, 178, 339, 992, 129, 442, 607, 359, 510, 748, 934, 248, 558, 320, 81, 369, 537, 172, 908, 516, 813, 397, 996, 166, 126, 700, 279, 834, 98, 285, 731, 604, 795, 476, 445, 171, 337, 339, 797, 2, 286, 193, 204, 648, 337, 439, 2, 807, 537, 478, 504, 628, 67, 918, 873, 398, 129, 692, 274, 408, 725]
+        },
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": ["every stone gone", "one stone", "equal stones"],
+  "variables": {
+    "pool": [
+      {"name": "pile", "type": "heap<num>"},
+      {"name": "s", "type": "num"},
+      {"name": "x", "type": "num"},
+      {"name": "y", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "smash_two_largest"}
+}

@@ -46,7 +46,7 @@ into `main` only when complete and green. If it is not done by the freeze,
 
 - [x] 1 engine — `HeapValue`, seven blocks, `test/heap_test.dart` (engine 381)
 - [x] 2 app — Block Reference (7 blocks + the Heap concept), EN/TR terms and messages (Flutter 487)
-- [ ] 3 content tooling
-- [ ] 4 world 09 batch 1
+- [x] 3 content tooling — capability `heap` supported, structure `heap`, generator helpers, `oracles/heaps.dart`
+- [x] 4 world 09 batch 1 — top scores, ticket order, rope joining, last stone, seat desk, meeting rooms, podium place, running median (142 puzzles; Flutter 503)
 - [ ] 5 world 09 batch 2
 - [ ] 6 docs, checks, merge

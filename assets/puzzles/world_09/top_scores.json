@@ -1,0 +1,94 @@
+{
+  "id": "top_scores",
+  "version": 1,
+  "title": "Top Scores",
+  "world": "world_09",
+  "chapter": "take_k_from_max_heap",
+  "tier": 2,
+  "mode": "build",
+  "concepts": ["heap"],
+  "prerequisites": [],
+  "story": "The scoreboard adds up the k best scores of the night. If fewer than k scores came in, it adds up all of them. A MAX heap always has its largest number on top: put every score in, then TAKE TOP k times.",
+  "io": {
+    "inputs": [
+      {"name": "scores", "type": "array<num>"},
+      {"name": "k", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 200},
+    "notes": ["Scores are whole numbers from 0 to 100.", "k is 0 or more; it may be larger than the number of scores."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "cmp.gt", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "logic.not", "new.max_heap", "new.min_heap", "var.get", "var.set"],
+    "maxBlocks": 37
+  },
+  "limits": {"maxOps": 2650, "maxDepth": 32, "maxAlloc": 450},
+  "hints": ["SET best TO NEW MAX HEAP, then FOR EACH score, INSERT it into best.", "FOR i FROM 0 TO k, add TAKE TOP best to the total: the largest score comes out first, then the next one.", "TAKE TOP on an empty heap is an error. When the scores run out before k, IF best IS EMPTY, stop adding."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"scores": [5, 1, 9, 3], "k": 2},
+        "out": 14
+      },
+      {
+        "id": "v2",
+        "in": {"scores": [4, 8, 6], "k": 1},
+        "out": 8
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"scores": [], "k": 3},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"scores": [2, 7], "k": 5},
+        "out": 9
+      },
+      {
+        "id": "h03",
+        "in": {"scores": [3, 3, 3], "k": 2},
+        "out": 6
+      },
+      {
+        "id": "h04",
+        "in": {"scores": [10, 20], "k": 0},
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {"scores": [0, 0, 5], "k": 3},
+        "out": 5
+      },
+      {
+        "id": "h06",
+        "in": {"scores": [100], "k": 1},
+        "out": 100
+      },
+      {
+        "id": "h07",
+        "in": {
+          "scores": [16, 50, 5, 83, 95, 75, 51, 24, 19, 24, 78, 17, 90, 72, 41, 77, 37, 45, 6, 38, 60, 18, 82, 85, 35, 37, 4, 5, 70, 78, 5, 23, 35, 73, 7, 77, 89, 72, 71, 44, 4, 1, 71, 51, 26, 53, 49, 86, 92, 13, 93, 61, 40, 55, 83, 53, 62, 94, 84, 100, 40, 97, 86, 60, 65, 51, 61, 59, 54, 88, 65, 72, 79, 12, 17, 95, 86, 23, 23, 27, 55, 95, 71, 74, 42, 99, 80, 53, 37, 31, 66, 58, 8, 19, 69, 45, 41, 36, 32, 51, 10, 87, 26, 71, 61, 31, 2, 50, 79, 3, 27, 58, 74, 43, 90, 99, 93, 66, 6, 12, 89, 64, 35, 88, 21, 68, 2, 86, 54, 39, 95, 51, 9, 66, 79, 36, 23, 6, 93, 22, 34, 94, 0, 32, 13, 53, 77, 73, 29, 41, 7, 9, 20, 65, 30, 70, 1, 55, 56, 93, 10, 98, 82, 63, 29, 12, 26, 37, 3, 41, 39, 51, 11, 19, 42, 20, 31, 35, 25, 19, 99, 70, 39, 40, 52, 50, 6, 9, 38, 1, 97, 47, 32, 13, 54, 83, 15, 20, 37, 19],
+          "k": 50
+        },
+        "out": 4341
+      }
+    ]
+  },
+  "edgeCases": ["fewer scores than k", "k of 0", "equal scores"],
+  "variables": {
+    "pool": [
+      {"name": "best", "type": "heap<num>"},
+      {"name": "s", "type": "num"},
+      {"name": "total", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "take_k_from_max_heap"}
+}

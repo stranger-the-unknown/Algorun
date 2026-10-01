@@ -36,7 +36,7 @@ final class DifficultySignals {
     }
 
     walk(solution.entryIds, 0);
-    const containers = {TypeAtom.array, TypeAtom.map, TypeAtom.set, TypeAtom.stack, TypeAtom.queue};
+    const containers = {TypeAtom.array, TypeAtom.map, TypeAtom.set, TypeAtom.stack, TypeAtom.queue, TypeAtom.heap};
     final givens = {for (final b in puzzle.io.inputs) b.name};
     // Structures the program builds itself: a graph handed in as input and
     // walked with one queue is one structure of the solver's choosing.

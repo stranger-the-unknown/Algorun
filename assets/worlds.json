@@ -202,7 +202,16 @@
       "prerequisites": [
         "tree"
       ],
-      "puzzles": []
+      "puzzles": [
+        "top_scores",
+        "ticket_order",
+        "rope_joining",
+        "last_stone",
+        "seat_desk",
+        "meeting_rooms",
+        "podium_place",
+        "running_median"
+      ]
     },
     {
       "id": "world_10",

@@ -1,0 +1,90 @@
+{
+  "id": "rope_joining",
+  "version": 1,
+  "title": "Rope Joining",
+  "world": "world_09",
+  "chapter": "combine_two_smallest",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["heap"],
+  "prerequisites": [],
+  "story": "A sailor joins ropes into one long rope, two at a time. Joining two ropes costs as much as their lengths together, and the new rope can be joined again. What is the cheapest total cost? Joining 1, 1, 1 and 1 costs 8 if you join the two shortest each time (2, 2, then 4), but 9 one after another (2, 3, 4).",
+  "io": {
+    "inputs": [
+      {"name": "ropes", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 300},
+    "notes": ["Rope lengths are whole numbers from 1 to 100.", "No ropes, or one rope, costs 0."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arr.get", "arr.len", "cmp.eq", "cmp.gt", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "new.max_heap", "new.min_heap", "var.get", "var.set"],
+    "maxBlocks": 53
+  },
+  "limits": {"maxOps": 15600, "maxDepth": 32, "maxAlloc": 650},
+  "hints": ["Long ropes should be joined as few times as possible, so always join the two shortest ropes there are now.", "Keep the ropes in a NEW MIN HEAP. WHILE its SIZE is GREATER THAN 1: TAKE TOP twice, add both to the cost, and INSERT the joined rope back.", "The joined rope goes back into the heap: it may be one of the two shortest next time."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"ropes": [1, 2, 3]},
+        "out": 9
+      },
+      {
+        "id": "v2",
+        "in": {"ropes": [2, 3, 4]},
+        "out": 14
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"ropes": []},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"ropes": [5]},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"ropes": [1, 1, 1, 1]},
+        "out": 8
+      },
+      {
+        "id": "h04",
+        "in": {"ropes": [4, 3, 2, 1]},
+        "out": 19
+      },
+      {
+        "id": "h05",
+        "in": {"ropes": [5, 5, 5, 5, 5]},
+        "out": 60
+      },
+      {
+        "id": "h06",
+        "in": {
+          "ropes": [1, 38, 81, 44, 56, 7, 19, 78, 77, 57, 22, 28, 58, 39, 87, 36, 86, 96, 8, 35, 89, 94, 54, 69, 18, 83, 43, 64, 83, 52, 96, 79, 81, 15, 6, 92, 4, 91, 99, 67, 99, 69, 18, 98, 9, 23, 65, 53, 13, 55, 73, 38, 91, 76, 34, 99, 53, 55, 44, 5, 58, 94, 22, 63, 52, 93, 39, 21, 41, 75, 33, 17, 70, 98, 44, 65, 95, 77, 80, 90, 53, 41, 26, 73, 9, 23, 10, 16, 91, 3, 17, 20, 65, 39, 52, 12, 26, 61, 69, 65, 81, 13, 9, 80, 25, 43, 57, 77, 30, 92, 17, 39, 13, 13, 1, 41, 9, 40, 37, 7, 91, 26, 67, 77, 51, 13, 18, 51, 25, 43, 88, 28, 66, 11, 27, 11, 51, 46, 40, 66, 37, 10, 3, 17, 67, 54, 51, 81, 63, 20, 75, 95, 60, 92, 69, 16, 77, 49, 64, 52, 26, 41, 38, 77, 64, 15, 29, 32, 1, 63, 94, 34, 86, 64, 37, 32, 8, 79, 63, 61, 18, 62, 49, 15, 6, 43, 54, 10, 91, 11, 24, 1, 91, 65, 71, 21, 66, 51, 65, 89, 16, 65, 51, 99, 88, 36, 64, 24, 98, 17, 64, 71, 96, 41, 95, 94, 53, 59, 12, 58, 97, 20, 77, 91, 40, 26, 86, 53, 89, 78, 83, 79, 72, 42, 56, 64, 99, 95, 8, 9, 1, 44, 39, 30, 97, 25, 93, 11, 84, 57, 11, 62, 26, 95, 48, 77, 16, 67, 26, 43, 31, 54, 88, 21, 2, 86, 2, 40, 16, 40, 24, 53, 85, 95, 60, 42, 98, 49, 64, 36, 78, 2, 94, 96, 97, 63, 28, 53, 100, 55, 33, 48, 26, 68, 6, 46, 75, 68, 97, 68]
+        },
+        "out": 123311
+      }
+    ]
+  },
+  "edgeCases": ["ropes of equal length", "one rope", "the longest rope first"],
+  "variables": {
+    "pool": [
+      {"name": "pile", "type": "heap<num>"},
+      {"name": "r", "type": "num"},
+      {"name": "a", "type": "num"},
+      {"name": "b", "type": "num"},
+      {"name": "cost", "type": "num"},
+      {"name": "joined", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "combine_two_smallest"}
+}

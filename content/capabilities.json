@@ -29,7 +29,7 @@
     "multi_concept": {"status": "supported", "note": "Combinations of supported families."},
     "recursion": {"status": "supported", "note": "Player functions that CALL themselves (L2): a FUNCTION per puzzle, each call with its own variables, depth counted against maxDepth."},
     "backtracking": {"status": "supported", "note": "Recursion that tries a choice, CALLs itself, then undoes it (APPEND / REMOVE AT on a list passed by reference) (L2)."},
-    "heap": {"status": "blocked", "note": "No heap or priority-queue blocks, runtime value or fixture form."},
+    "heap": {"status": "supported", "note": "NEW MIN HEAP / NEW MAX HEAP / INSERT / TAKE TOP / TOP / SIZE / IS EMPTY; numbers only (H)."},
     "sorting_builtin": {"status": "blocked", "note": "There is no sort block; puzzles give sorted input when order matters."},
     "strings": {"status": "blocked", "note": "No text operations, and the editor cannot enter text."},
     "bit_manipulation": {"status": "blocked", "note": "No bitwise operators."},

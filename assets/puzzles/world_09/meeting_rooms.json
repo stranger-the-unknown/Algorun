@@ -1,0 +1,88 @@
+{
+  "id": "meeting_rooms",
+  "version": 1,
+  "title": "Meeting Rooms",
+  "world": "world_09",
+  "chapter": "rooms_by_earliest_end",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": ["heap"],
+  "prerequisites": [],
+  "story": "Meetings are listed by start time: meeting i runs from starts[i] to ends[i]. A room is free again the moment its meeting ends, so a meeting may start in a room at the very minute another one ends there. How many rooms are needed for all the meetings?",
+  "io": {
+    "inputs": [
+      {"name": "starts", "type": "array<num>"},
+      {"name": "ends", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 200},
+    "notes": ["Up to 200 meetings, listed by start time; starts and ends have the same length.", "Every meeting ends after it starts."]
+  },
+  "blocks": {
+    "allow": ["arith.max", "arr.get", "arr.len", "cmp.le", "cmp.lt", "ctrl.for_range", "ctrl.if", "ctrl.return", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "logic.and", "logic.not", "new.max_heap", "new.min_heap", "var.get", "var.set"],
+    "maxBlocks": 45
+  },
+  "limits": {"maxOps": 7950, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Keep the end times of the meetings in rooms in a NEW MIN HEAP: TOP is the room that frees up first.", "For each meeting, IF NOT (ending IS EMPTY) AND TOP ending is LESS OR EQUAL to its start, that room is free: TAKE TOP it. Then INSERT the meeting's end.", "The rooms in use at the end are all the rooms ever needed: RETURN the heap's SIZE. A meeting that starts as another ends does not need a new room."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"starts": [0, 5, 15], "ends": [30, 10, 20]},
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {"starts": [1, 2, 3], "ends": [10, 10, 10]},
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"starts": [0, 10], "ends": [10, 20]},
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {"starts": [], "ends": []},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"starts": [5], "ends": [6]},
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {"starts": [1, 2, 3, 4], "ends": [2, 3, 4, 5]},
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {"starts": [0, 0, 0], "ends": [5, 5, 5]},
+        "out": 3
+      },
+      {
+        "id": "h06",
+        "in": {
+          "starts": [9, 13, 21, 25, 29, 31, 34, 45, 54, 59, 69, 97, 99, 111, 138, 143, 145, 167, 168, 168, 169, 180, 186, 200, 216, 252, 261, 278, 289, 307, 308, 310, 346, 354, 369, 373, 375, 392, 401, 402, 419, 429, 433, 436, 442, 445, 458, 462, 470, 490, 540, 552, 556, 557, 560, 562, 562, 565, 573, 585, 599, 599, 626, 660, 664, 667, 667, 671, 677, 678, 706, 719, 735, 744, 765, 766, 789, 798, 821, 847, 854, 865, 868, 892, 911, 913, 940, 960, 969, 997, 1010, 1014, 1026, 1032, 1035, 1043, 1049, 1075, 1089, 1091, 1110, 1123, 1125, 1135, 1141, 1144, 1173, 1194, 1207, 1211, 1220, 1227, 1233, 1233, 1237, 1267, 1318, 1322, 1343, 1346, 1358, 1365, 1372, 1377, 1391, 1400, 1407, 1408, 1417, 1424, 1426, 1431, 1436, 1442, 1468, 1468, 1484, 1484, 1494, 1522, 1541, 1547, 1556, 1576, 1578, 1580, 1584, 1602, 1609, 1618, 1636, 1651, 1664, 1678, 1680, 1681, 1712, 1715, 1716, 1718, 1745, 1761, 1761, 1763, 1780, 1786, 1792, 1797, 1805, 1816, 1826, 1830, 1841, 1845, 1857, 1859, 1865, 1866, 1876, 1876, 1880, 1882, 1895, 1914, 1930, 1938, 1944, 1946, 1949, 1953, 1956, 1962, 1966, 1976, 1978, 1978, 1979, 1984, 1991, 1999],
+          "ends": [125, 36, 106, 37, 57, 50, 154, 61, 74, 77, 122, 217, 121, 132, 139, 178, 165, 282, 207, 243, 174, 205, 198, 294, 250, 309, 299, 338, 377, 413, 330, 415, 371, 419, 473, 434, 411, 427, 468, 416, 493, 493, 475, 549, 461, 459, 557, 494, 493, 497, 594, 579, 657, 662, 590, 613, 676, 581, 632, 702, 634, 713, 725, 724, 769, 753, 692, 766, 786, 789, 748, 734, 827, 850, 837, 816, 816, 890, 920, 857, 951, 887, 941, 967, 945, 918, 980, 1033, 1041, 1014, 1110, 1040, 1033, 1034, 1145, 1081, 1146, 1148, 1101, 1104, 1161, 1234, 1193, 1243, 1191, 1216, 1232, 1310, 1281, 1325, 1301, 1244, 1253, 1278, 1294, 1378, 1437, 1390, 1413, 1360, 1374, 1398, 1404, 1490, 1470, 1460, 1497, 1490, 1458, 1438, 1536, 1542, 1537, 1458, 1582, 1501, 1526, 1590, 1536, 1611, 1597, 1565, 1589, 1584, 1632, 1594, 1586, 1640, 1720, 1640, 1660, 1676, 1668, 1770, 1795, 1771, 1778, 1809, 1729, 1721, 1862, 1849, 1865, 1775, 1786, 1802, 1866, 1883, 1906, 1905, 1940, 1879, 1937, 1921, 1866, 1942, 1908, 1882, 1888, 1989, 1995, 1937, 1948, 1953, 1999, 2027, 1959, 2050, 2033, 2001, 1999, 2011, 2026, 1990, 2054, 2043, 2013, 2053, 2074, 2114]
+        },
+        "out": 15
+      }
+    ]
+  },
+  "edgeCases": ["a meeting that starts as another ends", "no meetings", "all at once"],
+  "variables": {
+    "pool": [
+      {"name": "ending", "type": "heap<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "done", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "rooms_by_earliest_end"}
+}

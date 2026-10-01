@@ -1,0 +1,90 @@
+{
+  "id": "seat_desk",
+  "version": 1,
+  "title": "Seat Desk",
+  "world": "world_09",
+  "chapter": "lowest_free_slot",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["heap"],
+  "prerequisites": [],
+  "story": "A desk hands out seats numbered from 1. Each request is a number: 0 means \"give me a seat\", and the desk gives the lowest free seat; any other number is a seat given back, which is free again. Which seats does the desk hand out, in order? With 3 seats and the requests 0 0 1 0, it hands out 1 and 2, gets 1 back, and hands out 1 again: 1 2 1.",
+  "io": {
+    "inputs": [
+      {"name": "seats", "type": "num"},
+      {"name": "requests", "type": "array<num>"}
+    ],
+    "output": {"type": "array<num>"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 400},
+    "notes": ["1 to 200 seats and up to 400 requests.", "A 0 comes only when a seat is free; a seat given back was handed out and not yet given back."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arr.append", "cmp.eq", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "heap.empty", "heap.insert", "heap.size", "heap.take", "heap.top", "lit.num", "new.array", "new.max_heap", "new.min_heap", "var.get", "var.set"],
+    "maxBlocks": 45
+  },
+  "limits": {"maxOps": 8550, "maxDepth": 32, "maxAlloc": 700},
+  "hints": ["Keep the free seats in a NEW MIN HEAP: put seats 1 to seats in at the start.", "FOR EACH request: IF it is 0, APPEND TAKE TOP free to the list; ELSE INSERT the seat that came back.", "A seat that comes back must be handed out before higher seats: counting up never notices it."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"seats": 3, "requests": [0, 0, 0]},
+        "out": [1, 2, 3]
+      },
+      {
+        "id": "v2",
+        "in": {"seats": 4, "requests": [0, 0, 2]},
+        "out": [1, 2]
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"seats": 3, "requests": [0, 0, 1, 0]},
+        "out": [1, 2, 1]
+      },
+      {
+        "id": "h02",
+        "in": {"seats": 5, "requests": [0, 0, 0, 2, 0, 0]},
+        "out": [1, 2, 3, 2, 4]
+      },
+      {
+        "id": "h03",
+        "in": {"seats": 1, "requests": [0, 1, 0]},
+        "out": [1, 1]
+      },
+      {
+        "id": "h04",
+        "in": {"seats": 2, "requests": []},
+        "out": []
+      },
+      {
+        "id": "h05",
+        "in": {"seats": 4, "requests": [0, 0, 0, 0, 3, 1, 0, 0]},
+        "out": [1, 2, 3, 4, 1, 3]
+      },
+      {
+        "id": "h06",
+        "in": {
+          "seats": 200,
+          "requests": [0, 0, 2, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 2, 1, 9, 0, 0, 0, 0, 0, 6, 10, 0, 0, 0, 5, 8, 0, 0, 0, 9, 4, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 10, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 7, 6, 0, 26, 0, 11, 0, 29, 0, 0, 0, 0, 0, 25, 16, 3, 0, 0, 0, 21, 11, 8, 0, 15, 24, 0, 0, 0, 0, 0, 0, 31, 0, 13, 20, 0, 0, 0, 9, 0, 0, 0, 15, 0, 29, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 21, 0, 4, 26, 0, 8, 0, 0, 0, 0, 27, 0, 0, 5, 0, 0, 6, 16, 0, 7, 0, 0, 0, 0, 0, 1, 0, 41, 39, 0, 24, 0, 21, 0, 0, 44, 0, 0, 0, 8, 44, 36, 0, 0, 34, 0, 35, 0, 0, 0, 0, 5, 54, 4, 10, 1, 0, 27, 0, 0, 21, 0, 9, 5, 0, 0, 38, 12, 42, 0, 0, 0, 13, 30, 0, 0, 39, 0, 0, 10, 0, 5, 0, 53, 44, 0, 24, 0, 15, 46, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 28, 36, 65, 0, 55, 0, 38, 0, 0, 0, 0, 0, 62, 0, 4, 0, 0, 0, 67, 0, 8, 0, 8, 0, 0, 0, 8, 17, 62, 10, 67, 0, 0, 0, 0, 0, 0, 0, 37, 6, 0, 0, 0, 42, 61, 0, 0, 0, 0, 0, 61, 0, 11, 0, 68, 0, 0, 0, 20, 71, 0, 0, 0, 0, 25, 60, 0, 0, 0, 0, 3, 0, 0, 0, 0, 6, 60, 79, 0, 0, 0, 0, 0, 51, 0, 0, 86, 0, 0, 0, 0, 0, 60, 30, 67, 0, 0, 0, 0, 48, 0, 0, 0, 0, 14, 0, 0, 0, 54, 31, 92, 0, 0, 0, 0, 56, 68, 30, 15, 0, 50, 92, 0, 0, 0, 29, 0, 0, 0, 0, 0, 43, 0, 0, 68, 0, 0, 0, 0, 60, 0, 75, 12, 0, 0, 0, 49, 0, 0, 0, 0, 0, 59, 0, 14, 0, 0, 0, 0, 26, 0, 0, 0, 1, 0, 0, 0, 50, 75]
+        },
+        "out": [1, 2, 2, 2, 3, 4, 5, 3, 6, 7, 8, 5, 9, 10, 1, 2, 9, 11, 12, 6, 10, 13, 5, 8, 14, 4, 9, 10, 10, 15, 16, 17, 18, 19, 20, 21, 20, 10, 22, 23, 24, 25, 26, 9, 27, 28, 29, 30, 31, 32, 20, 33, 6, 7, 11, 26, 29, 34, 35, 36, 3, 16, 25, 8, 11, 15, 21, 24, 37, 38, 31, 13, 20, 39, 9, 40, 41, 15, 29, 42, 43, 44, 45, 46, 47, 47, 48, 21, 4, 8, 26, 49, 50, 27, 51, 5, 52, 6, 7, 16, 53, 54, 55, 1, 39, 24, 21, 41, 44, 56, 57, 8, 36, 34, 35, 44, 58, 59, 1, 4, 5, 10, 5, 9, 12, 21, 27, 13, 30, 38, 39, 10, 5, 42, 24, 15, 44, 45, 46, 53, 54, 60, 61, 62, 63, 64, 9, 65, 28, 36, 38, 55, 65, 66, 67, 62, 4, 68, 69, 67, 8, 8, 70, 71, 8, 10, 17, 62, 67, 72, 73, 6, 37, 74, 42, 61, 75, 76, 77, 61, 11, 68, 78, 79, 20, 71, 80, 81, 25, 60, 82, 83, 3, 84, 85, 86, 6, 60, 79, 87, 88, 51, 89, 86, 90, 91, 92, 93, 30, 60, 67, 94, 48, 95, 96, 97, 14, 98, 99, 31, 54, 92, 100, 15, 30, 50, 56, 29, 68, 92, 101, 102, 43, 103, 68, 104, 105, 106, 60, 12, 75, 107, 49, 108, 109, 110, 111, 59, 14, 112, 113, 114, 26, 115, 116, 1, 117, 118]
+      }
+    ]
+  },
+  "edgeCases": ["a seat that comes back", "the same seat handed out twice", "no requests"],
+  "variables": {
+    "pool": [
+      {"name": "free", "type": "heap<num>"},
+      {"name": "s", "type": "num"},
+      {"name": "r", "type": "num"},
+      {"name": "handed", "type": "array<num>"},
+      {"name": "next", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "lowest_free_slot"}
+}
