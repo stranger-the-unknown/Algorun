@@ -130,22 +130,22 @@ final class Interpreter {
           vars.putIfAbsent(entry.key, () => _copy(entry.value, {}));
         }
       }
-      try {
-        _execAll(fn.body, vars);
-        // A player FUNCTION that promises a value must RETURN one (L2).
-        final promised = fn.returnType;
-        if (!isEntry && promised != null && promised.atom != TypeAtom.voidType) {
-          throw _Halt(ResultKind.runtimeError, 'FUNCTION ${fn.name} ended without RETURN.', fn.srcBlockId);
-        }
-        return const NilValue();
-      } on _Return catch (signal) {
-        return signal.value;
-      } on _Loop catch (signal) {
-        throw _Halt(
-          ResultKind.invalidProgram,
-          'This block only works inside a loop.',
-          signal.blockId,
-        );
+      switch (_execAll(fn.body, vars)) {
+        case final _Return signal:
+          return signal.value;
+        case final _Loop signal:
+          throw _Halt(
+            ResultKind.invalidProgram,
+            'This block only works inside a loop.',
+            signal.blockId,
+          );
+        case null:
+          // A player FUNCTION that promises a value must RETURN one (L2).
+          final promised = fn.returnType;
+          if (!isEntry && promised != null && promised.atom != TypeAtom.voidType) {
+            throw _Halt(ResultKind.runtimeError, 'FUNCTION ${fn.name} ended without RETURN.', fn.srcBlockId);
+          }
+          return const NilValue();
       }
     } finally {
       _depth--;
@@ -154,51 +154,60 @@ final class Interpreter {
 
   // --- statements ---------------------------------------------------------
 
-  void _execAll(List<Stmt> body, Map<String, RuntimeValue> vars) {
+  /// Runs [body] in order. Stops at the first RETURN, BREAK or CONTINUE and
+  /// hands it up; `null` means the body ran to its end.
+  _Flow? _execAll(List<Stmt> body, Map<String, RuntimeValue> vars) {
     for (final stmt in body) {
-      _exec(stmt, vars);
+      final flow = _exec(stmt, vars);
+      if (flow != null) return flow;
     }
+    return null;
   }
 
-  void _exec(Stmt stmt, Map<String, RuntimeValue> vars) {
+  // RETURN, BREAK and CONTINUE travel up as values, not exceptions: a Dart
+  // throw records the whole stack, which made every RETURN deep in a
+  // recursion cost hundreds of microseconds.
+  _Flow? _exec(Stmt stmt, Map<String, RuntimeValue> vars) {
     _enter(stmt.srcBlockId);
     try {
       switch (stmt) {
         case final SeqStmt s:
-          _execAll(s.stmts, vars);
+          return _execAll(s.stmts, vars);
         case final ExprStmt s:
           _eval(s.expr, vars);
         case final IfStmt s:
           _tick(s.srcBlockId);
           _emit('if', s.srcBlockId, vars);
           if (_bool(_eval(s.cond, vars), s.cond.srcBlockId)) {
-            _execAll(s.thenBody, vars);
+            return _execAll(s.thenBody, vars);
           } else {
             final otherwise = s.elseBody;
-            if (otherwise != null) _execAll(otherwise, vars);
+            if (otherwise != null) return _execAll(otherwise, vars);
           }
         case final WhileStmt s:
           while (true) {
             _tick(s.srcBlockId);
             _emit('while', s.srcBlockId, vars);
             if (!_bool(_eval(s.cond, vars), s.cond.srcBlockId)) break;
-            if (_loopBody(s.body, vars)) break;
+            final flow = _loopBody(s.body, vars);
+            if (flow is _Return) return flow;
+            if (flow != null) break;
           }
         case final ForRangeStmt s:
-          _execForRange(s, vars);
+          return _execForRange(s, vars);
         case final ForEachStmt s:
-          _execForEach(s, vars);
+          return _execForEach(s, vars);
         case final BreakStmt s:
           _tick(s.srcBlockId);
-          throw _Loop(isBreak: true, blockId: s.srcBlockId);
+          return _Loop(isBreak: true, blockId: s.srcBlockId);
         case final ContinueStmt s:
           _tick(s.srcBlockId);
-          throw _Loop(isBreak: false, blockId: s.srcBlockId);
+          return _Loop(isBreak: false, blockId: s.srcBlockId);
         case final ReturnStmt s:
           _tick(s.srcBlockId);
           _emit('return', s.srcBlockId, vars);
           final value = s.value;
-          throw _Return(value == null ? const NilValue() : _eval(value, vars));
+          return _Return(value == null ? const NilValue() : _eval(value, vars));
         case final AssignStmt s:
           _tick(s.srcBlockId);
           _assign(s.target, _eval(s.value, vars), vars);
@@ -208,12 +217,13 @@ final class Interpreter {
         case final DecStmt s:
           _step(s.target, -1, s.srcBlockId, vars);
       }
+      return null;
     } finally {
       _nesting--;
     }
   }
 
-  void _execForRange(ForRangeStmt s, Map<String, RuntimeValue> vars) {
+  _Flow? _execForRange(ForRangeStmt s, Map<String, RuntimeValue> vars) {
     _tick(s.srcBlockId);
     final start = _num(_eval(s.start, vars), s.start.srcBlockId);
     final end = _num(_eval(s.end, vars), s.end.srcBlockId);
@@ -234,12 +244,15 @@ final class Interpreter {
       // the body cannot change how many times it runs.
       vars[s.loopVar] = NumValue(cursor);
       _emit('forRange', s.srcBlockId, vars);
-      if (_loopBody(s.body, vars)) break;
+      final flow = _loopBody(s.body, vars);
+      if (flow is _Return) return flow;
+      if (flow != null) break;
       cursor += step;
     }
+    return null;
   }
 
-  void _execForEach(ForEachStmt s, Map<String, RuntimeValue> vars) {
+  _Flow? _execForEach(ForEachStmt s, Map<String, RuntimeValue> vars) {
     _tick(s.srcBlockId);
     // Snapshot: appending to the collection inside the loop does not extend
     // the iteration.
@@ -250,18 +263,19 @@ final class Interpreter {
       vars[s.itemVar] = items[index];
       if (indexVar != null) vars[indexVar] = NumValue(index);
       _emit('forEach', s.srcBlockId, vars);
-      if (_loopBody(s.body, vars)) break;
+      final flow = _loopBody(s.body, vars);
+      if (flow is _Return) return flow;
+      if (flow != null) break;
     }
+    return null;
   }
 
-  /// Runs a loop body. Returns `true` when the body asked to break out.
-  bool _loopBody(List<Stmt> body, Map<String, RuntimeValue> vars) {
-    try {
-      _execAll(body, vars);
-    } on _Loop catch (signal) {
-      return signal.isBreak;
-    }
-    return false;
+  /// Runs one pass of a loop body. `null` goes on to the next pass (the body
+  /// ended or asked to CONTINUE); a BREAK or a RETURN comes back to the loop.
+  _Flow? _loopBody(List<Stmt> body, Map<String, RuntimeValue> vars) {
+    final flow = _execAll(body, vars);
+    if (flow is _Loop && !flow.isBreak) return null;
+    return flow;
   }
 
   void _step(
@@ -1052,14 +1066,19 @@ final class Interpreter {
   }
 }
 
+/// How a statement ended when it did not just run to its end.
+sealed class _Flow {
+  const _Flow();
+}
+
 /// A `return` travelling up to its function frame.
-final class _Return implements Exception {
+final class _Return extends _Flow {
   const _Return(this.value);
   final RuntimeValue value;
 }
 
 /// A `break` or `continue` travelling up to its loop.
-final class _Loop implements Exception {
+final class _Loop extends _Flow {
   const _Loop({required this.isBreak, this.blockId});
   final bool isBreak;
   final String? blockId;

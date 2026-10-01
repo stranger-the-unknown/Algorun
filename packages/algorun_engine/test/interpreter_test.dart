@@ -216,6 +216,46 @@ void main() {
       expect(_number(result), 3 + 4 + 5);
     });
 
+    Expr eq(Expr a, Expr b) => BinaryExpr(BinaryOp.eq, a, b, type: ValueType.boolean);
+
+    test('RETURN inside nested loops ends the whole program', () {
+      final result = _run(_program([
+        ForRangeStmt(loopVar: 'i', start: _n(0), end: _n(10), body: [
+          ForRangeStmt(loopVar: 'j', start: _n(0), end: _n(10), body: [
+            IfStmt(
+              cond: eq(_add(_get('i'), _get('j')), _n(5)),
+              thenBody: [
+                ReturnStmt(value: _add(BinaryExpr(BinaryOp.mul, _get('i'), _n(10), type: ValueType.number), _get('j'))),
+              ],
+            ),
+          ]),
+        ]),
+        ReturnStmt(value: _n(-1)),
+      ]));
+      expect(_number(result), 5);
+    });
+
+    test('BREAK leaves only the innermost loop', () {
+      final result = _run(_program([
+        _set('total', _n(0)),
+        ForRangeStmt(loopVar: 'i', start: _n(0), end: _n(3), body: [
+          ForRangeStmt(loopVar: 'j', start: _n(0), end: _n(10), body: [
+            IfStmt(cond: eq(_get('j'), _n(2)), thenBody: const [BreakStmt()]),
+            _set('total', _add(_get('total'), _n(1))),
+          ]),
+        ]),
+        ReturnStmt(value: _get('total')),
+      ]));
+      expect(_number(result), 3 * 2);
+    });
+
+    test('BREAK outside any loop is not a program that can run', () {
+      final result = _run(_program(const [BreakStmt(srcBlockId: 'b1')]));
+      expect(result.kind, ResultKind.invalidProgram);
+      expect(result.message, 'This block only works inside a loop.');
+      expect(result.blockId, 'b1');
+    });
+
     test('if takes the else branch', () {
       final result = _run(_program([
         IfStmt(

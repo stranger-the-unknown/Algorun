@@ -24,6 +24,13 @@ void main() {
       expect(_connect(h, lit, 'out', w, 'condition').ok, isTrue);
     });
 
+    test('an empty GET ELEMENT fits LENGTH OF (a row of a grid)', () {
+      final h = _hist();
+      final len = _add(h, BlockIds.arrLen);
+      final get = _add(h, BlockIds.arrGet);
+      expect(_connect(h, get, 'out', len, 'array').ok, isTrue);
+    });
+
     test('SET.value matches declared variable type', () {
       final h = _hist(variables: {'x': ValueType.number});
       final set = _add(h, BlockIds.varSet, literals: {'name': 'x'});

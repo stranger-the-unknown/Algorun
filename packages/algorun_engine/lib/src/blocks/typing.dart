@@ -351,7 +351,7 @@ ConnectDecision _expressionRules(
       'This piece does not fit here.',
     );
   }
-  final plug = _plugType(graph, from.blockId, to);
+  final plug = _apart(_plugType(graph, from.blockId, to));
   if (plug == null) {
     return const ConnectDecision.deny(
       'unknown_port',
@@ -397,6 +397,22 @@ ValueType? _plugType(BlockGraph graph, String blockId, PortRef to) {
     );
   }
   return _outputType(graph, blockId, {});
+}
+
+/// [type] with its open type names renamed, so an empty GET ELEMENT (`T`)
+/// dropped into LENGTH OF (`array<T>`) is not read as `T = array<T>`.
+ValueType? _apart(ValueType? type) {
+  if (type == null) return null;
+  final names = <String>{};
+  void collect(ValueType t) {
+    if (t.isGeneric && t.genericName != null) names.add(t.genericName!);
+    if (t.param != null) collect(t.param!);
+    if (t.param2 != null) collect(t.param2!);
+  }
+
+  collect(type);
+  if (names.isEmpty) return type;
+  return type.subst({for (final n in names) n: ValueType.generic("$n'")});
 }
 
 bool _isVarValueHole(BlockGraph graph, PortRef to) {
