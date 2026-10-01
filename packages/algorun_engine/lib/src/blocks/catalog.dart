@@ -90,6 +90,12 @@ abstract final class BlockIds {
   static const queueFront = 'queue.front';
   static const queueEmpty = 'queue.empty';
 
+  static const heapInsert = 'heap.insert';
+  static const heapTake = 'heap.take';
+  static const heapTop = 'heap.top';
+  static const heapSize = 'heap.size';
+  static const heapEmpty = 'heap.empty';
+
   static const llValue = 'll.value';
   static const llNext = 'll.next';
   static const llSetNext = 'll.set_next';
@@ -108,6 +114,8 @@ abstract final class BlockIds {
   static const newSet = 'new.set';
   static const newStack = 'new.stack';
   static const newQueue = 'new.queue';
+  static const newMinHeap = 'new.min_heap';
+  static const newMaxHeap = 'new.max_heap';
 
   static const fnDef = 'fn.def';
   static const fnCall = 'fn.call';
@@ -137,10 +145,11 @@ abstract final class BlockIds {
     setAdd, setHas, setRemove, setSize,
     stackPush, stackPop, stackPeek, stackEmpty,
     queueEnq, queueDeq, queueFront, queueEmpty,
+    heapInsert, heapTake, heapTop, heapSize, heapEmpty,
     llValue, llNext, llSetNext,
     treeValue, treeLeft, treeRight,
     graphNeighbors, graphMark, graphVisited, graphNodeCount,
-    newArray, newMap, newSet, newStack, newQueue,
+    newArray, newMap, newSet, newStack, newQueue, newMinHeap, newMaxHeap,
     fnDef, fnCall, fnCall1, fnCall2, fnCall3,
   };
 
@@ -480,6 +489,22 @@ abstract final class BlockCatalog {
       const [],
       typeParams: const ['T'],
     ),
+    // H: heaps hold numbers; the order (min or max) is chosen when one is made.
+    BlockIds.heapInsert: BlockDefinition(
+      id: BlockIds.heapInsert,
+      role: BlockRole.statement,
+      ports: [
+        stmtOut,
+        exprIn('heap', _numHeap),
+        exprIn('value', ValueType.number),
+      ],
+    ),
+    BlockIds.heapTake: reporter(BlockIds.heapTake, ValueType.number, [exprIn('heap', _numHeap)]),
+    BlockIds.heapTop: reporter(BlockIds.heapTop, ValueType.number, [exprIn('heap', _numHeap)]),
+    BlockIds.heapSize: reporter(BlockIds.heapSize, ValueType.number, [exprIn('heap', _numHeap)]),
+    BlockIds.heapEmpty: reporter(BlockIds.heapEmpty, ValueType.boolean, [exprIn('heap', _numHeap)]),
+    BlockIds.newMinHeap: reporter(BlockIds.newMinHeap, _numHeap, const []),
+    BlockIds.newMaxHeap: reporter(BlockIds.newMaxHeap, _numHeap, const []),
     // FUNCTION: its signature lives in literals (`name`, `params`, `returns`);
     // CALL: `name` picks the function, a1..a3 are the values passed. Their
     // types come from the signature (`typing.dart`), not from these ports.
@@ -529,3 +554,5 @@ BlockDefinition _nothingCheck(String id) => reporter(
       [exprIn('value', ValueType.generic('T', nullable: true))],
       typeParams: const ['T'],
     );
+
+const _numHeap = ValueType(TypeAtom.heap, param: ValueType.number);

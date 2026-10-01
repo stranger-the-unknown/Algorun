@@ -634,7 +634,7 @@ final class FieldExpr extends Expr {
       };
 }
 
-enum CollKind { array, map, set, stack, queue, deque }
+enum CollKind { array, map, set, stack, queue, deque, minHeap, maxHeap }
 
 final class NewExpr extends Expr {
   const NewExpr(

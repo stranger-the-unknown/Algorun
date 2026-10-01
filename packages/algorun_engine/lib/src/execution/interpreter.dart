@@ -503,6 +503,8 @@ final class Interpreter {
         QueueValue([], id: id, elementType: type.param ?? ValueType.number),
       CollKind.deque =>
         DequeValue([], id: id, elementType: type.param ?? ValueType.number),
+      CollKind.minHeap => HeapValue([], isMax: false, id: id),
+      CollKind.maxHeap => HeapValue([], isMax: true, id: id),
     };
   }
 
@@ -670,6 +672,37 @@ final class Interpreter {
         }
       case BlockIds.queueEmpty:
         return BoolValue(_queue(at(0), id).items.isEmpty);
+      case BlockIds.heapInsert:
+        {
+          final heap = _heap(at(0), id);
+          if (heap.items.length >= limits.maxArrayLen) {
+            throw _Halt(ResultKind.memoryLimit, 'This heap got too big.', id);
+          }
+          _alloc(1, id);
+          heap.insert(_num(at(1), id));
+          return const NilValue();
+        }
+      case BlockIds.heapTake:
+        {
+          final heap = _heap(at(0), id);
+          if (heap.items.isEmpty) {
+            throw _Halt(ResultKind.runtimeError, 'This heap is empty.', id);
+          }
+          _free(1);
+          return NumValue(heap.takeTop());
+        }
+      case BlockIds.heapTop:
+        {
+          final heap = _heap(at(0), id);
+          if (heap.items.isEmpty) {
+            throw _Halt(ResultKind.runtimeError, 'This heap is empty.', id);
+          }
+          return NumValue(heap.top);
+        }
+      case BlockIds.heapSize:
+        return NumValue(_heap(at(0), id).items.length);
+      case BlockIds.heapEmpty:
+        return BoolValue(_heap(at(0), id).items.isEmpty);
       case BlockIds.graphNeighbors:
         {
           final graph = _graph(at(0), id);
@@ -886,6 +919,11 @@ final class Interpreter {
     throw _Halt(ResultKind.runtimeError, 'This block needs a queue.', blockId);
   }
 
+  HeapValue _heap(RuntimeValue value, String? blockId) {
+    if (value is HeapValue) return value;
+    throw _Halt(ResultKind.runtimeError, 'This block needs a heap.', blockId);
+  }
+
   GraphValue _graph(RuntimeValue value, String? blockId) {
     if (value is GraphValue) return value;
     throw _Halt(ResultKind.runtimeError, 'This block needs a graph.', blockId);
@@ -1018,6 +1056,10 @@ final class Interpreter {
         for (final entry in v.members.entries) {
           copy.members[entry.key] = _copy(entry.value, seen);
         }
+        return copy;
+      case final HeapValue v:
+        final copy = HeapValue(List.of(v.items), isMax: v.isMax, id: _nextId++);
+        seen[value] = copy;
         return copy;
       case final StackValue v:
         final copy = StackValue([], id: _nextId++, elementType: v.elementType);

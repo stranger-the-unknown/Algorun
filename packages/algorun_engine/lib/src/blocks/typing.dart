@@ -576,6 +576,7 @@ String _typeMessage(PortDefinition hole, ValueType type) {
     'set' => 'This block needs a set.',
     'stack' => 'This block needs a stack.',
     'queue' => 'This block needs a queue.',
+    'heap' => 'This block needs a heap.',
     _ => switch (type.atom) {
         TypeAtom.boolean => 'This block needs a condition.',
         TypeAtom.number => 'This block needs a number.',

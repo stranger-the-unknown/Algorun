@@ -130,6 +130,63 @@ final class QueueValue extends RuntimeValue {
   Object? toJson() => [for (final v in items) v.toJson()];
 }
 
+/// Priority queue of numbers (H). [items] is a binary heap whose top — the
+/// smallest for a min heap, the largest for a max heap — is `items[0]`.
+final class HeapValue extends RuntimeValue {
+  HeapValue(this.items, {required this.isMax, this.id = 0});
+  final int id;
+  final bool isMax;
+  final List<num> items;
+
+  @override
+  ValueType get type => ValueType.heapOf(ValueType.number);
+
+  /// Whether [a] belongs above [b].
+  bool _above(num a, num b) => isMax ? a > b : a < b;
+
+  num get top => items.first;
+
+  void insert(num value) {
+    items.add(value);
+    var i = items.length - 1;
+    while (i > 0) {
+      final parent = (i - 1) ~/ 2;
+      if (!_above(items[i], items[parent])) break;
+      final t = items[i];
+      items[i] = items[parent];
+      items[parent] = t;
+      i = parent;
+    }
+  }
+
+  num takeTop() {
+    final top = items.first;
+    final last = items.removeLast();
+    if (items.isEmpty) return top;
+    items[0] = last;
+    var i = 0;
+    while (true) {
+      final l = 2 * i + 1;
+      final r = l + 1;
+      var best = i;
+      if (l < items.length && _above(items[l], items[best])) best = l;
+      if (r < items.length && _above(items[r], items[best])) best = r;
+      if (best == i) break;
+      final t = items[i];
+      items[i] = items[best];
+      items[best] = t;
+      i = best;
+    }
+    return top;
+  }
+
+  /// The items in the order TAKE TOP would give them.
+  List<num> inTakeOrder() => List.of(items)..sort((a, b) => isMax ? b.compareTo(a) : a.compareTo(b));
+
+  @override
+  Object? toJson() => inTakeOrder();
+}
+
 /// Double-ended queue. Front is first, back is last.
 final class DequeValue extends RuntimeValue {
   DequeValue(this.items, {this.id = 0, this.elementType = ValueType.number});

@@ -83,7 +83,10 @@ RuntimeValue valueFromJson(
 }
 
 /// Canonical JSON for [value]. `valueFromJson(valueToJson(v))` equals `v`, and
-/// `valueToJson(valueFromJson(j))` is the canonical spelling of `j`.
+/// `valueToJson(valueFromJson(j))` is the canonical spelling of `j`. A heap
+/// is the exception (H): it is written for display — its order and its items
+/// in the order TAKE TOP gives them — but never read, so no puzzle takes or
+/// returns one.
 ///
 /// Throws [FixtureFormatException] for a value the format cannot hold: a tree
 /// that contains itself, a graph that marked a node it does not have, or a
@@ -526,6 +529,11 @@ final class _Encoder {
       StackValue(:final items) => _items('stack', items, path, depth),
       QueueValue(:final items) => _items('queue', items, path, depth),
       DequeValue(:final items) => _items('deque', items, path, depth),
+      final HeapValue heap => {
+          'type': 'heap',
+          'order': heap.isMax ? 'max' : 'min',
+          'items': heap.inTakeOrder(),
+        },
       final ListNodeValue head => _list(head, path),
       final TreeNodeValue root => _tree(root, path, depth, <TreeNodeValue>{}),
       final GraphValue graph => _graph(graph, path),

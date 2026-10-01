@@ -173,6 +173,7 @@ final class _Session {
         BlockIds.setRemove ||
         BlockIds.stackPush ||
         BlockIds.queueEnq ||
+        BlockIds.heapInsert ||
         BlockIds.graphMark =>
           _callStmt(block),
         BlockIds.llSetNext => _fieldAssign(block, 'next', 'node', 'next'),
@@ -593,6 +594,8 @@ final class _Session {
         BlockIds.newSet => _new(block, CollKind.set),
         BlockIds.newStack => _new(block, CollKind.stack),
         BlockIds.newQueue => _new(block, CollKind.queue),
+        BlockIds.newMinHeap => _new(block, CollKind.minHeap),
+        BlockIds.newMaxHeap => _new(block, CollKind.maxHeap),
         final call when BlockIds.isCall(call) => _call(block),
         _ => _callExpr(block),
       };
@@ -754,6 +757,7 @@ final class _Session {
           CollKind.queue => ValueType.queueOf(inner),
           CollKind.deque => ValueType.dequeOf(inner),
           CollKind.map => ValueType.mapOf(ValueType.string, inner),
+          CollKind.minHeap || CollKind.maxHeap => ValueType.heapOf(ValueType.number),
         };
       } on FormatException {
         _err('malformed', 'This program is not put together correctly.', block.id);
@@ -815,6 +819,7 @@ final class _Session {
       'set' => 'This block needs a set.',
       'stack' => 'This block needs a stack.',
       'queue' => 'This block needs a queue.',
+      'heap' => 'This block needs a heap.',
       // MS13: an empty value slot said "does not fit" — it is simply empty.
       'value' || 'left' || 'right' || 'arg' => 'This block needs a value.',
       'key' => 'This block needs a key.',

@@ -101,6 +101,8 @@ bool valuesEqual(RuntimeValue a, RuntimeValue b) {
     StackValue(:final items) => _listEqual(items, (b as StackValue).items),
     QueueValue(:final items) => _listEqual(items, (b as QueueValue).items),
     DequeValue(:final items) => _listEqual(items, (b as DequeValue).items),
+    final HeapValue h =>
+      h.isMax == (b as HeapValue).isMax && _numListEqual(h.inTakeOrder(), b.inTakeOrder()),
     ListNodeValue() => _chainEqual(a, b as ListNodeValue),
     TreeNodeValue() => _treeNodeEqual(a, b as TreeNodeValue),
     GraphValue() => _graphEqual(a, b as GraphValue),
@@ -272,6 +274,14 @@ bool _mapEqual(Map<Object, RuntimeValue> a, Map<Object, RuntimeValue> b) {
   for (final e in a.entries) {
     final other = b[e.key];
     if (other == null || !valuesEqual(e.value, other)) return false;
+  }
+  return true;
+}
+
+bool _numListEqual(List<num> a, List<num> b) {
+  if (a.length != b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
   }
   return true;
 }

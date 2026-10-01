@@ -177,6 +177,7 @@ int _size(RuntimeValue value) {
     StackValue(:final items) => items.length,
     QueueValue(:final items) => items.length,
     DequeValue(:final items) => items.length,
+    HeapValue(:final items) => items.length,
     GraphValue(:final adjacency) => adjacency.length,
     ListNodeValue() => _chainLength(value),
     TreeNodeValue() => _treeSize(value, <TreeNodeValue>{}),
