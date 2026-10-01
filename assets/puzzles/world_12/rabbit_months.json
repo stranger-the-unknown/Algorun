@@ -1,0 +1,92 @@
+{
+  "id": "rabbit_months",
+  "version": 1,
+  "title": "Rabbit Months",
+  "world": "world_12",
+  "chapter": "memo_map_recursion",
+  "tier": 4,
+  "mode": "budget",
+  "concepts": ["recursion"],
+  "prerequisites": ["hash_map"],
+  "story": "A rabbit farm counts pairs month by month: month 0 had 0 pairs, month 1 had 1, and every later month has as many as the two months before it together. How many pairs are there in month n? A function that asks for both earlier months every time repeats the same work over and over; remember each answer in the memo map the first time you find it.",
+  "io": {
+    "inputs": [
+      {"name": "n", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["n is 0 to 60."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "cmp.lt", "ctrl.else", "ctrl.if", "ctrl.return", "fn.call2", "lit.num", "logic.is_not_nothing", "logic.is_nothing", "map.get", "map.has", "map.set", "new.map", "var.get", "var.set"],
+    "maxBlocks": 66
+  },
+  "limits": {"maxOps": 5000, "maxDepth": 80, "maxAlloc": 150},
+  "performance": {"required": true, "baselineFactor": 10},
+  "hints": ["pairs(month) is pairs(month MINUS 1) PLUS pairs(month MINUS 2); months 0 and 1 are given.", "Before working anything out, look in memo: GET month from it, and if it IS NOT NOTHING the answer is already known.", "After working it out, PUT it into memo before you RETURN it. The program passes in a NEW MAP; every CALL shares that same map."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"n": 6},
+        "out": 8
+      },
+      {
+        "id": "v2",
+        "in": {"n": 10},
+        "out": 55
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"n": 0},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"n": 1},
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {"n": 2},
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {"n": 30},
+        "out": 832040
+      },
+      {
+        "id": "h05",
+        "in": {"n": 45},
+        "out": 1134903170
+      },
+      {
+        "id": "h06",
+        "in": {"n": 60},
+        "out": 1548008755920
+      }
+    ]
+  },
+  "edgeCases": ["the same month worked out again and again", "months 0 and 1", "a late month"],
+  "variables": {
+    "pool": [
+      {"name": "known", "type": "num?"},
+      {"name": "v", "type": "num"},
+      {"name": "book", "type": "map<num,num>"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "pairs",
+      "params": [
+        {"name": "month", "type": "num"},
+        {"name": "memo", "type": "map<num,num>"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "memo_map_recursion"}
+}

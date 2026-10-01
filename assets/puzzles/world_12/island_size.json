@@ -1,0 +1,198 @@
+{
+  "id": "island_size",
+  "version": 1,
+  "title": "Island Size",
+  "world": "world_12",
+  "chapter": "flood_fill_recursive",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["recursion"],
+  "prerequisites": [],
+  "story": "A map is a grid of land (1) and water (0). Land squares that touch side by side — not corner to corner — belong to the same island. How big is the island at the given row and column? On water the answer is 0. fill(g, r, c) counts the land reachable from square r, c that is not counted yet, and marks every square it counts by turning it into water.",
+  "io": {
+    "inputs": [
+      {"name": "grid", "type": "array<array<num>>"},
+      {"name": "row", "type": "num"},
+      {"name": "col", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 12},
+    "notes": ["The map has 1 to 12 rows and as many columns; every row is the same length.", "row and col are inside the map."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.lt", "ctrl.if", "ctrl.return", "fn.call3", "lit.num", "logic.or", "var.get", "var.set"],
+    "maxBlocks": 122
+  },
+  "limits": {"maxOps": 43550, "maxDepth": 160, "maxAlloc": 100},
+  "hints": ["A square must count once: after counting a land square, SET ELEMENT it to 0 so no other path counts it again.", "fill(g, r, c): outside the map, or on water, is 0. Otherwise mark the square, then RETURN 1 PLUS fill of the four neighbours: one row down, one up, one column right, one left.", "Mark before you CALL the neighbours, or they keep sending you back. Squares that only touch at a corner are not neighbours."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "grid": [
+            [1, 1, 0, 0],
+            [0, 1, 0, 1],
+            [0, 0, 0, 1]
+          ],
+          "row": 0,
+          "col": 0
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "grid": [
+            [1, 1, 0, 0],
+            [0, 1, 0, 1],
+            [0, 0, 0, 1]
+          ],
+          "row": 2,
+          "col": 3
+        },
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "grid": [
+            [1, 0],
+            [0, 1]
+          ],
+          "row": 0,
+          "col": 0
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "grid": [
+            [1, 0],
+            [0, 1]
+          ],
+          "row": 0,
+          "col": 1
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "grid": [
+            [1]
+          ],
+          "row": 0,
+          "col": 0
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "grid": [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+          ],
+          "row": 5,
+          "col": 7
+        },
+        "out": 144
+      },
+      {
+        "id": "h05",
+        "in": {
+          "grid": [
+            [0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 0]
+          ],
+          "row": 0,
+          "col": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {
+          "grid": [
+            [1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1],
+            [0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0],
+            [1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1],
+            [0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0],
+            [0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1],
+            [1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0]
+          ],
+          "row": 0,
+          "col": 5
+        },
+        "out": 46
+      },
+      {
+        "id": "h07",
+        "in": {
+          "grid": [
+            [0, 0, 0, 1, 1, 0, 1, 1, 0, 0],
+            [0, 1, 1, 1, 1, 0, 1, 1, 0, 0],
+            [0, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+            [0, 1, 0, 0, 1, 0, 1, 1, 0, 1],
+            [0, 1, 0, 1, 1, 0, 1, 0, 1, 1],
+            [1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+            [1, 0, 0, 0, 1, 0, 1, 1, 0, 0],
+            [1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+            [1, 1, 0, 0, 0, 1, 1, 1, 0, 1],
+            [1, 0, 0, 1, 0, 1, 1, 0, 1, 0]
+          ],
+          "row": 6,
+          "col": 6
+        },
+        "out": 13
+      }
+    ]
+  },
+  "edgeCases": ["islands that touch only at a corner", "starting on water", "a map that is all land"],
+  "variables": {
+    "pool": [
+      {"name": "line", "type": "array<num>"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "fill",
+      "params": [
+        {"name": "g", "type": "array<array<num>>"},
+        {"name": "r", "type": "num"},
+        {"name": "c", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "flood_fill_recursive"}
+}

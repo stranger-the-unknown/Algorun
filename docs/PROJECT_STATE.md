@@ -3,7 +3,7 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current state: L2 — player functions and recursion — is in (see MILESTONE_L2.md): world 12 Recursion & Backtracking opens with 6 puzzles; 125 campaign puzzles. MS15 added 34 puzzles before it (Foundations 2 → 12, +24 across ten worlds). The version before L2 is tagged `v0.2-ms15`.**
+**Current state: L2 — player functions and recursion — is in (see MILESTONE_L2.md): world 12 Recursion & Backtracking has 14 puzzles; 133 campaign puzzles. MS15 added 34 puzzles before it (Foundations 2 → 12, +24 across ten worlds). The version before L2 is tagged `v0.2-ms15`.**
 **Why the corpus grows before the playtest (user decision, 2026-09-30):** the user's subscription ends around 2026-10-10; they want the game developed as far as possible now, and will playtest afterwards and bring notes to the next development month. Plan: MS15 content (Foundations, then thin worlds) → recursion and player functions only if content is done by 2026-10-05 → freeze on 2026-10-09 / 10 (tests, APK, web build, a test checklist in `bekleyen-isler.md`). See [`MILESTONE_15.md`](MILESTONE_15.md).
 
 Do not implement the next milestone from this file unless the user explicitly asks.
@@ -37,7 +37,8 @@ The player constructs algorithms with Scratch-style typed visual blocks. No
 syntax. No eval of generated Dart/JS/Kotlin. The game ships 119 campaign puzzles
 in 12 worlds (five from MS8, 33 from MS12, 47 from MS14), tiers 1–5. The
 corpus stops here for a playtest; it is not on the way to 300 until that
-playtest says so. Recursion is still unbuilt, so worlds 09 and 12 stay empty.
+playtest says so. Since L2 world 12 (recursion) has 14 puzzles; world 09
+(heaps) stays empty until the language has heaps.
 
 There is **no TypeScript / React / web product codebase**. The web version
 (W1) is the same Dart app built with Flutter web, not a second implementation.
@@ -670,12 +671,12 @@ puzzle app bar and the piece picker. Details:
 | Suite | Result |
 |---|---|
 | `packages/algorun_engine` `dart analyze` | no issues |
-| `packages/algorun_engine` `dart test` | **367 passed** (L2) |
+| `packages/algorun_engine` `dart test` | **371 passed** (L2, world 12 batch 2) |
 | `packages/algorun_content` `dart analyze` | no issues |
 | `packages/algorun_content` `dart test` | **86 passed** (MS15) |
-| Content validator (assets + worlds + references) | `PIPELINE 119 of 119 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 124 puzzle(s), 7 warning(s)` (MS15) |
+| Content validator (assets + worlds + references) | `PIPELINE 133 of 133 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 138 puzzle(s), 5 warning(s)` (L2, world 12 batch 2) |
 | Flutter `analyze` | no issues |
-| Flutter `test` | **468 passed** (L2; 260 at MS14 review time of this table) |
+| Flutter `test` | **484 passed** (L2, world 12 batch 2; 260 at MS14 review time of this table) |
 | `flutter build apk --debug` | built |
 | Emulator checklist (18 steps, MILESTONE_13.md) | passed on Android 15 emulator, 360 / 390 / 412 dp, landscape (MS13) |
 | U1 emulator pass (MILESTONE_U1.md) | English and Turkish at 360 × 800 dp: home, reference, settings, worlds, puzzle, picker, pad, results |
@@ -802,7 +803,7 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | U1 | English / Turkish, block reference, number entry, no CREATE VARIABLE | complete |
 | 14 | Content batch 2: 47 puzzles (85 in the campaign) | complete |
 | 15 | Content batch 3: Foundations 2 → 12, +24 across ten worlds (119 in the campaign) | complete |
-| **L2** | Player functions and recursion; world 12 Recursion & Backtracking with 6 puzzles (125 in the campaign) | **complete** |
+| **L2** | Player functions and recursion; world 12 Recursion & Backtracking with 14 puzzles (133 in the campaign) | **complete** |
 | later | Language: player functions / recursion, heap values and blocks, starter programs for complete / repair modes | planned, each unblocks content; do not start until playtest |
 
 ## Content backlog and coverage (MS15 batch 3, in progress)
@@ -824,7 +825,7 @@ Source of truth: `content/coverage.json`.
 | 09 Heaps | 0 / 15 | blocked by the language (heap) |
 | 10 Graphs | 15 / 30 | platform doors, direct hop, silent stops, scout reach, scout last, biggest patch, source radius, last layer; MS15: ring road, ride limit |
 | 11 Greedy | 8 / 20 | cookie gifts, dock overlap, leap reach; MS15: every rise, one room, medals in a row |
-| 12 Recursion & Backtracking | 6 / 15 | L2: stack of coins, tree total, exact weight, even branches, change ways, watchtowers |
+| 12 Recursion & Backtracking | 14 / 15 | L2: stack of coins, tree total, exact weight, even branches, change ways, watchtowers; batch 2: digit root, lucky picks, lantern rows, catalogue check, island size, power steps, rabbit months, maze paths |
 | 13 Dynamic Programming | 10 / 30 | plank ways, step toll, aisle cost, open lanes, diagonal haul, pack bins; MS15: best stretch, rising line |
 | 14 Advanced | 1 / 8 | — |
 

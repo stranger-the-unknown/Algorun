@@ -1,0 +1,101 @@
+{
+  "id": "digit_root",
+  "version": 1,
+  "title": "Digit Root",
+  "world": "world_12",
+  "chapter": "two_functions_digit_root",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["recursion"],
+  "prerequisites": [],
+  "story": "Add up the digits of a number, then the digits of that sum, and so on, until a single digit is left. Two functions do it without any loop: digits(m) adds up the digits of m once, and root(m) keeps going until m is a single digit.",
+  "io": {
+    "inputs": [
+      {"name": "n", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["n is a whole number from 0 to 999999999."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.floor_div", "arith.mod", "cmp.eq", "cmp.le", "cmp.lt", "ctrl.if", "ctrl.return", "fn.call1", "lit.num", "var.get"],
+    "maxBlocks": 48
+  },
+  "limits": {"maxOps": 400, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Each function CALLs itself: digits on the number without its last digit, root on the digit sum.", "digits(m): IF m EQUAL 0, RETURN 0; otherwise RETURN m REMAINDER 10 PLUS CALL digits(m FLOOR DIVIDE 10).", "root(m): a number LESS THAN 10 is already one digit; otherwise RETURN CALL root(CALL digits(m)). Careful: 10 has two digits."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"n": 9875},
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {"n": 456},
+        "out": 6
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"n": 10},
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {"n": 0},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"n": 9},
+        "out": 9
+      },
+      {
+        "id": "h04",
+        "in": {"n": 19},
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {"n": 28},
+        "out": 1
+      },
+      {
+        "id": "h06",
+        "in": {"n": 100},
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {"n": 999999999},
+        "out": 9
+      },
+      {
+        "id": "h08",
+        "in": {"n": 123456789},
+        "out": 9
+      }
+    ]
+  },
+  "edgeCases": ["10 and other numbers whose digits add up to 10", "the number 0", "a single digit"],
+  "variables": {"pool": []},
+  "functions": [
+    {
+      "name": "digits",
+      "params": [
+        {"name": "m", "type": "num"}
+      ],
+      "returns": "num"
+    },
+    {
+      "name": "root",
+      "params": [
+        {"name": "m", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "two_functions_digit_root"}
+}

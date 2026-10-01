@@ -13,8 +13,8 @@ void main() {
         for (final id in ids) id: const PuzzleProgress(puzzleVersion: 1, completed: true),
       });
 
-  test('125 puzzles load, and a fresh install starts at Foundations', () {
-    expect(campaign.puzzles, hasLength(125));
+  test('133 puzzles load, and a fresh install starts at Foundations', () {
+    expect(campaign.puzzles, hasLength(133));
     final fresh = evaluateCampaign(campaign, PlayerSave.fresh);
     expect(fresh.worldStatus('world_01'), WorldStatus.open);
     // MS15: Foundations holds twelve puzzles, all open from the start.

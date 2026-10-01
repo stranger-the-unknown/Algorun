@@ -1,0 +1,149 @@
+{
+  "id": "maze_paths",
+  "version": 1,
+  "title": "Maze Paths",
+  "world": "world_12",
+  "chapter": "mark_unmark_paths",
+  "tier": 5,
+  "mode": "build",
+  "concepts": ["backtracking"],
+  "prerequisites": [],
+  "story": "A maze is a grid of open squares (1) and walls (0). Walking from the top-left square to the bottom-right square, one step at a time up, down, left or right, and never stepping on the same square twice in one walk, how many different walks are there? walk(g, r, c) counts the walks from square r, c to the end; it marks the squares of the walk so far as walls.",
+  "io": {
+    "inputs": [
+      {"name": "maze", "type": "array<array<num>>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 5},
+    "notes": ["The maze has 1 to 5 rows and 1 to 5 columns; every row is the same length."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.lt", "ctrl.if", "ctrl.return", "fn.call3", "lit.num", "logic.and", "logic.or", "var.get", "var.set"],
+    "maxBlocks": 157
+  },
+  "limits": {"maxOps": 344200, "maxDepth": 40, "maxAlloc": 100},
+  "hints": ["At each square, try all four directions. A square on the current walk must not be stepped on again: mark it as a wall (SET ELEMENT to 0) while you are on it.", "walk(g, r, c): outside, or on a wall, is 0; the bottom-right square is 1 walk. Otherwise mark the square, add up walk for the four neighbours, then RETURN the sum.", "Before you RETURN, SET ELEMENT the square back to 1: another walk may pass through it later. Forgetting this loses walks."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "maze": [
+            [1, 1, 1]
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {
+          "maze": [
+            [1, 1],
+            [1, 1]
+          ]
+        },
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "maze": [
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1]
+          ]
+        },
+        "out": 12
+      },
+      {
+        "id": "h02",
+        "in": {
+          "maze": [
+            [1]
+          ]
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "maze": [
+            [0, 1],
+            [1, 1]
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {
+          "maze": [
+            [1, 1],
+            [1, 0]
+          ]
+        },
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {
+          "maze": [
+            [1, 1, 1, 1],
+            [1, 0, 0, 1],
+            [1, 1, 1, 1]
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "maze": [
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1]
+          ]
+        },
+        "out": 184
+      },
+      {
+        "id": "h07",
+        "in": {
+          "maze": [
+            [1, 1, 1, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 1]
+          ]
+        },
+        "out": 12
+      }
+    ]
+  },
+  "edgeCases": ["a square not cleared after trying it", "a wall at the start or the end", "a maze of one square"],
+  "variables": {
+    "pool": [
+      {"name": "line", "type": "array<num>"},
+      {"name": "ways", "type": "num"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "walk",
+      "params": [
+        {"name": "g", "type": "array<array<num>>"},
+        {"name": "r", "type": "num"},
+        {"name": "c", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "mark_unmark_paths"}
+}

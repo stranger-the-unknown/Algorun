@@ -1,0 +1,98 @@
+{
+  "id": "power_steps",
+  "version": 1,
+  "title": "Power Steps",
+  "world": "world_12",
+  "chapter": "fast_power_halving",
+  "tier": 4,
+  "mode": "budget",
+  "concepts": ["recursion"],
+  "prerequisites": [],
+  "story": "A calculator only shows the last four digits. What does it show for base to the power exp? Any base to the power 0 shows 1. Multiplying exp times takes far too many steps for huge exponents: an even exponent can be halved, since b to the power 2k is b to the power k, times itself.",
+  "io": {
+    "inputs": [
+      {"name": "base", "type": "num"},
+      {"name": "exp", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["base is 0 to 9999.", "exp is 0 to 1000000000."]},
+  "blocks": {
+    "allow": ["arith.floor_div", "arith.mod", "arith.mul", "arith.sub", "cmp.eq", "ctrl.else", "ctrl.for_range", "ctrl.if", "ctrl.return", "fn.call2", "lit.num", "var.get", "var.set"],
+    "maxBlocks": 63
+  },
+  "limits": {"maxOps": 2000, "maxDepth": 80, "maxAlloc": 100},
+  "performance": {"required": true, "baselineFactor": 10},
+  "hints": ["Keep only the last four digits after every multiplication: REMAINDER 10000.", "power(b, e): e of 0 gives 1; an even e gives the square of power(b, e FLOOR DIVIDE 2); an odd e gives b TIMES power(b, e MINUS 1).", "SET the half into a variable and multiply it by itself: CALLing power twice for the same half is as slow as multiplying one step at a time."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"base": 2, "exp": 10},
+        "out": 1024
+      },
+      {
+        "id": "v2",
+        "in": {"base": 7, "exp": 3},
+        "out": 343
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"base": 5, "exp": 0},
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {"base": 0, "exp": 7},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"base": 10, "exp": 4},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"base": 9999, "exp": 2},
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {"base": 2, "exp": 1000000000},
+        "out": 9376
+      },
+      {
+        "id": "h06",
+        "in": {"base": 1234, "exp": 987654321},
+        "out": 9184
+      },
+      {
+        "id": "h07",
+        "in": {"base": 3, "exp": 1000000},
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": ["a huge exponent", "the power 0", "a base ending in zeros"],
+  "variables": {
+    "pool": [
+      {"name": "h", "type": "num"},
+      {"name": "res", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "power",
+      "params": [
+        {"name": "b", "type": "num"},
+        {"name": "e", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "fast_power_halving"}
+}

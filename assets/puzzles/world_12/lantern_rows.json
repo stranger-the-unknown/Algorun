@@ -1,0 +1,80 @@
+{
+  "id": "lantern_rows",
+  "version": 1,
+  "title": "Lantern Rows",
+  "world": "world_12",
+  "chapter": "branching_count_with_state",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": ["recursion"],
+  "prerequisites": [],
+  "story": "Each lantern in a row of n can be on or off, but two lanterns side by side may never both be on. How many different patterns are allowed? An empty row has one pattern: nothing. rows(left, on) counts the patterns for the lanterns still to place, where on says whether the last one placed is on.",
+  "io": {
+    "inputs": [
+      {"name": "n", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["n is 0 to 15."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "cmp.eq", "ctrl.else", "ctrl.if", "ctrl.return", "fn.call2", "lit.bool", "lit.num", "logic.and", "logic.not", "var.get"],
+    "maxBlocks": 50
+  },
+  "limits": {"maxOps": 100300, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Place the lanterns one by one; what may come next depends only on how many are left and whether the last one is on.", "An off lantern always fits: CALL rows(left MINUS 1, FALSE). An on lantern fits only after an off one: CALL rows(left MINUS 1, TRUE).", "With no lanterns left there is exactly 1 pattern: stop at 0, not at 1, or an empty row never stops. The program asks rows(n, FALSE)."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"n": 3},
+        "out": 5
+      },
+      {
+        "id": "v2",
+        "in": {"n": 5},
+        "out": 13
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"n": 0},
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {"n": 1},
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {"n": 2},
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {"n": 10},
+        "out": 144
+      },
+      {
+        "id": "h05",
+        "in": {"n": 15},
+        "out": 1597
+      }
+    ]
+  },
+  "edgeCases": ["an empty row", "a single lantern", "two lanterns on side by side"],
+  "variables": {"pool": []},
+  "functions": [
+    {
+      "name": "rows",
+      "params": [
+        {"name": "left", "type": "num"},
+        {"name": "on", "type": "bool"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "branching_count_with_state"}
+}

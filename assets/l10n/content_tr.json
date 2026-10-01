@@ -1175,6 +1175,78 @@
         "Bu satırda her c sütununu dene: daha önceki hiçbir kule c sütununda değilse ve hiçbiri satır farkı kadar sütun uzakta değilse (çapraz) güvenlidir. Güvenliyse c'yi APPEND et, CALL place(row PLUS 1, size, cols) ekle, sonra kuleyi geri almak için son konumu REMOVE AT ile sil.",
         "row size'a EQUAL olunca her kule yerindedir: bu 1 yoldur. Program bir NEW LIST ile başlar ve CALL place(0, n, o liste) yapar."
       ]
+    },
+    "digit_root": {
+      "title": "Rakam Kökü",
+      "story": "Bir sayının rakamlarını topla, sonra o toplamın rakamlarını, ve böyle tek bir rakam kalana kadar devam et. İki fonksiyon bunu hiç döngü kullanmadan yapar: digits(m), m'nin rakamlarını bir kez toplar; root(m) ise m tek bir rakam olana kadar devam eder.",
+      "hints": [
+        "Her fonksiyon kendini CALL ile çağırır: digits son rakamı atılmış sayı için, root rakam toplamı için.",
+        "digits(m): IF m EQUAL 0 ise RETURN 0; değilse RETURN m REMAINDER 10 PLUS CALL digits(m FLOOR DIVIDE 10).",
+        "root(m): 10'dan küçük (LESS THAN) bir sayı zaten tek rakamdır; değilse RETURN CALL root(CALL digits(m)). Dikkat: 10 iki rakamlıdır."
+      ]
+    },
+    "lucky_picks": {
+      "title": "Şanslı Kartlar",
+      "story": "Bir piyango kartı, 1'den 9'a kadar, toplamı tam olarak hedefe eşit k farklı rakam istiyor. Sıra önemli değil: 2 ve 7, 7 ve 2 ile aynı karttır. Kaç farklı kart vardır? pick(low, left, rest), her biri en az low olan ve hepsi farklı, toplamı rest olan left tane rakam daha seçmenin yollarını sayar.",
+      "hints": [
+        "Rakamları küçükten büyüğe seç; böylece her kart bir kez sayılır.",
+        "pick(low, left, rest): low'dan 10'a kadar (yani 9'a kadar) her d rakamı için (FOR … FROM … TO) CALL pick(d PLUS 1, left MINUS 1, rest MINUS d) ekle.",
+        "Seçilecek rakam kalmadıysa, rest 0 ise 1 yol, değilse hiç yol yoktur. Bir sonraki seçime d PLUS 1 yerine d ile başlamak bir rakamın tekrar seçilmesine izin verir."
+      ]
+    },
+    "lantern_rows": {
+      "title": "Fener Sırası",
+      "story": "n fenerden oluşan bir sıradaki her fener açık ya da kapalı olabilir, ama yan yana iki fener asla ikisi birden açık olamaz. Kaç farklı desene izin var? Boş bir sıranın tek bir deseni vardır: hiçbir şey. rows(left, on), yerleştirilecek fenerler için desenleri sayar; on, son yerleştirilen fenerin açık olup olmadığını söyler.",
+      "hints": [
+        "Fenerleri tek tek yerleştir; sırada ne gelebileceği yalnızca kaç tane kaldığına ve son fenerin açık olup olmadığına bağlıdır.",
+        "Kapalı bir fener her zaman sığar: CALL rows(left MINUS 1, FALSE). Açık bir fener yalnızca kapalı birinin ardından sığar: CALL rows(left MINUS 1, TRUE).",
+        "Fener kalmadığında tam 1 desen vardır: 1'de değil 0'da dur, yoksa boş bir sıra hiç bitmez. Program rows(n, FALSE) sorar."
+      ]
+    },
+    "catalogue_check": {
+      "title": "Katalog Denetimi",
+      "story": "Bir arama ağacı düzenini her yerde korumalıdır: bir düğümün sol dalındaki her etiket düğümün etiketinden küçük, sağ dalındaki her etiket ise büyüktür. Yalnızca çocuklar değil, hepsi. Etiketler 1'den 1000'e kadar farklı tam sayılardır. Ağaç düzenli mi? ok(node, low, high), bu daldaki her etiketin low ile high arasında (ikisi hariç) olup olmadığını söyler.",
+      "hints": [
+        "Kök 1'den 1000'e kadar herhangi bir etiket olabilir: ok(root, 0, 1001) ile başla.",
+        "Bir düğüm low ile high arasında olmalı; sonra LEFT dalı low ile düğümün etiketi arasında, RIGHT dalı da etiket ile high arasında olmalıdır.",
+        "Bir düğümü yalnızca kendi çocuklarıyla karşılaştırmak, kökün yanlış tarafındaki bir torunu kaçırır."
+      ]
+    },
+    "island_size": {
+      "title": "Ada Büyüklüğü",
+      "story": "Bir harita, kara (1) ve su (0) karelerinden oluşan bir ızgaradır. Yan yana değen kara kareleri (köşeden köşeye değil) aynı adaya aittir. Verilen satır ve sütundaki ada ne kadar büyük? Su üzerindeyse cevap 0'dır. fill(g, r, c), r, c karesinden ulaşılabilen ve henüz sayılmamış karayı sayar; saydığı her kareyi suya çevirerek işaretler.",
+      "hints": [
+        "Bir kare bir kez sayılmalı: bir kara karesini saydıktan sonra onu SET ELEMENT ile 0 yap ki başka bir yol onu tekrar saymasın.",
+        "fill(g, r, c): haritanın dışı ya da su 0'dır. Değilse kareyi işaretle, sonra RETURN 1 PLUS dört komşunun fill'i: bir satır aşağı, bir yukarı, bir sütun sağ, bir sol.",
+        "Komşuları CALL ile çağırmadan önce işaretle, yoksa birbirlerine geri gönderip dururlar. Yalnızca köşeden değen kareler komşu değildir."
+      ]
+    },
+    "power_steps": {
+      "title": "Kuvvet Basamakları",
+      "story": "Bir hesap makinesi yalnızca son dört rakamı gösteriyor. base'in exp'inci kuvveti için ne gösterir? Her sayının 0'ıncı kuvveti 1 gösterir. exp kez çarpmak devasa üsler için çok fazla adım sürer: çift bir üs yarıya bölünebilir, çünkü b'nin 2k'ncı kuvveti, b'nin k'ncı kuvvetinin kendisiyle çarpımıdır.",
+      "hints": [
+        "Her çarpmadan sonra yalnızca son dört rakamı tut: REMAINDER 10000.",
+        "power(b, e): e 0 ise 1; çift e için power(b, e FLOOR DIVIDE 2)'nin karesi; tek e için b TIMES power(b, e MINUS 1).",
+        "Yarıyı bir değişkene SET et ve kendisiyle çarp: aynı yarı için power'ı iki kez CALL etmek, adım adım çarpmak kadar yavaştır."
+      ]
+    },
+    "rabbit_months": {
+      "title": "Tavşan Ayları",
+      "story": "Bir tavşan çiftliği çiftleri ay ay sayıyor: 0. ayda 0 çift, 1. ayda 1 çift vardı ve sonraki her ayda, önceki iki ayın toplamı kadar çift olur. n. ayda kaç çift vardır? Her seferinde önceki iki ayı soran bir fonksiyon aynı işi tekrar tekrar yapar; her cevabı ilk bulduğunda memo haritasında hatırla.",
+      "hints": [
+        "pairs(month), pairs(month MINUS 1) PLUS pairs(month MINUS 2)'dir; 0. ve 1. aylar verilmiştir.",
+        "Bir şey hesaplamadan önce memo'ya bak: month'u ondan GET et; IS NOT NOTHING ise cevap zaten biliniyordur.",
+        "Hesapladıktan sonra RETURN etmeden önce onu memo'ya PUT et. Program bir NEW MAP verir; her CALL aynı haritayı paylaşır."
+      ]
+    },
+    "maze_paths": {
+      "title": "Labirent Yolları",
+      "story": "Bir labirent, açık karelerden (1) ve duvarlardan (0) oluşan bir ızgaradır. Sol üst kareden sağ alt kareye, her adımda yukarı, aşağı, sola ya da sağa bir kare giderek ve bir yürüyüşte aynı kareye asla iki kez basmadan kaç farklı yürüyüş vardır? walk(g, r, c), r, c karesinden sona kadar olan yürüyüşleri sayar; o ana kadarki yürüyüşün karelerini duvar olarak işaretler.",
+      "hints": [
+        "Her karede dört yönü de dene. O anki yürüyüşteki bir kareye yeniden basılmamalı: üzerindeyken onu duvar olarak işaretle (SET ELEMENT ile 0).",
+        "walk(g, r, c): dışarısı ya da duvar 0'dır; sağ alt kare 1 yürüyüştür. Değilse kareyi işaretle, dört komşu için walk'ları topla, sonra toplamı RETURN et.",
+        "RETURN etmeden önce kareyi SET ELEMENT ile yeniden 1 yap: başka bir yürüyüş daha sonra oradan geçebilir. Bunu unutmak yürüyüş kaybettirir."
+      ]
     }
   }
 }

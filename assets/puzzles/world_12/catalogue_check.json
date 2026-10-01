@@ -1,0 +1,1070 @@
+{
+  "id": "catalogue_check",
+  "version": 1,
+  "title": "Catalogue Check",
+  "world": "world_12",
+  "chapter": "bounds_passed_down",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["recursion"],
+  "prerequisites": ["tree"],
+  "story": "A search tree must keep its order everywhere: every label in a node's left branch is smaller than the node's label, and every label in its right branch is larger. Not just the children — all of them. Labels are different whole numbers from 1 to 1000. Is the tree in order? ok(node, low, high) says whether every label in this branch lies strictly between low and high.",
+  "io": {
+    "inputs": [
+      {"name": "root", "type": "treeNode?"}
+    ],
+    "output": {"type": "bool"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 150},
+    "notes": ["Labels are different whole numbers from 1 to 1000."]
+  },
+  "blocks": {
+    "allow": ["cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "ctrl.else", "ctrl.if", "ctrl.return", "fn.call3", "lit.bool", "lit.num", "logic.and", "logic.is_not_nothing", "logic.is_nothing", "logic.not", "logic.or", "tree.left", "tree.right", "tree.value", "var.get", "var.set"],
+    "maxBlocks": 61
+  },
+  "limits": {"maxOps": 9650, "maxDepth": 64, "maxAlloc": 100},
+  "hints": ["The root may hold any label from 1 to 1000: start with ok(root, 0, 1001).", "A node must lie between low and high; then its LEFT branch must lie between low and the node's label, and its RIGHT branch between the label and high.", "Comparing a node only with its own children misses a grandchild on the wrong side of the root."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 8,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 1},
+              "right": {"type": "treeNode", "value": 6}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 10,
+              "right": {"type": "treeNode", "value": 14}
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {"type": "treeNode", "value": 7},
+            "right": {"type": "treeNode", "value": 9}
+          }
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"root": null},
+        "out": true
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {"type": "treeNode", "value": 1}
+        },
+        "out": true
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 8,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "right": {"type": "treeNode", "value": 9}
+            },
+            "right": {"type": "treeNode", "value": 10}
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "right": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {"type": "treeNode", "value": 4}
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 20,
+            "left": {
+              "type": "treeNode",
+              "value": 10,
+              "left": {"type": "treeNode", "value": 5},
+              "right": {"type": "treeNode", "value": 15}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 30,
+              "left": {"type": "treeNode", "value": 25},
+              "right": {"type": "treeNode", "value": 40}
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 440,
+            "left": {
+              "type": "treeNode",
+              "value": 436,
+              "left": {
+                "type": "treeNode",
+                "value": 291,
+                "left": {
+                  "type": "treeNode",
+                  "value": 16,
+                  "left": {"type": "treeNode", "value": 13},
+                  "right": {
+                    "type": "treeNode",
+                    "value": 51,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 32,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 31,
+                        "left": {"type": "treeNode", "value": 25}
+                      },
+                      "right": {"type": "treeNode", "value": 43}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 226,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 62,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 57,
+                          "left": {"type": "treeNode", "value": 54}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 204,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 95,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 89,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 84,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 81,
+                                  "left": {"type": "treeNode", "value": 69}
+                                }
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 93,
+                                "right": {"type": "treeNode", "value": 94}
+                              }
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 99,
+                              "left": {"type": "treeNode", "value": 98},
+                              "right": {
+                                "type": "treeNode",
+                                "value": 149,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 126,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 117,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 105,
+                                      "right": {"type": "treeNode", "value": 109}
+                                    }
+                                  },
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 136,
+                                    "right": {"type": "treeNode", "value": 146}
+                                  }
+                                },
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 155,
+                                  "left": {"type": "treeNode", "value": 150},
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 196,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 192,
+                                      "left": {
+                                        "type": "treeNode",
+                                        "value": 179,
+                                        "left": {
+                                          "type": "treeNode",
+                                          "value": 160,
+                                          "right": {"type": "treeNode", "value": 172}
+                                        },
+                                        "right": {"type": "treeNode", "value": 191}
+                                      }
+                                    },
+                                    "right": {
+                                      "type": "treeNode",
+                                      "value": 199,
+                                      "left": {"type": "treeNode", "value": 198}
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 222,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 206,
+                              "right": {"type": "treeNode", "value": 219}
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 227,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 268,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 241,
+                            "right": {"type": "treeNode", "value": 267}
+                          },
+                          "right": {"type": "treeNode", "value": 287}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 423,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 360,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 339,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 317,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 313,
+                          "left": {"type": "treeNode", "value": 311}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 335,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 331,
+                            "left": {"type": "treeNode", "value": 322}
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 337,
+                            "right": {"type": "treeNode", "value": 338}
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 353,
+                        "left": {"type": "treeNode", "value": 347},
+                        "right": {"type": "treeNode", "value": 357}
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 417,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 377,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 372,
+                          "right": {"type": "treeNode", "value": 376}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 409,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 400,
+                            "left": {"type": "treeNode", "value": 395}
+                          },
+                          "right": {"type": "treeNode", "value": 414}
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 424,
+                    "right": {"type": "treeNode", "value": 430}
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 910,
+              "left": {
+                "type": "treeNode",
+                "value": 884,
+                "left": {
+                  "type": "treeNode",
+                  "value": 819,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 685,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 582,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 513,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 455,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 446,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 445,
+                              "left": {"type": "treeNode", "value": 442}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 507,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 482,
+                              "left": {"type": "treeNode", "value": 466}
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 569,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 528,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 527,
+                              "left": {"type": "treeNode", "value": 520}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 562,
+                              "left": {"type": "treeNode", "value": 541},
+                              "right": {"type": "treeNode", "value": 567}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 578,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 581,
+                              "left": {"type": "treeNode", "value": 580}
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 633,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 583,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 623,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 585,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 617,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 612,
+                                  "left": {"type": "treeNode", "value": 597}
+                                }
+                              }
+                            },
+                            "right": {"type": "treeNode", "value": 628}
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 672,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 657,
+                            "left": {"type": "treeNode", "value": 641},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 668,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 658,
+                                "right": {"type": "treeNode", "value": 659}
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 674,
+                            "left": {"type": "treeNode", "value": 673}
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 721,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 705,
+                        "left": {"type": "treeNode", "value": 697}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 732,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 816,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 802,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 788,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 776,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 775,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 753,
+                                    "left": {"type": "treeNode", "value": 734}
+                                  }
+                                },
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 780,
+                                  "left": {"type": "treeNode", "value": 777}
+                                }
+                              },
+                              "right": {"type": "treeNode", "value": 790}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 809,
+                              "left": {"type": "treeNode", "value": 803}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 882,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 879,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 859,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 821,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 847,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 837,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 822,
+                                "right": {"type": "treeNode", "value": 825}
+                              }
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 851,
+                              "right": {"type": "treeNode", "value": 853}
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 870,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 864,
+                            "right": {"type": "treeNode", "value": 867}
+                          },
+                          "right": {"type": "treeNode", "value": 872}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 908,
+                  "left": {"type": "treeNode", "value": 892}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 966,
+                "left": {
+                  "type": "treeNode",
+                  "value": 949,
+                  "left": {"type": "treeNode", "value": 918},
+                  "right": {
+                    "type": "treeNode",
+                    "value": 960,
+                    "right": {"type": "treeNode", "value": 962}
+                  }
+                },
+                "right": {"type": "treeNode", "value": 988}
+              }
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 440,
+            "left": {
+              "type": "treeNode",
+              "value": 436,
+              "left": {
+                "type": "treeNode",
+                "value": 291,
+                "left": {
+                  "type": "treeNode",
+                  "value": 16,
+                  "left": {"type": "treeNode", "value": 441},
+                  "right": {
+                    "type": "treeNode",
+                    "value": 51,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 32,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 31,
+                        "left": {"type": "treeNode", "value": 25}
+                      },
+                      "right": {"type": "treeNode", "value": 43}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 226,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 62,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 57,
+                          "left": {"type": "treeNode", "value": 54}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 204,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 95,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 89,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 84,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 81,
+                                  "left": {"type": "treeNode", "value": 69}
+                                }
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 93,
+                                "right": {"type": "treeNode", "value": 94}
+                              }
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 99,
+                              "left": {"type": "treeNode", "value": 98},
+                              "right": {
+                                "type": "treeNode",
+                                "value": 149,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 126,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 117,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 105,
+                                      "right": {"type": "treeNode", "value": 109}
+                                    }
+                                  },
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 136,
+                                    "right": {"type": "treeNode", "value": 146}
+                                  }
+                                },
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 155,
+                                  "left": {"type": "treeNode", "value": 150},
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 196,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 192,
+                                      "left": {
+                                        "type": "treeNode",
+                                        "value": 179,
+                                        "left": {
+                                          "type": "treeNode",
+                                          "value": 160,
+                                          "right": {"type": "treeNode", "value": 172}
+                                        },
+                                        "right": {"type": "treeNode", "value": 191}
+                                      }
+                                    },
+                                    "right": {
+                                      "type": "treeNode",
+                                      "value": 199,
+                                      "left": {"type": "treeNode", "value": 198}
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 222,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 206,
+                              "right": {"type": "treeNode", "value": 219}
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 227,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 268,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 241,
+                            "right": {"type": "treeNode", "value": 267}
+                          },
+                          "right": {"type": "treeNode", "value": 287}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 423,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 360,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 339,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 317,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 313,
+                          "left": {"type": "treeNode", "value": 311}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 335,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 331,
+                            "left": {"type": "treeNode", "value": 322}
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 337,
+                            "right": {"type": "treeNode", "value": 338}
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 353,
+                        "left": {"type": "treeNode", "value": 347},
+                        "right": {"type": "treeNode", "value": 357}
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 417,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 377,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 372,
+                          "right": {"type": "treeNode", "value": 376}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 409,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 400,
+                            "left": {"type": "treeNode", "value": 395}
+                          },
+                          "right": {"type": "treeNode", "value": 414}
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 424,
+                    "right": {"type": "treeNode", "value": 430}
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 910,
+              "left": {
+                "type": "treeNode",
+                "value": 884,
+                "left": {
+                  "type": "treeNode",
+                  "value": 819,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 685,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 582,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 513,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 455,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 446,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 445,
+                              "left": {"type": "treeNode", "value": 442}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 507,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 482,
+                              "left": {"type": "treeNode", "value": 466}
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 569,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 528,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 527,
+                              "left": {"type": "treeNode", "value": 520}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 562,
+                              "left": {"type": "treeNode", "value": 541},
+                              "right": {"type": "treeNode", "value": 567}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 578,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 581,
+                              "left": {"type": "treeNode", "value": 580}
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 633,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 583,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 623,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 585,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 617,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 612,
+                                  "left": {"type": "treeNode", "value": 597}
+                                }
+                              }
+                            },
+                            "right": {"type": "treeNode", "value": 628}
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 672,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 657,
+                            "left": {"type": "treeNode", "value": 641},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 668,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 658,
+                                "right": {"type": "treeNode", "value": 659}
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 674,
+                            "left": {"type": "treeNode", "value": 673}
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 721,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 705,
+                        "left": {"type": "treeNode", "value": 697}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 732,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 816,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 802,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 788,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 776,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 775,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 753,
+                                    "left": {"type": "treeNode", "value": 734}
+                                  }
+                                },
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 780,
+                                  "left": {"type": "treeNode", "value": 777}
+                                }
+                              },
+                              "right": {"type": "treeNode", "value": 790}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 809,
+                              "left": {"type": "treeNode", "value": 803}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 882,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 879,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 859,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 821,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 847,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 837,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 822,
+                                "right": {"type": "treeNode", "value": 825}
+                              }
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 851,
+                              "right": {"type": "treeNode", "value": 853}
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 870,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 864,
+                            "right": {"type": "treeNode", "value": 867}
+                          },
+                          "right": {"type": "treeNode", "value": 872}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 908,
+                  "left": {"type": "treeNode", "value": 892}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 966,
+                "left": {
+                  "type": "treeNode",
+                  "value": 949,
+                  "left": {"type": "treeNode", "value": 918},
+                  "right": {
+                    "type": "treeNode",
+                    "value": 960,
+                    "right": {"type": "treeNode", "value": 962}
+                  }
+                },
+                "right": {"type": "treeNode", "value": 988}
+              }
+            }
+          }
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": ["a grandchild on the wrong side of the root", "an empty tree", "a single node"],
+  "variables": {
+    "pool": [
+      {"name": "l", "type": "treeNode?"},
+      {"name": "r", "type": "treeNode?"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "ok",
+      "params": [
+        {"name": "node", "type": "treeNode?"},
+        {"name": "low", "type": "num"},
+        {"name": "high", "type": "num"}
+      ],
+      "returns": "bool"
+    }
+  ],
+  "reference": {"strategy": "bounds_passed_down"}
+}

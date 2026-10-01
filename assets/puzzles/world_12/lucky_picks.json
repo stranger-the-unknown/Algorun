@@ -1,0 +1,102 @@
+{
+  "id": "lucky_picks",
+  "version": 1,
+  "title": "Lucky Picks",
+  "world": "world_12",
+  "chapter": "choose_k_distinct_digits",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["backtracking"],
+  "prerequisites": [],
+  "story": "A lottery card asks for k different digits from 1 to 9 that add up to exactly the total. The order does not matter: 2 and 7 is the same card as 7 and 2. How many different cards are there? pick(low, left, rest) counts the ways to choose left more digits, each at least low and all different, that add up to rest.",
+  "io": {
+    "inputs": [
+      {"name": "k", "type": "num"},
+      {"name": "total", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["k is 0 to 9.", "The total is 0 to 45."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "cmp.eq", "cmp.lt", "ctrl.for_range", "ctrl.if", "ctrl.return", "fn.call3", "lit.num", "var.get", "var.set"],
+    "maxBlocks": 61
+  },
+  "limits": {"maxOps": 25600, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Choose the digits from smallest to largest, so every card is counted once.", "pick(low, left, rest): FOR every digit d FROM low TO 10 (that is, up to 9), add CALL pick(d PLUS 1, left MINUS 1, rest MINUS d).", "With no digits left to choose there is 1 way if rest is 0, else none. Starting the next choice at d instead of d PLUS 1 lets a digit repeat."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"k": 2, "total": 3},
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {"k": 2, "total": 15},
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"k": 2, "total": 4},
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {"k": 0, "total": 0},
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {"k": 0, "total": 5},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"k": 9, "total": 45},
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {"k": 3, "total": 15},
+        "out": 8
+      },
+      {
+        "id": "h06",
+        "in": {"k": 4, "total": 20},
+        "out": 12
+      },
+      {
+        "id": "h07",
+        "in": {"k": 1, "total": 10},
+        "out": 0
+      },
+      {
+        "id": "h08",
+        "in": {"k": 5, "total": 25},
+        "out": 12
+      }
+    ]
+  },
+  "edgeCases": ["a digit used twice", "k of 0", "a total no card can make"],
+  "variables": {
+    "pool": [
+      {"name": "count", "type": "num"},
+      {"name": "d", "type": "num"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "pick",
+      "params": [
+        {"name": "low", "type": "num"},
+        {"name": "left", "type": "num"},
+        {"name": "rest", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "choose_k_distinct_digits"}
+}

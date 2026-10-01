@@ -2,6 +2,7 @@ import 'batch2.dart';
 import 'batch3.dart';
 import 'batch4.dart';
 import 'batch5.dart';
+import 'batch6.dart';
 import 'arrays.dart';
 import 'foundations.dart';
 import 'graphs.dart';
@@ -31,4 +32,5 @@ const Map<String, Oracle> oracleRegistry = {
   ...batch3Oracles,
   ...batch4Oracles,
   ...batch5Oracles,
+  ...batch6Oracles,
 };

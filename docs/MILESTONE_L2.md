@@ -38,17 +38,50 @@ Oracles in `packages/algorun_content/lib/src/oracles/batch5.dart` (a fold,
 an explicit stack, heights per node, bit masks, a DP table, permutations).
 `maxDepth` is set per puzzle (32–80).
 
+### Second batch (2026-10-01): 6 → 14 of 15
+
+| Puzzle | Tier | Function(s) | What it teaches | The trap (its reject) |
+|---|---|---|---|---|
+| Digit Root | 3 | `digits(m)`, `root(m)` | two functions, one calling the other | stopping at 10 (LESS OR EQUAL) |
+| Lucky Picks | 3 | `pick(low, left, rest)` | k different digits in increasing order | picking the same digit again |
+| Lantern Rows | 3 (edge) | `rows(left, on)` | a BOOLEAN parameter carries state | base case at one lantern (DEPTH LIMIT on an empty row) |
+| Catalogue Check | 4 | `ok(node, low, high)` | bounds passed down a search tree | comparing a node with its children only |
+| Island Size | 4 | `fill(g, r, c)` | flood fill, marking with SET ELEMENT on a row | counting diagonal neighbours |
+| Power Steps | 4 (budget) | `power(b, e)` | halving the exponent, the half kept in a variable | one step per exponent; the half CALLed twice (both OPERATION LIMIT) |
+| Rabbit Months | 4 (budget) | `pairs(month, memo)` | memo in a map passed by reference | no memo (OPERATION LIMIT) |
+| Maze Paths | 5 | `walk(g, r, c)` | mark, try four ways, unmark | never clearing a square |
+
+Oracles in `oracles/batch6.dart`: a closed form (digit root), bit masks,
+an off/on table, an in-order walk, BFS with a queue, `modPow`, iteration,
+and every simple path on an explicit stack.
+
+Two engine fixes came out of this batch:
+
+- **Generic names kept apart when connecting.** An empty GET ELEMENT (`T`)
+  dropped into LENGTH OF (`array<T>`) was read as `T = array<T>` and
+  refused, so nobody could build `LENGTH OF (grid's row r)` top-down. The
+  plugged block's open type names are renamed before binding
+  (`typing.dart` `_apart`; `connect_test.dart`).
+- **RETURN, BREAK and CONTINUE without exceptions.** They were Dart throws,
+  and a throw records the whole stack, so each RETURN deep in a recursion
+  cost hundreds of microseconds. They now travel up as values (`_Flow`).
+  A recursion that runs into its step budget went from 3.4 s to 0.1 s; all
+  reference checks together from 21.5 s to 8.7 s. On a phone this is what
+  keeps a slow recursive answer from freezing the screen.
+
 ## Tests
 
-Engine **367** (+17, `test/functions_test.dart`: schema, setup, typing,
+Engine **371** (+17, `test/functions_test.dart`: schema, setup, typing,
 factorial with depth 6, tree height, depth limit, own variables per call and
-a shared list, every lowering error, a missing RETURN). Content **86**.
-Flutter **468**: `test/functions_editor_test.dart` (the FUNCTION on open,
+a shared list, every lowering error, a missing RETURN; +4 with the second
+batch: GET ELEMENT into LENGTH OF, RETURN out of nested loops, BREAK leaves
+only its own loop, BREAK outside a loop). Content **86**.
+Flutter **484**: `test/functions_editor_test.dart` (the FUNCTION on open,
 not counted, not removable, kept by CLEAR PROGRAM; the picker inside it),
-the campaign regression test builds all six world 12 references tap by tap
-(FUNCTION bodies included), runs, saves and restores them, and renders each
-at 360 × 800. Validator `PIPELINE 125 of 125 campaign puzzle(s) accepted` ·
-`OK 130 puzzle(s), 5 warning(s)` (the five unlisted probes).
+the campaign regression test builds all fourteen world 12 references tap by
+tap (FUNCTION bodies included), runs, saves and restores them, and renders
+each at 360 × 800. Validator `PIPELINE 133 of 133 campaign puzzle(s)
+accepted` · `OK 138 puzzle(s), 5 warning(s)` (the five unlisted probes).
 
 Checked by hand: in the browser at phone size (the brief, the FUNCTION
 block, a RETURN in its body, the picker's `CALL sum_from`, no givens
@@ -57,10 +90,8 @@ RUN on an empty program gives WRONG ANSWER, no crash).
 
 ## Not done
 
-- World 12 has 6 of its 15 planned puzzles; heaps (world 9) stay blocked.
+- World 12 has 14 of its 15 planned puzzles; heaps (world 9) stay blocked.
 - Functions are declared by the puzzle; a player cannot add a function or
   change a signature.
 - The palette chip CALL places the first function of its arity when a
   puzzle has two with the same number of values; the slot picker lists each.
-- No memo / DP inside recursion puzzles yet (they would need a map passed in;
-  possible, not written).

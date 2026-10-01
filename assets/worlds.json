@@ -270,9 +270,17 @@
         "coin_stack",
         "tree_total",
         "exact_weight",
+        "digit_root",
+        "lucky_picks",
+        "lantern_rows",
         "even_branches",
         "change_ways",
-        "watchtowers"
+        "catalogue_check",
+        "island_size",
+        "power_steps",
+        "rabbit_months",
+        "watchtowers",
+        "maze_paths"
       ]
     },
     {
