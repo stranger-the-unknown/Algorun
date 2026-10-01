@@ -371,6 +371,14 @@
   "engineThisCaseDidNotComeOutThe": "Bu vaka bulmacanın beklediği gibi sonuçlanmadı.",
   "engineAHiddenCaseDidNotComeOut": "Gizli bir vaka bulmacanın beklediği gibi sonuçlanmadı.",
   "engineMaxBlocks": "Bu bulmaca en fazla {max} bloğa izin veriyor.",
+  "engineChooseAFunction": "Bir fonksiyon seç.",
+  "engineFunctionAtTop": "Bir FUNCTION, programın en üstünde ve diğer blokların dışında kalmalı.",
+  "engineFunctionMalformed": "Bu FUNCTION doğru kurulmamış.",
+  "engineTwoFunctions": "{name} adında iki FUNCTION bloğu var.",
+  "engineNoFunction": "{name} adında bir FUNCTION yok.",
+  "engineWrongArity": "Bu CALL, {name} için yanlış sayıda değer veriyor.",
+  "engineNotInFunction": "{name} bir FUNCTION içinde bilinmez: onu bir değer olarak geçir.",
+  "engineNoReturn": "FUNCTION {name}, RETURN olmadan bitti.",
   "engineNoValueFor": "Bu program {name} için bir değer almadı.",
   "engineCaseFailed": "{id} vakası bulmacanın beklediği gibi sonuçlanmadı."
 }

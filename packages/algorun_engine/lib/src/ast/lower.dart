@@ -1,6 +1,7 @@
 import '../blocks/block_graph.dart';
 import '../blocks/catalog.dart';
 import '../blocks/definition.dart';
+import '../blocks/functions.dart';
 import '../blocks/narrowing.dart';
 import '../blocks/ports.dart';
 import '../blocks/structure.dart';
@@ -76,8 +77,16 @@ final class _Session {
       return LowerResult.fail(List.unmodifiable(errors));
     }
 
+    // FUNCTION blocks at the top level are the player's functions (L2); every
+    // other top-level instruction is the main program.
     final body = <Stmt>[];
+    final functions = <FnDecl>[];
     for (final id in graph.entryIds) {
+      if (graph.blocks[id]?.catalogId == BlockIds.fnDef) {
+        final fn = _function(graph.blocks[id]!);
+        if (fn != null) functions.add(fn);
+        continue;
+      }
       final stmt = _stmt(id);
       if (stmt != null) body.add(stmt);
     }
@@ -94,9 +103,39 @@ final class _Session {
           returnType: puzzle.io.output,
           body: body,
         ),
+        ...functions,
       ],
     );
     return LowerResult.ok(program);
+  }
+
+  /// The FUNCTION being lowered, or null in the main program.
+  FunctionSignature? _inFunction;
+
+  FnDecl? _function(BlockInstance block) {
+    final sig = FunctionSignature.of(block);
+    if (sig == null || sig.name == 'main' || sig.name.contains('.')) {
+      _err('malformed', 'This FUNCTION is not put together correctly.', block.id);
+      return null;
+    }
+    final twin = graph.blocks.values.where((b) => FunctionSignature.of(b)?.name == sig.name).length;
+    if (twin > 1) {
+      _err('duplicate_function', 'There are two FUNCTION blocks named ${sig.name}.', block.id);
+      return null;
+    }
+    _inFunction = sig;
+    try {
+      final body = _stmts(block.id, 'body');
+      return FnDecl(
+        name: sig.name,
+        params: [for (final p in sig.params) Param(p.name, p.type)],
+        returnType: sig.returns,
+        body: body,
+        srcBlockId: block.id,
+      );
+    } finally {
+      _inFunction = null;
+    }
   }
 
   Stmt? _stmt(String id) {
@@ -137,7 +176,8 @@ final class _Session {
         BlockIds.graphMark =>
           _callStmt(block),
         BlockIds.llSetNext => _fieldAssign(block, 'next', 'node', 'next'),
-        BlockIds.fnDef || BlockIds.fnCall => _unsupported(block),
+        BlockIds.fnDef => _nestedFunction(block),
+        final call when BlockIds.isCall(call) => _maybeExprStmt(block),
         _ => _maybeExprStmt(block),
       };
     } on FormatException {
@@ -156,6 +196,11 @@ final class _Session {
       'Only an else branch fits here.',
       block.id,
     );
+    return null;
+  }
+
+  Stmt? _nestedFunction(BlockInstance block) {
+    _err('nested_function', 'A FUNCTION must stay at the top of the program, outside other blocks.', block.id);
     return null;
   }
 
@@ -548,7 +593,7 @@ final class _Session {
         BlockIds.newSet => _new(block, CollKind.set),
         BlockIds.newStack => _new(block, CollKind.stack),
         BlockIds.newQueue => _new(block, CollKind.queue),
-        BlockIds.fnCall => _unsupportedExpr(block),
+        final call when BlockIds.isCall(call) => _call(block),
         _ => _callExpr(block),
       };
       return built;
@@ -562,9 +607,31 @@ final class _Session {
     }
   }
 
-  Expr? _unsupportedExpr(BlockInstance block) {
-    _err('unsupported', 'This piece cannot be used yet.', block.id);
-    return null;
+  /// CALL of a player function (L2): a [CallExpr] whose callee is the
+  /// function's name; the VM runs it in a new frame.
+  Expr? _call(BlockInstance block) {
+    final name = block.literals['name'];
+    if (name is! String || name.isEmpty) {
+      _err('undefined_function', 'Choose a function.', block.id);
+      return null;
+    }
+    final sig = FunctionTable.of(graph)[name];
+    if (sig == null) {
+      _err('undefined_function', 'There is no FUNCTION named $name.', block.id);
+      return null;
+    }
+    final arity = BlockIds.callArity(block.catalogId);
+    if (arity != sig.params.length) {
+      _err('wrong_arity', 'This CALL passes the wrong number of values to $name.', block.id);
+      return null;
+    }
+    final args = <Expr>[];
+    for (var i = 1; i <= arity; i++) {
+      final arg = _reqExpr(block.id, 'a$i');
+      if (arg == null) return null;
+      args.add(arg);
+    }
+    return CallExpr(name, args, type: sig.returns, srcBlockId: block.id);
   }
 
   LitExpr? _litNum(BlockInstance block) {
@@ -592,6 +659,14 @@ final class _Session {
     final name = block.literals['name'] as String?;
     if (name == null || name.isEmpty) {
       _err('undefined_variable', 'Choose a name.', block.id);
+      return null;
+    }
+    // A FUNCTION sees only its own values: a given has to be passed in (L2).
+    final fn = _inFunction;
+    if (fn != null &&
+        puzzle.io.inputs.any((input) => input.name == name) &&
+        !fn.params.any((p) => p.name == name)) {
+      _err('not_in_function', '$name is not known inside a FUNCTION: pass it in as a value.', block.id);
       return null;
     }
     final type = _read(name, block.id);

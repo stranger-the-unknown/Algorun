@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../blocks/catalog.dart';
+import '../blocks/functions.dart';
 import '../runner/validators.dart';
 import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
@@ -51,6 +52,7 @@ const puzzleFields = {
   'edgeCases',
   'verdictSource',
   'variables',
+  'functions',
   'meta',
   'reference',
   'performance',
@@ -218,6 +220,7 @@ final class _PuzzleSchema {
     final verdict = r.choice(m, 'verdictSource', '', {for (final v in VerdictSource.values) v.name: v}) ??
         VerdictSource.local;
     final pool = _pool(m, io);
+    final functions = _functions(m, io, pool);
     final meta = _meta(m);
     final reference = _reference(m);
     final performance = _performance(m);
@@ -233,7 +236,8 @@ final class _PuzzleSchema {
         limits == null ||
         validator == null ||
         fixtures == null ||
-        pool == null) {
+        pool == null ||
+        functions == null) {
       return null;
     }
     return Puzzle(
@@ -259,6 +263,7 @@ final class _PuzzleSchema {
       edgeCases: edgeCases,
       verdictSource: verdict,
       variablePool: pool,
+      functions: functions,
       meta: meta,
       reference: reference,
       performance: performance,
@@ -600,6 +605,70 @@ final class _PuzzleSchema {
       pool.add(binding);
     }
     return ok ? pool : null;
+  }
+
+  /// `functions`: what the player writes (L2). Each has a lower_snake_case
+  /// name, at most [FunctionSignature.maxParams] typed parameters and a
+  /// return type. A name keeps one type everywhere: a parameter cannot be an
+  /// input, and shares a pool variable's or another parameter's name only
+  /// with the same type.
+  List<FunctionSignature>? _functions(Map<String, Object?> m, IoSpec? io, List<IoBinding>? pool) {
+    if (!m.containsKey('functions')) return const [];
+    final raw = r.list(m, 'functions', '');
+    if (raw == null) return null;
+    final givens = {for (final b in io?.inputs ?? const <IoBinding>[]) b.name};
+    final typed = {for (final b in pool ?? const <IoBinding>[]) b.name: b.type};
+    final names = <String>{};
+    final out = <FunctionSignature>[];
+    var ok = true;
+    for (final (i, item) in raw.indexed) {
+      final at = 'functions[$i]';
+      if (item is! Map<String, Object?>) {
+        r.issue(at, 'A function is {"name": …, "params": […], "returns": …}.');
+        ok = false;
+        continue;
+      }
+      r.closed(item, const {'name', 'params', 'returns'}, at);
+      final name = r.string(item, 'name', at, required: true, pattern: _identifier, hint: _identifierHint);
+      final returns = r.valueType(item, 'returns', at, required: true, fixture: false);
+      final rawParams = r.list(item, 'params', at) ?? const <Object?>[];
+      if (name != null && (name == 'main' || givens.contains(name) || typed.containsKey(name) || !names.add(name))) {
+        r.issue('$at.name', 'The name "$name" is already used.');
+        ok = false;
+      }
+      if (rawParams.length > FunctionSignature.maxParams) {
+        r.issue('$at.params', 'A function takes at most ${FunctionSignature.maxParams} values.');
+        ok = false;
+      }
+      final params = <FunctionParam>[];
+      final own = <String>{};
+      for (final (k, p) in rawParams.indexed) {
+        final binding = _binding(p, '$at.params[$k]', own, fixture: false);
+        if (binding == null) {
+          ok = false;
+          continue;
+        }
+        if (givens.contains(binding.name)) {
+          r.issue('$at.params[$k].name', '"${binding.name}" is an input; give the parameter another name.');
+          ok = false;
+          continue;
+        }
+        final before = typed[binding.name];
+        if (before != null && before != binding.type) {
+          r.issue('$at.params[$k].type', '"${binding.name}" is a $before elsewhere.');
+          ok = false;
+          continue;
+        }
+        typed[binding.name] = binding.type;
+        params.add(FunctionParam(binding.name, binding.type));
+      }
+      if (name == null || returns == null) {
+        ok = false;
+        continue;
+      }
+      out.add(FunctionSignature(name: name, params: params, returns: returns));
+    }
+    return ok ? out : null;
   }
 
   Map<String, Object> _meta(Map<String, Object?> m) {

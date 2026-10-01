@@ -34,8 +34,8 @@ final class BlockChrome {
 
   static String labelOf(String catalogId) => of(catalogId).label;
 
-  static bool hiddenFromEditor(String catalogId) =>
-      catalogId == BlockIds.fnDef || catalogId == BlockIds.fnCall;
+  /// FUNCTION blocks come from the puzzle (L2), never from the palette.
+  static bool hiddenFromEditor(String catalogId) => catalogId == BlockIds.fnDef;
 
   static String holeCaption(String portName) {
     return switch (portName) {
@@ -161,4 +161,7 @@ final Map<String, BlockChrome> _all = {
   BlockIds.newQueue: _ch('NEW QUEUE', _k, BlockLayout.reporter),
   BlockIds.fnDef: _ch('FUNCTION', _c, BlockLayout.cBlock),
   BlockIds.fnCall: _ch('CALL', _c, BlockLayout.reporter),
+  BlockIds.fnCall1: _ch('CALL', _c, BlockLayout.reporter),
+  BlockIds.fnCall2: _ch('CALL', _c, BlockLayout.reporter),
+  BlockIds.fnCall3: _ch('CALL', _c, BlockLayout.reporter),
 };

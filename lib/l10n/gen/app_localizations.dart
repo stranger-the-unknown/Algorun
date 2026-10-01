@@ -2324,6 +2324,54 @@ abstract class AppLocalizations {
   /// **'This puzzle allows at most {max} blocks.'**
   String engineMaxBlocks(String max);
 
+  /// No description provided for @engineChooseAFunction.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a function.'**
+  String get engineChooseAFunction;
+
+  /// No description provided for @engineFunctionAtTop.
+  ///
+  /// In en, this message translates to:
+  /// **'A FUNCTION must stay at the top of the program, outside other blocks.'**
+  String get engineFunctionAtTop;
+
+  /// No description provided for @engineFunctionMalformed.
+  ///
+  /// In en, this message translates to:
+  /// **'This FUNCTION is not put together correctly.'**
+  String get engineFunctionMalformed;
+
+  /// No description provided for @engineTwoFunctions.
+  ///
+  /// In en, this message translates to:
+  /// **'There are two FUNCTION blocks named {name}.'**
+  String engineTwoFunctions(String name);
+
+  /// No description provided for @engineNoFunction.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no FUNCTION named {name}.'**
+  String engineNoFunction(String name);
+
+  /// No description provided for @engineWrongArity.
+  ///
+  /// In en, this message translates to:
+  /// **'This CALL passes the wrong number of values to {name}.'**
+  String engineWrongArity(String name);
+
+  /// No description provided for @engineNotInFunction.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is not known inside a FUNCTION: pass it in as a value.'**
+  String engineNotInFunction(String name);
+
+  /// No description provided for @engineNoReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'FUNCTION {name} ended without RETURN.'**
+  String engineNoReturn(String name);
+
   /// No description provided for @engineNoValueFor.
   ///
   /// In en, this message translates to:

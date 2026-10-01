@@ -1300,6 +1300,41 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get engineChooseAFunction => 'Bir fonksiyon seç.';
+
+  @override
+  String get engineFunctionAtTop =>
+      'Bir FUNCTION, programın en üstünde ve diğer blokların dışında kalmalı.';
+
+  @override
+  String get engineFunctionMalformed => 'Bu FUNCTION doğru kurulmamış.';
+
+  @override
+  String engineTwoFunctions(String name) {
+    return '$name adında iki FUNCTION bloğu var.';
+  }
+
+  @override
+  String engineNoFunction(String name) {
+    return '$name adında bir FUNCTION yok.';
+  }
+
+  @override
+  String engineWrongArity(String name) {
+    return 'Bu CALL, $name için yanlış sayıda değer veriyor.';
+  }
+
+  @override
+  String engineNotInFunction(String name) {
+    return '$name bir FUNCTION içinde bilinmez: onu bir değer olarak geçir.';
+  }
+
+  @override
+  String engineNoReturn(String name) {
+    return 'FUNCTION $name, RETURN olmadan bitti.';
+  }
+
+  @override
   String engineNoValueFor(String name) {
     return 'Bu program $name için bir değer almadı.';
   }

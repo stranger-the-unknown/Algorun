@@ -1044,6 +1044,49 @@
       }
     }
   },
+  "engineChooseAFunction": "Choose a function.",
+  "engineFunctionAtTop": "A FUNCTION must stay at the top of the program, outside other blocks.",
+  "engineFunctionMalformed": "This FUNCTION is not put together correctly.",
+  "engineTwoFunctions": "There are two FUNCTION blocks named {name}.",
+  "@engineTwoFunctions": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "engineNoFunction": "There is no FUNCTION named {name}.",
+  "@engineNoFunction": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "engineWrongArity": "This CALL passes the wrong number of values to {name}.",
+  "@engineWrongArity": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "engineNotInFunction": "{name} is not known inside a FUNCTION: pass it in as a value.",
+  "@engineNotInFunction": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "engineNoReturn": "FUNCTION {name} ended without RETURN.",
+  "@engineNoReturn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "engineNoValueFor": "This program did not get a value for {name}.",
   "@engineNoValueFor": {
     "placeholders": {

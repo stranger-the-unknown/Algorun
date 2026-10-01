@@ -1305,6 +1305,42 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get engineChooseAFunction => 'Choose a function.';
+
+  @override
+  String get engineFunctionAtTop =>
+      'A FUNCTION must stay at the top of the program, outside other blocks.';
+
+  @override
+  String get engineFunctionMalformed =>
+      'This FUNCTION is not put together correctly.';
+
+  @override
+  String engineTwoFunctions(String name) {
+    return 'There are two FUNCTION blocks named $name.';
+  }
+
+  @override
+  String engineNoFunction(String name) {
+    return 'There is no FUNCTION named $name.';
+  }
+
+  @override
+  String engineWrongArity(String name) {
+    return 'This CALL passes the wrong number of values to $name.';
+  }
+
+  @override
+  String engineNotInFunction(String name) {
+    return '$name is not known inside a FUNCTION: pass it in as a value.';
+  }
+
+  @override
+  String engineNoReturn(String name) {
+    return 'FUNCTION $name ended without RETURN.';
+  }
+
+  @override
   String engineNoValueFor(String name) {
     return 'This program did not get a value for $name.';
   }

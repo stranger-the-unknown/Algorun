@@ -17,6 +17,11 @@ final _patterns = <(RegExp, String Function(AppLocalizations, String))>[
   (RegExp(r'^This puzzle allows at most (\d+) blocks\.$'), (l, n) => l.engineMaxBlocks(n)),
   (RegExp(r'^This program did not get a value for (.+)\.$'), (l, name) => l.engineNoValueFor(name)),
   (RegExp(r'^Case (.+) did not come out the way the puzzle expects\.$'), (l, id) => l.engineCaseFailed(id)),
+  (RegExp(r'^There are two FUNCTION blocks named (.+)\.$'), (l, name) => l.engineTwoFunctions(name)),
+  (RegExp(r'^There is no FUNCTION named (.+)\.$'), (l, name) => l.engineNoFunction(name)),
+  (RegExp(r'^This CALL passes the wrong number of values to (.+)\.$'), (l, name) => l.engineWrongArity(name)),
+  (RegExp(r'^(.+) is not known inside a FUNCTION: pass it in as a value\.$'), (l, name) => l.engineNotInFunction(name)),
+  (RegExp(r'^FUNCTION (.+) ended without RETURN\.$'), (l, name) => l.engineNoReturn(name)),
 ];
 
 final _exact = <String, String Function(AppLocalizations)>{
@@ -30,6 +35,9 @@ final _exact = <String, String Function(AppLocalizations)>{
   'This spot needs an instruction, not a value.': (l) => l.engineThisSpotNeedsAnInstructionNotA,
   'A connection points at a missing block.': (l) => l.engineAConnectionPointsAtAMissingBlock,
   'Choose a name.': (l) => l.engineChooseAName,
+  'Choose a function.': (l) => l.engineChooseAFunction,
+  'A FUNCTION must stay at the top of the program, outside other blocks.': (l) => l.engineFunctionAtTop,
+  'This FUNCTION is not put together correctly.': (l) => l.engineFunctionMalformed,
   'This block needs a list.': (l) => l.engineThisBlockNeedsAList,
   'This variable is not defined.': (l) => l.engineThisVariableIsNotDefined,
   'This variable is not a number.': (l) => l.engineThisVariableIsNotANumber,

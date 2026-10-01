@@ -1,3 +1,4 @@
+import '../blocks/functions.dart';
 import '../runner/validators.dart';
 import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
@@ -152,6 +153,7 @@ final class Puzzle {
     this.edgeCases = const [],
     this.verdictSource = VerdictSource.local,
     this.variablePool = const [],
+    this.functions = const [],
     this.meta = const {},
     this.reference,
     this.performance = PerformanceSpec.none,
@@ -183,6 +185,10 @@ final class Puzzle {
 
   /// Closed names the player may CREATE. Not free text.
   final List<IoBinding> variablePool;
+
+  /// Functions the player writes (L2): given names, parameters and return
+  /// types; the editor puts a FUNCTION block for each at the top.
+  final List<FunctionSignature> functions;
 
   /// Reserved forward-compatible metadata: flat string / number / boolean
   /// values the engine never reads. Nothing in it is ever executed.

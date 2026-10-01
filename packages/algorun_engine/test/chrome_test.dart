@@ -11,9 +11,11 @@ void main() {
     }
   });
 
-  test('function blocks are hidden from the editor', () {
+  test('FUNCTION comes from the puzzle, CALL from the palette (L2)', () {
     expect(BlockChrome.hiddenFromEditor(BlockIds.fnDef), isTrue);
-    expect(BlockChrome.hiddenFromEditor(BlockIds.fnCall), isTrue);
+    for (final call in BlockIds.calls) {
+      expect(BlockChrome.hiddenFromEditor(call), isFalse);
+    }
     expect(BlockChrome.hiddenFromEditor(BlockIds.ctrlIf), isFalse);
   });
 }

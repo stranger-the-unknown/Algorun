@@ -11,6 +11,7 @@ export 'src/blocks/catalog.dart';
 export 'src/blocks/chrome.dart';
 export 'src/blocks/commands.dart';
 export 'src/blocks/definition.dart';
+export 'src/blocks/functions.dart';
 export 'src/blocks/ports.dart';
 export 'src/blocks/structure.dart';
 export 'src/blocks/typing.dart';

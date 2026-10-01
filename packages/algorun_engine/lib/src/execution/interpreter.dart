@@ -132,6 +132,11 @@ final class Interpreter {
       }
       try {
         _execAll(fn.body, vars);
+        // A player FUNCTION that promises a value must RETURN one (L2).
+        final promised = fn.returnType;
+        if (!isEntry && promised != null && promised.atom != TypeAtom.voidType) {
+          throw _Halt(ResultKind.runtimeError, 'FUNCTION ${fn.name} ended without RETURN.', fn.srcBlockId);
+        }
         return const NilValue();
       } on _Return catch (signal) {
         return signal.value;

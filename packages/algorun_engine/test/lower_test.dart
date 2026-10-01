@@ -477,16 +477,19 @@ void main() {
       expect(result.errors.any((e) => e.code == 'unknown_port'), isTrue);
     });
 
-    test('unsupported operation', () {
-      final h = _hist();
-      _add(h, BlockIds.fnCall, id: 'c1');
-      // fn.call is an expression; park it as a return value.
-      _add(h, BlockIds.ctrlReturn, id: 'r1');
-      _connect(h, 'c1', 'out', 'r1', 'value');
-      _attach(h, 'r1', PortRef.mainBody);
-      final result = lowerer.lower(h.current, _puzzle());
+    test('a CALL that names no function (L2)', () {
+      // The editor never builds this (an unnamed CALL has no type to snap
+      // with); lowering still refuses it in words.
+      const graph = BlockGraph(
+        blocks: {
+          'c1': BlockInstance(id: 'c1', catalogId: BlockIds.fnCall),
+          'r1': BlockInstance(id: 'r1', catalogId: BlockIds.ctrlReturn, slots: {'value': RefBinding('c1')}),
+        },
+        entryIds: ['r1'],
+      );
+      final result = lowerer.lower(graph, _puzzle());
       expect(result.ok, isFalse);
-      expect(result.errors.any((e) => e.code == 'unsupported'), isTrue);
+      expect(result.errors.map((e) => e.code), contains('undefined_function'));
     });
 
     test('does not throw on malformed graphs', () {

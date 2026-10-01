@@ -111,6 +111,17 @@ abstract final class BlockIds {
 
   static const fnDef = 'fn.def';
   static const fnCall = 'fn.call';
+  static const fnCall1 = 'fn.call1';
+  static const fnCall2 = 'fn.call2';
+  static const fnCall3 = 'fn.call3';
+
+  /// CALL blocks by number of values passed (L2): `fn.call` passes none.
+  static const calls = [fnCall, fnCall1, fnCall2, fnCall3];
+
+  static bool isCall(String id) => calls.contains(id);
+
+  /// How many values a CALL block passes, or -1 for another block.
+  static int callArity(String id) => calls.indexOf(id);
 
   static const Set<String> all = {
     ctrlIf, ctrlElse, ctrlWhile, ctrlForRange, ctrlForEach,
@@ -130,7 +141,7 @@ abstract final class BlockIds {
     treeValue, treeLeft, treeRight,
     graphNeighbors, graphMark, graphVisited, graphNodeCount,
     newArray, newMap, newSet, newStack, newQueue,
-    fnDef, fnCall,
+    fnDef, fnCall, fnCall1, fnCall2, fnCall3,
   };
 
   static bool exists(String id) => all.contains(id);
@@ -469,8 +480,18 @@ abstract final class BlockCatalog {
       const [],
       typeParams: const ['T'],
     ),
+    // FUNCTION: its signature lives in literals (`name`, `params`, `returns`);
+    // CALL: `name` picks the function, a1..a3 are the values passed. Their
+    // types come from the signature (`typing.dart`), not from these ports.
     BlockIds.fnDef: stackBlock(BlockIds.fnDef, [stmtList('body')]),
     BlockIds.fnCall: reporter(BlockIds.fnCall, ValueType.t, const [],
+        typeParams: const ['T']),
+    BlockIds.fnCall1: reporter(BlockIds.fnCall1, ValueType.t, [exprIn('a1', ValueType.t)],
+        typeParams: const ['T']),
+    BlockIds.fnCall2: reporter(BlockIds.fnCall2, ValueType.t, [exprIn('a1', ValueType.t), exprIn('a2', ValueType.t)],
+        typeParams: const ['T']),
+    BlockIds.fnCall3: reporter(
+        BlockIds.fnCall3, ValueType.t, [exprIn('a1', ValueType.t), exprIn('a2', ValueType.t), exprIn('a3', ValueType.t)],
         typeParams: const ['T']),
   };
 }

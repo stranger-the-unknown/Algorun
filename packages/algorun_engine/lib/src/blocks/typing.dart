@@ -3,6 +3,7 @@ import '../types/value_type.dart';
 import 'block_graph.dart';
 import 'catalog.dart';
 import 'definition.dart';
+import 'functions.dart';
 import 'narrowing.dart';
 import 'ports.dart';
 
@@ -162,6 +163,25 @@ abstract final class GraphTyping {
           );
           if (decision.allowed) {
             out.add(Placement(catalogId: catalogId, literals: {'name': name}));
+          }
+        }
+        continue;
+      }
+      // CALL names its function (L2): one placement per function with as many
+      // parameters as this CALL passes values.
+      if (BlockIds.isCall(catalogId)) {
+        final arity = BlockIds.callArity(catalogId);
+        for (final sig in FunctionTable.of(graph).values) {
+          if (sig.params.length != arity) continue;
+          final decision = _previewConnect(
+            graph,
+            catalogId: catalogId,
+            literals: {'name': sig.name},
+            to: to,
+            index: index,
+          );
+          if (decision.allowed) {
+            out.add(Placement(catalogId: catalogId, literals: {'name': sig.name}));
           }
         }
         continue;
@@ -395,6 +415,19 @@ ValueType? _holeType(BlockGraph graph, PortRef to) {
     if (name == null) return null;
     return graph.variables[name];
   }
+  // A value passed to a function has its parameter's type (L2).
+  if (BlockIds.isCall(block.catalogId) && to.port.startsWith('a')) {
+    final sig = FunctionTable.called(graph, block);
+    final index = int.tryParse(to.port.substring(1));
+    if (sig == null || index == null || index < 1 || index > sig.params.length) return null;
+    return sig.params[index - 1].type;
+  }
+  // RETURN inside a FUNCTION gives back that function's type (L2).
+  if (block.catalogId == BlockIds.ctrlReturn && to.port == 'value') {
+    final fn = FunctionTable.enclosing(graph, block.id);
+    final sig = fn == null ? null : FunctionSignature.of(fn);
+    if (sig != null) return sig.returns;
+  }
   final def = BlockCatalog.of(block.catalogId);
   final port = def?.port(to.port);
   if (port == null) return null;
@@ -416,6 +449,9 @@ ValueType? _outputType(
     final declared = graph.variables[name];
     if (declared == null) return null;
     return Narrowing.read(declared, name, Narrowing.of(graph).at(blockId));
+  }
+  if (BlockIds.isCall(block.catalogId)) {
+    return FunctionTable.called(graph, block)?.returns;
   }
   if (block.catalogId == BlockIds.newArray) {
     final of = block.literals['of'] as String?;
