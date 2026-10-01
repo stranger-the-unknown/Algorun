@@ -27,6 +27,10 @@ final class BlockGraph {
 
   int get blockCount => blocks.length;
 
+  /// Blocks the player placed: everything but the puzzle's FUNCTION blocks
+  /// (L2), which the block budget does not count.
+  int get playerBlockCount => blocks.values.where((b) => b.catalogId != BlockIds.fnDef).length;
+
   bool get isEmpty => blocks.isEmpty;
 
   BlockInstance? operator [](String id) => blocks[id];

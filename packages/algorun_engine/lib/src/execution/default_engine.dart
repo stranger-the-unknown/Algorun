@@ -41,7 +41,8 @@ final class DefaultEngine implements AlgorunEngine {
         ));
         continue;
       }
-      if (!puzzle.blocks.allows(block.catalogId)) {
+      // A FUNCTION comes from the puzzle, never from the palette (L2).
+      if (block.catalogId != BlockIds.fnDef && !puzzle.blocks.allows(block.catalogId)) {
         messages.add(ValidationMessage(
           code: 'block_not_allowed',
           message: 'This puzzle does not include that block.',
@@ -50,7 +51,7 @@ final class DefaultEngine implements AlgorunEngine {
       }
     }
     final maxBlocks = puzzle.blocks.maxBlocks;
-    if (maxBlocks != null && graph.blockCount > maxBlocks) {
+    if (maxBlocks != null && graph.playerBlockCount > maxBlocks) {
       messages.add(ValidationMessage(
         code: 'block_budget',
         message: 'This puzzle allows at most $maxBlocks blocks.',

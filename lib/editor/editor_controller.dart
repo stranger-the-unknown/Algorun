@@ -126,7 +126,7 @@ final class EditorController extends ChangeNotifier {
   bool get canRedo => _history.canRedo;
 
   /// What the block budget counts: every block in the program.
-  int get blockCount => graph.blockCount;
+  int get blockCount => graph.playerBlockCount;
 
   /// Treat the current program as the starting point (clears undo / redo).
   void markBaseline() => _history.markBaseline();

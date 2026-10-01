@@ -32,14 +32,18 @@ void main() {
   test('every puzzle opens with its variables and givens declared, and nothing placed', () {
     for (final (_, puzzle) in _puzzles()) {
       final c = EditorController(puzzle: puzzle);
-      expect(c.graph.blocks, isEmpty, reason: puzzle.id);
+      // Only the puzzle's FUNCTION blocks, at the top (L2).
+      expect(c.graph.blocks.keys, [for (final f in puzzle.functions) FunctionSetup.idFor(f.name)], reason: puzzle.id);
+      expect(c.graph.entryIds, [for (final f in puzzle.functions) FunctionSetup.idFor(f.name)], reason: puzzle.id);
+      expect(c.blockCount, 0, reason: '${puzzle.id}: FUNCTION blocks are not the player\'s');
       for (final v in puzzle.variablePool) {
         expect(c.graph.variables[v.name], v.type, reason: '${puzzle.id}: ${v.name}');
       }
       for (final input in puzzle.io.inputs) {
         expect(c.graph.variables[input.name], input.type, reason: '${puzzle.id}: ${input.name}');
       }
-      expect(c.graph.variables.length, puzzle.variablePool.length + puzzle.io.inputs.length);
+      final params = {for (final f in puzzle.functions) for (final p in f.params) p.name};
+      expect(c.graph.variables.length, {...puzzle.variablePool.map((v) => v.name), ...puzzle.io.inputs.map((i) => i.name), ...params}.length);
       expect(c.unusedPool, isEmpty);
       expect(c.canUndo, isFalse, reason: 'declaring is not an edit the player could undo');
     }
@@ -66,7 +70,7 @@ void main() {
       expect(after.metrics.ops, before.metrics.ops, reason: '${puzzle.id}: same steps');
       expect(after.metrics.peakAlloc, before.metrics.peakAlloc, reason: '${puzzle.id}: same memory');
       expect(after.metrics.peakDepth, before.metrics.peakDepth, reason: '${puzzle.id}: same depth');
-      expect(c.blockCount, solution.blocks.length, reason: '${puzzle.id}: same block count');
+      expect(c.blockCount, solution.playerBlockCount, reason: '${puzzle.id}: same block count');
     }
   });
 

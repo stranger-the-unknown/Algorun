@@ -13,8 +13,8 @@ void main() {
         for (final id in ids) id: const PuzzleProgress(puzzleVersion: 1, completed: true),
       });
 
-  test('119 puzzles load, and a fresh install starts at Foundations', () {
-    expect(campaign.puzzles, hasLength(119));
+  test('125 puzzles load, and a fresh install starts at Foundations', () {
+    expect(campaign.puzzles, hasLength(125));
     final fresh = evaluateCampaign(campaign, PlayerSave.fresh);
     expect(fresh.worldStatus('world_01'), WorldStatus.open);
     // MS15: Foundations holds twelve puzzles, all open from the start.
@@ -38,7 +38,7 @@ void main() {
     expect(done, campaign.puzzles.keys.toSet());
     expect(rounds, greaterThan(3), reason: 'the campaign unlocks in stages');
     final end = evaluateCampaign(campaign, solved(done));
-    expect(end.worldStatus('world_12'), WorldStatus.locked, reason: 'backtracking waits for recursion');
+    expect(end.worldStatus('world_12'), WorldStatus.completed, reason: 'L2: recursion and backtracking open after trees');
     expect(end.worldStatus('world_14'), WorldStatus.completed);
   });
 

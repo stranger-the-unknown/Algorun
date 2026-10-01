@@ -1,0 +1,90 @@
+{
+  "id": "watchtowers",
+  "version": 1,
+  "title": "Watchtowers",
+  "world": "world_12",
+  "chapter": "place_undo_queens",
+  "tier": 5,
+  "mode": "build",
+  "concepts": ["backtracking"],
+  "prerequisites": [],
+  "story": "A square map has n rows and n columns. Put n watchtowers on it, one in every row, so that no two towers share a column or a diagonal. In how many ways can it be done?",
+  "io": {
+    "inputs": [
+      {"name": "n", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["n is 1 to 7."]},
+  "blocks": {
+    "allow": ["arith.abs", "arith.add", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.remove", "cmp.eq", "ctrl.for_range", "ctrl.if", "ctrl.return", "fn.call3", "lit.bool", "lit.num", "logic.not", "logic.or", "new.array", "var.get", "var.set"],
+    "maxBlocks": 100
+  },
+  "limits": {"maxOps": 642550, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Fill the rows from the top. place(row, size, cols) counts the ways to finish when the towers of the rows above stand in the columns listed in cols.", "In this row try every column c: it is safe if no earlier tower is in column c, and none is as many columns away as it is rows away (a diagonal). If safe, APPEND c, add CALL place(row PLUS 1, size, cols), then REMOVE AT the last position to take the tower back.", "When row EQUALs size every tower stands: that is 1 way. The program starts with a NEW LIST and CALL place(0, n, that list)."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"n": 1},
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {"n": 2},
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"n": 4},
+        "out": 2
+      },
+      {
+        "id": "h02",
+        "in": {"n": 3},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"n": 5},
+        "out": 10
+      },
+      {
+        "id": "h04",
+        "in": {"n": 6},
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {"n": 7},
+        "out": 40
+      }
+    ]
+  },
+  "edgeCases": ["towers on a diagonal", "a tower not taken back", "sizes with no way at all"],
+  "variables": {
+    "pool": [
+      {"name": "count", "type": "num"},
+      {"name": "c", "type": "num"},
+      {"name": "r", "type": "num"},
+      {"name": "d", "type": "num"},
+      {"name": "ok", "type": "bool"},
+      {"name": "spots", "type": "array<num>"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "place",
+      "params": [
+        {"name": "row", "type": "num"},
+        {"name": "size", "type": "num"},
+        {"name": "cols", "type": "array<num>"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "place_undo_queens"}
+}

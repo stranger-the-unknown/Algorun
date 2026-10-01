@@ -12,7 +12,7 @@
     "world_09": "Öbekler (Heap)",
     "world_10": "Çizgeler",
     "world_11": "Açgözlü Yöntemler",
-    "world_12": "Geri İzleme",
+    "world_12": "Özyineleme ve Geri İzleme",
     "world_13": "Dinamik Programlama",
     "world_14": "İleri Algoritmalar"
   },
@@ -1120,6 +1120,60 @@
         "Her kişi için, o kişiyle biten en büyük yükselen grubu bul.",
         "Bu, kendisinden önce gelen ve kesinlikle daha kısa olanların en iyisine PLUS 1'dir; bu sayıları bir NEW LIST içinde tut.",
         "Cevap o listedeki en büyük sayıdır. En son seçilenden uzun olan herkesi almak yetmez."
+      ]
+    },
+    "coin_stack": {
+      "title": "Jeton Yığını",
+      "story": "Yukarıdan aşağıya listelenmiş bir jeton yığınını hiç döngü kullanmadan topla. sum_from(stack, i) fonksiyonu, i konumundan en alta kadar olan jetonların toplamını verir: i'nci jeton artı onun altındaki jetonların toplamı. Son jetondan sonra eklenecek bir şey yoktur. Program yığının tamamının toplamını döndürür.",
+      "hints": [
+        "Bir FUNCTION, problemin daha küçük bir parçası için kendini CALL ile çağırabilir: i'nin altındaki jetonlar daha küçük bir yığındır.",
+        "sum_from(stack, i), i'nci jeton PLUS CALL sum_from(stack, i PLUS 1) olur.",
+        "i yığının LENGTH'ine ulaşınca dur ve orada RETURN 0 yap; boş bir yığının son jetonu yoktur. Program RETURN CALL sum_from(coins, 0) yapar."
+      ]
+    },
+    "tree_total": {
+      "title": "Ağaç Toplamı",
+      "story": "Bir ağacın her düğümünde, bazıları negatif olan bir sayı var. Hepsini total(node) fonksiyonuyla topla: boş bir dal 0 ekler, bir düğüm de kendi sayısını iki dalının toplamına ekler.",
+      "hints": [
+        "Döngüye gerek yok: iki dal da daha küçük ağaçlardır, bu yüzden her biri için total'ı CALL ile çağır.",
+        "IF node IS NOTHING ise RETURN 0; değilse RETURN NODE VALUE PLUS LEFT ve RIGHT'ın toplamları.",
+        "LEFT dal eksik olsa bile iki dal da önemlidir."
+      ]
+    },
+    "even_branches": {
+      "title": "Dengeli Dallar",
+      "story": "Bir ağaç, her düğümünde iki dalının seviye sayıları en fazla 1 farklıysa dengeli büyümüştür (boş bir dalın 0 seviyesi vardır). Ağacın tamamı dengeli büyümüş mü? levels(node) fonksiyonu bir dalın seviye sayısını verir; içindeki bir düğüm dengesizse hemen -1 verir.",
+      "hints": [
+        "Her dala seviyesini sor; biri -1 derse cevap da -1 olur.",
+        "Değilse, ikisi 1'den fazla farklıysa (farkın ABSOLUTE değeri) RETURN -1; yoksa RETURN 1 PLUS büyük olan.",
+        "levels(root) -1'e NOT EQUAL ise ağaç dengelidir. Yalnızca kökün iki dalını karşılaştırmak, daha derindeki dengesiz bir düğümü kaçırır."
+      ]
+    },
+    "exact_weight": {
+      "title": "Tam Ağırlık",
+      "story": "Bir terazi tam olarak hedef ağırlığı göstermeli. Verilen ağırlıklardan, toplamı tam hedefe eşit olan farklı seçimleri say; her ağırlık en fazla bir kez kullanılır ve farklı konumdaki ağırlıklar eşit olsalar bile farklı sayılır. Hiçbir şey seçmemek 0 ağırlık eder.",
+      "hints": [
+        "Her ağırlık bir seçimdir: bırak ya da al. ways(w, i, rest), i'nci ağırlıktan itibaren kalanı tamamlayan seçimleri sayar.",
+        "ways(w, i, rest) = ways(w, i PLUS 1, rest) PLUS ways(w, i PLUS 1, rest MINUS i'nci ağırlık).",
+        "Kararı yalnızca sonda ver (i LENGTH'e EQUAL olunca): hiçbir şey kalmadıysa 1, yoksa 0. Kalan biter bitmez durmak, 0 ağırlıkları da alan seçimleri kaçırır."
+      ]
+    },
+    "change_ways": {
+      "title": "Para Üstü Yolları",
+      "story": "Bir kasada birkaç farklı değerde jeton var, her birinden gerektiği kadar. Kasa tutarı tam olarak kaç farklı şekilde ödeyebilir? Aynı jetonları başka bir sırayla kullanan iki yol aynı yoldur. 0 ödemenin tam bir yolu vardır: hiç jeton vermemek.",
+      "hints": [
+        "Sıraları saymamak için jeton değerlerini birer birer belirle: önce i değerinden kaç tane, sonra kalanı sonraki değerlerden.",
+        "pay(c, i, rest) = pay(c, i, rest MINUS i'nci jeton), i'nci jetonu bir kez daha kullanarak, PLUS pay(c, i PLUS 1, rest), i'nci jetondan başka kullanmadan.",
+        "Kalan 0 ise 1 yol; kalan 0'ın altındaysa ya da jeton değeri kalmadıysa 0 yol."
+      ]
+    },
+    "watchtowers": {
+      "title": "Gözcü Kuleleri",
+      "story": "Kare bir haritada n satır ve n sütun var. Üzerine her satıra bir tane olmak üzere n gözcü kulesi yerleştir; hiçbir iki kule aynı sütunu ya da aynı çaprazı paylaşmasın. Bu kaç farklı şekilde yapılabilir?",
+      "hints": [
+        "Satırları yukarıdan doldur. place(row, size, cols), üstteki satırların kuleleri cols'ta listelenen sütunlarda dururken yerleştirmeyi bitirmenin yollarını sayar.",
+        "Bu satırda her c sütununu dene: daha önceki hiçbir kule c sütununda değilse ve hiçbiri satır farkı kadar sütun uzakta değilse (çapraz) güvenlidir. Güvenliyse c'yi APPEND et, CALL place(row PLUS 1, size, cols) ekle, sonra kuleyi geri almak için son konumu REMOVE AT ile sil.",
+        "row size'a EQUAL olunca her kule yerindedir: bu 1 yoldur. Program bir NEW LIST ile başlar ve CALL place(0, n, o liste) yapar."
       ]
     }
   }

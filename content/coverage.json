@@ -1,22 +1,22 @@
 {
-  "total": 119,
+  "total": 125,
   "targetTotal": 300,
   "tiers": {
     "1": 9,
     "2": 41,
-    "3": 40,
-    "4": 27,
-    "5": 2
+    "3": 43,
+    "4": 29,
+    "5": 3
   },
   "modes": {
     "budget": 15,
-    "build": 74,
+    "build": 80,
     "edge": 22,
     "optimize": 5,
     "restricted": 3
   },
   "structures": {
-    "array": 48,
+    "array": 52,
     "graph": 16,
     "grid": 3,
     "hash_map": 8,
@@ -25,10 +25,11 @@
     "queue": 2,
     "scalar": 8,
     "stack": 7,
-    "tree": 12
+    "tree": 14
   },
   "families": {
     "array_scan": 11,
+    "backtracking": 3,
     "binary_search": 2,
     "control_flow": 7,
     "dp_grid": 3,
@@ -45,6 +46,7 @@
     "multi_concept": 1,
     "prefix_sum": 5,
     "queue": 3,
+    "recursion": 3,
     "sliding_window": 9,
     "stack": 5,
     "topological_order": 1,
@@ -53,13 +55,14 @@
   },
   "performance": {
     "budget": 24,
-    "correctness": 87,
+    "correctness": 93,
     "optimization": 5,
     "restricted": 3
   },
   "concepts": {
     "array_scan": 11,
     "arrays": 12,
+    "backtracking": 3,
     "bfs": 9,
     "binary_search": 2,
     "binary_search_answer": 1,
@@ -85,6 +88,7 @@
     "nullable_check": 11,
     "prefix_sum": 7,
     "queue": 11,
+    "recursion": 3,
     "relinking": 2,
     "shortest_path": 1,
     "sliding_window": 9,
@@ -450,20 +454,31 @@
     },
     {
       "id": "world_12",
-      "title": "Backtracking",
+      "title": "Recursion & Backtracking",
       "concepts": [
+        "recursion",
         "backtracking"
       ],
-      "count": 0,
+      "count": 6,
       "tiers": {
         "1": 0,
         "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0
+        "3": 3,
+        "4": 2,
+        "5": 1
       },
-      "families": {},
-      "patterns": {},
+      "families": {
+        "backtracking": 3,
+        "recursion": 3
+      },
+      "patterns": {
+        "balanced_height_or_minus_one": 1,
+        "combinations_by_coin_index": 1,
+        "place_undo_queens": 1,
+        "recursive_list_sum": 1,
+        "recursive_tree_sum": 1,
+        "take_or_skip_count": 1
+      },
       "target": 15
     },
     {
@@ -615,6 +630,20 @@
       ]
     },
     {
+      "id": "change_ways",
+      "world": "world_12",
+      "tier": 4,
+      "mode": "build",
+      "family": "backtracking",
+      "pattern": "combinations_by_coin_index",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "backtracking"
+      ]
+    },
+    {
       "id": "closest_gap",
       "world": "world_04",
       "tier": 4,
@@ -626,6 +655,20 @@
       "performance": "budget",
       "concepts": [
         "two_pointers"
+      ]
+    },
+    {
+      "id": "coin_stack",
+      "world": "world_12",
+      "tier": 3,
+      "mode": "build",
+      "family": "recursion",
+      "pattern": "recursive_list_sum",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "recursion"
       ]
     },
     {
@@ -806,6 +849,20 @@
       ]
     },
     {
+      "id": "even_branches",
+      "world": "world_12",
+      "tier": 4,
+      "mode": "build",
+      "family": "recursion",
+      "pattern": "balanced_height_or_minus_one",
+      "structure": "tree",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "recursion"
+      ]
+    },
+    {
       "id": "even_prefixes",
       "world": "world_02",
       "tier": 2,
@@ -866,6 +923,20 @@
       "performance": "restricted",
       "concepts": [
         "two_pointers"
+      ]
+    },
+    {
+      "id": "exact_weight",
+      "world": "world_12",
+      "tier": 3,
+      "mode": "build",
+      "family": "backtracking",
+      "pattern": "take_or_skip_count",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "backtracking"
       ]
     },
     {
@@ -2203,6 +2274,20 @@
       ]
     },
     {
+      "id": "tree_total",
+      "world": "world_12",
+      "tier": 3,
+      "mode": "build",
+      "family": "recursion",
+      "pattern": "recursive_tree_sum",
+      "structure": "tree",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "recursion"
+      ]
+    },
+    {
       "id": "twin_beacons",
       "world": "world_03",
       "tier": 2,
@@ -2264,6 +2349,20 @@
       "concepts": [
         "variables",
         "control"
+      ]
+    },
+    {
+      "id": "watchtowers",
+      "world": "world_12",
+      "tier": 5,
+      "mode": "build",
+      "family": "backtracking",
+      "pattern": "place_undo_queens",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "backtracking"
       ]
     },
     {
@@ -2427,19 +2526,8 @@
     {
       "area": "world",
       "id": "world_12",
-      "have": 0,
-      "want": 15,
-      "note": "blocked by the language: backtracking"
-    },
-    {
-      "area": "tiers",
-      "id": "world_12",
-      "missing": [
-        3,
-        4,
-        5
-      ],
-      "note": "blocked by the language: backtracking"
+      "have": 6,
+      "want": 15
     },
     {
       "area": "world",
@@ -2609,9 +2697,8 @@
     {
       "area": "family",
       "id": "backtracking",
-      "have": 0,
-      "want": 15,
-      "note": "blocked by the language"
+      "have": 3,
+      "want": 15
     },
     {
       "area": "family",
@@ -2623,7 +2710,7 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 74,
+      "have": 80,
       "want": 150
     },
     {

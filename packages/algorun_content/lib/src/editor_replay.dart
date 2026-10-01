@@ -111,6 +111,9 @@ final class _Replay {
   }
 
   void _checkLiterals(BlockInstance block) {
+    // A FUNCTION's literals are its signature, from the puzzle (L2); the
+    // replay compares them with what the editor puts there.
+    if (block.catalogId == BlockIds.fnDef) return;
     final path = 'blocks.${block.id}';
     for (final entry in block.literals.entries) {
       final key = entry.key;

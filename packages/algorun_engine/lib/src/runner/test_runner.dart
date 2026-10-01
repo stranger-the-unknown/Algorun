@@ -283,8 +283,8 @@ int countBlocks(Program program) {
     }
   }
 
+  // A FUNCTION block itself is the puzzle's, not counted (L2).
   for (final fn in program.functions) {
-    addId(fn.srcBlockId);
     walkStmts(fn.body);
   }
   return ids.length;

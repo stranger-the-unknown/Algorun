@@ -1,0 +1,294 @@
+{
+  "id": "tree_total",
+  "version": 1,
+  "title": "Tree Total",
+  "world": "world_12",
+  "chapter": "recursive_tree_sum",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["recursion"],
+  "prerequisites": ["tree"],
+  "story": "Every node of a tree holds a number, some of them negative. Add them all up with the function total(node): an empty branch adds 0, and a node adds its own number to the totals of its two branches.",
+  "io": {
+    "inputs": [
+      {"name": "root", "type": "treeNode?"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 60},
+    "notes": ["Numbers are whole numbers from -50 to 50."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "ctrl.else", "ctrl.if", "ctrl.return", "fn.call1", "lit.num", "logic.is_not_nothing", "logic.is_nothing", "tree.left", "tree.right", "tree.value", "var.get"],
+    "maxBlocks": 34
+  },
+  "limits": {"maxOps": 2300, "maxDepth": 64, "maxAlloc": 100},
+  "hints": ["No loop is needed: the two branches are smaller trees, so CALL total on each of them.", "IF node IS NOTHING, RETURN 0; otherwise RETURN NODE VALUE PLUS the totals of LEFT and RIGHT.", "Both branches matter, even when the LEFT one is missing."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {"type": "treeNode", "value": 3},
+            "right": {
+              "type": "treeNode",
+              "value": -2,
+              "left": {"type": "treeNode", "value": 4},
+              "right": {"type": "treeNode", "value": 1}
+            }
+          }
+        },
+        "out": 11
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {"type": "treeNode", "value": 7}
+        },
+        "out": 7
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"root": null},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "right": {"type": "treeNode", "value": 3}
+            }
+          }
+        },
+        "out": 6
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": -4,
+            "left": {"type": "treeNode", "value": -1}
+          }
+        },
+        "out": -5
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 2,
+            "right": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {"type": "treeNode", "value": 5}
+            }
+          }
+        },
+        "out": 15
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 8,
+            "left": {
+              "type": "treeNode",
+              "value": -33,
+              "left": {
+                "type": "treeNode",
+                "value": -50,
+                "left": {
+                  "type": "treeNode",
+                  "value": 1,
+                  "right": {"type": "treeNode", "value": 41}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 32,
+                  "left": {
+                    "type": "treeNode",
+                    "value": -3,
+                    "left": {"type": "treeNode", "value": -12},
+                    "right": {
+                      "type": "treeNode",
+                      "value": -18,
+                      "right": {"type": "treeNode", "value": -7}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 11,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 32,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 13,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 0,
+                          "right": {"type": "treeNode", "value": 4}
+                        },
+                        "right": {"type": "treeNode", "value": -41}
+                      },
+                      "right": {"type": "treeNode", "value": 49}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 50,
+                      "left": {"type": "treeNode", "value": 21}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 45,
+                  "left": {
+                    "type": "treeNode",
+                    "value": -13,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 21,
+                      "right": {
+                        "type": "treeNode",
+                        "value": -21,
+                        "right": {"type": "treeNode", "value": -49}
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": -31,
+                      "right": {
+                        "type": "treeNode",
+                        "value": -21,
+                        "left": {
+                          "type": "treeNode",
+                          "value": -48,
+                          "left": {"type": "treeNode", "value": 1}
+                        },
+                        "right": {"type": "treeNode", "value": 25}
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": -5,
+                    "left": {
+                      "type": "treeNode",
+                      "value": -3,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 12,
+                        "right": {"type": "treeNode", "value": -46}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": -30,
+                        "right": {"type": "treeNode", "value": 39}
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 39,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 46,
+                        "left": {"type": "treeNode", "value": 43},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 5,
+                          "left": {
+                            "type": "treeNode",
+                            "value": -41,
+                            "left": {"type": "treeNode", "value": 45},
+                            "right": {
+                              "type": "treeNode",
+                              "value": -8,
+                              "right": {"type": "treeNode", "value": 28}
+                            }
+                          },
+                          "right": {"type": "treeNode", "value": -26}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": -19,
+                  "left": {
+                    "type": "treeNode",
+                    "value": -25,
+                    "left": {"type": "treeNode", "value": -45}
+                  },
+                  "right": {"type": "treeNode", "value": 11}
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": -15,
+              "left": {
+                "type": "treeNode",
+                "value": -25,
+                "left": {
+                  "type": "treeNode",
+                  "value": -14,
+                  "left": {"type": "treeNode", "value": -13},
+                  "right": {
+                    "type": "treeNode",
+                    "value": -11,
+                    "left": {"type": "treeNode", "value": 50},
+                    "right": {"type": "treeNode", "value": -35}
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": -4,
+                  "left": {
+                    "type": "treeNode",
+                    "value": -25,
+                    "left": {"type": "treeNode", "value": -50}
+                  }
+                }
+              },
+              "right": {"type": "treeNode", "value": -23}
+            }
+          }
+        },
+        "out": -134
+      }
+    ]
+  },
+  "edgeCases": ["a node with only a RIGHT branch", "an empty tree", "negative numbers"],
+  "variables": {"pool": []},
+  "functions": [
+    {
+      "name": "total",
+      "params": [
+        {"name": "node", "type": "treeNode?"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "recursive_tree_sum"}
+}

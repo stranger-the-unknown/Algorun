@@ -1,0 +1,434 @@
+{
+  "id": "even_branches",
+  "version": 1,
+  "title": "Even Branches",
+  "world": "world_12",
+  "chapter": "balanced_height_or_minus_one",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["recursion"],
+  "prerequisites": ["tree"],
+  "story": "A tree is evenly grown when, at every node, its two branches differ by at most 1 in their number of levels (an empty branch has 0 levels). Is the whole tree evenly grown? The function levels(node) gives the number of levels of a branch, or -1 as soon as some node inside it is lopsided.",
+  "io": {
+    "inputs": [
+      {"name": "root", "type": "treeNode?"}
+    ],
+    "output": {"type": "bool"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 63},
+    "notes": ["Labels are whole numbers from 1 to 99."]
+  },
+  "blocks": {
+    "allow": ["arith.abs", "arith.add", "arith.max", "arith.sub", "cmp.eq", "cmp.gt", "cmp.le", "cmp.ne", "ctrl.else", "ctrl.if", "ctrl.return", "fn.call1", "lit.bool", "lit.num", "logic.is_not_nothing", "logic.is_nothing", "tree.left", "tree.right", "var.get", "var.set"],
+    "maxBlocks": 76
+  },
+  "limits": {"maxOps": 2600, "maxDepth": 64, "maxAlloc": 100},
+  "hints": ["Ask each branch for its levels; if either says -1, the answer is -1 too.", "Otherwise, if the two differ by more than 1 (ABSOLUTE of the difference), RETURN -1; else RETURN 1 PLUS the larger one.", "The tree is evenly grown when levels(root) is NOT EQUAL to -1. Comparing only the root's two branches misses a lopsided node deeper down."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 4},
+              "right": {"type": "treeNode", "value": 5}
+            },
+            "right": {"type": "treeNode", "value": 3}
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {"type": "treeNode", "value": 4}
+              }
+            }
+          }
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"root": null},
+        "out": true
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {"type": "treeNode", "value": 1}
+        },
+        "out": true
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {"type": "treeNode", "value": 2}
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {"type": "treeNode", "value": 4}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 5,
+              "left": {"type": "treeNode", "value": 6},
+              "right": {"type": "treeNode", "value": 7}
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {"type": "treeNode", "value": 16},
+                  "right": {"type": "treeNode", "value": 17}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {"type": "treeNode", "value": 18},
+                  "right": {"type": "treeNode", "value": 19}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {
+                  "type": "treeNode",
+                  "value": 10,
+                  "left": {"type": "treeNode", "value": 20},
+                  "right": {"type": "treeNode", "value": 21}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 11,
+                  "left": {"type": "treeNode", "value": 22},
+                  "right": {"type": "treeNode", "value": 23}
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {
+                  "type": "treeNode",
+                  "value": 12,
+                  "left": {"type": "treeNode", "value": 24},
+                  "right": {"type": "treeNode", "value": 25}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 13,
+                  "left": {"type": "treeNode", "value": 26},
+                  "right": {"type": "treeNode", "value": 27}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 14,
+                  "left": {"type": "treeNode", "value": 28},
+                  "right": {"type": "treeNode", "value": 29}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 15,
+                  "left": {"type": "treeNode", "value": 30},
+                  "right": {"type": "treeNode", "value": 31}
+                }
+              }
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {"type": "treeNode", "value": 16},
+                  "right": {"type": "treeNode", "value": 17}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {"type": "treeNode", "value": 18},
+                  "right": {"type": "treeNode", "value": 19}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {
+                  "type": "treeNode",
+                  "value": 10,
+                  "left": {"type": "treeNode", "value": 20},
+                  "right": {"type": "treeNode", "value": 21}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 11,
+                  "left": {"type": "treeNode", "value": 22},
+                  "right": {"type": "treeNode", "value": 23}
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {"type": "treeNode", "value": 12},
+                "right": {"type": "treeNode", "value": 13}
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 14,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 28,
+                    "left": {"type": "treeNode", "value": 56},
+                    "right": {"type": "treeNode", "value": 57}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 29,
+                    "left": {"type": "treeNode", "value": 58},
+                    "right": {"type": "treeNode", "value": 59}
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 15,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 30,
+                    "left": {"type": "treeNode", "value": 60},
+                    "right": {"type": "treeNode", "value": 61}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 31,
+                    "left": {"type": "treeNode", "value": 62},
+                    "right": {"type": "treeNode", "value": 63}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 62,
+            "left": {
+              "type": "treeNode",
+              "value": 83,
+              "left": {
+                "type": "treeNode",
+                "value": 62,
+                "right": {
+                  "type": "treeNode",
+                  "value": 63,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 51,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 48,
+                      "left": {"type": "treeNode", "value": 83}
+                    }
+                  },
+                  "right": {"type": "treeNode", "value": 93}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 72,
+                "left": {
+                  "type": "treeNode",
+                  "value": 13,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 86,
+                    "left": {"type": "treeNode", "value": 36}
+                  }
+                },
+                "right": {"type": "treeNode", "value": 19}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 62,
+              "left": {
+                "type": "treeNode",
+                "value": 16,
+                "left": {
+                  "type": "treeNode",
+                  "value": 1,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 40,
+                    "left": {"type": "treeNode", "value": 89}
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 99,
+                  "left": {"type": "treeNode", "value": 25}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 49,
+                "left": {
+                  "type": "treeNode",
+                  "value": 7,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 78,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 49,
+                      "right": {"type": "treeNode", "value": 16}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 9,
+                      "left": {"type": "treeNode", "value": 87},
+                      "right": {"type": "treeNode", "value": 92}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 18,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 82,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 16,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 98,
+                        "right": {"type": "treeNode", "value": 38}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 32,
+                        "right": {"type": "treeNode", "value": 9}
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 60,
+                      "left": {"type": "treeNode", "value": 77},
+                      "right": {"type": "treeNode", "value": 92}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 56,
+                    "right": {"type": "treeNode", "value": 55}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": ["a lopsided node below a balanced root", "an empty tree", "a single node"],
+  "variables": {
+    "pool": [
+      {"name": "a", "type": "num"},
+      {"name": "b", "type": "num"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "levels",
+      "params": [
+        {"name": "node", "type": "treeNode?"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "balanced_height_or_minus_one"}
+}

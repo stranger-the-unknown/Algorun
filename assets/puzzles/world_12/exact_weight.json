@@ -1,0 +1,100 @@
+{
+  "id": "exact_weight",
+  "version": 1,
+  "title": "Exact Weight",
+  "world": "world_12",
+  "chapter": "take_or_skip_count",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["backtracking"],
+  "prerequisites": [],
+  "story": "A scale must show exactly the target weight. Count the different selections of the given weights that add up to exactly the target; each weight is used at most once, and weights in different positions are different weights even if they are equal. Choosing nothing weighs 0.",
+  "io": {
+    "inputs": [
+      {"name": "weights", "type": "array<num>"},
+      {"name": "target", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 14},
+    "notes": ["Weights are 0 to 20.", "The target is 0 to 200."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "arr.get", "arr.len", "cmp.eq", "ctrl.if", "ctrl.return", "fn.call3", "lit.num", "var.get"],
+    "maxBlocks": 60
+  },
+  "limits": {"maxOps": 1114100, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Every weight is a choice: leave it or take it. ways(w, i, rest) counts the selections from weight i onward that make up the rest.", "ways(w, i, rest) = ways(w, i PLUS 1, rest) PLUS ways(w, i PLUS 1, rest MINUS weight i).", "Decide only at the end (i EQUAL to the LENGTH): 1 if nothing is left, else 0. Stopping as soon as nothing is left misses selections that also take weights of 0."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"weights": [3, 5, 2, 8], "target": 10},
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {"weights": [4, 6], "target": 5},
+        "out": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"weights": [5, 0], "target": 5},
+        "out": 2
+      },
+      {
+        "id": "h02",
+        "in": {"weights": [], "target": 0},
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {"weights": [], "target": 3},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"weights": [0, 0], "target": 0},
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {"weights": [1, 1, 1], "target": 2},
+        "out": 3
+      },
+      {
+        "id": "h06",
+        "in": {"weights": [7], "target": 7},
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {"weights": [17, 1, 5, 2, 2, 17, 5, 7, 14, 3, 12, 14, 15, 14], "target": 60},
+        "out": 323
+      },
+      {
+        "id": "h08",
+        "in": {"weights": [1, 1, 5, 5, 2, 4, 5, 0, 5, 3, 2, 1, 0, 0], "target": 10},
+        "out": 552
+      }
+    ]
+  },
+  "edgeCases": ["weights of 0", "a target of 0", "equal weights in different positions"],
+  "variables": {"pool": []},
+  "functions": [
+    {
+      "name": "ways",
+      "params": [
+        {"name": "w", "type": "array<num>"},
+        {"name": "i", "type": "num"},
+        {"name": "rest", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "take_or_skip_count"}
+}

@@ -257,15 +257,23 @@
     },
     {
       "id": "world_12",
-      "title": "Backtracking",
+      "title": "Recursion & Backtracking",
       "index": 12,
       "concepts": [
+        "recursion",
         "backtracking"
       ],
       "prerequisites": [
-        "recursion"
+        "tree"
       ],
-      "puzzles": []
+      "puzzles": [
+        "coin_stack",
+        "tree_total",
+        "exact_weight",
+        "even_branches",
+        "change_ways",
+        "watchtowers"
+      ]
     },
     {
       "id": "world_13",

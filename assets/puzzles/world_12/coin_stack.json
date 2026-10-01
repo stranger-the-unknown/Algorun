@@ -1,0 +1,85 @@
+{
+  "id": "coin_stack",
+  "version": 1,
+  "title": "Stack of Coins",
+  "world": "world_12",
+  "chapter": "recursive_list_sum",
+  "tier": 3,
+  "mode": "build",
+  "concepts": ["recursion"],
+  "prerequisites": [],
+  "story": "Add up a stack of coins, listed from top to bottom, without any loop. The function sum_from(stack, i) gives the total of the coins from position i down to the bottom: coin i plus the total of the coins below it. Past the last coin there is nothing to add. The program returns the total of the whole stack.",
+  "io": {
+    "inputs": [
+      {"name": "coins", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 60},
+    "notes": ["Coins are worth 0 to 100."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "arr.get", "arr.len", "cmp.eq", "cmp.ge", "ctrl.if", "ctrl.return", "fn.call2", "lit.num", "var.get"],
+    "maxBlocks": 36
+  },
+  "limits": {"maxOps": 1850, "maxDepth": 80, "maxAlloc": 100},
+  "hints": ["A FUNCTION may CALL itself on a smaller part of the problem: the coins below i are a smaller stack.", "sum_from(stack, i) is coin i PLUS CALL sum_from(stack, i PLUS 1).", "Stop when i reaches the LENGTH of the stack and RETURN 0 there; an empty stack has no last coin. The program RETURNs CALL sum_from(coins, 0)."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"coins": [5, 1, 10, 25]},
+        "out": 41
+      },
+      {
+        "id": "v2",
+        "in": {"coins": [2, 2]},
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"coins": []},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"coins": [7]},
+        "out": 7
+      },
+      {
+        "id": "h03",
+        "in": {"coins": [0, 0, 0]},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"coins": [100, 50]},
+        "out": 150
+      },
+      {
+        "id": "h05",
+        "in": {
+          "coins": [6, 43, 99, 56, 49, 48, 86, 14, 38, 49, 53, 69, 21, 40, 39, 87, 15, 12, 61, 3, 73, 35, 79, 85, 41, 31, 82, 36, 30, 31, 4, 14, 44, 10, 10, 79, 20, 36, 20, 75, 92, 65, 91, 92, 12, 50, 99, 83, 66, 49, 99, 76, 57, 71, 70, 71, 90, 62, 22, 89]
+        },
+        "out": 3129
+      }
+    ]
+  },
+  "edgeCases": ["an empty stack", "a single coin"],
+  "variables": {"pool": []},
+  "functions": [
+    {
+      "name": "sum_from",
+      "params": [
+        {"name": "stack", "type": "array<num>"},
+        {"name": "i", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "recursive_list_sum"}
+}

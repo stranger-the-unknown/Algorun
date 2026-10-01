@@ -24,7 +24,7 @@ void main() {
       for (final id in world.puzzleIds) (world.id, campaign.puzzles[id]!),
   ];
 
-  test('119 campaign puzzles', () => expect(entries, hasLength(119)));
+  test('125 campaign puzzles', () => expect(entries, hasLength(125)));
 
   for (final (world, puzzle) in entries) {
     final metrics = referenceFile(world, puzzle.id)['metrics']! as Map<String, Object?>;
@@ -39,7 +39,7 @@ void main() {
       }
 
       final built = buildThroughEditor(puzzle, referenceSolution(world, puzzle.id));
-      expect(built.blockCount, withoutStrays(built.graph).blockCount, reason: 'nothing left behind');
+      expect(built.blockCount, withoutStrays(built.graph).playerBlockCount, reason: 'nothing left behind');
       final max = puzzle.blocks.maxBlocks;
       if (max != null) expect(built.blockCount, lessThanOrEqualTo(max));
       final outcome = runPuzzle(const DefaultEngine(), built.graph, puzzle);

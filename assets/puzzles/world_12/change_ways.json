@@ -1,0 +1,100 @@
+{
+  "id": "change_ways",
+  "version": 1,
+  "title": "Change Ways",
+  "world": "world_12",
+  "chapter": "combinations_by_coin_index",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["backtracking"],
+  "prerequisites": [],
+  "story": "A till has coins of a few different values, as many of each as it needs. In how many different ways can it pay the amount exactly? Two ways that use the same coins in another order are the same way. Paying 0 has exactly one way: no coins at all.",
+  "io": {
+    "inputs": [
+      {"name": "coins", "type": "array<num>"},
+      {"name": "amount", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 4},
+    "notes": ["Coin values are different whole numbers from 1 to 25.", "The amount is 0 to 40."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "arr.get", "arr.len", "cmp.eq", "cmp.lt", "ctrl.for_range", "ctrl.if", "ctrl.return", "fn.call3", "lit.num", "var.get", "var.set"],
+    "maxBlocks": 66
+  },
+  "limits": {"maxOps": 155350, "maxDepth": 64, "maxAlloc": 100},
+  "hints": ["To avoid counting orders, settle one coin value at a time: how many of value i, then the rest from later values.", "pay(c, i, rest) = pay(c, i, rest MINUS coin i), using coin i once more, PLUS pay(c, i PLUS 1, rest), no more of coin i.", "A rest of 0 is 1 way; a rest below 0, or no coin values left, is 0 ways."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"coins": [3, 10], "amount": 9},
+        "out": 1
+      },
+      {
+        "id": "v2",
+        "in": {"coins": [4, 6], "amount": 12},
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"coins": [1, 2], "amount": 4},
+        "out": 3
+      },
+      {
+        "id": "h02",
+        "in": {"coins": [2, 5, 10], "amount": 0},
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {"coins": [7], "amount": 3},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"coins": [], "amount": 5},
+        "out": 0
+      },
+      {
+        "id": "h05",
+        "in": {"coins": [1, 5, 10, 25], "amount": 30},
+        "out": 18
+      },
+      {
+        "id": "h06",
+        "in": {"coins": [2, 3, 5], "amount": 25},
+        "out": 15
+      },
+      {
+        "id": "h07",
+        "in": {"coins": [1, 2, 5], "amount": 40},
+        "out": 97
+      }
+    ]
+  },
+  "edgeCases": ["the same coins in another order", "an amount of 0", "an amount no coins can make", "no coin values"],
+  "variables": {
+    "pool": [
+      {"name": "total", "type": "num"},
+      {"name": "k", "type": "num"}
+    ]
+  },
+  "functions": [
+    {
+      "name": "pay",
+      "params": [
+        {"name": "c", "type": "array<num>"},
+        {"name": "i", "type": "num"},
+        {"name": "rest", "type": "num"}
+      ],
+      "returns": "num"
+    }
+  ],
+  "reference": {"strategy": "combinations_by_coin_index"}
+}
