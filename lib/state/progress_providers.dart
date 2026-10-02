@@ -9,6 +9,7 @@ import '../progress/progress_ledger.dart' as ledger;
 import '../progress/progress_store.dart';
 import '../progress/save_codec.dart';
 import '../progress/save_data.dart';
+import '../progress/save_files.dart';
 import 'providers.dart';
 
 /// Where the save lives. In memory unless `main` installs
@@ -16,17 +17,22 @@ import 'providers.dart';
 /// browser), so tests never touch device storage.
 final progressStoreProvider = Provider<ProgressStore>((ref) => MemoryProgressStore());
 
-/// The worlds manifest and every puzzle a world lists.
+/// Downloading and loading a save file: the browser version only (elsewhere
+/// [SaveFiles.supported] is false and the settings screen shows nothing).
+final saveFilesProvider = Provider<SaveFiles>((ref) => platformSaveFiles());
+
+/// The worlds manifest and every puzzle a world lists. The puzzles load
+/// together, not one after another: in the browser each is a request, and
+/// 150 in a row kept the first start waiting for seconds.
 final campaignProvider = FutureProvider<Campaign>((ref) async {
   final manifest = await ref.watch(worldsProvider.future);
   final repository = ref.watch(puzzleRepositoryProvider);
-  final puzzles = <String, Puzzle>{};
-  for (final world in manifest.worlds) {
-    for (final id in world.puzzleIds) {
-      puzzles[id] = await repository.loadPuzzle(world.id, id);
-    }
-  }
-  return Campaign(manifest, puzzles);
+  final listed = [
+    for (final world in manifest.worlds)
+      for (final id in world.puzzleIds) (world.id, id),
+  ];
+  final loaded = await Future.wait([for (final (world, id) in listed) repository.loadPuzzle(world, id)]);
+  return Campaign(manifest, {for (var i = 0; i < listed.length; i++) listed[i].$2: loaded[i]});
 });
 
 final progressProvider = AsyncNotifierProvider<ProgressNotifier, PlayerSave>(ProgressNotifier.new);
@@ -149,6 +155,23 @@ final class ProgressNotifier extends AsyncNotifier<PlayerSave> {
   void updateSettings(PlayerSettings settings) {
     if (!state.hasValue) return;
     _set(_current.copyWith(settings: settings), now: true);
+  }
+
+  /// The whole save as the text of a save file (the same JSON the device
+  /// keeps), for the player to download.
+  String exportText() => encodeSave(_current);
+
+  /// Replaces all progress with a save file's [text] and writes it at once.
+  /// Returns the loaded save, or null — changing nothing — when the text is
+  /// not a save this build can use, or the current save has not loaded yet.
+  Future<PlayerSave?> importText(String text) async {
+    if (!state.hasValue) return null;
+    final read = decodeSave(text);
+    if (!read.usable) return null;
+    read.issues.forEach(_report);
+    _set(read.save, now: true);
+    await flush();
+    return read.save;
   }
 
   /// Deletes every saved result, program and setting, except the language:

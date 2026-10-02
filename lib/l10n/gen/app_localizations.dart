@@ -1658,6 +1658,66 @@ abstract class AppLocalizations {
   /// **'In a web browser, progress is kept by that browser for this address. Clearing the site\'s data, or another browser, starts fresh.'**
   String get webStorageNote;
 
+  /// No description provided for @saveFileSection.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE FILE'**
+  String get saveFileSection;
+
+  /// No description provided for @saveFileNote.
+  ///
+  /// In en, this message translates to:
+  /// **'If this browser\'s data is cleared, your progress goes with it. Download a save file now and then; load it here, or in another browser, to carry on.'**
+  String get saveFileNote;
+
+  /// No description provided for @saveFileDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download save'**
+  String get saveFileDownload;
+
+  /// No description provided for @saveFileLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Load save'**
+  String get saveFileLoad;
+
+  /// No description provided for @saveFileDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Save file downloaded.'**
+  String get saveFileDownloaded;
+
+  /// No description provided for @saveFileLoadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Load a save file?'**
+  String get saveFileLoadTitle;
+
+  /// No description provided for @saveFileLoadBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The progress in the file replaces the progress in this browser.'**
+  String get saveFileLoadBody;
+
+  /// No description provided for @saveFileChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose file'**
+  String get saveFileChoose;
+
+  /// No description provided for @saveFileLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is not an Algorun save. Nothing was changed.'**
+  String get saveFileLoadFailed;
+
+  /// No description provided for @saveFileLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Save loaded: {count, plural, =1{1 solved puzzle} other{{count} solved puzzles}}.'**
+  String saveFileLoaded(int count);
+
   /// No description provided for @resetProgress.
   ///
   /// In en, this message translates to:

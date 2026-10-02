@@ -926,6 +926,41 @@ class AppLocalizationsTr extends AppLocalizations {
       'Web tarayıcısında ilerleme o tarayıcıda, bu adres için saklanır. Sitenin verilerini silersen ya da başka bir tarayıcı kullanırsan baştan başlarsın.';
 
   @override
+  String get saveFileSection => 'KAYIT DOSYASI';
+
+  @override
+  String get saveFileNote =>
+      'Bu tarayıcının verileri silinirse ilerlemen de gider. Ara sıra kayıt dosyasını indir; devam etmek için onu buraya ya da başka bir tarayıcıya yükle.';
+
+  @override
+  String get saveFileDownload => 'Kaydı indir';
+
+  @override
+  String get saveFileLoad => 'Kaydı yükle';
+
+  @override
+  String get saveFileDownloaded => 'Kayıt dosyası indirildi.';
+
+  @override
+  String get saveFileLoadTitle => 'Kayıt dosyası yüklensin mi?';
+
+  @override
+  String get saveFileLoadBody =>
+      'Dosyadaki ilerleme, bu tarayıcıdaki ilerlemenin yerini alır.';
+
+  @override
+  String get saveFileChoose => 'Dosya seç';
+
+  @override
+  String get saveFileLoadFailed =>
+      'Bu dosya bir Algorun kaydı değil. Hiçbir şey değişmedi.';
+
+  @override
+  String saveFileLoaded(int count) {
+    return 'Kayıt yüklendi: $count çözülmüş bulmaca.';
+  }
+
+  @override
   String get resetProgress => 'İlerlemeyi sıfırla';
 
   @override

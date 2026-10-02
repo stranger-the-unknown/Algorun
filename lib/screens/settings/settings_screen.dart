@@ -88,6 +88,31 @@ final class SettingsScreen extends ConsumerWidget {
               child: Text(l.resetProgress),
             ),
           ),
+          if (ref.watch(saveFilesProvider).supported) ...[
+            const SizedBox(height: AppSpace.s5),
+            Semantics(header: true, child: Text(l.saveFileSection, style: AppText.label(context))),
+            const SizedBox(height: AppSpace.s2),
+            Text(l.saveFileNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
+            const SizedBox(height: AppSpace.s3),
+            Wrap(
+              spacing: AppSpace.s2,
+              runSpacing: AppSpace.s2,
+              children: [
+                OutlinedButton.icon(
+                  key: const Key('settings-save-download'),
+                  onPressed: save == null ? null : () => _download(context, ref),
+                  icon: const Icon(Icons.download_outlined, size: 18),
+                  label: Text(l.saveFileDownload),
+                ),
+                OutlinedButton.icon(
+                  key: const Key('settings-save-load'),
+                  onPressed: save == null ? null : () => _load(context, ref),
+                  icon: const Icon(Icons.upload_file_outlined, size: 18),
+                  label: Text(l.saveFileLoad),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: AppSpace.s5),
           Text(l.platformNote, style: TextStyle(color: context.palette.muted, height: 1.5)),
           if (kDebugMode) ...[
@@ -111,7 +136,7 @@ final class SettingsScreen extends ConsumerWidget {
           ],
           const SizedBox(height: AppSpace.s5),
           Text(
-            l.versionLine('0.1.0  ·  Milestone 13 · U1'),
+            l.versionLine('0.1.0  ·  H  ·  2026-10-02'),
             style: TextStyle(
               color: context.palette.muted,
               fontFeatures: [FontFeature.tabularFigures()],
@@ -120,6 +145,45 @@ final class SettingsScreen extends ConsumerWidget {
         ],
       ))),
     );
+  }
+
+  void _download(BuildContext context, WidgetRef ref) {
+    final text = ref.read(progressProvider.notifier).exportText();
+    final day = DateTime.now().toIso8601String().substring(0, 10);
+    ref.read(saveFilesProvider).download('algorun-save-$day.json', text);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(context.l10n.saveFileDownloaded)));
+  }
+
+  Future<void> _load(BuildContext context, WidgetRef ref) async {
+    final l = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.saveFileLoadTitle),
+        content: Text(l.saveFileLoadBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel)),
+          TextButton(
+            key: const Key('settings-save-load-confirm'),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l.saveFileChoose),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    final text = await ref.read(saveFilesProvider).pick();
+    if (text == null) return;
+    final loaded = await ref.read(progressProvider.notifier).importText(text);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(SnackBar(
+      content: Text(loaded == null
+          ? l.saveFileLoadFailed
+          : l.saveFileLoaded(loaded.puzzles.values.where((p) => p.completed).length)),
+    ));
   }
 
   Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {

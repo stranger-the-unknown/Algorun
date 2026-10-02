@@ -6,11 +6,13 @@ import 'package:flutter_test/flutter_test.dart';
 /// the file store touches the device. Widgets reach storage through the
 /// progress notifier, never directly.
 void main() {
-  test('lib/progress is pure Dart except the device stores (file, browser)', () {
+  test('lib/progress is pure Dart except the device stores (file, browser) and the browser\'s save files', () {
     final files = Directory('lib/progress').listSync().whereType<File>().where((f) => f.path.endsWith('.dart'));
     expect(files, isNotEmpty);
     for (final file in files) {
-      if (file.path.endsWith('file_progress_store.dart') || file.path.endsWith('platform_store_web.dart')) continue;
+      if (const ['file_progress_store.dart', 'platform_store_web.dart', 'save_files_web.dart'].any(file.path.endsWith)) {
+        continue;
+      }
       final source = file.readAsStringSync();
       for (final banned in ['package:flutter', 'dart:io', 'package:path_provider', 'dart:ui', 'package:web']) {
         expect(source, isNot(contains(banned)), reason: '${file.path} imports $banned');

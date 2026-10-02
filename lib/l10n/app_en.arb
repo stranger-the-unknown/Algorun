@@ -711,6 +711,23 @@
   "showBriefSetting": "Show the brief when a puzzle opens",
   "privacyNote": "Progress, your programs and your best results are saved on this device only. There is no account and nothing is uploaded.",
   "webStorageNote": "In a web browser, progress is kept by that browser for this address. Clearing the site's data, or another browser, starts fresh.",
+  "saveFileSection": "SAVE FILE",
+  "saveFileNote": "If this browser's data is cleared, your progress goes with it. Download a save file now and then; load it here, or in another browser, to carry on.",
+  "saveFileDownload": "Download save",
+  "saveFileLoad": "Load save",
+  "saveFileDownloaded": "Save file downloaded.",
+  "saveFileLoadTitle": "Load a save file?",
+  "saveFileLoadBody": "The progress in the file replaces the progress in this browser.",
+  "saveFileChoose": "Choose file",
+  "saveFileLoadFailed": "That file is not an Algorun save. Nothing was changed.",
+  "saveFileLoaded": "Save loaded: {count, plural, =1{1 solved puzzle} other{{count} solved puzzles}}.",
+  "@saveFileLoaded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "resetProgress": "Reset progress",
   "resetConfirmTitle": "Reset progress?",
   "resetConfirmBody": "Every solved puzzle, saved program and best result on this device is deleted. This cannot be undone.",

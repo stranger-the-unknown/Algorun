@@ -6,6 +6,8 @@ Engine is pure Dart (`packages/algorun_engine`). Content validation is a separat
 
 **Status:** H is in: heaps of numbers (NEW MIN HEAP / NEW MAX HEAP, INSERT, TAKE TOP…) and world 09 (Heaps) with 15 puzzles; before it, L2 brought player functions, recursion and world 12 (Recursion & Backtracking, 15 puzzles) — 149 campaign puzzles in all. Every listed puzzle passes the seven-level content pipeline with an independent oracle; the game plays in English or Turkish. See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing, and [`docs/MILESTONE_H.md`](docs/MILESTONE_H.md) for the latest milestone.
 
+Play in the browser: https://stranger-the-unknown.github.io/algorun-play/ (built web files only; publish an update with `tool/publish_web.sh`).
+
 Validate content before committing it:
 
 ```bash

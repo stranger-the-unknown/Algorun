@@ -928,6 +928,47 @@ class AppLocalizationsEn extends AppLocalizations {
       'In a web browser, progress is kept by that browser for this address. Clearing the site\'s data, or another browser, starts fresh.';
 
   @override
+  String get saveFileSection => 'SAVE FILE';
+
+  @override
+  String get saveFileNote =>
+      'If this browser\'s data is cleared, your progress goes with it. Download a save file now and then; load it here, or in another browser, to carry on.';
+
+  @override
+  String get saveFileDownload => 'Download save';
+
+  @override
+  String get saveFileLoad => 'Load save';
+
+  @override
+  String get saveFileDownloaded => 'Save file downloaded.';
+
+  @override
+  String get saveFileLoadTitle => 'Load a save file?';
+
+  @override
+  String get saveFileLoadBody =>
+      'The progress in the file replaces the progress in this browser.';
+
+  @override
+  String get saveFileChoose => 'Choose file';
+
+  @override
+  String get saveFileLoadFailed =>
+      'That file is not an Algorun save. Nothing was changed.';
+
+  @override
+  String saveFileLoaded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count solved puzzles',
+      one: '1 solved puzzle',
+    );
+    return 'Save loaded: $_temp0.';
+  }
+
+  @override
   String get resetProgress => 'Reset progress';
 
   @override
