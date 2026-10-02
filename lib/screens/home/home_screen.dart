@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/l10n.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/content_width.dart';
+import '../../shared/load_failed.dart';
 import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';
 import '../guide/guide_screen.dart';
@@ -17,7 +18,8 @@ final class HomeScreen extends ConsumerWidget {
     // once the save says where the player was.
     final l = context.l10n;
     final text = ref.watch(contentTextProvider);
-    final view = ref.watch(campaignViewProvider).valueOrNull;
+    final campaignView = ref.watch(campaignViewProvider);
+    final view = campaignView.valueOrNull;
     final currentId = view?.progress.currentPuzzleId;
     final current = currentId == null ? null : view!.campaign.puzzles[currentId];
     final currentWorld = currentId == null ? null : view!.campaign.worldOf(currentId);
@@ -109,7 +111,9 @@ final class HomeScreen extends ConsumerWidget {
                             ],
                           ],
                         ),
-                      ),
+                      )
+                    else if (campaignView.hasError)
+                      LoadFailed(onRetry: () => retryCampaign(ref)),
                     const SizedBox(height: AppSpace.s5),
                     if (current != null && currentWorld != null) ...[
                       FilledButton(

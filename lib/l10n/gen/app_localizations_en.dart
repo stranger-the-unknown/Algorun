@@ -928,6 +928,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'In a web browser, progress is kept by that browser for this address. Clearing the site\'s data, or another browser, starts fresh.';
 
   @override
+  String get loadFailed =>
+      'The puzzles could not be loaded. Check the connection and try again.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
   String get saveFileSection => 'SAVE FILE';
 
   @override

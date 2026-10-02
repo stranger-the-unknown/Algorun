@@ -22,8 +22,9 @@ final progressStoreProvider = Provider<ProgressStore>((ref) => MemoryProgressSto
 final saveFilesProvider = Provider<SaveFiles>((ref) => platformSaveFiles());
 
 /// The worlds manifest and every puzzle a world lists. The puzzles load
-/// together, not one after another: in the browser each is a request, and
-/// 150 in a row kept the first start waiting for seconds.
+/// [_loadTogether] at a time, not one after another: in the browser each is
+/// a request, and 150 in a row kept the first start waiting for seconds;
+/// all at once is more than a server likes.
 final campaignProvider = FutureProvider<Campaign>((ref) async {
   final manifest = await ref.watch(worldsProvider.future);
   final repository = ref.watch(puzzleRepositoryProvider);
@@ -31,9 +32,22 @@ final campaignProvider = FutureProvider<Campaign>((ref) async {
     for (final world in manifest.worlds)
       for (final id in world.puzzleIds) (world.id, id),
   ];
-  final loaded = await Future.wait([for (final (world, id) in listed) repository.loadPuzzle(world, id)]);
+  final loaded = <Puzzle>[];
+  for (var i = 0; i < listed.length; i += _loadTogether) {
+    loaded.addAll(await Future.wait([
+      for (final (world, id) in listed.skip(i).take(_loadTogether)) repository.loadPuzzle(world, id),
+    ]));
+  }
   return Campaign(manifest, {for (var i = 0; i < listed.length; i++) listed[i].$2: loaded[i]});
 });
+
+const _loadTogether = 20;
+
+/// Loads the worlds and their puzzles again after a failure.
+void retryCampaign(WidgetRef ref) {
+  ref.invalidate(worldsProvider);
+  ref.invalidate(campaignProvider);
+}
 
 final progressProvider = AsyncNotifierProvider<ProgressNotifier, PlayerSave>(ProgressNotifier.new);
 

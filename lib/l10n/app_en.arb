@@ -711,6 +711,8 @@
   "showBriefSetting": "Show the brief when a puzzle opens",
   "privacyNote": "Progress, your programs and your best results are saved on this device only. There is no account and nothing is uploaded.",
   "webStorageNote": "In a web browser, progress is kept by that browser for this address. Clearing the site's data, or another browser, starts fresh.",
+  "loadFailed": "The puzzles could not be loaded. Check the connection and try again.",
+  "tryAgain": "Try again",
   "saveFileSection": "SAVE FILE",
   "saveFileNote": "If this browser's data is cleared, your progress goes with it. Download a save file now and then; load it here, or in another browser, to carry on.",
   "saveFileDownload": "Download save",

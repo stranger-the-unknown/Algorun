@@ -260,6 +260,8 @@
   "showBriefSetting": "Bulmaca açılınca görevi göster",
   "privacyNote": "İlerlemen, programların ve en iyi sonuçların yalnızca bu cihaza kaydedilir. Hesap yoktur ve hiçbir şey yüklenmez.",
   "webStorageNote": "Web tarayıcısında ilerleme o tarayıcıda, bu adres için saklanır. Sitenin verilerini silersen ya da başka bir tarayıcı kullanırsan baştan başlarsın.",
+  "loadFailed": "Bulmacalar yüklenemedi. Bağlantını kontrol edip tekrar dene.",
+  "tryAgain": "Tekrar dene",
   "saveFileSection": "KAYIT DOSYASI",
   "saveFileNote": "Bu tarayıcının verileri silinirse ilerlemen de gider. Ara sıra kayıt dosyasını indir; devam etmek için onu buraya ya da başka bir tarayıcıya yükle.",
   "saveFileDownload": "Kaydı indir",

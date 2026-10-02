@@ -926,6 +926,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Web tarayıcısında ilerleme o tarayıcıda, bu adres için saklanır. Sitenin verilerini silersen ya da başka bir tarayıcı kullanırsan baştan başlarsın.';
 
   @override
+  String get loadFailed =>
+      'Bulmacalar yüklenemedi. Bağlantını kontrol edip tekrar dene.';
+
+  @override
+  String get tryAgain => 'Tekrar dene';
+
+  @override
   String get saveFileSection => 'KAYIT DOSYASI';
 
   @override

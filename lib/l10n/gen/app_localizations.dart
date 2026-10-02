@@ -1658,6 +1658,18 @@ abstract class AppLocalizations {
   /// **'In a web browser, progress is kept by that browser for this address. Clearing the site\'s data, or another browser, starts fresh.'**
   String get webStorageNote;
 
+  /// No description provided for @loadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The puzzles could not be loaded. Check the connection and try again.'**
+  String get loadFailed;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
   /// No description provided for @saveFileSection.
   ///
   /// In en, this message translates to:

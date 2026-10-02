@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../progress/campaign.dart';
 import '../../l10n/content_text.dart';
 import '../../l10n/l10n.dart';
+import '../../shared/load_failed.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/content_width.dart';
 import '../../state/l10n_providers.dart';
@@ -26,7 +27,7 @@ final class WorldSelectScreen extends ConsumerWidget {
         error: (e, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(AppSpace.s5),
-            child: Text('$e', style: TextStyle(color: context.palette.danger)),
+            child: LoadFailed(onRetry: () => retryCampaign(ref)),
           ),
         ),
         data: (view) {
