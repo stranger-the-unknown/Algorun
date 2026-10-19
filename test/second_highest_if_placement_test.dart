@@ -197,26 +197,72 @@ void main() {
     expect((stmt.thenBody.single as IfStmt).srcBlockId, inner);
   });
 
-  testWidgets('closing the THEN picker arms that list for the next palette IF', (tester) async {
+  testWidgets('closing the THEN picker drops that target before the next palette IF', (tester) async {
     await _open(tester);
     final loop = await _addForEach(tester);
     final first = await _addIf(tester, loop, 'body', 'For DO of FOR EACH.');
-    await _tap(tester, find.byKey(ValueKey('add-step:$first.then')));
-    expect(find.textContaining('For THEN of IF.'), findsOneWidget);
+    await _openThen(tester, first);
     await _tap(tester, find.descendant(of: find.byType(BottomSheet), matching: find.byTooltip('Close')));
-    expect(find.byType(PaletteTray), findsOneWidget);
-    final chip = find.descendant(of: find.byType(PaletteTray), matching: find.text('IF'));
-    final rows = find.descendant(of: find.byType(PaletteTray), matching: find.byType(Scrollable));
-    await tester.scrollUntilVisible(chip, 120, scrollable: rows.last);
-    await tester.pumpAndSettle();
-    await tester.tap(chip.hitTestable().first);
-    await tester.pumpAndSettle();
-
-    final graph = _graph(tester);
-    final nested = graph.slotList(first, 'then').single;
-    expect(graph.blocks[nested]?.catalogId, BlockIds.ctrlIf);
-    expect(graph.parentOf(nested)?.blockId, first);
-    expect(graph.parentOf(nested)?.port, 'then');
-    expect(graph.slotList(loop, 'body'), [first]);
+    await _expectCancelledTarget(tester, loop, first);
   });
+
+  testWidgets('tapping outside the THEN picker drops that target', (tester) async {
+    await _open(tester);
+    final loop = await _addForEach(tester);
+    final first = await _addIf(tester, loop, 'body', 'For DO of FOR EACH.');
+    await _openThen(tester, first);
+    await tester.tapAt(const Offset(20, 20));
+    await tester.pumpAndSettle();
+    await _expectCancelledTarget(tester, loop, first);
+  });
+
+  testWidgets('dragging the THEN picker closed drops that target', (tester) async {
+    await _open(tester);
+    final loop = await _addForEach(tester);
+    final first = await _addIf(tester, loop, 'body', 'For DO of FOR EACH.');
+    await _openThen(tester, first);
+    await tester.fling(find.text('Choose a piece'), const Offset(0, 400), 1200);
+    await tester.pumpAndSettle();
+    await _expectCancelledTarget(tester, loop, first);
+  });
+
+  testWidgets('the back button on the THEN picker drops that target', (tester) async {
+    await _open(tester);
+    final loop = await _addForEach(tester);
+    final first = await _addIf(tester, loop, 'body', 'For DO of FOR EACH.');
+    await _openThen(tester, first);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    await _expectCancelledTarget(tester, loop, first);
+  });
+}
+
+Future<void> _openThen(WidgetTester tester, String ifId) async {
+  await _tap(tester, find.byKey(ValueKey('add-step:$ifId.then')));
+  expect(find.textContaining('For THEN of IF.'), findsOneWidget);
+  expect(
+    tester.widget<ScriptView>(find.byType(ScriptView)).controller.activeHole,
+    PortRef(ifId, 'then'),
+  );
+}
+
+Future<void> _expectCancelledTarget(WidgetTester tester, String loop, String first) async {
+  expect(find.byType(BottomSheet), findsNothing);
+  expect(tester.widget<ScriptView>(find.byType(ScriptView)).controller.activeHole, isNull);
+  expect(_graph(tester).slotList(first, 'then'), isEmpty);
+
+  final chip = find.descendant(of: find.byType(PaletteTray), matching: find.text('IF'));
+  final rows = find.descendant(of: find.byType(PaletteTray), matching: find.byType(Scrollable));
+  await tester.scrollUntilVisible(chip, 120, scrollable: rows.last);
+  await tester.pumpAndSettle();
+  await tester.tap(chip.hitTestable().first);
+  await tester.pumpAndSettle();
+
+  final graph = _graph(tester);
+  expect(graph.slotList(first, 'then'), isEmpty);
+  expect(graph.slotList(loop, 'body'), [first]);
+  expect(graph.entryIds, hasLength(2));
+  final added = graph.entryIds.last;
+  expect(graph.blocks[added]?.catalogId, BlockIds.ctrlIf);
+  expect(graph.parentOf(added)?.blockId, BlockGraph.mainId);
 }

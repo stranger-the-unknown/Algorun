@@ -42,7 +42,11 @@ abstract final class HolePicker {
           placements: placements,
         );
       },
-    );
+    ).whenComplete(() {
+      // Closing the sheet, by the close button, back, or a drag, is a
+      // cancel. A piece that was chosen already cleared this hole in place().
+      if (controller.activeHole == hole) controller.selectHole(null);
+    });
   }
 
   /// The sheet covers up to the lower half of the screen: a slot below 40 %
