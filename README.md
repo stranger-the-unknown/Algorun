@@ -8,6 +8,8 @@ Engine is pure Dart (`packages/algorun_engine`). Content validation is a separat
 
 Play in the browser: https://stranger-the-unknown.github.io/algorun-play/ (built web files only; publish an update with `tool/publish_web.sh`).
 
+Android APK: https://github.com/stranger-the-unknown/Algorun/releases/latest/download/Algorun.apk (every release: https://github.com/stranger-the-unknown/Algorun/releases; publish one with `tool/publish_apk.sh <notes.md>`).
+
 Validate content before committing it:
 
 ```bash
