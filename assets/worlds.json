@@ -337,6 +337,32 @@
       "puzzles": [
         "many_shortest_routes"
       ]
+    },
+    {
+      "id": "world_15",
+      "title": "Text, Sorting & Pairs",
+      "index": 15,
+      "concepts": [
+        "text",
+        "sorting",
+        "deque",
+        "pairs"
+      ],
+      "prerequisites": [
+        "arrays"
+      ],
+      "puzzles": [
+        "letter_tally",
+        "middle_child",
+        "top_scorer",
+        "seat_label",
+        "mirror_sign",
+        "smudged_tickets",
+        "out_of_place",
+        "zigzag_queue",
+        "pass_list",
+        "two_doors"
+      ]
     }
   ]
 }

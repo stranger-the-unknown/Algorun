@@ -1,0 +1,94 @@
+{
+  "id": "out_of_place",
+  "version": 1,
+  "title": "Out of Place",
+  "world": "world_15",
+  "chapter": "copy_sort_compare_positions",
+  "tier": 2,
+  "mode": "build",
+  "concepts": ["sorting"],
+  "prerequisites": [],
+  "story": "On the first day the children sit wherever they like. The teacher's register lists the same names in dictionary order, and from tomorrow seat 0 belongs to the first name in the register, seat 1 to the second, and so on. Given the names in the order the children sit today, return how many children will have to move. Two children may share a name.",
+  "io": {
+    "inputs": [
+      {"name": "names", "type": "array<str>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 30},
+    "notes": ["Names use only the small letters a to z."]
+  },
+  "blocks": {
+    "allow": ["arr.get", "arr.len", "arr.sort", "cmp.ne", "ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "var.copy", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 32
+  },
+  "limits": {"maxOps": 150, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["You need two orders side by side: today's seats and the register.", "SORT changes the list it is given, and SET would only give that same list a second name. COPY makes a real second list to sort.", "COPY names TO register, SORT register. Then FOR every position i: IF the name at i in names is NOT EQUAL to the name at i in register, INCREMENT moved."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"names": ["mina", "ali", "zeno", "bea"]},
+        "out": 4
+      },
+      {
+        "id": "v2",
+        "in": {"names": ["cora", "dan", "abe"]},
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"names": []},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"names": ["ivo"]},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"names": ["ada", "ben", "cy", "dot", "eli"]},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"names": ["eli", "dot", "cy", "ben", "ada"]},
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {"names": ["ada", "cy", "ben", "dot"]},
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {"names": ["sam", "ann", "sam", "ann"]},
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {"names": ["an", "anna", "a", "ann"]},
+        "out": 4
+      },
+      {
+        "id": "h08",
+        "in": {"names": ["lu", "lu", "lu"]},
+        "out": 0
+      }
+    ]
+  },
+  "edgeCases": ["an empty class", "one child", "already in register order", "the reverse order with a middle child who stays", "two children swapped", "children who share a name"],
+  "variables": {
+    "pool": [
+      {"name": "register", "type": "array<str>"},
+      {"name": "moved", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "copy_sort_compare_positions"}
+}

@@ -14,7 +14,8 @@
     "world_11": "Açgözlü Yöntemler",
     "world_12": "Özyineleme ve Geri İzleme",
     "world_13": "Dinamik Programlama",
-    "world_14": "İleri Algoritmalar"
+    "world_14": "İleri Algoritmalar",
+    "world_15": "Metin, Sıralama ve Çiftler"
   },
   "concepts": {
     "variables": "değişkenler",
@@ -48,7 +49,11 @@
     "backtracking": "geri izleme",
     "recursion": "özyineleme",
     "dp": "dinamik programlama",
-    "multi_concept": "birleşik kavramlar"
+    "multi_concept": "birleşik kavramlar",
+    "text": "metin",
+    "sorting": "sıralama",
+    "deque": "çift uçlu kuyruk",
+    "pairs": "çiftler"
   },
   "puzzles": {
     "warm_readings": {
@@ -1390,6 +1395,96 @@
         "İlk kareyle bir NEW MIN HEAP başlat: ücreti × 1000 + 0. TAKE TOP her zaman şimdiye kadar bulunan en ucuz yürüyüşü verir: maliyeti sayı FLOOR DIVIDE 1000, karesi ise REMAINDER'dır.",
         "Her kare için bir tane olmak üzere 0'lardan oluşan bir done listesi tut. Bir kare öncelik kuyruğundan ilk kez çıktığında maliyeti en ucuzdur: done'ı SET ELEMENT ile 1 yap. IF son kareyse maliyeti RETURN et.",
         "Bir kareden dört adımı dene (1, -1, 0, 0 tutan dr ve dc listeleri işe yarar): tarlanın içindeki ve done olmayan her komşu için (maliyet PLUS ücreti) × 1000 PLUS numarasını INSERT et. Bir kare birkaç kez girebilir; yalnızca ilk çıkışı sayılır."
+      ]
+    },
+    "letter_tally": {
+      "title": "Harf Sayımı",
+      "story": "Bir tabelacı, süslü tek bir harf için fazladan ücret alıyor. Tabelanın metni ve o harf verildiğinde, harfin tabelada kaç kez geçtiğini say. Büyük harf ile küçük harf iki ayrı harftir; boşluk da bir harf sayılır.",
+      "hints": [
+        "Tabelaya harf harf bak ve bir sayaç tut.",
+        "TEXT LENGTH tabelada kaç konum olduğunu söyler; LETTER AT, 0'dan başlayarak bir konumdaki harfi verir.",
+        "FOR ile i'yi 0'dan sign metninin TEXT LENGTH değerine kadar gezdir ve IF ile bak: LETTER AT i, letter ile EQUAL ise count için INCREMENT kullan. Sonunda RETURN count."
+      ]
+    },
+    "middle_child": {
+      "title": "Ortadaki Çocuk",
+      "story": "Sınıf fotoğrafı için çocuklar, en kısa olan başta olacak şekilde tek sıra olur. Fotoğrafçı sıranın ortasındaki çocuğa odaklanır; çocuk sayısı çiftse ortadaki iki çocuktan soldakine. Çocukların geliş sırasına göre boyları verildiğinde, fotoğrafçının odaklandığı boyu döndür. En az bir çocuk vardır.",
+      "hints": [
+        "Geliş sırasında \"ortadaki çocuk\" bir şey ifade etmez: önce sırayı düzene sok.",
+        "SORT listenin kendisini küçükten büyüğe dizer. Sonrası tek bir GET ELEMENT.",
+        "SORT heights sonrasında konum: (heights LENGTH MINUS 1) FLOOR DIVIDE 2. 4 çocuk için bu 1 eder, yani ortadaki ikiliden soldaki."
+      ]
+    },
+    "top_scorer": {
+      "title": "En Çok Puan",
+      "story": "Bilgi yarışması gecesinden sonra her sonuç bir çifttir: ilk değer oyuncunun adı, ikincisi puanı. En çok puanı alan oyuncunun adını döndür. Zirveyi birkaç oyuncu paylaşıyorsa listede önce gelen kazanır. En az bir sonuç vardır.",
+      "hints": [
+        "O ana kadar gördüğün en iyi sonucu bütün bir çift olarak sakla ve her sonucu onunla karşılaştır.",
+        "SECOND bir çiftin puanını, FIRST adını okur. 0 konumundaki sonucu en iyi kabul ederek başla.",
+        "FOR EACH ile results içindeki her r için IF ile bak: (r SECOND), (best SECOND) değerinden GREATER THAN ise SET best TO r. Kesin büyük olmalı; böylece listede sonra gelen eşit puan öne geçmez. Sonunda RETURN (best FIRST)."
+      ]
+    },
+    "mirror_sign": {
+      "title": "Ayna Tabelası",
+      "story": "Bir berber, dükkânın adını ayna duvarına boyatıyor; koltuktaki müşteri yazıyı karşısındaki aynada düz okuyabilsin diye. Bunun için boyacıya metnin tersi gerekiyor: son harf başta. Tabelayı tersten yazılmış olarak döndür.",
+      "hints": [
+        "Boş metinle (\"\") başlayıp yeni bir metin kur.",
+        "JOIN iki metni, soldaki önce gelecek şekilde birleştirir. Her yeni harf hangi tarafa gelmeli?",
+        "SET result TO \"\". FOR ile i'yi 0'dan sign metninin TEXT LENGTH değerine kadar gezdir: SET result TO (LETTER AT i) JOIN result. Her harf elindekinin önüne geçer; böylece son harf en başa gelir."
+      ]
+    },
+    "smudged_tickets": {
+      "title": "Lekeli Biletler",
+      "story": "Bir bilet makinesi her bilete bir tam sayı basar, ama yağmur bazılarını lekeler. Görevli her bilette ne yazıyor gibi görünüyorsa onu yazar. Bir bilet yalnızca metni bir tam sayıysa sayılır: yalnızca rakamlar, başında en fazla bir -. Sayılan biletlerin sayılarını topla; sayılmayan bilet toplama bir şey katmaz.",
+      "hints": [
+        "Bir metin, sayıya benzese bile sayı değildir: önce sayı olarak okunması gerekir.",
+        "TEXT AS NUMBER rakamlardan oluşan bir metni okur. Başka her metin için NOTHING verir; yani sonucu boş olabilir.",
+        "FOR EACH ile her ticket için: SET n TO (ticket TEXT AS NUMBER). Sonra IF ile bak: n IS NOT NOTHING ise SET total TO total PLUS n. Sonunda RETURN total."
+      ]
+    },
+    "out_of_place": {
+      "title": "Yerinde Olmayanlar",
+      "story": "İlk gün çocuklar istedikleri yere oturur. Öğretmenin yoklama defteri aynı adları sözlük sırasıyla listeler; yarından itibaren 0 numaralı sıra defterdeki ilk ada, 1 numaralı sıra ikinci ada aittir ve böyle devam eder. Çocukların bugünkü oturma sırasına göre adları verildiğinde, kaç çocuğun yer değiştirmesi gerekeceğini döndür. İki çocuğun adı aynı olabilir.",
+      "hints": [
+        "Yan yana iki sıra gerekiyor: bugünkü oturma düzeni ve yoklama defteri.",
+        "SORT kendisine verilen listeyi değiştirir; SET ise aynı listeye yalnızca ikinci bir ad verir. COPY, sıralanacak gerçek bir ikinci liste yapar.",
+        "COPY names TO register, ardından SORT register. Sonra FOR ile her i konumu için IF ile bak: names içindeki ad, register içindeki addan NOT EQUAL ise moved için INCREMENT kullan."
+      ]
+    },
+    "zigzag_queue": {
+      "title": "Zikzak Kuyruk",
+      "story": "Panayırda insanlar dönme dolap sırasına tuhaf bir biçimde giriyor. İlk gelen doğrudan sıraya geçer. İkincisi en öne sıkışır, üçüncüsü arkaya geçer, dördüncüsü yine öne gider ve böyle sırayla devam eder. İnsanların geliş sırasına göre bilet numaraları verildiğinde, sırayı önden arkaya doğru döndür.",
+      "hints": [
+        "Sıraya iki ucundan da insan ekleniyor. Çift uçlu kuyruk, iki ucu da açık bir sıradır.",
+        "arrivals listesinde 0, 2, 4, … konumundaki kişi arkaya, diğerleri öne geçer: i REMAINDER 2 bunları ayırır.",
+        "Her geleni bir NEW DEQUE içine PUSH BACK ya da PUSH FRONT ile ekle. Sonra kuyruk boş değilken (NOT ... IS EMPTY, WHILE ile) POP FRONT sonucunu bir NEW LIST içine APPEND et ve o listeyi RETURN et."
+      ]
+    },
+    "pass_list": {
+      "title": "Geçenler Listesi",
+      "story": "Sınav kurulunun elinde aynı sırada iki liste var: adayların adları ve puanları. Kurul bir geçenler listesi yayımlar: puanı en az geçme notu kadar olan her aday için, ilk değeri ad, ikinci değeri puan olan bir çift; asıl listelerdeki sırayla. Geçenler listesini döndür.",
+      "hints": [
+        "İki listeyi tek bir konumla gez: aynı konumdaki ad ile puan birbirine aittir.",
+        "MAKE PAIR iki değeri tek bir değere bağlar; böylece bir liste adı ve puanı birlikte tutabilir.",
+        "SET passed TO NEW LIST. FOR ile her i konumu için IF ile bak: i konumundaki puan mark değerinden GREATER OR EQUAL ise, passed listesine (i konumundaki ad MAKE PAIR i konumundaki puan) APPEND et. Sonunda RETURN passed."
+      ]
+    },
+    "two_doors": {
+      "title": "İki Kapı",
+      "story": "Dar bir tramvayın bir ön, bir arka kapısı vardır; yolcular iki kapı arasında tek sıra durur. Vatman her hareketi bir sayı olarak kaydeder. Pozitif sayı, o bilet numaralı yolcunun arka kapıdan binip herkesin arkasına geçmesidir. 0, ön kapıya en yakın yolcunun inmesi; -1, arka kapıya en yakın yolcunun inmesi demektir. Tramvay boşken basılan 0 ya da -1 yanlışlıkla basılmıştır ve hiçbir şey olmaz. Hâlâ içeride olan yolcuların biletlerini ön kapıdan arka kapıya doğru döndür.",
+      "hints": [
+        "Yolcular sıranın iki ucundan da iniyor; yani sıra bir çift uçlu kuyruktur.",
+        "Binmek PUSH BACK demektir. İnmek 0 için POP FRONT, -1 için POP BACK; ikisi de inen bileti verir, onu SET ile yedek bir değişkene koyabilirsin.",
+        "Boş bir çift uçlu kuyruk bir şey veremez: her POP FRONT ya da POP BACK öncesinde NOT (tram IS EMPTY) kontrolü yap. Sonunda kalanları POP FRONT ile bir NEW LIST içine taşı."
+      ]
+    },
+    "seat_label": {
+      "title": "Koltuk Etiketi",
+      "story": "Bir tiyatro her koltuk için bir etiket basar: sıra harfi, bir tire ve iki haneli yazılmış koltuk numarası. C sırasındaki 12 numaralı koltuk C-12, C sırasındaki 7 numaralı koltuk C-07 olur. Bir sıra harfi ve 1 ile 99 arasında bir koltuk numarası verildiğinde etiketi döndür.",
+      "hints": [
+        "Etiket, birleştirilen metin parçalarından kurulur; koltuk bir sayıdır ve önce metne çevrilmelidir.",
+        "JOIN iki metni birleştirir. NUMBER AS TEXT koltuk numarasını metne çevirir. TEXT bloğu bu bulmacanın gerektirdiği parçaları sunar: \"-\" ve \"0\".",
+        "SET label TO row JOIN \"-\". IF ile bak: seat, 10 değerinden LESS THAN ise SET label TO label JOIN \"0\". Sonunda RETURN label JOIN (seat NUMBER AS TEXT)."
       ]
     }
   }

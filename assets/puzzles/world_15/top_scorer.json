@@ -1,0 +1,143 @@
+{
+  "id": "top_scorer",
+  "version": 1,
+  "title": "Top Scorer",
+  "world": "world_15",
+  "chapter": "first_maximum_by_second",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["pairs"],
+  "prerequisites": [],
+  "story": "After the quiz night every result is a pair: the player's name first, their points second. Return the name of the player with the most points. When several players share the top, the one who comes first in the list wins. There is always at least one result.",
+  "io": {
+    "inputs": [
+      {"name": "results", "type": "array<pair<str,num>>"}
+    ],
+    "output": {"type": "str"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 30},
+    "notes": ["Points are whole numbers and may be zero or negative."]
+  },
+  "blocks": {
+    "allow": ["arr.get", "cmp.ge", "cmp.gt", "ctrl.foreach", "ctrl.if", "ctrl.return", "lit.num", "pair.first", "pair.second", "var.get", "var.set"],
+    "maxBlocks": 28
+  },
+  "limits": {"maxOps": 150, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Keep the best result seen so far, as a whole pair, and compare every result with it.", "SECOND reads the points of a pair, FIRST its name. Start with the result at position 0 as the best.", "FOR EACH r in results: IF (r SECOND) is GREATER THAN (best SECOND), SET best TO r. Strictly greater, so an equal score later in the list does not take over. RETURN (best FIRST)."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "mira", "second": 7},
+            {"type": "pair", "first": "tolga", "second": 12},
+            {"type": "pair", "first": "ines", "second": 9}
+          ]
+        },
+        "out": "tolga"
+      },
+      {
+        "id": "v2",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "otto", "second": 4},
+            {"type": "pair", "first": "lale", "second": 3}
+          ]
+        },
+        "out": "otto"
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "solo", "second": 0}
+          ]
+        },
+        "out": "solo"
+      },
+      {
+        "id": "h02",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "ada", "second": 8},
+            {"type": "pair", "first": "bora", "second": 11},
+            {"type": "pair", "first": "cem", "second": 11},
+            {"type": "pair", "first": "defne", "second": 5}
+          ]
+        },
+        "out": "bora"
+      },
+      {
+        "id": "h03",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "uma", "second": 6},
+            {"type": "pair", "first": "vera", "second": 6},
+            {"type": "pair", "first": "yusuf", "second": 6}
+          ]
+        },
+        "out": "uma"
+      },
+      {
+        "id": "h04",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "kaan", "second": -4},
+            {"type": "pair", "first": "lior", "second": -2},
+            {"type": "pair", "first": "mert", "second": -9}
+          ]
+        },
+        "out": "lior"
+      },
+      {
+        "id": "h05",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "a", "second": 1},
+            {"type": "pair", "first": "b", "second": 2},
+            {"type": "pair", "first": "c", "second": 3},
+            {"type": "pair", "first": "d", "second": 4},
+            {"type": "pair", "first": "e", "second": 5}
+          ]
+        },
+        "out": "e"
+      },
+      {
+        "id": "h06",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "zed", "second": 10},
+            {"type": "pair", "first": "amy", "second": 10}
+          ]
+        },
+        "out": "zed"
+      },
+      {
+        "id": "h07",
+        "in": {
+          "results": [
+            {"type": "pair", "first": "p", "second": 3},
+            {"type": "pair", "first": "q", "second": 15},
+            {"type": "pair", "first": "r", "second": 2},
+            {"type": "pair", "first": "s", "second": 15},
+            {"type": "pair", "first": "t", "second": 14}
+          ]
+        },
+        "out": "q"
+      }
+    ]
+  },
+  "edgeCases": ["one result", "a tie for the top: the first one wins", "every score equal", "negative points", "the best is last"],
+  "variables": {
+    "pool": [
+      {"name": "best", "type": "pair<str,num>"},
+      {"name": "r", "type": "pair<str,num>"}
+    ]
+  },
+  "reference": {"strategy": "first_maximum_by_second"}
+}

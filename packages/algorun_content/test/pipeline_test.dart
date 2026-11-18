@@ -215,8 +215,8 @@ void main() {
 
   group('level 2: blocks and capabilities', () {
     test('a family the language cannot express is refused', () {
-      final report = _run([_candidate(spec: _spec(family: 'sorting_builtin'))]);
-      expect(_says(report, Severity.error, Level.blocks, 'cannot express "sorting_builtin"'), isTrue);
+      final report = _run([_candidate(spec: _spec(family: 'bit_manipulation'))]);
+      expect(_says(report, Severity.error, Level.blocks, 'cannot express "bit_manipulation"'), isTrue);
       expect(_verdict(report, 'count_items').failed, contains(Level.blocks));
     });
 
@@ -525,7 +525,7 @@ void main() {
         'worlds': {
           'world_a': {'target': 3, 'tiers': [1, 2]},
         },
-        'families': {'array_scan': 2, 'sorting_builtin': 1},
+        'families': {'array_scan': 2, 'bit_manipulation': 1},
         'modes': {'repair': 1},
       });
       final report = _run([_candidate()], targets: targets);
@@ -536,7 +536,7 @@ void main() {
       final gaps = (matrix['gaps']! as List).cast<Map<String, Object?>>();
       expect(gaps, contains(equals({'area': 'world', 'id': 'world_a', 'have': 1, 'want': 3})));
       expect(gaps, contains(equals({'area': 'tiers', 'id': 'world_a', 'missing': [2]})));
-      expect(gaps, contains(equals({'area': 'family', 'id': 'sorting_builtin', 'have': 0, 'want': 1, 'note': 'blocked by the language'})));
+      expect(gaps, contains(equals({'area': 'family', 'id': 'bit_manipulation', 'have': 0, 'want': 1, 'note': 'blocked by the language'})));
       expect(gaps.where((g) => g['id'] == 'repair').single['note'], startsWith('blocked:'));
       // Deterministic: the same corpus gives the same text.
       expect(coverageJson(_run([_candidate()], targets: targets).coverage!), coverageJson(matrix));
@@ -591,7 +591,7 @@ void main() {
     test('every campaign puzzle is accepted at every level', () {
       expect(report.errors, isEmpty, reason: report.errors.join('\n'));
       final campaign = report.verdicts.where((v) => v.campaign).toList();
-      expect(campaign, hasLength(149));
+      expect(campaign, hasLength(159));
       expect(campaign.where((v) => !v.accepted), isEmpty);
     });
 

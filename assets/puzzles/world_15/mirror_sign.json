@@ -1,0 +1,93 @@
+{
+  "id": "mirror_sign",
+  "version": 1,
+  "title": "Mirror Sign",
+  "world": "world_15",
+  "chapter": "reverse_text_by_prepending",
+  "tier": 2,
+  "mode": "build",
+  "concepts": ["text"],
+  "prerequisites": [],
+  "story": "A barber paints the shop's name on the mirror wall so that customers in the chair read it the right way round in the mirror in front of them. For that the painter needs the text backwards: the last letter first. Return the sign written backwards.",
+  "io": {
+    "inputs": [
+      {"name": "sign", "type": "str"}
+    ],
+    "output": {"type": "str"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 40},
+    "notes": ["The sign has at most 40 letters."]
+  },
+  "blocks": {
+    "allow": ["ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "lit.str", "str.char_at", "str.concat", "str.len", "var.get", "var.set"],
+    "maxBlocks": 23
+  },
+  "limits": {"maxOps": 250, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Build a new text, starting from the empty text \"\".", "JOIN puts two texts together, the left one first. Which side should each new letter go on?", "SET result TO \"\". FOR i from 0 to the TEXT LENGTH of sign: SET result TO (the LETTER AT i) JOIN result. Each letter goes in front of what you have, so the last one ends up first."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"sign": "barber"},
+        "out": "rebrab"
+      },
+      {
+        "id": "v2",
+        "in": {"sign": "open late"},
+        "out": "etal nepo"
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"sign": ""},
+        "out": ""
+      },
+      {
+        "id": "h02",
+        "in": {"sign": "k"},
+        "out": "k"
+      },
+      {
+        "id": "h03",
+        "in": {"sign": "level"},
+        "out": "level"
+      },
+      {
+        "id": "h04",
+        "in": {"sign": "aab"},
+        "out": "baa"
+      },
+      {
+        "id": "h05",
+        "in": {"sign": " cut and shave"},
+        "out": "evahs dna tuc "
+      },
+      {
+        "id": "h06",
+        "in": {"sign": "Est 1984"},
+        "out": "4891 tsE"
+      },
+      {
+        "id": "h07",
+        "in": {"sign": "şeker"},
+        "out": "rekeş"
+      },
+      {
+        "id": "h08",
+        "in": {"sign": "no no on on"},
+        "out": "no no on on"
+      }
+    ]
+  },
+  "edgeCases": ["an empty sign", "one letter", "a sign that reads the same both ways", "spaces keep their place in the order", "repeated letters"],
+  "variables": {
+    "pool": [
+      {"name": "result", "type": "str"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "reverse_text_by_prepending"}
+}

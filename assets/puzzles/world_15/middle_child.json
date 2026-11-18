@@ -1,0 +1,83 @@
+{
+  "id": "middle_child",
+  "version": 1,
+  "title": "Middle Child",
+  "world": "world_15",
+  "chapter": "sort_then_lower_median",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["sorting"],
+  "prerequisites": [],
+  "story": "For the class photo the children stand in one row, shortest first. The photographer focuses on the child in the middle of the row; when the number of children is even, on the left one of the two in the middle. Given the heights in the order the children arrived, return the height the photographer focuses on. There is always at least one child.",
+  "io": {
+    "inputs": [
+      {"name": "heights", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 40},
+    "notes": ["Heights are whole numbers from 90 to 160."]
+  },
+  "blocks": {
+    "allow": ["arith.floor_div", "arith.sub", "arr.get", "arr.len", "arr.sort", "ctrl.return", "lit.num", "var.get"],
+    "maxBlocks": 18
+  },
+  "limits": {"maxOps": 100, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["In the order they arrived the middle child means nothing: put the row in order first.", "SORT puts the list itself in rising order. Then the answer is one GET ELEMENT away.", "After SORT heights, the position is (LENGTH of heights MINUS 1) FLOOR DIVIDE 2: for 4 children that is 1, the left of the two in the middle."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"heights": [132, 118, 141, 125, 120]},
+        "out": 125
+      },
+      {
+        "id": "v2",
+        "in": {"heights": [150, 110, 130]},
+        "out": 130
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"heights": [127]},
+        "out": 127
+      },
+      {
+        "id": "h02",
+        "in": {"heights": [140, 112]},
+        "out": 112
+      },
+      {
+        "id": "h03",
+        "in": {"heights": [121, 135, 109, 144]},
+        "out": 121
+      },
+      {
+        "id": "h04",
+        "in": {"heights": [118, 118, 131, 118]},
+        "out": 118
+      },
+      {
+        "id": "h05",
+        "in": {"heights": [100, 105, 111, 119, 126, 138]},
+        "out": 111
+      },
+      {
+        "id": "h06",
+        "in": {"heights": [158, 149, 137, 122, 113, 104, 96]},
+        "out": 122
+      },
+      {
+        "id": "h07",
+        "in": {"heights": [133, 97, 133, 97, 160, 97, 133, 120]},
+        "out": 120
+      }
+    ]
+  },
+  "edgeCases": ["one child", "two children: the shorter one", "an even row", "equal heights", "already in order", "tallest first"],
+  "variables": {"pool": []},
+  "reference": {"strategy": "sort_then_lower_median"}
+}

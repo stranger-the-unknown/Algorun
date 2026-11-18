@@ -1,0 +1,94 @@
+{
+  "id": "smudged_tickets",
+  "version": 1,
+  "title": "Smudged Tickets",
+  "world": "world_15",
+  "chapter": "parse_or_skip_sum",
+  "tier": 2,
+  "mode": "edge",
+  "concepts": ["text"],
+  "prerequisites": [],
+  "story": "A ticket machine prints a whole number on every ticket, but rain smudges some of them. The clerk types what each ticket seems to say. A ticket counts only when its text is a whole number: digits only, with at most one - in front. Add up the numbers of the tickets that count; a ticket that does not count adds nothing.",
+  "io": {
+    "inputs": [
+      {"name": "tickets", "type": "array<str>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 30},
+    "notes": ["Every ticket text has at most 6 letters."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "ctrl.foreach", "ctrl.if", "ctrl.return", "lit.num", "logic.is_not_nothing", "str.to_num", "var.get", "var.set"],
+    "maxBlocks": 26
+  },
+  "limits": {"maxOps": 150, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["A text is not a number, even when it looks like one: it has to be read as a number first.", "TEXT AS NUMBER reads a text made of digits. For any other text it gives NOTHING, so its result may be empty.", "FOR EACH ticket: SET n TO (ticket TEXT AS NUMBER). IF n IS NOT NOTHING, SET total TO total PLUS n. RETURN total."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"tickets": ["12", "7#", "30"]},
+        "out": 42
+      },
+      {
+        "id": "v2",
+        "in": {"tickets": ["5", "-2", "x", "10"]},
+        "out": 13
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"tickets": []},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"tickets": ["a1", "??", "1 2"]},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"tickets": ["007", "0", "040"]},
+        "out": 47
+      },
+      {
+        "id": "h04",
+        "in": {"tickets": ["-15", "15", "-", "-3"]},
+        "out": -3
+      },
+      {
+        "id": "h05",
+        "in": {"tickets": ["", "9", ""]},
+        "out": 9
+      },
+      {
+        "id": "h06",
+        "in": {"tickets": ["+4", "3.5", "6", "2e1"]},
+        "out": 6
+      },
+      {
+        "id": "h07",
+        "in": {"tickets": ["8 ", " 8", "8"]},
+        "out": 8
+      },
+      {
+        "id": "h08",
+        "in": {"tickets": ["100", "--1", "1-", "250", "٣", "99"]},
+        "out": 449
+      }
+    ]
+  },
+  "edgeCases": ["no tickets", "every ticket smudged", "zeros in front", "a negative number", "a lone minus", "an empty text", "a space or a letter among the digits", "a plus sign or a decimal point"],
+  "variables": {
+    "pool": [
+      {"name": "total", "type": "num"},
+      {"name": "ticket", "type": "str"},
+      {"name": "n", "type": "num?"}
+    ]
+  },
+  "reference": {"strategy": "parse_or_skip_sum"}
+}
