@@ -179,12 +179,53 @@ world lists).
 |---|---|---|
 | Engine `dart test` | 398 | **421** (+23 `test/starter_program_test.dart`: schema 16, predict grading 7) |
 | Content `dart test` | 86 | **109** (+23 `test/starter_check_test.dart`) |
-| Flutter `flutter test` | 540 | **FLUTTER_TOTAL** (+40 `test/puzzle_modes_test.dart`, +18 from nine more puzzles in the campaign regression loop) |
+| Flutter `flutter test` | 540 | **599** (+41 `test/puzzle_modes_test.dart`, +18 from nine more puzzles in the campaign regression loop) |
 | Validator | 149 of 149 · 154 puzzles | `PIPELINE 158 of 158 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 163 puzzle(s), 5 warning(s)` (the five unlisted probes, as before) |
 
 `dart analyze` (engine, content) and `flutter analyze`: no issues.
 
-EMULATOR_SECTION
+## Emulator pass (2026-11-18)
+
+AVD `algorun_phone` (headless, 1080 × 2400 at density 420 — 411 × 914 dp),
+debug APK of this branch installed over the app already there, driven with
+`adb` taps found through the accessibility tree. One puzzle of each mode,
+start to finish, in English:
+
+- **predict — Halve or Step:** worlds list (COMPLETE / REPAIR / PREDICT
+  badges on worlds 01, 02, 04), puzzle row badge, the read-only program,
+  three answers on the number pad with one wrong on purpose → WRONG ANSWER,
+  "2 of 3 answers…", question 2 marked, no right answer shown → BACK TO THE
+  QUESTIONS lands on question 2 with the old answer → corrected → CORRECT,
+  *Puzzle solved.*, the row then says *Solved*.
+- **repair — Fence Posts:** RUN on the starter → WRONG ANSWER (v1 passed,
+  v2 expected 4, gave 3; 3 of 8 hidden) → select LESS THAN → REPLACE →
+  LESS OR EQUAL → `pos`, `length` → RUN → CORRECT, 8 of 8 hidden.
+- **complete — Flag Lines:** locked blocks show their lock; a locked SET
+  has no moves and stays; the two missing instructions added through the
+  picker, the name sheet and the number pad (9 → 17 blocks) → RUN → CORRECT.
+  Start over asks, restores 9 blocks, UNDO brings 17 back; after a force
+  stop CONTINUE reopens Flag Lines with the 17-block program.
+
+The emulator was free when this ran and was shut down afterwards; it now
+holds this branch's debug build and a save with these three solved.
+
+## NOT TESTED
+
+- No physical phone; the emulator pass was English only, one screen size,
+  light theme. Turkish strings and dark theme are covered by widget tests
+  (ARB parity, one 360 × 640 predict screen at ×1.6 in dark) but were not
+  looked at on a device.
+- The other six new puzzles were not played by hand on the emulator
+  (their references run in the regression loop; their starters and answers
+  in `puzzle_modes_test.dart`).
+- The web build (`tool/web.sh`) and a release APK were not built.
+- A yes / no predict puzzle on a device (none ships).
+- TalkBack was not run; the new controls carry semantics labels, and the
+  emulator pass found them through the accessibility tree.
+- Baseline note: the first `flutter test` on untouched `main` in this
+  worktree reported 539 passed and 1 failed — the stress probe's timing
+  check ("an edit on the 82-block program rebuilds quickly"), with five
+  sessions compiling at once. The same test passed in both later full runs.
 
 ## For the coordinator
 
@@ -199,6 +240,8 @@ with the probes).** Test lines that pin campaign size, all changed here:
 | `test/localization_ui_test.dart` | `'0 of 149 puzzles solved'`, `'149 bulmacadan 0 tanesi çözüldü'` → 158 |
 | `packages/algorun_content/test/pipeline_test.dart` | `hasLength(149)` → 158; the "mode the product cannot play" example and the coverage-gap example changed from `repair` to `ops` (repair is playable now) |
 | `packages/algorun_content/test/content_validator_test.dart` | `puzzleCount` 154 → 163; `hasLength(149)` → 158; `'OK 154 puzzle(s)'` → 163 |
+| `test/real_puzzles_test.dart` | `'0 of 12 solved'` → 15 (the Foundations card) |
+| `test/screens_polish_test.dart` | `'0 of 12 solved · teaches variables, control'` → 15 |
 | `test/stress_probe_test.dart` | its `PuzzleSaveHooks` stub: `runFinished(BlockGraph? graph, …)` |
 
 Files other sessions are likely to touch too: `assets/worlds.json` (nine
