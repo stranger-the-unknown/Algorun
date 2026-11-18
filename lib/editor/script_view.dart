@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/l10n.dart';
 import '../shared/theme/app_theme.dart';
+import 'block_drag.dart';
 import 'editor_controller.dart';
 import 'hole_picker.dart';
 import 'statement_tile.dart';
@@ -23,10 +24,12 @@ final class ScriptView extends StatelessWidget {
     final ids = controller.graph.entryIds;
     // While a reveal is pending, build far past the viewport so a moved
     // block that left the lazy window still mounts and can scroll-into-view.
-    return CustomScrollView(
+    // A dragged block (E1) must stay built while the program scrolls under
+    // the finger, for the same reason.
+    final scroll = CustomScrollView(
       key: const PageStorageKey('script'),
       // ignore: deprecated_member_use
-      cacheExtent: controller.revealId != null ? 100000 : null,
+      cacheExtent: controller.revealId != null || controller.draggingId != null ? 100000 : null,
       slivers: [
         if (header.isNotEmpty) SliverList.list(children: header),
         if (ids.isEmpty)
@@ -72,9 +75,12 @@ final class ScriptView extends StatelessWidget {
                           : context.palette.border,
                     ),
                   ),
-                  child: AddStepButton(
-                    key: const ValueKey('add-step:main'),
-                    onTap: () => HolePicker.open(context, controller, PortRef.mainBody),
+                  child: DropAnchor.listEnd(
+                    list: PortRef.mainBody,
+                    child: AddStepButton(
+                      key: const ValueKey('add-step:main'),
+                      onTap: () => HolePicker.open(context, controller, PortRef.mainBody),
+                    ),
                   ),
                 ),
               ),
@@ -83,6 +89,7 @@ final class ScriptView extends StatelessWidget {
         ],
       ],
     );
+    return BlockDragLayer(controller: controller, child: scroll);
   }
 }
 

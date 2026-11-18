@@ -145,6 +145,7 @@
   "noticePastedWithInside": "{label}, içindeki {blocks} ile birlikte yapıştırıldı.",
   "noticeTapSlotFirst": "Önce bir değer yuvasına dokun.",
   "noticePieceDoesNotFit": "Bu parça buraya uymuyor.",
+  "noticeNotInsideItself": "Bir blok kendi içine konamaz.",
   "chooseAPiece": "Bir parça seç",
   "pickerFor": "Yer: {target}. Yalnızca buraya uyan parçalar listelenir.",
   "close": "Kapat",

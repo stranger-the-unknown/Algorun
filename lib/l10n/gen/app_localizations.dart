@@ -968,6 +968,12 @@ abstract class AppLocalizations {
   /// **'This piece does not fit here.'**
   String get noticePieceDoesNotFit;
 
+  /// No description provided for @noticeNotInsideItself.
+  ///
+  /// In en, this message translates to:
+  /// **'A block cannot go inside itself.'**
+  String get noticeNotInsideItself;
+
   /// No description provided for @chooseAPiece.
   ///
   /// In en, this message translates to:

@@ -69,6 +69,23 @@ final class SelectionInfo {
   final bool canCopy;
 }
 
+/// What a drop would do (E1): nothing (the block is already there), a move,
+/// or a refusal with the reason in player words.
+final class DropCheck {
+  const DropCheck._(this.allowed, this.reason, {this.stays = false});
+
+  /// The block is already at that place: dropping there changes nothing.
+  static const same = DropCheck._(false, null, stays: true);
+  static const ok = DropCheck._(true, null);
+  const DropCheck.refused(EditorNotice reason) : this._(false, reason);
+
+  final bool allowed;
+  final bool stays;
+
+  /// Why not, when the place is refused.
+  final EditorNotice? reason;
+}
+
 /// A copied block with everything inside it (E1): a snapshot, so later edits
 /// to the program do not change what PASTE brings back.
 final class BlockClip {
@@ -139,6 +156,14 @@ final class EditorController extends ChangeNotifier {
   PortRef? activeHole;
   String? selectedBlockId;
   EditorNotice? flash;
+
+  /// The instruction being dragged (E1), from the moment the finger moves
+  /// after a long press until it lifts. UI state, like the selection.
+  String? draggingId;
+
+  /// The drop places already asked about during this drag.
+  final Map<(PortRef, int), DropCheck> _dropChecks = {};
+  Map<String, String>? _misfitsBeforeDrag;
 
   /// What COPY took (E1). It belongs to this editor, so it only ever holds
   /// blocks of this puzzle; it is not saved and is not an undo step.
@@ -799,6 +824,132 @@ final class EditorController extends ChangeNotifier {
     ]));
     if (!ok) return false;
     selectedBlockId = id;
+    _reveal(id);
+    notifyListeners();
+    return true;
+  }
+
+  // ---- drag to move (E1) ----------------------------------------------------
+
+  /// Whether [id] can be picked up: an instruction of the player's own.
+  bool canDrag(String id) => isStatement(id) && !isFunction(id) && graph.parentOf(id) != null;
+
+  /// The finger started moving [id]. The block is selected; nothing changes
+  /// in the program until [moveTo].
+  void beginDrag(String id) {
+    if (!canDrag(id)) return;
+    draggingId = id;
+    selectedBlockId = id;
+    activeHole = null;
+    _dropChecks.clear();
+    _misfitsBeforeDrag = null;
+    notifyListeners();
+  }
+
+  void endDrag() {
+    if (draggingId == null) return;
+    draggingId = null;
+    _dropChecks.clear();
+    _misfitsBeforeDrag = null;
+    notifyListeners();
+  }
+
+  /// The connections inside [tree] that the engine would refuse to make
+  /// again where they are in [g], with the engine's reason: a value that may
+  /// be empty outside its check, a BREAK outside a loop.
+  Map<String, String> _misfits(BlockGraph g, Iterable<String> tree, {String? except}) {
+    final out = <String, String>{};
+    for (final b in tree) {
+      if (b == except) continue;
+      final block = g.blocks[b];
+      final at = g.parentOf(b);
+      final def = block == null ? null : BlockCatalog.of(block.catalogId);
+      if (at == null || def == null || def.outputs.isEmpty) continue;
+      final decision = GraphTyping.canConnect(
+        g.detach(b),
+        from: PortRef(b, def.outputs.first.name),
+        to: PortRef(at.blockId, at.port),
+        index: def.outputs.first.kind == PortKind.statement ? at.index : null,
+      );
+      if (!decision.allowed) out[b] = decision.message ?? '';
+    }
+    return out;
+  }
+
+  ({_Batch batch, PortRef to, int index})? _moveBatch(String id, PortRef to, int index) {
+    final at = graph.parentOf(id);
+    if (at == null) return null;
+    final same = at.blockId == to.blockId && at.port == to.port;
+    if (same && (index == at.index || index == at.index + 1)) return null;
+    // [index] counts the list as it is shown; taking the block out of the
+    // same list first moves everything after it one place up.
+    final landing = same && index > at.index ? index - 1 : index;
+    return (
+      batch: _Batch([
+        DisconnectCommand(id),
+        AttachStatementCommand(blockId: id, to: to, index: landing),
+      ]),
+      to: to,
+      index: landing,
+    );
+  }
+
+  /// What dropping [id] before position [index] of the list [to] would do.
+  /// [index] counts the list as it is shown now, the dragged block included.
+  ///
+  /// The engine decides: the move is its own detach + attach, and then every
+  /// connection inside the moved block is asked again in the new place. A
+  /// connection that was fine before and is refused there (a value that may
+  /// be empty outside its check, a BREAK outside its loop) refuses the drop.
+  DropCheck checkMove(String id, PortRef to, int index) {
+    final cached = draggingId == id ? _dropChecks[(to, index)] : null;
+    if (cached != null) return cached;
+    final check = _checkMove(id, to, index);
+    if (draggingId == id) _dropChecks[(to, index)] = check;
+    return check;
+  }
+
+  DropCheck _checkMove(String id, PortRef to, int index) {
+    if (!canDrag(id)) return DropCheck.refused(EditorNotice((l) => l.noticePieceDoesNotFit));
+    final move = _moveBatch(id, to, index);
+    if (move == null) return DropCheck.same;
+    final tree = subtreeOf(id);
+    if (tree.contains(to.blockId)) {
+      return DropCheck.refused(EditorNotice((l) => l.noticeNotInsideItself));
+    }
+    final result = move.batch.execute(graph);
+    if (!result.ok) return DropCheck.refused(EditorNotice.engine(result.decision.message));
+    if (!_seesItsNames([for (final b in tree) graph.blocks[b]!], to)) {
+      return DropCheck.refused(EditorNotice((l) => l.noticePieceDoesNotFit));
+    }
+    final before = draggingId == id
+        ? (_misfitsBeforeDrag ??= _misfits(graph, tree, except: id))
+        : _misfits(graph, tree, except: id);
+    final after = _misfits(result.graph, tree, except: id);
+    for (final entry in after.entries) {
+      if (!before.containsKey(entry.key)) {
+        final message = entry.value;
+        return DropCheck.refused(EditorNotice.engine(message.isEmpty ? null : message));
+      }
+    }
+    return DropCheck.ok;
+  }
+
+  /// Moves [id] before position [index] of the list [to] (see [checkMove]),
+  /// as one undo step. A refused place changes nothing and says why.
+  bool moveTo(String id, PortRef to, int index) {
+    final check = _checkMove(id, to, index);
+    if (!check.allowed) {
+      if (check.reason != null) {
+        flash = check.reason;
+        notifyListeners();
+      }
+      return false;
+    }
+    final move = _moveBatch(id, to, index)!;
+    if (!apply(move.batch)) return false;
+    selectedBlockId = id;
+    activeHole = null;
     _reveal(id);
     notifyListeners();
     return true;

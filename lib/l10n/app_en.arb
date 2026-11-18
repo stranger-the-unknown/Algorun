@@ -469,6 +469,7 @@
   },
   "noticeTapSlotFirst": "Tap a value slot first.",
   "noticePieceDoesNotFit": "This piece does not fit here.",
+  "noticeNotInsideItself": "A block cannot go inside itself.",
   "chooseAPiece": "Choose a piece",
   "pickerFor": "For {target}. Only pieces that fit this slot are listed.",
   "@pickerFor": {

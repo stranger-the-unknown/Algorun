@@ -534,6 +534,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noticePieceDoesNotFit => 'Bu parça buraya uymuyor.';
 
   @override
+  String get noticeNotInsideItself => 'Bir blok kendi içine konamaz.';
+
+  @override
   String get chooseAPiece => 'Bir parça seç';
 
   @override
