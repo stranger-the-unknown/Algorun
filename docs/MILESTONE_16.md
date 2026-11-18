@@ -32,6 +32,36 @@ the reference. This batch was written against that list:
 - tiers 3–4 carry the batch, with real tier 5 puzzles added;
 - modes other than `build` are used where the puzzle really is one.
 
+## The batch at a glance
+
+| World | Before | Added | Now / target |
+|---|---|---|---|
+| 02 Arrays | 13 | 4 | 17 / 30 |
+| 03 Hash Maps | 10 | 4 | 14 / 25 |
+| 04 Two Pointers | 8 | 4 | 12 / 20 |
+| 05 Sliding Window | 9 | 3 | 12 / 20 |
+| 06 Stack & Queue | 10 | 3 | 13 / 25 |
+| 07 Linked Lists | 11 | 2 | 13 / 20 |
+| 08 Trees | 12 | 3 | 15 / 30 |
+| 10 Graphs | 15 | 3 | 18 / 30 |
+| 11 Greedy | 8 | 3 | 11 / 20 |
+| 13 Dynamic Programming | 10 | 4 | 14 / 30 |
+| 14 Advanced | 1 | 3 | 4 / 8 |
+
+Foundations, Heaps and Recursion were full and are unchanged.
+
+- **Tiers of the 36:** tier 3 × 8, tier 4 × 21, tier 5 × 7 (After the Rain,
+  Longest Crawl, Shortest Ring, The Parts Aisle, Two Loads of Salt, Every
+  Cold Spell, The Twice-Read Clue). The campaign is now 1: 9 · 2: 43 ·
+  3: 60 · 4: 58 · 5: 15.
+- **Modes of the 36:** build 17 · budget 10 · edge 4 · optimize 3 ·
+  restricted 2. Performance classes: correctness 17 · budget 14 ·
+  optimization 3 · restricted 2 (four `build` puzzles carry a proven slow
+  baseline and say so in their story: Level Score, One Straight Cut, Shared
+  Watch, Far from Zero).
+- **Worlds 05, 08, 10 and 13 have their first tier 5; world 14 its first
+  tier 4.** Coverage gaps: 49 → 41.
+
 ## Part 1 — Arrays, Hash Maps, Two Pointers (12 puzzles, 149 → 161)
 
 | World | Puzzle (id) | Tier | Mode / class | Pattern | The idea in one sentence |
@@ -68,15 +98,16 @@ Rejects (each passes the visible cases and ends in the verdict shown):
 
 Budget notes:
 
-- `cheap_seats`: `maxOps` 16 000 is set by hand, not at twice the reference.
-  A binary search in every row is a fair second solution; it was built and
-  run against the fixtures (it passes) and then removed again. The big halls
-  are wide and shallow (30 × 300, 40 × 240) so that this stays true.
+- `cheap_seats`: `maxOps` 10 000 is set by hand, not at twice the reference
+  (3 475). A binary search in every row is a fair second solution; it was
+  built and run against the final fixtures (it passes) and then removed
+  again. The big halls are wide and shallow (20 × 200, 30 × 150) so that
+  this stays true; reading every seat needs more than two budgets.
 - `next_lineup`: `maxOps` 30 000 by hand (the reference needs 1 872). The
   puzzle is about equal numbers and the wrap-round, not speed.
-- `rod_triangles`: `maxOps` 700 000 by hand (the reference needs 127 212) so
-  that a binary search for every pair fits (estimated at about 560 000, not
-  built); every set of three still needs more than three budgets.
+- `rod_triangles`: `maxOps` 450 000 by hand (the reference needs 71 852 on
+  80 rods) so that a binary search for every pair fits (estimated at about
+  360 000, not built); every set of three still needs more than two budgets.
 - `after_rain`: `maxAlloc` 16, so the memory-hungry reject can pass the two
   visible cases (5 and 6 towers) and fails on every long street.
 - `spy_cipher` is mode `edge` but its story states the operation budget,
@@ -237,14 +268,124 @@ Notes:
 | Shortest stretch in which some value already appears as often as the most frequent value of the whole list | Three maps for a tier 4 that teaches little beyond counting; kept in reserve. |
 | A wrong-answer reject for `cheap_seats` and `far_from_zero` | No tempting wrong strategy passes a visible case that still shows the task (mixed signs, rows with different cut-offs); only the slow baseline is proven. |
 
+## Results
+
+Run on the final commit of the branch (2026-11-18, the machine shared with
+four other sessions):
+
+| Suite | Result |
+|---|---|
+| `packages/algorun_engine` `dart analyze` / `dart test` | no issues / **398 passed** (unchanged) |
+| `packages/algorun_content` `dart analyze` / `dart test` | no issues / **86 passed** (unchanged count; the pinned sizes moved) |
+| Content validator | `PIPELINE 185 of 185 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 190 puzzle(s), 5 warning(s)`: the five known probe warnings, none about a campaign puzzle |
+| `flutter analyze` / `flutter test` | no issues / **612 passed** (540 + 72: the campaign regression builds every new puzzle's reference by taps at 360 × 800 and runs it, two tests per puzzle) |
+
+Baseline before the batch, same machine: engine 398, content 86, Flutter
+540, validator 149 of 149.
+
+After each part's commit the content tests were also run on a clean export
+of that commit (parts 1 and 2 carry empty oracle files for the later parts),
+and the campaign Flutter tests (campaign, regression, localization,
+responsive) on the working tree: 364, 388 and 412 passed.
+
+**Validator time.** Measured back to back on exports of `main` and of this
+branch, same disk, load average about 10: 18–20 s for 149 puzzles, 25–26 s
+for 185 (about +7 s, +38 % for +24 % puzzles). The new puzzles are heavier
+than the old average because most have two or three rejects, and the test
+runner re-measures every over-budget case of a slow baseline with up to a
+million extra operations. The fourth commit cut what it could without
+weakening a puzzle: one long case per timed puzzle where one proves the
+baseline, declared factors capped (the validator runs a baseline up to that
+many budgets), trees of 60 levels instead of 200. **Not measured on a quiet
+machine.**
+
+**Size.** `assets/puzzles` grew from 2.7 MB to 3.5 MB. The largest new file
+is `shared_ancestor.json` (126 KB: nested trees print with their
+indentation; shipped `range_count.json` is 596 KB for the same reason).
+
+## Known limits
+
+- Oracles are as independent as their author made them; samples are small
+  (40 seeded inputs per puzzle in the validator, 200 in the kit).
+- Several budgets rest on an estimate of a second solution's cost, not on a
+  built program; each is named in the notes above.
+- `both_ends` is mechanically close to Rush Hour (89 % block similarity).
+- `longest_crawl` (world 08) needs a map, which the unlock order does not
+  guarantee the player has met; it is the world's tier 5.
+- Seven tier 5 puzzles were added at once; none has been played by a person.
+  Tiers are the authors' judgement plus the validator's heuristic (no
+  warning).
+- The Turkish text was written by the model that wrote the English; no
+  native speaker has read it.
+
+## NOT TESTED
+
+- No APK was built and nothing was run on the emulator (it was in use by
+  another session) or on a phone. The widget tests build and run every new
+  puzzle at 360 × 800, in English; one Turkish puzzle screen is covered by
+  the existing localization UI test, not the new puzzles' Turkish text on a
+  screen.
+- No web build, and the web start-up time with 36 more puzzle files was not
+  measured.
+- No person has solved any of the 36 puzzles in the editor; hints were not
+  tried by a player.
+- The validator's time on an unloaded machine.
+
+## For the coordinator (merge notes)
+
+- **This branch adds 36 puzzles: 149 → 185** (190 files with the five
+  probes). M1 adds puzzles at the same time, so every pinned size below
+  conflicts; the merged values are this branch's numbers plus M1's count.
+- Test lines this branch touched (all are sizes, nothing else):
+  - `test/campaign_test.dart`: the test title and `hasLength(149)` → 185;
+    Arrays `hasLength(13)` → 17 and its comment.
+  - `test/campaign_regression_test.dart`: `'149 campaign puzzles'` and
+    `hasLength(149)` → 185.
+  - `test/localization_ui_test.dart`: `0 of 149 puzzles solved` and
+    `149 bulmacadan 0 tanesi çözüldü` → 185.
+  - `test/responsive_test.dart`: `1 of 149 puzzles solved` → 185.
+  - `test/real_puzzles_test.dart`: a comment (149 → 185).
+  - `packages/algorun_content/test/pipeline_test.dart`: `hasLength(149)` →
+    185.
+  - `packages/algorun_content/test/content_validator_test.dart`:
+    `puzzleCount, 154` → 190, `hasLength(149)` → 185,
+    `'OK 154 puzzle(s)'` → `'OK 190 puzzle(s)'`.
+- Shared data files: `assets/worlds.json` (eleven worlds' puzzle lists, kept
+  in tier order), `assets/l10n/content_tr.json` (36 new entries under
+  `puzzles`, nothing else), `content/coverage.json` (generated: after the
+  merge **regenerate it** with `--coverage`, do not merge it by hand).
+- Oracles: `packages/algorun_content/lib/src/oracles/batch7.dart`,
+  `batch8.dart`, `batch9.dart`, registered in `registry.dart` (three imports
+  and three spread lines). If M1 also adds a `batchN.dart`, rename one side.
+- No engine, editor, screen, ARB or `pubspec.yaml` change. No new block is
+  used: `arr.swap`, `var.swap`, `var.copy`, `ctrl.continue`, `lit.str` and
+  `arith.div` were avoided because no shipped reference uses them.
+- For `PROJECT_STATE.md` (not edited here): the campaign size (185) and the
+  per-world table in "Content backlog and coverage"; tiers 1: 9 · 2: 43 ·
+  3: 60 · 4: 58 · 5: 15; modes build 112 · budget 30 · edge 29 · optimize 8
+  · restricted 6; performance classes correctness 129 · budget 43 ·
+  optimization 8 · restricted 5; the test table (Flutter 612, validator 185
+  of 185); the milestone list (MS16, content batch 4); `assets/worlds.json`
+  "14 worlds, 185 puzzles"; the ideas kept in reserve (edit distance,
+  palindrome list in no memory, shortest stretch with the top frequency) in
+  the backlog.
+
 ## Tooling (not in the repository)
 
 The generators are scratch scripts in `.content-tools/bin/` of the main
 checkout (git-excluded): `kit16.dart` (the MS15 kit plus: the checkout to
-write to comes from `ALGORUN_ROOT`; `maxOps` / `maxAlloc` overrides;
-`optimization` and `restricted` classes; the lazy-answer and Turkish
-block-label checks), `prog16.dart` (the program builder plus BREAK, NOTHING,
-REMOVE KEY, SIZE), and one script per part: `ms16a.dart`, `ms16b.dart`,
-`ms16c.dart`. **Do not re-run them with `--write` after a hand edit of a
-generated file**; they overwrite puzzle, reference, `worlds.json` order and
-the Turkish entries.
+write to comes from `ALGORUN_ROOT`; `maxOps` / `maxAlloc` / `factorCap`
+overrides; `optimization` and `restricted` classes; the lazy-answer and
+Turkish block-label checks), `prog16.dart` (the program builder plus BREAK,
+NOTHING, REMOVE KEY, SIZE), one script per part (`ms16a.dart`, `ms16b.dart`,
+`ms16c.dart`), and `timing16.dart` / `phases16.dart` (where the validator's
+time goes). They were written and run from a copy of that folder inside the
+worktree, so that `package:` imports resolve to the worktree's packages, and
+copied back at the end. Parts 2 and 3 were drafted by two forks of the
+authoring session, each writing only its generator and its oracle file and
+checking against a scratch copy of the content; the main session reviewed
+their text and cases, tightened budgets and fixtures, wrote the files and
+ran the tests. **Do not re-run the scripts with `--write` after a hand edit
+of a generated file**: they overwrite puzzle, reference, the `worlds.json`
+order and the Turkish entries, and every random case of a script comes from
+one seed, so removing a case regenerates the ones after it.
