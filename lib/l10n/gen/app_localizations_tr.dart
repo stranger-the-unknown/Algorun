@@ -1411,4 +1411,183 @@ class AppLocalizationsTr extends AppLocalizations {
   String engineCaseFailed(String id) {
     return '$id vakası bulmacanın beklediği gibi sonuçlanmadı.';
   }
+
+  @override
+  String get traceOpen => 'ADIM ADIM İZLE';
+
+  @override
+  String get traceTitle => 'ADIM ADIM';
+
+  @override
+  String get traceHelp => 'Bu nasıl çalışır';
+
+  @override
+  String get traceCannot => 'Bu vaka adım adım izlenemiyor.';
+
+  @override
+  String get traceCurrentBlock => 'az önce çalışan blok';
+
+  @override
+  String tracePosition(String position, String total) {
+    return '$position / $total';
+  }
+
+  @override
+  String traceOpsSoFar(String used, String budget) {
+    return 'Şimdiye kadar kullanılan adım: $used / $budget';
+  }
+
+  @override
+  String traceDepthNow(int depth, int budget) {
+    return 'Derinlik $depth / $budget';
+  }
+
+  @override
+  String traceLongRun(String total, String window) {
+    return 'Uzun bir çalışma: $total komut çalıştı. İçinde ilerledikçe her seferinde $window tanesi yüklenir.';
+  }
+
+  @override
+  String get traceStart => 'Başlangıç. Verilen değerler bunlar.';
+
+  @override
+  String traceCall(String name) {
+    return '$name başlıyor, bir seviye daha derinde.';
+  }
+
+  @override
+  String get traceIfTrue => 'Koşul TRUE: THEN çalışır.';
+
+  @override
+  String get traceIfFalse => 'Koşul FALSE: THEN atlanır.';
+
+  @override
+  String get traceWhileTrue => 'Koşul TRUE: döngü bir tur döner.';
+
+  @override
+  String get traceWhileFalse => 'Koşul FALSE: döngü biter.';
+
+  @override
+  String get traceLoopNext => 'Döngü yeni bir tura başlar.';
+
+  @override
+  String get traceLoopEnd => 'Geriye bir şey kalmadı: döngü biter.';
+
+  @override
+  String get traceBreak => 'BREAK: döngü burada biter.';
+
+  @override
+  String get traceContinue => 'CONTINUE: sıradaki tura geçilir.';
+
+  @override
+  String traceReturn(String value) {
+    return 'RETURN $value değerini geri verir.';
+  }
+
+  @override
+  String traceAnswer(String value) {
+    return 'Programın cevabı: $value';
+  }
+
+  @override
+  String get traceRan => 'Bu blok çalıştı.';
+
+  @override
+  String traceRanValue(String value) {
+    return 'Bu blok çalıştı ve $value verdi.';
+  }
+
+  @override
+  String traceHalt(String message) {
+    return 'Burada durdu. $message';
+  }
+
+  @override
+  String get traceValues => 'DEĞERLER';
+
+  @override
+  String traceCalls(int depth) {
+    return 'ÇAĞRILAR · $depth AÇIK';
+  }
+
+  @override
+  String traceWaiting(String name) {
+    return '$name, yaptığı çağrının bitmesini bekliyor.';
+  }
+
+  @override
+  String get traceNoValues => 'Henüz hiçbir adın değeri yok.';
+
+  @override
+  String get traceChanged => 'değişti';
+
+  @override
+  String get traceNew => 'yeni';
+
+  @override
+  String get traceChangedBeyond => 'ileride bir değişiklik var';
+
+  @override
+  String get traceEmpty => 'boş';
+
+  @override
+  String get traceTop => 'üst';
+
+  @override
+  String get traceFront => 'ön';
+
+  @override
+  String traceMore(int count) {
+    return '+$count tane daha';
+  }
+
+  @override
+  String get traceVisited => 'ziyaret edildi';
+
+  @override
+  String get traceLoopsBack => 'başa dönüyor';
+
+  @override
+  String get traceFirst => 'Başa git';
+
+  @override
+  String get tracePrevious => 'Bir geri';
+
+  @override
+  String get traceNext => 'Bir ileri';
+
+  @override
+  String get traceLast => 'Sona git';
+
+  @override
+  String get tracePlay => 'Oynat';
+
+  @override
+  String get tracePause => 'Duraklat';
+
+  @override
+  String get traceSpeed => 'Hız';
+
+  @override
+  String get traceHelpTitle => 'ADIM ADIM';
+
+  @override
+  String get traceHelpSteps =>
+      'İleri, programının bir komutunu bu vaka üzerinde çalıştırır; Geri onu geri alır. Az önce çalışan blok çerçevelenir ve bir okla işaretlenir. Oynat kendiliğinden ilerler; yanındaki düğme hızı değiştirir.';
+
+  @override
+  String get traceHelpValues =>
+      'DEĞERLER, her adı o bloktan hemen sonraki haliyle gösterir. Bloğun az önce değiştirdiği değer renkle ve “değişti” ya da “yeni” sözüyle işaretlenir. Bir değer beklediğin gibi olmayana kadar ilerle: bakman gereken yer o bloktur.';
+
+  @override
+  String get traceHelpCalls =>
+      'Bir FUNCTION içinde ÇAĞRILAR, hâlâ açık olan her çağrıyı, çalışan en başta olacak şekilde listeler. Kendi değerlerini görmek için birine dokun.';
+
+  @override
+  String get traceHelpCost =>
+      '“Kullanılan adım”, sonuç ekranının bütçeyle karşılaştırdığı sayıdır: çalışan her blok bir adım tutar, bir komutun içindeki değer blokları da.';
+
+  @override
+  String get traceHelpHidden =>
+      'Yalnızca görebildiğin vakalar adım adım izlenebilir. Gizli vakalar gizli kalır.';
 }

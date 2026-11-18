@@ -2497,6 +2497,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Case {id} did not come out the way the puzzle expects.'**
   String engineCaseFailed(String id);
+
+  /// No description provided for @traceOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'STEP THROUGH'**
+  String get traceOpen;
+
+  /// No description provided for @traceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'STEP BY STEP'**
+  String get traceTitle;
+
+  /// No description provided for @traceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How this works'**
+  String get traceHelp;
+
+  /// No description provided for @traceCannot.
+  ///
+  /// In en, this message translates to:
+  /// **'This case cannot be stepped through.'**
+  String get traceCannot;
+
+  /// No description provided for @traceCurrentBlock.
+  ///
+  /// In en, this message translates to:
+  /// **'the block that just ran'**
+  String get traceCurrentBlock;
+
+  /// No description provided for @tracePosition.
+  ///
+  /// In en, this message translates to:
+  /// **'{position} / {total}'**
+  String tracePosition(String position, String total);
+
+  /// No description provided for @traceOpsSoFar.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps used so far: {used} of {budget}'**
+  String traceOpsSoFar(String used, String budget);
+
+  /// No description provided for @traceDepthNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Depth {depth} of {budget}'**
+  String traceDepthNow(int depth, int budget);
+
+  /// No description provided for @traceLongRun.
+  ///
+  /// In en, this message translates to:
+  /// **'A long run: {total} instructions ran. They load {window} at a time as you move through it.'**
+  String traceLongRun(String total, String window);
+
+  /// No description provided for @traceStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start. These are the given values.'**
+  String get traceStart;
+
+  /// No description provided for @traceCall.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} starts, one level deeper.'**
+  String traceCall(String name);
+
+  /// No description provided for @traceIfTrue.
+  ///
+  /// In en, this message translates to:
+  /// **'The condition is TRUE: THEN runs.'**
+  String get traceIfTrue;
+
+  /// No description provided for @traceIfFalse.
+  ///
+  /// In en, this message translates to:
+  /// **'The condition is FALSE: THEN is skipped.'**
+  String get traceIfFalse;
+
+  /// No description provided for @traceWhileTrue.
+  ///
+  /// In en, this message translates to:
+  /// **'The condition is TRUE: the loop runs a pass.'**
+  String get traceWhileTrue;
+
+  /// No description provided for @traceWhileFalse.
+  ///
+  /// In en, this message translates to:
+  /// **'The condition is FALSE: the loop ends.'**
+  String get traceWhileFalse;
+
+  /// No description provided for @traceLoopNext.
+  ///
+  /// In en, this message translates to:
+  /// **'The loop starts a pass.'**
+  String get traceLoopNext;
+
+  /// No description provided for @traceLoopEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing left: the loop ends.'**
+  String get traceLoopEnd;
+
+  /// No description provided for @traceBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'BREAK: the loop ends here.'**
+  String get traceBreak;
+
+  /// No description provided for @traceContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINUE: on to the next pass.'**
+  String get traceContinue;
+
+  /// No description provided for @traceReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'RETURN gives back {value}.'**
+  String traceReturn(String value);
+
+  /// No description provided for @traceAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The program’s answer: {value}'**
+  String traceAnswer(String value);
+
+  /// No description provided for @traceRan.
+  ///
+  /// In en, this message translates to:
+  /// **'This block ran.'**
+  String get traceRan;
+
+  /// No description provided for @traceRanValue.
+  ///
+  /// In en, this message translates to:
+  /// **'This block ran and gave {value}.'**
+  String traceRanValue(String value);
+
+  /// No description provided for @traceHalt.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped here. {message}'**
+  String traceHalt(String message);
+
+  /// No description provided for @traceValues.
+  ///
+  /// In en, this message translates to:
+  /// **'VALUES'**
+  String get traceValues;
+
+  /// No description provided for @traceCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'CALLS · {depth} OPEN'**
+  String traceCalls(int depth);
+
+  /// No description provided for @traceWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is waiting for the call it made to finish.'**
+  String traceWaiting(String name);
+
+  /// No description provided for @traceNoValues.
+  ///
+  /// In en, this message translates to:
+  /// **'No name has a value yet.'**
+  String get traceNoValues;
+
+  /// No description provided for @traceChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'changed'**
+  String get traceChanged;
+
+  /// No description provided for @traceNew.
+  ///
+  /// In en, this message translates to:
+  /// **'new'**
+  String get traceNew;
+
+  /// No description provided for @traceChangedBeyond.
+  ///
+  /// In en, this message translates to:
+  /// **'a change further on'**
+  String get traceChangedBeyond;
+
+  /// No description provided for @traceEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'empty'**
+  String get traceEmpty;
+
+  /// No description provided for @traceTop.
+  ///
+  /// In en, this message translates to:
+  /// **'top'**
+  String get traceTop;
+
+  /// No description provided for @traceFront.
+  ///
+  /// In en, this message translates to:
+  /// **'front'**
+  String get traceFront;
+
+  /// No description provided for @traceMore.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String traceMore(int count);
+
+  /// No description provided for @traceVisited.
+  ///
+  /// In en, this message translates to:
+  /// **'visited'**
+  String get traceVisited;
+
+  /// No description provided for @traceLoopsBack.
+  ///
+  /// In en, this message translates to:
+  /// **'loops back'**
+  String get traceLoopsBack;
+
+  /// No description provided for @traceFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'To the start'**
+  String get traceFirst;
+
+  /// No description provided for @tracePrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Back one'**
+  String get tracePrevious;
+
+  /// No description provided for @traceNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward one'**
+  String get traceNext;
+
+  /// No description provided for @traceLast.
+  ///
+  /// In en, this message translates to:
+  /// **'To the end'**
+  String get traceLast;
+
+  /// No description provided for @tracePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get tracePlay;
+
+  /// No description provided for @tracePause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get tracePause;
+
+  /// No description provided for @traceSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get traceSpeed;
+
+  /// No description provided for @traceHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'STEP BY STEP'**
+  String get traceHelpTitle;
+
+  /// No description provided for @traceHelpSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward runs one instruction of your program on this case; Back undoes it. The block that just ran is outlined and marked with an arrow. Play runs on by itself; the button beside it changes the speed.'**
+  String get traceHelpSteps;
+
+  /// No description provided for @traceHelpValues.
+  ///
+  /// In en, this message translates to:
+  /// **'VALUES shows every name as it stands right after that block. What the block just changed is marked in colour and with the word “changed” or “new”. Step until a value is not what you expected: that block is where to look.'**
+  String get traceHelpValues;
+
+  /// No description provided for @traceHelpCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'Inside a FUNCTION, CALLS lists every call that is still open, the running one first. Tap one to see its own values.'**
+  String get traceHelpCalls;
+
+  /// No description provided for @traceHelpCost.
+  ///
+  /// In en, this message translates to:
+  /// **'“Steps used” is the count the result screen holds against the budget: every block that works costs one, the value blocks inside an instruction too.'**
+  String get traceHelpCost;
+
+  /// No description provided for @traceHelpHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the cases you can see can be stepped through. Hidden cases stay hidden.'**
+  String get traceHelpHidden;
 }
 
 class _AppLocalizationsDelegate

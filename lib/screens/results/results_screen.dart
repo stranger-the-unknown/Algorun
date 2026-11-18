@@ -12,6 +12,7 @@ import '../../progress/save_data.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/content_width.dart';
 import '../../state/performance_text.dart';
+import '../trace/trace_screen.dart';
 
 /// A puzzle to go on to after a solve.
 final class NextPuzzle {
@@ -39,9 +40,14 @@ final class ResultsArgs {
     this.progress,
     this.next,
     this.text = ContentText.english,
+    this.graph,
   });
 
   final Puzzle puzzle;
+
+  /// The program that ran, as the player built it. With it, every visible
+  /// case can be stepped through (T1); without it the cases are only listed.
+  final BlockGraph? graph;
 
   /// Puzzle content (world titles) in the player's language.
   final ContentText text;
@@ -237,7 +243,18 @@ final class ResultsScreen extends StatelessWidget {
                     const SizedBox(height: AppSpace.s5),
                     _SectionLabel(l.cases),
                     for (final result in suite.visible)
-                      _CaseRow(result: result),
+                      _CaseRow(
+                        result: result,
+                        // Visible cases only: a hidden case is a count below,
+                        // never a row, so it never gets this button.
+                        onTrace: args.graph == null || !result.visible
+                            ? null
+                            : () => Navigator.pushNamed(
+                                  context,
+                                  '/trace',
+                                  arguments: TraceArgs(puzzle: args.puzzle, graph: args.graph!, caseResult: result),
+                                ),
+                      ),
                   ],
                   if (suite.hiddenSummary != null) ...[
                     const SizedBox(height: AppSpace.s5),
@@ -442,8 +459,11 @@ class _CostRow extends StatelessWidget {
 
 /// A visible case. Hidden cases never reach this widget.
 class _CaseRow extends StatelessWidget {
-  const _CaseRow({required this.result});
+  const _CaseRow({required this.result, this.onTrace});
   final CaseResult result;
+
+  /// Opens this case step by step.
+  final VoidCallback? onTrace;
 
   @override
   Widget build(BuildContext context) {
@@ -485,6 +505,21 @@ class _CaseRow extends StatelessWidget {
             _detail(context, l.caseExpected, result.expected),
             _detail(context, l.caseYouGave, result.actual),
           ],
+          if (onTrace != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 14),
+              child: TextButton.icon(
+                key: Key('trace-case:${result.id}'),
+                onPressed: onTrace,
+                icon: const Icon(Icons.play_circle_outline, size: 18),
+                label: Text(l.traceOpen),
+                style: TextButton.styleFrom(
+                  // A failed case is the one to look into: its button stands out.
+                  foregroundColor: ok ? context.palette.muted : context.palette.fg,
+                  textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 0.6),
+                ),
+              ),
+            ),
         ],
       ),
     );
