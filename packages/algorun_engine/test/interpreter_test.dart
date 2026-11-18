@@ -908,18 +908,23 @@ void main() {
   group('trace', () {
     test('steps carry the block that ran and the names in play', () {
       final events = <TraceEvent>[];
+      // The names are live while the sink runs (T1), so they are read there.
+      final names = <String, Map<String, String>>{};
       final result = _run(
         _program([
           _set('x', _n(1), src: 'set1'),
           IfStmt(cond: _bool(true), thenBody: const [], srcBlockId: 'if1'),
         ]),
-        trace: events.add,
+        trace: (event) {
+          events.add(event);
+          names[event.kind] = event.locals;
+        },
       );
       expect(result.kind, ResultKind.correct);
       expect(events.map((e) => e.kind), containsAll(['assign', 'if']));
       final assign = events.firstWhere((e) => e.kind == 'assign');
       expect(assign.blockId, 'set1');
-      expect(assign.locals['x'], '1');
+      expect(names['assign']!['x'], '1');
       expect(assign.opIndex, greaterThan(0));
     });
 
