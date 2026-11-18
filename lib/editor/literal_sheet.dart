@@ -9,9 +9,39 @@ import 'editor_controller.dart';
 /// limit for reference programs).
 const padNumberLimit = 999999;
 
-/// Number pad, yes / no and name pickers. No TextField, no system keyboard:
-/// the pad is the game's own number keyboard.
+/// A text value as the editor writes it: in quotes, so the empty text and a
+/// single space can be seen (`""`, `" "`).
+String quotedText(String value) => '"$value"';
+
+/// Number pad, yes / no, text and name pickers. No TextField, no system
+/// keyboard: the pad is the game's own number keyboard, and a text is chosen
+/// from the ones the puzzle offers (L3).
 abstract final class LiteralSheet {
+  /// The texts a TEXT block may hold in this puzzle, as chips. With nothing
+  /// but the empty text to choose, there is no sheet to open.
+  static Future<void> showText(
+    BuildContext context,
+    EditorController controller,
+    String blockId,
+  ) {
+    final choices = controller.textChoices;
+    if (choices.length < 2) return Future.value();
+    return showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: context.palette.elevated,
+      builder: (_) => SizedBox(
+        width: double.infinity,
+        child: _VariableChips(
+          controller: controller,
+          blockId: blockId,
+          nameKey: 'value',
+          names: choices,
+          text: true,
+        ),
+      ),
+    );
+  }
+
   static Future<void> showNumber(
     BuildContext context,
     EditorController controller,
@@ -355,12 +385,16 @@ class _VariableChips extends StatelessWidget {
     required this.blockId,
     required this.nameKey,
     required this.names,
+    this.text = false,
   });
 
   final EditorController controller;
   final String blockId;
   final String nameKey;
   final List<String> names;
+
+  /// The chips are text values (shown in quotes), not names.
+  final bool text;
 
   @override
   Widget build(BuildContext context) {
@@ -374,12 +408,12 @@ class _VariableChips extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l.chooseName,
+              text ? l.chooseText : l.chooseName,
               style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.4),
             ),
             const SizedBox(height: 2),
             Text(
-              l.namesFromPuzzle,
+              text ? l.textsFromPuzzle : l.namesFromPuzzle,
               style: TextStyle(color: context.palette.muted, fontSize: 13),
             ),
             const SizedBox(height: 12),
@@ -390,7 +424,7 @@ class _VariableChips extends StatelessWidget {
                 for (final name in names)
                   ActionChip(
                     avatar: name == current ? const Icon(Icons.check, size: 18) : null,
-                    label: Text(name),
+                    label: Text(text ? quotedText(name) : name),
                     onPressed: () {
                       controller.setLiteral(blockId, nameKey, name);
                       Navigator.pop(context);

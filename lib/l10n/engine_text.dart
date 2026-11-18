@@ -22,6 +22,7 @@ final _patterns = <(RegExp, String Function(AppLocalizations, String))>[
   (RegExp(r'^This CALL passes the wrong number of values to (.+)\.$'), (l, name) => l.engineWrongArity(name)),
   (RegExp(r'^(.+) is not known inside a FUNCTION: pass it in as a value\.$'), (l, name) => l.engineNotInFunction(name)),
   (RegExp(r'^FUNCTION (.+) ended without RETURN\.$'), (l, name) => l.engineNoReturn(name)),
+  (RegExp(r'^FUNCTION (.+) can end without RETURN\.$'), (l, name) => l.engineCanEndWithoutReturn(name)),
 ];
 
 final _exact = <String, String Function(AppLocalizations)>{
@@ -90,6 +91,16 @@ final _exact = <String, String Function(AppLocalizations)>{
   'This queue is empty.': (l) => l.engineThisQueueIsEmpty,
   'This heap got too big.': (l) => l.engineThisHeapGotTooBig,
   'This heap is empty.': (l) => l.engineThisHeapIsEmpty,
+  'That position is outside the text.': (l) => l.engineThatPositionIsOutsideTheText,
+  'This block needs some text.': (l) => l.engineThisBlockNeedsSomeText,
+  'This block needs a deque.': (l) => l.engineThisBlockNeedsADeque,
+  'This block needs a pair.': (l) => l.engineThisBlockNeedsAPair,
+  'This deque got too big.': (l) => l.engineThisDequeGotTooBig,
+  'This deque is empty.': (l) => l.engineThisDequeIsEmpty,
+  'This text got too long.': (l) => l.engineThisTextGotTooLong,
+  'SORT needs a list of only numbers or only text.': (l) => l.engineSortMixed,
+  'SORT needs a list of numbers or a list of text.': (l) => l.engineSortType,
+  'NUMBER AS TEXT needs a whole number.': (l) => l.engineNumberAsTextWhole,
   'This block cannot run yet.': (l) => l.engineThisBlockCannotRunYet,
   'This block is missing a name.': (l) => l.engineThisBlockIsMissingAName,
   'This block can only swap two names.': (l) => l.engineThisBlockCanOnlySwapTwoNames,

@@ -656,6 +656,12 @@ abstract class AppLocalizations {
   /// **'graphs'**
   String get itemGraph;
 
+  /// No description provided for @itemPair.
+  ///
+  /// In en, this message translates to:
+  /// **'pairs'**
+  String get itemPair;
+
   /// No description provided for @itemOther.
   ///
   /// In en, this message translates to:
@@ -691,6 +697,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'heap of {item}'**
   String typeHeapOf(String item);
+
+  /// No description provided for @typePairOf.
+  ///
+  /// In en, this message translates to:
+  /// **'pair of {first} and {second}'**
+  String typePairOf(String first, String second);
 
   /// No description provided for @typeDequeOf.
   ///
@@ -1046,6 +1058,24 @@ abstract class AppLocalizations {
   /// **'heap'**
   String get captionHeap;
 
+  /// No description provided for @captionText.
+  ///
+  /// In en, this message translates to:
+  /// **'text'**
+  String get captionText;
+
+  /// No description provided for @captionDeque.
+  ///
+  /// In en, this message translates to:
+  /// **'deque'**
+  String get captionDeque;
+
+  /// No description provided for @captionPair.
+  ///
+  /// In en, this message translates to:
+  /// **'pair'**
+  String get captionPair;
+
   /// No description provided for @captionKey.
   ///
   /// In en, this message translates to:
@@ -1207,6 +1237,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Names come from the puzzle; there is no typing.'**
   String get namesFromPuzzle;
+
+  /// No description provided for @chooseText.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a text'**
+  String get chooseText;
+
+  /// No description provided for @textsFromPuzzle.
+  ///
+  /// In en, this message translates to:
+  /// **'Texts come from the puzzle; there is no typing.'**
+  String get textsFromPuzzle;
 
   /// No description provided for @padDone.
   ///
@@ -2333,6 +2375,66 @@ abstract class AppLocalizations {
   /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
   ///
   /// In en, this message translates to:
+  /// **'That position is outside the text.'**
+  String get engineThatPositionIsOutsideTheText;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This block needs some text.'**
+  String get engineThisBlockNeedsSomeText;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This block needs a deque.'**
+  String get engineThisBlockNeedsADeque;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This block needs a pair.'**
+  String get engineThisBlockNeedsAPair;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This deque got too big.'**
+  String get engineThisDequeGotTooBig;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This deque is empty.'**
+  String get engineThisDequeIsEmpty;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This text got too long.'**
+  String get engineThisTextGotTooLong;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'SORT needs a list of only numbers or only text.'**
+  String get engineSortMixed;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'SORT needs a list of numbers or a list of text.'**
+  String get engineSortType;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'NUMBER AS TEXT needs a whole number.'**
+  String get engineNumberAsTextWhole;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
   /// **'This queue got too big.'**
   String get engineThisQueueGotTooBig;
 
@@ -2485,6 +2587,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'FUNCTION {name} ended without RETURN.'**
   String engineNoReturn(String name);
+
+  /// No description provided for @engineCanEndWithoutReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'FUNCTION {name} can end without RETURN.'**
+  String engineCanEndWithoutReturn(String name);
 
   /// No description provided for @engineNoValueFor.
   ///

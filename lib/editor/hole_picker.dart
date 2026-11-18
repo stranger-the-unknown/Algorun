@@ -206,6 +206,10 @@ class _PickerBody extends StatelessWidget {
       if (context.mounted) {
         await LiteralSheet.showNumber(context, controller, id);
       }
+    } else if (placement.catalogId == BlockIds.litStr) {
+      if (context.mounted) {
+        await LiteralSheet.showText(context, controller, id);
+      }
     } else if (placement.catalogId == BlockIds.varSet ||
         placement.catalogId == BlockIds.varInc ||
         placement.catalogId == BlockIds.varDec) {

@@ -331,6 +331,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get itemGraph => 'çizge';
 
   @override
+  String get itemPair => 'çift';
+
+  @override
   String get itemOther => 'koleksiyon';
 
   @override
@@ -356,6 +359,11 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String typeHeapOf(String item) {
     return '$item öncelik kuyruğu';
+  }
+
+  @override
+  String typePairOf(String first, String second) {
+    return '$first ve $second çifti';
   }
 
   @override
@@ -575,6 +583,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get captionHeap => 'öncelik kuyruğu';
 
   @override
+  String get captionText => 'metin';
+
+  @override
+  String get captionDeque => 'çift uçlu kuyruk';
+
+  @override
+  String get captionPair => 'çift';
+
+  @override
   String get captionKey => 'anahtar';
 
   @override
@@ -661,6 +678,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get namesFromPuzzle => 'Adlar bulmacadan gelir; yazman gerekmez.';
+
+  @override
+  String get chooseText => 'Bir metin seç';
+
+  @override
+  String get textsFromPuzzle => 'Metinler bulmacadan gelir; yazman gerekmez.';
 
   @override
   String get padDone => 'TAMAM';
@@ -1304,6 +1327,39 @@ class AppLocalizationsTr extends AppLocalizations {
   String get engineThisHeapIsEmpty => 'Bu öncelik kuyruğu boş.';
 
   @override
+  String get engineThatPositionIsOutsideTheText => 'Bu konum metnin dışında.';
+
+  @override
+  String get engineThisBlockNeedsSomeText => 'Bu blok bir metin bekliyor.';
+
+  @override
+  String get engineThisBlockNeedsADeque =>
+      'Bu blok bir çift uçlu kuyruk bekliyor.';
+
+  @override
+  String get engineThisBlockNeedsAPair => 'Bu blok bir çift bekliyor.';
+
+  @override
+  String get engineThisDequeGotTooBig => 'Bu çift uçlu kuyruk çok büyüdü.';
+
+  @override
+  String get engineThisDequeIsEmpty => 'Bu çift uçlu kuyruk boş.';
+
+  @override
+  String get engineThisTextGotTooLong => 'Bu metin çok uzadı.';
+
+  @override
+  String get engineSortMixed =>
+      'SORT yalnızca sayılardan ya da yalnızca metinlerden oluşan bir liste bekliyor.';
+
+  @override
+  String get engineSortType =>
+      'SORT bir sayı listesi ya da bir metin listesi bekliyor.';
+
+  @override
+  String get engineNumberAsTextWhole => 'NUMBER AS TEXT bir tam sayı bekliyor.';
+
+  @override
   String get engineThisQueueGotTooBig => 'Bu kuyruk çok büyüdü.';
 
   @override
@@ -1400,6 +1456,11 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String engineNoReturn(String name) {
     return 'FUNCTION $name, RETURN olmadan bitti.';
+  }
+
+  @override
+  String engineCanEndWithoutReturn(String name) {
+    return 'FUNCTION $name, RETURN olmadan bitebilir.';
   }
 
   @override

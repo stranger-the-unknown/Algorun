@@ -138,6 +138,10 @@ final class EditorController extends ChangeNotifier {
 
   List<IoBinding> get givens => puzzle.io.inputs;
 
+  /// What a TEXT block may hold here (L3): the empty text, then the puzzle's
+  /// `blocks.texts`. Text is chosen from these, never typed.
+  List<String> get textChoices => puzzle.blocks.textChoices;
+
   /// The puzzle's working variables (`variables.pool`), declared from the
   /// start.
   List<IoBinding> get poolVariables => puzzle.variablePool;
@@ -324,6 +328,9 @@ final class EditorController extends ChangeNotifier {
     if (placement.catalogId == BlockIds.litBool && !next.containsKey('value')) {
       next['value'] = false;
     }
+    if (placement.catalogId == BlockIds.litStr && !next.containsKey('value')) {
+      next['value'] = '';
+    }
     return next;
   }
 
@@ -461,6 +468,7 @@ final class EditorController extends ChangeNotifier {
     if (block.catalogId == BlockIds.fnDef && name is String) return 'FUNCTION $name';
     if (block.catalogId == BlockIds.varGet && name is String) return name;
     if (block.catalogId == BlockIds.litNum) return '${block.literals['value'] ?? 0}';
+    if (block.catalogId == BlockIds.litStr) return '"${block.literals['value'] ?? ''}"';
     final label = BlockChrome.labelOf(block.catalogId);
     return name is String ? '$label $name' : label;
   }
