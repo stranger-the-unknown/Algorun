@@ -9,6 +9,7 @@ export 'src/difficulty.dart';
 export 'src/editor_replay.dart';
 export 'src/oracles/oracle.dart';
 export 'src/oracles/registry.dart';
+export 'src/parallel_check.dart';
 export 'src/progression_check.dart';
 export 'src/redundancy.dart';
 export 'src/reference_check.dart';

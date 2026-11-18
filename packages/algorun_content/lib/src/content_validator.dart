@@ -55,6 +55,11 @@ final class ContentValidator {
   /// Leave it null to skip executing references; the report then says so.
   /// [capabilitiesSource] and [targetsSource] are `content/capabilities.json`
   /// and `content/coverage_targets.json`.
+  ///
+  /// [referenceOutcomes] are reference checks already made, by puzzle id
+  /// (see [referenceJobs] and `checkReferencesInParallel`): a puzzle found
+  /// there is not checked again, and its findings land where the check would
+  /// have put them, so the report is the same either way.
   ContentReport validateContent({
     required List<ContentFile> puzzles,
     String? worldsSource,
@@ -63,54 +68,24 @@ final class ContentValidator {
     String referencesLabel = 'references',
     String? capabilitiesSource,
     String? targetsSource,
+    Map<String, ReferenceOutcome>? referenceOutcomes,
   }) {
-    final issues = <ContentIssue>[];
-    final files = [...puzzles]..sort((a, b) => a.path.compareTo(b.path));
-    final byId = <String, ({String file, Puzzle puzzle})>{};
-    final unread = <String>[];
-
-    for (final file in files) {
-      final path = file.path.replaceAll('\\', '/');
-      final puzzle = _readPuzzle(file.source, path, issues);
-      if (puzzle == null) {
-        unread.add(path);
-        continue;
-      }
-      final taken = byId[puzzle.id];
-      if (taken != null) {
-        issues.add(ContentIssue(Severity.error, path, 'id', 'Puzzle id "${puzzle.id}" is also used by ${taken.file}.',
-            level: Level.schema));
-        unread.add(path);
-        continue;
-      }
-      byId[puzzle.id] = (file: path, puzzle: puzzle);
-      final expected = '${puzzle.world}/${puzzle.id}.json';
-      if (path != expected) {
-        issues.add(ContentIssue(Severity.error, path, '', 'The game loads this puzzle from $expected.',
-            level: Level.schema, puzzle: puzzle.id));
-      }
-    }
-
-    Capabilities? capabilities;
-    if (capabilitiesSource != null) {
-      try {
-        capabilities = Capabilities.parse(capabilitiesSource);
-      } on FormatException catch (e) {
-        issues.add(ContentIssue(Severity.error, 'capabilities.json', '', e.message, level: Level.schema));
-      }
-    }
-    CoverageTargets? targets;
-    if (targetsSource != null) {
-      try {
-        targets = CoverageTargets.parse(targetsSource);
-      } on Object catch (e) {
-        issues.add(ContentIssue(Severity.error, 'coverage_targets.json', '', '$e', level: Level.schema));
-      }
-    }
-
-    final manifest = worldsSource == null ? null : _checkWorlds(worldsSource, worldsFile, byId, issues);
-    final listed = manifest == null ? null : {for (final w in manifest.worlds) ...w.puzzleIds};
-    final checked = _checkReferences(byId, listed, references, referencesLabel, capabilities, issues);
+    final (:issues, :byId, :unread, :capabilities, :targets, :manifest, :listed) = _prepare(
+      puzzles: puzzles,
+      worldsSource: worldsSource,
+      worldsFile: worldsFile,
+      capabilitiesSource: capabilitiesSource,
+      targetsSource: targetsSource,
+    );
+    final checked = _checkReferences(
+      byId,
+      listed,
+      references,
+      referencesLabel,
+      capabilities,
+      issues,
+      outcomes: referenceOutcomes,
+    );
     for (final id in byId.keys.toList()..sort()) {
       final (:file, :puzzle) = byId[id]!;
       if (starterModes.contains(puzzle.mode) && puzzle.reference == null) {
@@ -165,6 +140,118 @@ final class ContentValidator {
         PuzzleVerdict(id: path, file: path, campaign: false, failed: failed[path] ?? {Level.schema}),
     ]..sort((a, b) => a.file.compareTo(b.file));
     return ContentReport(issues, puzzleCount: byId.length, verdicts: verdicts, coverage: coverage);
+  }
+
+  /// The reference checks [validateContent] would make for this content, in
+  /// its order: one per puzzle that declares reference metadata and has a
+  /// reference file. Each is self-contained, so the checks can run apart
+  /// from each other (`checkReferencesInParallel`) and be handed back as
+  /// `referenceOutcomes`.
+  List<ReferenceJob> referenceJobs({
+    required List<ContentFile> puzzles,
+    String? worldsSource,
+    String worldsFile = 'worlds.json',
+    List<ContentFile>? references,
+    String referencesLabel = 'references',
+    String? capabilitiesSource,
+  }) {
+    if (references == null) return const [];
+    final (:issues, :byId, :unread, :capabilities, :targets, :manifest, :listed) = _prepare(
+      puzzles: puzzles,
+      worldsSource: worldsSource,
+      worldsFile: worldsFile,
+      capabilitiesSource: capabilitiesSource,
+      targetsSource: null,
+    );
+    final byPath = {
+      for (final ref in references) ref.path.replaceAll(r'\', '/'): ref.source,
+    };
+    return [
+      for (final id in byId.keys.toList()..sort())
+        if (byId[id]!.puzzle case final puzzle when puzzle.reference != null)
+          if (byPath['${puzzle.world}/${puzzle.id}.json'] case final source?)
+            ReferenceJob(
+              puzzle: puzzle,
+              source: source,
+              file: '$referencesLabel/${puzzle.world}/${puzzle.id}.json',
+              campaign: listed?.contains(puzzle.id) ?? false,
+              capabilities: capabilities,
+            ),
+    ];
+  }
+
+  /// Levels 1 and the manifest: every puzzle file read, the capability audit
+  /// and the coverage targets parsed, the worlds checked.
+  ({
+    List<ContentIssue> issues,
+    Map<String, ({String file, Puzzle puzzle})> byId,
+    List<String> unread,
+    Capabilities? capabilities,
+    CoverageTargets? targets,
+    WorldsManifest? manifest,
+    Set<String>? listed,
+  }) _prepare({
+    required List<ContentFile> puzzles,
+    required String? worldsSource,
+    required String worldsFile,
+    required String? capabilitiesSource,
+    required String? targetsSource,
+  }) {
+    final issues = <ContentIssue>[];
+    final files = [...puzzles]..sort((a, b) => a.path.compareTo(b.path));
+    final byId = <String, ({String file, Puzzle puzzle})>{};
+    final unread = <String>[];
+
+    for (final file in files) {
+      final path = file.path.replaceAll('\\', '/');
+      final puzzle = _readPuzzle(file.source, path, issues);
+      if (puzzle == null) {
+        unread.add(path);
+        continue;
+      }
+      final taken = byId[puzzle.id];
+      if (taken != null) {
+        issues.add(ContentIssue(Severity.error, path, 'id', 'Puzzle id "${puzzle.id}" is also used by ${taken.file}.',
+            level: Level.schema));
+        unread.add(path);
+        continue;
+      }
+      byId[puzzle.id] = (file: path, puzzle: puzzle);
+      final expected = '${puzzle.world}/${puzzle.id}.json';
+      if (path != expected) {
+        issues.add(ContentIssue(Severity.error, path, '', 'The game loads this puzzle from $expected.',
+            level: Level.schema, puzzle: puzzle.id));
+      }
+    }
+
+    Capabilities? capabilities;
+    if (capabilitiesSource != null) {
+      try {
+        capabilities = Capabilities.parse(capabilitiesSource);
+      } on FormatException catch (e) {
+        issues.add(ContentIssue(Severity.error, 'capabilities.json', '', e.message, level: Level.schema));
+      }
+    }
+    CoverageTargets? targets;
+    if (targetsSource != null) {
+      try {
+        targets = CoverageTargets.parse(targetsSource);
+      } on Object catch (e) {
+        issues.add(ContentIssue(Severity.error, 'coverage_targets.json', '', '$e', level: Level.schema));
+      }
+    }
+
+    final manifest = worldsSource == null ? null : _checkWorlds(worldsSource, worldsFile, byId, issues);
+    final listed = manifest == null ? null : {for (final w in manifest.worlds) ...w.puzzleIds};
+    return (
+      issues: issues,
+      byId: byId,
+      unread: unread,
+      capabilities: capabilities,
+      targets: targets,
+      manifest: manifest,
+      listed: listed,
+    );
   }
 
   /// Level 7 over the campaign: redundancy, difficulty advice, coverage.
@@ -245,8 +332,9 @@ final class ContentValidator {
     List<ContentFile>? references,
     String label,
     Capabilities? capabilities,
-    List<ContentIssue> issues,
-  ) {
+    List<ContentIssue> issues, {
+    Map<String, ReferenceOutcome>? outcomes,
+  }) {
     final out = <String, CheckedReference>{};
     final ids = puzzles.keys.toList()..sort();
     if (listed != null) {
@@ -294,15 +382,16 @@ final class ContentValidator {
             level: Level.schema, puzzle: puzzle.id));
         continue;
       }
-      final result = checker.check(
-        puzzle,
-        source,
-        '$label/$path',
-        issues,
-        campaign: listed?.contains(puzzle.id) ?? false,
-        capabilities: capabilities,
-      );
-      if (result != null) out[puzzle.id] = result;
+      final outcome = outcomes?[puzzle.id] ??
+          checker.run(ReferenceJob(
+            puzzle: puzzle,
+            source: source,
+            file: '$label/$path',
+            campaign: listed?.contains(puzzle.id) ?? false,
+            capabilities: capabilities,
+          ));
+      issues.addAll(outcome.issues);
+      if (outcome.result case final result?) out[puzzle.id] = result;
     }
     final orphans = byPath.keys.where((p) => !expected.contains(p)).toList()..sort();
     for (final path in orphans) {

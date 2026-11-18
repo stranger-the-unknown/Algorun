@@ -35,6 +35,37 @@ final class CheckedReference {
   final BlockGraph? solution;
 }
 
+/// One reference check with everything it needs, so it can be made apart
+/// from the others (another isolate) and its findings put back in order.
+final class ReferenceJob {
+  const ReferenceJob({
+    required this.puzzle,
+    required this.source,
+    required this.file,
+    this.campaign = false,
+    this.capabilities,
+  });
+
+  final Puzzle puzzle;
+
+  /// The reference file's text.
+  final String source;
+
+  /// The reference file's name in findings (`references/world_01/x.json`).
+  final String file;
+  final bool campaign;
+  final Capabilities? capabilities;
+}
+
+/// What a [ReferenceJob] found: its findings in the order they were made, and
+/// what the reference gave the corpus checks (null when it could not be read).
+final class ReferenceOutcome {
+  const ReferenceOutcome(this.issues, this.result);
+
+  final List<ContentIssue> issues;
+  final CheckedReference? result;
+}
+
 /// Proves a puzzle is solvable as shipped, from a reference file of the form:
 ///
 /// ```json
@@ -74,6 +105,20 @@ final class ReferenceChecker {
 
   final AlgorunEngine engine;
   final Map<String, Oracle> oracles;
+
+  /// [check] as a value: the findings and the result of one job.
+  ReferenceOutcome run(ReferenceJob job) {
+    final issues = <ContentIssue>[];
+    final result = check(
+      job.puzzle,
+      job.source,
+      job.file,
+      issues,
+      campaign: job.campaign,
+      capabilities: job.capabilities,
+    );
+    return ReferenceOutcome(issues, result);
+  }
 
   CheckedReference? check(
     Puzzle puzzle,

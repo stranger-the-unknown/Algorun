@@ -6,6 +6,7 @@ import 'package:algorun_content/algorun_content.dart';
 ///
 ///     dart run packages/algorun_content/bin/validate.dart
 ///         <puzzles_dir> [worlds.json] [references_dir] [--coverage <out.json>]
+///         [--jobs <n>]
 ///
 /// Validates every `.json` file under `puzzles_dir` against the closed puzzle
 /// schema, then the set as a whole (duplicate ids, file locations, world
@@ -18,8 +19,22 @@ import 'package:algorun_content/algorun_content.dart';
 /// Prints every finding with its level, one ACCEPTED / REJECTED line per
 /// puzzle, and a summary. `--coverage` writes the coverage matrix. Exits 1
 /// when there is any error. Output order is stable.
-void main(List<String> arguments) {
+///
+/// The reference checks run on every processor (`--jobs <n>` to choose,
+/// `--jobs 1` for one after another). The output is the same either way.
+Future<void> main(List<String> arguments) async {
   final args = [...arguments];
+  int? jobs;
+  final jobsFlag = args.indexOf('--jobs');
+  if (jobsFlag >= 0) {
+    jobs = jobsFlag + 1 < args.length ? int.tryParse(args[jobsFlag + 1]) : null;
+    if (jobs == null || jobs < 1) {
+      stderr.writeln('--jobs needs a whole number, 1 or more');
+      exitCode = 64;
+      return;
+    }
+    args.removeRange(jobsFlag, jobsFlag + 2);
+  }
   String? coverageOut;
   final flag = args.indexOf('--coverage');
   if (flag >= 0) {
@@ -32,7 +47,7 @@ void main(List<String> arguments) {
     args.removeRange(flag, flag + 2);
   }
   if (args.isEmpty) {
-    stderr.writeln('usage: validate <puzzles_dir> [worlds.json] [references_dir] [--coverage <out.json>]');
+    stderr.writeln('usage: validate <puzzles_dir> [worlds.json] [references_dir] [--coverage <out.json>] [--jobs <n>]');
     exitCode = 64;
     return;
   }
@@ -93,7 +108,20 @@ void main(List<String> arguments) {
     targets = sibling('coverage_targets.json');
   }
 
-  final report = const ContentValidator().validateContent(
+  const validator = ContentValidator();
+  final outcomes = await checkReferencesInParallel(
+    validator.referenceJobs(
+      puzzles: files,
+      worldsSource: worldsSource,
+      worldsFile: worldsName,
+      references: references,
+      referencesLabel: referencesLabel,
+      capabilitiesSource: capabilities,
+    ),
+    checker: validator.checker,
+    workers: jobs,
+  );
+  final report = validator.validateContent(
     puzzles: files,
     worldsSource: worldsSource,
     worldsFile: worldsName,
@@ -101,6 +129,7 @@ void main(List<String> arguments) {
     referencesLabel: referencesLabel,
     capabilitiesSource: capabilities,
     targetsSource: targets,
+    referenceOutcomes: outcomes,
   );
   for (final issue in report.issues) {
     stdout.writeln(issue);
