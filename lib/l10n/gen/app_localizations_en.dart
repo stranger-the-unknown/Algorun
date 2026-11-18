@@ -1422,4 +1422,183 @@ class AppLocalizationsEn extends AppLocalizations {
   String engineCaseFailed(String id) {
     return 'Case $id did not come out the way the puzzle expects.';
   }
+
+  @override
+  String get traceOpen => 'STEP THROUGH';
+
+  @override
+  String get traceTitle => 'STEP BY STEP';
+
+  @override
+  String get traceHelp => 'How this works';
+
+  @override
+  String get traceCannot => 'This case cannot be stepped through.';
+
+  @override
+  String get traceCurrentBlock => 'the block that just ran';
+
+  @override
+  String traceOpsSoFar(String used, String budget) {
+    return 'Steps used so far: $used of $budget';
+  }
+
+  @override
+  String traceDepthNow(int depth, int budget) {
+    return 'Depth $depth of $budget';
+  }
+
+  @override
+  String traceLongRun(String total, String window) {
+    return 'A long run: $total instructions ran. They load $window at a time as you move through it.';
+  }
+
+  @override
+  String get traceStart => 'Start. These are the given values.';
+
+  @override
+  String traceCall(String name) {
+    return '$name starts, one level deeper.';
+  }
+
+  @override
+  String get traceIfTrue => 'The condition is TRUE: THEN runs.';
+
+  @override
+  String get traceIfFalse => 'The condition is FALSE: THEN is skipped.';
+
+  @override
+  String get traceWhileTrue => 'The condition is TRUE: the loop runs a pass.';
+
+  @override
+  String get traceWhileFalse => 'The condition is FALSE: the loop ends.';
+
+  @override
+  String get traceLoopNext => 'The loop starts a pass.';
+
+  @override
+  String get traceLoopEnd => 'Nothing left: the loop ends.';
+
+  @override
+  String get traceBreak => 'BREAK: the loop ends here.';
+
+  @override
+  String get traceContinue => 'CONTINUE: on to the next pass.';
+
+  @override
+  String traceReturn(String value) {
+    return 'RETURN gives back $value.';
+  }
+
+  @override
+  String traceAnswer(String value) {
+    return 'The program’s answer: $value';
+  }
+
+  @override
+  String get traceRan => 'This block ran.';
+
+  @override
+  String traceRanValue(String value) {
+    return 'This block ran and gave $value.';
+  }
+
+  @override
+  String traceHalt(String message) {
+    return 'Stopped here. $message';
+  }
+
+  @override
+  String get traceValues => 'VALUES';
+
+  @override
+  String traceCalls(int depth) {
+    return 'CALLS · $depth OPEN';
+  }
+
+  @override
+  String traceWaiting(String name) {
+    return '$name is waiting for the call it made to finish.';
+  }
+
+  @override
+  String get traceNoValues => 'No name has a value yet.';
+
+  @override
+  String get traceChanged => 'changed';
+
+  @override
+  String get traceNew => 'new';
+
+  @override
+  String get traceChangedBeyond => 'a change further on';
+
+  @override
+  String get traceEmpty => 'empty';
+
+  @override
+  String get traceTop => 'top';
+
+  @override
+  String get traceFront => 'front';
+
+  @override
+  String traceMore(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String get traceVisited => 'visited';
+
+  @override
+  String get traceLoopsBack => 'loops back';
+
+  @override
+  String get traceFirst => 'To the start';
+
+  @override
+  String get tracePrevious => 'Back one';
+
+  @override
+  String get traceNext => 'Forward one';
+
+  @override
+  String get traceLast => 'To the end';
+
+  @override
+  String get tracePlay => 'Play';
+
+  @override
+  String get tracePause => 'Pause';
+
+  @override
+  String get traceSpeed => 'Speed';
+
+  @override
+  String get traceHelpTitle => 'STEP BY STEP';
+
+  @override
+  String get traceHelpSteps =>
+      'Forward runs one instruction of your program on this case; Back undoes it. The block that just ran is outlined and marked with an arrow. Play runs on by itself; the button beside it changes the speed.';
+
+  @override
+  String get traceHelpValues =>
+      'VALUES shows every name as it stands right after that block. What the block just changed is marked in colour and with the word “changed” or “new”. Step until a value is not what you expected: that block is where to look.';
+
+  @override
+  String get traceHelpCalls =>
+      'Inside a FUNCTION, CALLS lists every call that is still open, the running one first. Tap one to see its own values.';
+
+  @override
+  String get traceHelpCost =>
+      '“Steps used” is the count the result screen holds against the budget: every block that works costs one, the value blocks inside an instruction too.';
+
+  @override
+  String get traceHelpHidden =>
+      'Only the cases you can see can be stepped through. Hidden cases stay hidden.';
+
+  @override
+  String traceNowIs(String name, String value) {
+    return '$name is now $value.';
+  }
 }

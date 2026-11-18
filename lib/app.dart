@@ -8,6 +8,7 @@ import 'screens/puzzle/puzzle_list_screen.dart';
 import 'screens/puzzle/puzzle_screen.dart';
 import 'screens/results/results_screen.dart';
 import 'screens/settings/settings_screen.dart';
+import 'screens/trace/trace_screen.dart';
 import 'screens/world_select/world_select_screen.dart';
 import 'shared/theme/app_theme.dart';
 import 'state/l10n_providers.dart';
@@ -84,6 +85,7 @@ Route<void>? _withArguments(RouteSettings settings) {
     '/puzzles' => const PuzzleListScreen(),
     '/puzzle' => const PuzzleScreen(),
     '/results' => const ResultsScreen(),
+    '/trace' => const TraceScreen(),
     _ => null,
   };
   if (page == null) return null;

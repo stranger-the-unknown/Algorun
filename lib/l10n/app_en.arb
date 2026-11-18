@@ -1151,5 +1151,151 @@
         "type": "String"
       }
     }
+  },
+  "traceOpen": "STEP THROUGH",
+  "traceTitle": "STEP BY STEP",
+  "traceHelp": "How this works",
+  "traceCannot": "This case cannot be stepped through.",
+  "traceCurrentBlock": "the block that just ran",
+  "traceOpsSoFar": "Steps used so far: {used} of {budget}",
+  "@traceOpsSoFar": {
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      }
+    }
+  },
+  "traceDepthNow": "Depth {depth} of {budget}",
+  "@traceDepthNow": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      },
+      "budget": {
+        "type": "int"
+      }
+    }
+  },
+  "traceLongRun": "A long run: {total} instructions ran. They load {window} at a time as you move through it.",
+  "@traceLongRun": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "traceStart": "Start. These are the given values.",
+  "traceCall": "{name} starts, one level deeper.",
+  "@traceCall": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "traceIfTrue": "The condition is TRUE: THEN runs.",
+  "traceIfFalse": "The condition is FALSE: THEN is skipped.",
+  "traceWhileTrue": "The condition is TRUE: the loop runs a pass.",
+  "traceWhileFalse": "The condition is FALSE: the loop ends.",
+  "traceLoopNext": "The loop starts a pass.",
+  "traceLoopEnd": "Nothing left: the loop ends.",
+  "traceBreak": "BREAK: the loop ends here.",
+  "traceContinue": "CONTINUE: on to the next pass.",
+  "traceReturn": "RETURN gives back {value}.",
+  "@traceReturn": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "traceAnswer": "The program’s answer: {value}",
+  "@traceAnswer": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "traceRan": "This block ran.",
+  "traceRanValue": "This block ran and gave {value}.",
+  "@traceRanValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "traceHalt": "Stopped here. {message}",
+  "@traceHalt": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "traceValues": "VALUES",
+  "traceCalls": "CALLS · {depth} OPEN",
+  "@traceCalls": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "traceWaiting": "{name} is waiting for the call it made to finish.",
+  "@traceWaiting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "traceNoValues": "No name has a value yet.",
+  "traceChanged": "changed",
+  "traceNew": "new",
+  "traceChangedBeyond": "a change further on",
+  "traceEmpty": "empty",
+  "traceTop": "top",
+  "traceFront": "front",
+  "traceMore": "+{count} more",
+  "@traceMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "traceVisited": "visited",
+  "traceLoopsBack": "loops back",
+  "traceFirst": "To the start",
+  "tracePrevious": "Back one",
+  "traceNext": "Forward one",
+  "traceLast": "To the end",
+  "tracePlay": "Play",
+  "tracePause": "Pause",
+  "traceSpeed": "Speed",
+  "traceHelpTitle": "STEP BY STEP",
+  "traceHelpSteps": "Forward runs one instruction of your program on this case; Back undoes it. The block that just ran is outlined and marked with an arrow. Play runs on by itself; the button beside it changes the speed.",
+  "traceHelpValues": "VALUES shows every name as it stands right after that block. What the block just changed is marked in colour and with the word “changed” or “new”. Step until a value is not what you expected: that block is where to look.",
+  "traceHelpCalls": "Inside a FUNCTION, CALLS lists every call that is still open, the running one first. Tap one to see its own values.",
+  "traceHelpCost": "“Steps used” is the count the result screen holds against the budget: every block that works costs one, the value blocks inside an instruction too.",
+  "traceHelpHidden": "Only the cases you can see can be stepped through. Hidden cases stay hidden.",
+  "traceNowIs": "{name} is now {value}.",
+  "@traceNowIs": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
   }
 }

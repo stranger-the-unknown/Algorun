@@ -334,6 +334,8 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
         progress: progress,
         next: next,
         text: ref.read(contentTextProvider),
+        // The program as it ran, so a case can be stepped through (T1).
+        graph: _controller.graph,
       ),
     );
     if (!mounted) return;

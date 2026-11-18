@@ -1,0 +1,762 @@
+{
+ "digit_wheels": {
+  "source": "-68aa024ea9cd0b0",
+  "runs": 22,
+  "digest": "-6c21f27fb758c44a"
+ },
+ "doubling_jar": {
+  "source": "-3ea0d281260a7d85",
+  "runs": 24,
+  "digest": "-5190ab3e7302efa6"
+ },
+ "dry_spell": {
+  "source": "7cd4e11c6984b37a",
+  "runs": 22,
+  "digest": "7b457a19df6e17ac"
+ },
+ "highest_tide": {
+  "source": "-67954fb5be8228c4",
+  "runs": 16,
+  "digest": "-2236c514c72c7ba4"
+ },
+ "hill_tops": {
+  "source": "4941fba30d202ad4",
+  "runs": 26,
+  "digest": "-49ccbadf63e9bbd0"
+ },
+ "l1_list_probe": {
+  "source": "-3d7e6f07192cc70b",
+  "runs": 4,
+  "digest": "-7c35bf3427a74030"
+ },
+ "l1_tree_probe": {
+  "source": "-3f3d31d1b250d00a",
+  "runs": 4,
+  "digest": "1777b1bf7d1913cb"
+ },
+ "lift_trips": {
+  "source": "-3c77b0e97c887b0b",
+  "runs": 30,
+  "digest": "119ba24fe85691d0"
+ },
+ "lighthouse_bell": {
+  "source": "29ca711331f877d1",
+  "runs": 39,
+  "digest": "-20461682577e420f"
+ },
+ "ms13_stress_probe": {
+  "source": "63c6b8c8caf1d2b3",
+  "runs": 8,
+  "digest": "-6c86183b592397e5"
+ },
+ "party_tables": {
+  "source": "7f7118d7dc54be4e",
+  "runs": 22,
+  "digest": "-44498b0ae8858b86"
+ },
+ "stair_lights": {
+  "source": "1dd1f263d3c75208",
+  "runs": 22,
+  "digest": "c629f84d6835590"
+ },
+ "three_planks": {
+  "source": "-24a85fd9e7f17ef0",
+  "runs": 36,
+  "digest": "ab7e0f6627f526e"
+ },
+ "ticket_price": {
+  "source": "-5ec9810cfb2dccfa",
+  "runs": 24,
+  "digest": "-7b794d951778924"
+ },
+ "warm_readings": {
+  "source": "-5408a14b2179cbc1",
+  "runs": 16,
+  "digest": "6bd3665c98ceb9cd"
+ },
+ "balance_point": {
+  "source": "-38c260992fd87f2c",
+  "runs": 33,
+  "digest": "-784791a2a89b2fab"
+ },
+ "departure_board": {
+  "source": "-69f7bc06719a5b98",
+  "runs": 30,
+  "digest": "-39088d9f5361fdae"
+ },
+ "even_prefixes": {
+  "source": "-733aea9224d8d22c",
+  "runs": 22,
+  "digest": "7227041b4add1a51"
+ },
+ "first_descent": {
+  "source": "-7d5baada0dc03055",
+  "runs": 24,
+  "digest": "-643a1890c65a842a"
+ },
+ "landslide": {
+  "source": "-55c535911f9717fe",
+  "runs": 44,
+  "digest": "2f19caf17805d692"
+ },
+ "last_sighting": {
+  "source": "2e2e7ffb5f550829",
+  "runs": 20,
+  "digest": "3727e24fbb96a72b"
+ },
+ "lowest_balance": {
+  "source": "-3c2c662913b1fe4f",
+  "runs": 16,
+  "digest": "f2de524130f51dc"
+ },
+ "max_product_two": {
+  "source": "457d1fecdd05b29e",
+  "runs": 18,
+  "digest": "-3926206f88abfe0c"
+ },
+ "nested_distinct": {
+  "source": "281078b3cc54f63f",
+  "runs": 20,
+  "digest": "-4fc631c4e2e75270"
+ },
+ "second_highest": {
+  "source": "-11391211ce39a6f8",
+  "runs": 22,
+  "digest": "1e39182d440def4b"
+ },
+ "shelf_totals": {
+  "source": "2c9e952e5b129f49",
+  "runs": 16,
+  "digest": "-7f84aed4e8e56340"
+ },
+ "smallest_cart": {
+  "source": "654a3adf83123d30",
+  "runs": 20,
+  "digest": "6d548409e13ce938"
+ },
+ "till_totals": {
+  "source": "37a15b6e671c0037",
+  "runs": 16,
+  "digest": "4843f436b9348549"
+ },
+ "level_stretches": {
+  "source": "-197cf6b67e0466c1",
+  "runs": 16,
+  "digest": "542c191eda61e82e"
+ },
+ "lonely_numbers": {
+  "source": "-1dc052910cfeb115",
+  "runs": 18,
+  "digest": "743e17742a12cae"
+ },
+ "longest_streak": {
+  "source": "4d19cd17dac6a74c",
+  "runs": 18,
+  "digest": "1842e10e0110efa0"
+ },
+ "loudest_echo": {
+  "source": "-2982af1106845ef3",
+  "runs": 16,
+  "digest": "-322cab7b622b9dc0"
+ },
+ "matching_bags": {
+  "source": "-19bbb547c47c97ef",
+  "runs": 33,
+  "digest": "48dff7dd7fb2622d"
+ },
+ "pair_sum_count": {
+  "source": "-109ecfc6320bd8cd",
+  "runs": 18,
+  "digest": "64a5a240bb192398"
+ },
+ "same_value_span": {
+  "source": "-50db705c96e2de0f",
+  "runs": 18,
+  "digest": "-3d2650d3cc3696a8"
+ },
+ "second_scan": {
+  "source": "27810dfb90e03e46",
+  "runs": 18,
+  "digest": "4a303a7eeb293f36"
+ },
+ "shared_values": {
+  "source": "5cbaf1ad5b809361",
+  "runs": 20,
+  "digest": "5d8b77f1794232e9"
+ },
+ "twin_beacons": {
+  "source": "-3a8e872b9ce00dd5",
+  "runs": 36,
+  "digest": "-781071046be741af"
+ },
+ "closest_gap": {
+  "source": "7247bb19d5c7a3c2",
+  "runs": 18,
+  "digest": "1483252b1fc5dfd7"
+ },
+ "exact_gaps": {
+  "source": "72bbb4db418a2cbe",
+  "runs": 22,
+  "digest": "7985685343dafe63"
+ },
+ "matched_pair": {
+  "source": "-5b26d4af967b7",
+  "runs": 18,
+  "digest": "695b96b8582c6a14"
+ },
+ "pairs_under": {
+  "source": "48a384f3227d84ee",
+  "runs": 22,
+  "digest": "-145b96e7623e91d8"
+ },
+ "recipe_steps": {
+  "source": "-34ad91c55d1536ab",
+  "runs": 22,
+  "digest": "-30659fd89e4634bb"
+ },
+ "sorted_shelf": {
+  "source": "-6ca7be33baeb885c",
+  "runs": 16,
+  "digest": "-63ada3b6d1610105"
+ },
+ "sorted_union": {
+  "source": "47d2412a65eb281b",
+  "runs": 22,
+  "digest": "4f92b41161e5022a"
+ },
+ "widest_basin": {
+  "source": "74d7d92a820668b5",
+  "runs": 16,
+  "digest": "-2126df7def796449"
+ },
+ "calm_stretches": {
+  "source": "7244bcdcfd9a7bbe",
+  "runs": 18,
+  "digest": "7a05a2de8397a85a"
+ },
+ "market_variety": {
+  "source": "33fc82e0859ed8e7",
+  "runs": 18,
+  "digest": "-5893fb7a82534d86"
+ },
+ "one_dropout": {
+  "source": "45065df653102006",
+  "runs": 24,
+  "digest": "-26af80ac84d9668b"
+ },
+ "patchy_signal": {
+  "source": "-3e0daee6d72b3902",
+  "runs": 18,
+  "digest": "-c97210cbc759bb1"
+ },
+ "peak_windows": {
+  "source": "-7090058711377741",
+  "runs": 20,
+  "digest": "-2e7bac22b32ca76c"
+ },
+ "quota_hours": {
+  "source": "-7b746e8276aff134",
+  "runs": 36,
+  "digest": "-3fe2d0522754d31f"
+ },
+ "rush_hour": {
+  "source": "28b08482e4cf6e6b",
+  "runs": 18,
+  "digest": "bbaa6f52ae45e0c"
+ },
+ "window_variety": {
+  "source": "7c48cb6cd71aa2b2",
+  "runs": 30,
+  "digest": "47a49679c6972cba"
+ },
+ "windows_at_least": {
+  "source": "-72a2e07b86d7577c",
+  "runs": 22,
+  "digest": "-35deaaff41a7b8a0"
+ },
+ "counter_sum": {
+  "source": "-274d6fecf6e92c2f",
+  "runs": 24,
+  "digest": "380b343778195109"
+ },
+ "josephus_line": {
+  "source": "74213f46af2a0e1",
+  "runs": 22,
+  "digest": "-60007b813dc7fd90"
+ },
+ "largest_billboard": {
+  "source": "2eb0290d41555e2f",
+  "runs": 20,
+  "digest": "2b3795713e2ecd61"
+ },
+ "plate_minimum": {
+  "source": "-6d01903b3e0779b7",
+  "runs": 18,
+  "digest": "31ab8c80d1ae1195"
+ },
+ "relay_towers": {
+  "source": "-213fb556e6f3393c",
+  "runs": 36,
+  "digest": "aee13d4665e3ac"
+ },
+ "sealed_crates": {
+  "source": "-6643cb1b7372dff6",
+  "runs": 20,
+  "digest": "-b9ec3fb368c479c"
+ },
+ "snowball_clash": {
+  "source": "7dc3a507a730f340",
+  "runs": 20,
+  "digest": "-c628be07a04beee"
+ },
+ "stack_sorted": {
+  "source": "-3163584cd188cf8",
+  "runs": 24,
+  "digest": "65c44292c35eca6"
+ },
+ "ticket_minutes": {
+  "source": "3b8be1e0c1b1c092",
+  "runs": 18,
+  "digest": "-54f603eb52987d0b"
+ },
+ "undo_button": {
+  "source": "-5f5a0e41663c09ef",
+  "runs": 16,
+  "digest": "1449893ea4d7c172"
+ },
+ "cold_cars": {
+  "source": "-5dde628822f2516",
+  "runs": 22,
+  "digest": "6f7bedcb7bcda223"
+ },
+ "drop_faulty_cars": {
+  "source": "-10ee7d80f6035a1a",
+  "runs": 18,
+  "digest": "782c0e10b9be34a9"
+ },
+ "end_gap": {
+  "source": "33ac21543c4896ad",
+  "runs": 20,
+  "digest": "262f7af89cc30a78"
+ },
+ "kth_from_end": {
+  "source": "37e2ddb6dbac1615",
+  "runs": 20,
+  "digest": "-821c9f0f4652fc2"
+ },
+ "loop_detector": {
+  "source": "-3a62845be3a3c9fe",
+  "runs": 20,
+  "digest": "-2ccf34cde7d426c"
+ },
+ "middle_car": {
+  "source": "624b990f2d77430e",
+  "runs": 16,
+  "digest": "-3a21766a96feb737"
+ },
+ "named_car": {
+  "source": "748e4cffc3cc92ab",
+  "runs": 22,
+  "digest": "7166be0e4ec08153"
+ },
+ "no_repeats": {
+  "source": "-4322e96a52dbce42",
+  "runs": 18,
+  "digest": "690a08d344ffc141"
+ },
+ "reverse_train": {
+  "source": "-2acef837d2ba76ae",
+  "runs": 7,
+  "digest": "-5077a87b657fd905"
+ },
+ "rising_links": {
+  "source": "28ac653cf0b00e5d",
+  "runs": 20,
+  "digest": "-3e7d56d77bb2d4e7"
+ },
+ "tail_lamp": {
+  "source": "753a7815ac8c0752",
+  "runs": 20,
+  "digest": "-7ba7fa095c8ae95d"
+ },
+ "canopy_height": {
+  "source": "-5c85ccc4377499fc",
+  "runs": 16,
+  "digest": "-7de1e249d086de7"
+ },
+ "leaf_census": {
+  "source": "-3cba3452a334ee5c",
+  "runs": 20,
+  "digest": "4a8591adfc1f2d12"
+ },
+ "left_vine": {
+  "source": "-40e62584b3aedfa6",
+  "runs": 22,
+  "digest": "250611ab1322d19"
+ },
+ "lone_tree": {
+  "source": "-40fc8ca7a8f9c5fd",
+  "runs": 20,
+  "digest": "3978e5472b99c463"
+ },
+ "lowest_leaf": {
+  "source": "7824f80726ba38af",
+  "runs": 20,
+  "digest": "513e3a06d7a1da23"
+ },
+ "mirror_tree": {
+  "source": "-56ded58f54ae642f",
+  "runs": 22,
+  "digest": "6f625d7656a31ad6"
+ },
+ "node_census": {
+  "source": "7e91b283014e3276",
+  "runs": 22,
+  "digest": "5792586a62a25ac"
+ },
+ "range_count": {
+  "source": "4dbde9b4f9d711ab",
+  "runs": 30,
+  "digest": "22f51ef7e20bb23c"
+ },
+ "right_marks": {
+  "source": "-609ed7cf852df666",
+  "runs": 22,
+  "digest": "1f6dc90b0ffd727"
+ },
+ "sorted_grove": {
+  "source": "-69236407bdd6d73c",
+  "runs": 18,
+  "digest": "8200fbb7f2d6080"
+ },
+ "trail_sum": {
+  "source": "8e2f0ead462050f",
+  "runs": 18,
+  "digest": "-2ca1acba87accb3b"
+ },
+ "widest_level": {
+  "source": "-3bb2215ab87de7b9",
+  "runs": 16,
+  "digest": "-1dbcfa82e53c930f"
+ },
+ "bricks_ladders": {
+  "source": "-27fed567ab53b9a5",
+  "runs": 18,
+  "digest": "-5ec115708fc77d4"
+ },
+ "cheapest_crossing": {
+  "source": "-50ca03ef2d2aaa7e",
+  "runs": 16,
+  "digest": "6ba0cfb51109ceaf"
+ },
+ "deadline_jobs": {
+  "source": "2933e62fb440484",
+  "runs": 16,
+  "digest": "-61dafcd176d169af"
+ },
+ "factory_codes": {
+  "source": "5aa8fad321c7bbac",
+  "runs": 16,
+  "digest": "13aceb18c1e1d83b"
+ },
+ "fuel_stops": {
+  "source": "-2750a593a3414240",
+  "runs": 16,
+  "digest": "-73fc66a93ecfa741"
+ },
+ "halving_piles": {
+  "source": "442a74e1cc0b24eb",
+  "runs": 16,
+  "digest": "425f6a8e68b14a1d"
+ },
+ "last_stone": {
+  "source": "-415cabfa702e8f49",
+  "runs": 16,
+  "digest": "125d99efbe2eafec"
+ },
+ "meeting_rooms": {
+  "source": "-384a39ab77670650",
+  "runs": 16,
+  "digest": "22ee2a63787966a9"
+ },
+ "podium_place": {
+  "source": "-91b6e6a5ffae28a",
+  "runs": 16,
+  "digest": "2d3ec400cf127d8a"
+ },
+ "print_shop": {
+  "source": "64190aa30b932e85",
+  "runs": 16,
+  "digest": "-90de801e93d6a30"
+ },
+ "rope_joining": {
+  "source": "-10775babec3cb586",
+  "runs": 16,
+  "digest": "-3ed9a0ee5ab9d6cf"
+ },
+ "running_median": {
+  "source": "329f984db1712d72",
+  "runs": 16,
+  "digest": "-2d497ee269d4d93"
+ },
+ "seat_desk": {
+  "source": "-2494c7997090fdd0",
+  "runs": 16,
+  "digest": "2f25e473de28a0ed"
+ },
+ "ticket_order": {
+  "source": "6972d5111abbcd36",
+  "runs": 16,
+  "digest": "-27b2349c9e9c5ae4"
+ },
+ "top_scores": {
+  "source": "-72d3d0e034f70f0a",
+  "runs": 18,
+  "digest": "629a01bf2021421"
+ },
+ "biggest_patch": {
+  "source": "5cbeedc3bbc16e1b",
+  "runs": 22,
+  "digest": "576b1153fa8696ad"
+ },
+ "direct_hop": {
+  "source": "47776ad6ee1e1241",
+  "runs": 22,
+  "digest": "-7e39689ccdd329ca"
+ },
+ "fewest_rides": {
+  "source": "4d253f2f3c7a6ab",
+  "runs": 20,
+  "digest": "-4dd618c40b3a63a5"
+ },
+ "hop_radius": {
+  "source": "5555a379ad4b229f",
+  "runs": 20,
+  "digest": "7caba566b076d6b5"
+ },
+ "island_count": {
+  "source": "7f834e09f0b99424",
+  "runs": 16,
+  "digest": "54b054a79fbcf82d"
+ },
+ "last_layer": {
+  "source": "-558bb04f4864eed0",
+  "runs": 24,
+  "digest": "34a9633cde7a518d"
+ },
+ "nearest_depot": {
+  "source": "a2eaa7a814b6d3f",
+  "runs": 16,
+  "digest": "-767ea79f8c82ab20"
+ },
+ "platform_doors": {
+  "source": "4d59c23729311ad7",
+  "runs": 22,
+  "digest": "5b4131d021dfaf75"
+ },
+ "ring_road": {
+  "source": "25601f870c1dffd3",
+  "runs": 20,
+  "digest": "-68237ebe31aa3088"
+ },
+ "scout_last": {
+  "source": "60f4dd2720908313",
+  "runs": 22,
+  "digest": "-5a64900ef1ddd060"
+ },
+ "scout_reach": {
+  "source": "31ccd1162cf6ab6e",
+  "runs": 22,
+  "digest": "-75fcad40f5edcd33"
+ },
+ "silent_stops": {
+  "source": "311d90397a7daf1d",
+  "runs": 20,
+  "digest": "2baae88f2a55a0a9"
+ },
+ "source_radius": {
+  "source": "21f41faf7a248b13",
+  "runs": 18,
+  "digest": "19206534824a6ae4"
+ },
+ "task_order": {
+  "source": "-20430b85e0c45ba4",
+  "runs": 18,
+  "digest": "2107de78e733f856"
+ },
+ "two_teams": {
+  "source": "5f532084fda28147",
+  "runs": 20,
+  "digest": "4e133d0d630dec34"
+ },
+ "cookie_gifts": {
+  "source": "-3a2052b14f78d5e6",
+  "runs": 22,
+  "digest": "33a211fe760a9958"
+ },
+ "dock_overlap": {
+  "source": "-5fb8f69f21503b92",
+  "runs": 22,
+  "digest": "15c52c73d49cdf8"
+ },
+ "every_rise": {
+  "source": "-55913617f73be2c0",
+  "runs": 18,
+  "digest": "-7ac04c932bcad692"
+ },
+ "fuel_loop": {
+  "source": "21c8dc84a34e6db5",
+  "runs": 18,
+  "digest": "4c92b593158ffdc0"
+ },
+ "leap_reach": {
+  "source": "-3786ab14e1445bc7",
+  "runs": 24,
+  "digest": "-5e64bdf6d60de02e"
+ },
+ "medal_row": {
+  "source": "5a1cc18c01c94380",
+  "runs": 20,
+  "digest": "-1f2a04f081e90c38"
+ },
+ "one_good_trade": {
+  "source": "7d409ccd27ea3b0f",
+  "runs": 16,
+  "digest": "746755263d9e0abe"
+ },
+ "one_room": {
+  "source": "4427f7f8845688d1",
+  "runs": 16,
+  "digest": "-7bf35cbb6ec3204f"
+ },
+ "catalogue_check": {
+  "source": "497de085ae1a2a39",
+  "runs": 18,
+  "digest": "-5e5668f07643cf36"
+ },
+ "change_ways": {
+  "source": "574c8e6b7a77a35f",
+  "runs": 18,
+  "digest": "-29ef7c4df970f414"
+ },
+ "coin_stack": {
+  "source": "767a70eab1289417",
+  "runs": 14,
+  "digest": "529f610c38f2b8c4"
+ },
+ "digit_root": {
+  "source": "10f5e288d801b9f5",
+  "runs": 20,
+  "digest": "-64ff1d337d355488"
+ },
+ "even_branches": {
+  "source": "6630ed86e1cd19cc",
+  "runs": 18,
+  "digest": "-6e1dd04b14bb74f9"
+ },
+ "exact_weight": {
+  "source": "6c85538eed679b67",
+  "runs": 20,
+  "digest": "31ed5f06014d05f9"
+ },
+ "island_size": {
+  "source": "-f099bf233b5cf15",
+  "runs": 18,
+  "digest": "-113f36f861be8deb"
+ },
+ "lantern_rows": {
+  "source": "-310d6127961ee4e7",
+  "runs": 14,
+  "digest": "-760400725c42130a"
+ },
+ "lucky_picks": {
+  "source": "-7e75373b5a9d5da6",
+  "runs": 20,
+  "digest": "-4c3a4a42981430c7"
+ },
+ "maze_paths": {
+  "source": "1984878fe02d01a7",
+  "runs": 18,
+  "digest": "3bd9e004d1d9593"
+ },
+ "power_steps": {
+  "source": "1b58cbb9ff2c4daf",
+  "runs": 27,
+  "digest": "781ea15de2588ff"
+ },
+ "rabbit_months": {
+  "source": "438960e99dd8f19d",
+  "runs": 16,
+  "digest": "-1299df52d478d0a6"
+ },
+ "seating_plan": {
+  "source": "-3c4f3b013ffb156c",
+  "runs": 26,
+  "digest": "-1113b2929e63471c"
+ },
+ "tree_total": {
+  "source": "25a876f618985cb4",
+  "runs": 14,
+  "digest": "-19641cfd559c189e"
+ },
+ "watchtowers": {
+  "source": "7b25b6c6a54a3671",
+  "runs": 14,
+  "digest": "c9dbb5b0f27d9f6"
+ },
+ "aisle_cost": {
+  "source": "3b22279dc46ab5f2",
+  "runs": 22,
+  "digest": "4a2afbb69ee192a5"
+ },
+ "best_stretch": {
+  "source": "-7974b322fa24e5aa",
+  "runs": 20,
+  "digest": "-5353ad1fb1ae7478"
+ },
+ "diagonal_haul": {
+  "source": "1d4a0b68cab1dd31",
+  "runs": 22,
+  "digest": "34c42a78841387f2"
+ },
+ "exact_change": {
+  "source": "-4a09cf3bcc17fd9a",
+  "runs": 18,
+  "digest": "-1abdf4c735c48085"
+ },
+ "open_lanes": {
+  "source": "-c25f08bc59d355",
+  "runs": 22,
+  "digest": "-3cffa74a10dff0f2"
+ },
+ "pack_bins": {
+  "source": "-1c28f27151a69eeb",
+  "runs": 18,
+  "digest": "-6c7266222f4644eb"
+ },
+ "plank_ways": {
+  "source": "39997cf05ea16045",
+  "runs": 16,
+  "digest": "-2fad1a910af26044"
+ },
+ "quiet_street": {
+  "source": "-78d01be1fb937e14",
+  "runs": 16,
+  "digest": "1d863c028441af8a"
+ },
+ "rising_line": {
+  "source": "2dc0d07f1040c6d",
+  "runs": 27,
+  "digest": "198f44c5ddfca90a"
+ },
+ "step_toll": {
+  "source": "-4d0a70e70ea05438",
+  "runs": 22,
+  "digest": "-5aadb2fcf2807e6e"
+ },
+ "many_shortest_routes": {
+  "source": "7eca62c8d0c3211d",
+  "runs": 16,
+  "digest": "36ecb9a2442e1564"
+ }
+}
