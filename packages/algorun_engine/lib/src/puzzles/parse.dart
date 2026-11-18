@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import '../blocks/block_graph.dart';
 import '../blocks/catalog.dart';
 import '../blocks/functions.dart';
+import '../blocks/structure.dart';
 import '../runner/validators.dart';
 import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
@@ -56,7 +58,11 @@ const puzzleFields = {
   'meta',
   'reference',
   'performance',
+  'starter',
 };
+
+/// Modes that cannot be played without a starter program.
+const starterModes = {PuzzleMode.complete, PuzzleMode.repair, PuzzleMode.predict};
 
 /// Budget ceilings. A puzzle past them could freeze a phone, so it is content
 /// error, not a harder puzzle.
@@ -224,6 +230,7 @@ final class _PuzzleSchema {
     final meta = _meta(m);
     final reference = _reference(m);
     final performance = _performance(m);
+    final starter = _starter(m, mode, io, blocks, pool, functions);
 
     if (id == null ||
         title == null ||
@@ -237,7 +244,8 @@ final class _PuzzleSchema {
         validator == null ||
         fixtures == null ||
         pool == null ||
-        functions == null) {
+        functions == null ||
+        !starter.ok) {
       return null;
     }
     return Puzzle(
@@ -267,7 +275,122 @@ final class _PuzzleSchema {
       meta: meta,
       reference: reference,
       performance: performance,
+      starter: starter.program,
     );
+  }
+
+  /// `starter`: the program the puzzle opens with (M1) — `{"graph": <block
+  /// graph>, "locked": [<block id>, …]}`. The graph is the editor's own
+  /// document format, the one reference files and saves use: data that only
+  /// the validate → lower → interpreter path ever reads.
+  ///
+  /// Checked here, because a puzzle that could not open never loads: the
+  /// graph decodes and is put together soundly (empty holes are fine), uses
+  /// only the puzzle's blocks and names, and fits the block budget. Whether
+  /// it is typed, buildable in the editor and fails (or shows) what the mode
+  /// promises is the content pipeline's job.
+  ({StarterProgram? program, bool ok}) _starter(
+    Map<String, Object?> m,
+    PuzzleMode? mode,
+    IoSpec? io,
+    BlockPolicy? blocks,
+    List<IoBinding>? pool,
+    List<FunctionSignature>? functions,
+  ) {
+    const none = (program: null, ok: true);
+    const bad = (program: null, ok: false);
+    if (!m.containsKey('starter')) {
+      if (mode != null && starterModes.contains(mode)) {
+        r.issue('starter', 'Required: a ${mode.name} puzzle opens with a starter program.');
+        return bad;
+      }
+      return none;
+    }
+    final s = r.object(m, 'starter', '');
+    if (s == null) return bad;
+    r.closed(s, const {'graph', 'locked'}, 'starter');
+    final raw = r.object(s, 'graph', 'starter', required: true);
+    final locked = r.strings(s, 'locked', 'starter') ?? const <String>[];
+    if (raw == null) return bad;
+
+    final BlockGraph graph;
+    try {
+      graph = BlockGraph.fromJson(Map<String, dynamic>.from(raw));
+    } on FormatException catch (e) {
+      r.issue('starter.graph', 'Not a block graph: ${e.message}');
+      return bad;
+    } on TypeError {
+      r.issue('starter.graph', 'Not a block graph: a field has the wrong type.');
+      return bad;
+    }
+    var ok = true;
+    for (final message in GraphStructure.validate(graph).messages) {
+      final at = message.blockId == null ? 'starter.graph' : 'starter.graph.blocks.${message.blockId}';
+      r.issue(at, message.message);
+      ok = false;
+    }
+    if (graph.blocks.isEmpty) {
+      r.issue('starter.graph', 'A starter program needs at least one block.');
+      ok = false;
+    }
+    if (blocks != null) {
+      for (final block in graph.blocks.values) {
+        // A FUNCTION comes from the puzzle's `functions`, never the palette.
+        if (block.catalogId == BlockIds.fnDef) continue;
+        if (!blocks.allows(block.catalogId)) {
+          r.issue('starter.graph.blocks.${block.id}',
+              '"${block.catalogId}" is not in blocks.allow: the player could not put it back.');
+          ok = false;
+        }
+      }
+      final maxBlocks = blocks.maxBlocks;
+      if (maxBlocks != null && graph.playerBlockCount > maxBlocks) {
+        r.issue('starter.graph',
+            'Has ${graph.playerBlockCount} blocks, but blocks.maxBlocks is $maxBlocks.');
+        ok = false;
+      }
+    }
+    if (io != null && pool != null && functions != null) {
+      final names = <String, ValueType>{
+        for (final b in pool) b.name: b.type,
+        for (final f in functions)
+          for (final p in f.params) p.name: p.type,
+        for (final b in io.inputs) b.name: b.type,
+      };
+      for (final entry in graph.variables.entries) {
+        final declared = names[entry.key];
+        if (declared == null) {
+          r.issue('starter.graph.variables.${entry.key}',
+              '"${entry.key}" is not an input or a variable of this puzzle.');
+          ok = false;
+        } else if (declared != entry.value) {
+          r.issue('starter.graph.variables.${entry.key}',
+              'The puzzle makes "${entry.key}" a $declared, not ${entry.value}.');
+          ok = false;
+        }
+      }
+    }
+    for (final (i, id) in locked.indexed) {
+      if (!graph.blocks.containsKey(id)) {
+        r.issue('starter.locked[$i]', 'No block "$id" in starter.graph.');
+        ok = false;
+      }
+    }
+    if (mode == PuzzleMode.predict) {
+      if (locked.isNotEmpty) {
+        r.issue('starter.locked', 'A predict puzzle shows its program read-only; nothing needs locking.');
+        ok = false;
+      }
+      // The answer is entered on the number pad or as TRUE / FALSE.
+      final out = io?.output;
+      if (out != null && out != ValueType.number && out != ValueType.boolean) {
+        r.issue('io.output.type',
+            'A predict puzzle is answered on the number pad or with TRUE / FALSE: the output must be num or bool, not $out.');
+        ok = false;
+      }
+    }
+    if (!ok) return bad;
+    return (program: StarterProgram(graph: graph, locked: locked.toSet()), ok: true);
   }
 
   /// `performance` says whether meeting the operation budget is the point of
