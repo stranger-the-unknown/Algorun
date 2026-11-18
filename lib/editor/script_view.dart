@@ -66,7 +66,11 @@ final class ScriptView extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(12, 0, 12, MediaQuery.sizeOf(context).height * 0.35),
             sliver: SliverToBoxAdapter(
               child: Builder(
-                builder: (context) => DecoratedBox(
+                builder: (context) {
+                  // END in the program outline (E1) scrolls here: the last
+                  // instruction above, this row in the lower half.
+                  revealWhenBuilt(context, controller, EditorController.endOfProgram, alignment: 0.7);
+                  return DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(
@@ -82,7 +86,8 @@ final class ScriptView extends StatelessWidget {
                       onTap: () => HolePicker.open(context, controller, PortRef.mainBody),
                     ),
                   ),
-                ),
+                );
+                },
               ),
             ),
           ),

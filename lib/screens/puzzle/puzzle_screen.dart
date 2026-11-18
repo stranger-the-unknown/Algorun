@@ -7,6 +7,7 @@ import '../../editor/editor_bars.dart';
 import '../../editor/editor_controller.dart';
 import '../../editor/givens_bar.dart';
 import '../../editor/palette_tray.dart';
+import '../../editor/program_outline.dart';
 import '../../editor/script_view.dart';
 import '../../l10n/content_text.dart';
 import '../../l10n/l10n.dart';
@@ -439,6 +440,12 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
                   tooltip: l.openGuide,
                   onPressed: _openGuide,
                   icon: const Icon(Icons.menu_book_outlined),
+                ),
+                IconButton(
+                  key: const Key('open-outline'),
+                  tooltip: l.programOutline,
+                  onPressed: () => ProgramOutline.show(context, _controller),
+                  icon: const Icon(Icons.format_list_numbered),
                 ),
                 PopupMenuButton<String>(
                   tooltip: l.programOptions,

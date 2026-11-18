@@ -507,6 +507,35 @@ final class EditorController extends ChangeNotifier {
     if (unfolded) foldsVersion++;
   }
 
+  /// What [scrollToEnd] asks to be revealed: the "add step" row after the
+  /// last instruction of the program.
+  static const String endOfProgram = '@end';
+
+  /// Goes to [id] (E1, the program outline): selected, scrolled into view,
+  /// whatever was folded around it opened. Not an edit.
+  void jumpTo(String id) {
+    if (!graph.blocks.containsKey(id)) return;
+    selectedBlockId = id;
+    activeHole = null;
+    _reveal(id);
+    notifyListeners();
+  }
+
+  /// Scrolls [id] into view without touching the selection.
+  void scrollTo(String id) {
+    if (!graph.blocks.containsKey(id)) return;
+    _reveal(id);
+    notifyListeners();
+  }
+
+  /// Scrolls to the end of the program without touching the selection.
+  void scrollToEnd() {
+    if (graph.entryIds.isEmpty) return;
+    revealId = endOfProgram;
+    revealEpoch++;
+    notifyListeners();
+  }
+
   /// A tile calls this once it is on screen; true means scroll to it.
   /// [epoch] must match the [_reveal] that asked for this id.
   bool takeReveal(String id, int epoch) {

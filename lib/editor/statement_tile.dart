@@ -71,7 +71,7 @@ final class StatementTile extends StatelessWidget {
 ///
 /// Only adjusts scroll when the block is not already fully visible, so a
 /// short UP/DOWN inside the viewport does not jump the camera.
-void revealWhenBuilt(BuildContext context, EditorController controller, String blockId) {
+void revealWhenBuilt(BuildContext context, EditorController controller, String blockId, {double alignment = 0.3}) {
   if (controller.revealId != blockId) return;
   final epoch = controller.revealEpoch;
   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -79,7 +79,7 @@ void revealWhenBuilt(BuildContext context, EditorController controller, String b
     if (blockFullyVisible(context)) return;
     Scrollable.ensureVisible(
       context,
-      alignment: 0.3,
+      alignment: alignment,
       duration: Duration.zero,
       alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
     );

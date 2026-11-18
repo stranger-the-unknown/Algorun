@@ -190,6 +190,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get programOptions => 'Program options';
 
   @override
+  String get programOutline => 'Program outline';
+
+  @override
+  String get outlineStart => 'START';
+
+  @override
+  String get outlineEnd => 'END';
+
+  @override
+  String get goToStart => 'Go to the start of the program';
+
+  @override
+  String get goToEnd => 'Go to the end of the program';
+
+  @override
+  String get outlineEmpty => 'The program is empty.';
+
+  @override
+  String outlineLine(int number, String text) {
+    return 'Line $number: $text';
+  }
+
+  @override
   String get foldAll => 'Fold every block';
 
   @override

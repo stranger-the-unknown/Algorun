@@ -398,6 +398,48 @@ abstract class AppLocalizations {
   /// **'Program options'**
   String get programOptions;
 
+  /// No description provided for @programOutline.
+  ///
+  /// In en, this message translates to:
+  /// **'Program outline'**
+  String get programOutline;
+
+  /// No description provided for @outlineStart.
+  ///
+  /// In en, this message translates to:
+  /// **'START'**
+  String get outlineStart;
+
+  /// No description provided for @outlineEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'END'**
+  String get outlineEnd;
+
+  /// No description provided for @goToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the start of the program'**
+  String get goToStart;
+
+  /// No description provided for @goToEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the end of the program'**
+  String get goToEnd;
+
+  /// No description provided for @outlineEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The program is empty.'**
+  String get outlineEmpty;
+
+  /// No description provided for @outlineLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {number}: {text}'**
+  String outlineLine(int number, String text);
+
   /// No description provided for @foldAll.
   ///
   /// In en, this message translates to:

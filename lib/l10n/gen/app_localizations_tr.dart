@@ -190,6 +190,29 @@ class AppLocalizationsTr extends AppLocalizations {
   String get programOptions => 'Program seçenekleri';
 
   @override
+  String get programOutline => 'Program özeti';
+
+  @override
+  String get outlineStart => 'BAŞ';
+
+  @override
+  String get outlineEnd => 'SON';
+
+  @override
+  String get goToStart => 'Programın başına git';
+
+  @override
+  String get goToEnd => 'Programın sonuna git';
+
+  @override
+  String get outlineEmpty => 'Program boş.';
+
+  @override
+  String outlineLine(int number, String text) {
+    return 'Satır $number: $text';
+  }
+
+  @override
   String get foldAll => 'Tüm blokları katla';
 
   @override

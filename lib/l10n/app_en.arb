@@ -172,6 +172,23 @@
   "puzzleChangedNotice": "This puzzle changed since you last played it. Your program was kept; RUN shows what to update.",
   "solved": "Solved",
   "programOptions": "Program options",
+  "programOutline": "Program outline",
+  "outlineStart": "START",
+  "outlineEnd": "END",
+  "goToStart": "Go to the start of the program",
+  "goToEnd": "Go to the end of the program",
+  "outlineEmpty": "The program is empty.",
+  "outlineLine": "Line {number}: {text}",
+  "@outlineLine": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  },
   "foldAll": "Fold every block",
   "unfoldAll": "Unfold every block",
   "clearProgram": "Clear the program",
