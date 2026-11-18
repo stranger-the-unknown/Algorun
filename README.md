@@ -4,7 +4,7 @@ Android-first algorithm puzzle game. Construct the algorithm with typed blocks. 
 
 Engine is pure Dart (`packages/algorun_engine`). Content validation is a separate package (`packages/algorun_content`) and is not shipped as app UI logic.
 
-**Status:** H is in: heaps of numbers (NEW MIN HEAP / NEW MAX HEAP, INSERT, TAKE TOP…) and world 09 (Heaps) with 15 puzzles; before it, L2 brought player functions, recursion and world 12 (Recursion & Backtracking, 15 puzzles) — 149 campaign puzzles in all. Every listed puzzle passes the seven-level content pipeline with an independent oracle; the game plays in English or Turkish. See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing, and [`docs/MILESTONE_H.md`](docs/MILESTONE_H.md) for the latest milestone.
+**Status (2026-11-18):** 204 campaign puzzles in 15 worlds. Five milestones were merged together: a step-by-step trace of a visible case (T1), editor comfort — block search, copy / paste, folds, drag, an outline (E1), puzzles that open with a program — complete, repair and predict (M1), text, deque, SORT and pair blocks with world 15 (L3), and a fourth content batch of 36 puzzles (MS16). Every listed puzzle passes the seven-level content pipeline with an independent oracle; the game plays in English or Turkish. See [`docs/PROJECT_STATE.md`](docs/PROJECT_STATE.md) before continuing; it points to each milestone's document.
 
 Play in the browser: https://stranger-the-unknown.github.io/algorun-play/ (built web files only; publish an update with `tool/publish_web.sh`).
 

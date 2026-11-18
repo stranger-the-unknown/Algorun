@@ -3,7 +3,11 @@
 Handoff document for the next coding agent. Read this before changing
 anything. It is written so you can continue without any previous conversation.
 
-**Current state: H — heaps — is in (see MILESTONE_H.md): heaps of numbers (NEW MIN HEAP / NEW MAX HEAP, INSERT, TAKE TOP, TOP, SIZE, IS EMPTY) and world 09 Heaps with 15 puzzles; 149 campaign puzzles. Before it, L2 (MILESTONE_L2.md) brought player functions, recursion and world 12 (15 puzzles). Versions before: tag `v0.3-l2` (before H), `v0.2-ms15` (before L2).**
+**Current state (2026-11-18): five milestones built in parallel sessions are merged — T1 step-by-step trace, E1 editor comfort, M1 complete / repair / predict puzzles, L3 the algorun-lang language additions (text, deque, SORT, pairs, deep COPY) with world 15, and MS16 content batch 4. 204 campaign puzzles in 15 worlds (209 files with the five probes). Each milestone's document is the detailed handoff for its area: [`MILESTONE_T1.md`](MILESTONE_T1.md), [`MILESTONE_E1.md`](MILESTONE_E1.md), [`MILESTONE_M1.md`](MILESTONE_M1.md), [`MILESTONE_L3.md`](MILESTONE_L3.md), [`MILESTONE_16.md`](MILESTONE_16.md). See "The 2026-11-18 merge" below for what the merge itself changed and what is still open.**
+
+**The playtest freeze is lifted (owner, 2026-11-18).** The owner played little, reported no problem beyond the sibling-IF picker bug (fixed in 63ad3c6), and asked for all five lines of work at once. Notes below that say "wait for the playtest" are history.
+
+**Before the merge: H — heaps — is in (see MILESTONE_H.md): heaps of numbers (NEW MIN HEAP / NEW MAX HEAP, INSERT, TAKE TOP, TOP, SIZE, IS EMPTY) and world 09 Heaps with 15 puzzles; 149 campaign puzzles. Before it, L2 (MILESTONE_L2.md) brought player functions, recursion and world 12 (15 puzzles). Versions before: tag `v0.3-l2` (before H), `v0.2-ms15` (before L2).**
 **Why the corpus grows before the playtest (user decision, 2026-09-30):** the user's subscription ends around 2026-10-10; they want the game developed as far as possible now, and will playtest afterwards and bring notes to the next development month. Plan: MS15 content (Foundations, then thin worlds) → recursion and player functions only if content is done by 2026-10-05 → freeze on 2026-10-09 / 10 (tests, APK, web build, a test checklist in `bekleyen-isler.md`). See [`MILESTONE_15.md`](MILESTONE_15.md).
 
 **Frozen for playtest on 2026-10-02** (tag `freeze-2026-10-02`, a week before the planned 10-09/10 date because development was done): every suite green (engine 381, content 86, Flutter 517, validator 149/149), release APK `Algorun-2026-10-02.apk` in the repo root (untracked; signed with the same debug key as earlier APKs, so it installs over them and keeps progress) smoke-tested on the `algorun_phone` emulator, the playtest checklist in `bekleyen-isler.md` (git-excluded). The user considers the game essentially finished once the playtest finds no serious bugs; after that, work is mainly fixes from the notes and more puzzles as they play. Campaign locks stay off until the user calls the game ready.
@@ -31,6 +35,57 @@ MS12 `c3f3d5d75c128f62ea1547715bb89a0f62d41857`,
 MS13 `10f6ec447778b92bf65eab579ba17d904cb6df17`, U1 — see `git log` (the
 commit titled "U1: Turkish localization, block reference, number entry and
 puzzle variables").
+
+---
+
+## The 2026-11-18 merge
+
+Five worktree branches, each from `main` = `4fbbfed`, merged in this order:
+T1 (`claude/t1-step-trace-d1bb5c`), E1 (`claude/e1-editor-8a8a35`), M1
+(`claude/m1-puzzle-modes-014876`), L3 (`claude/l3-lang-import-30795c`), MS16
+(`claude/ms16-content-be9897`).
+
+| Milestone | What it added | Details |
+|---|---|---|
+| T1 | From the results screen, a visible case runs one instruction at a time: forward / back, play / pause, the block that just ran is marked, values and data structures are drawn, open calls are listed. Hidden cases are never traceable. | `MILESTONE_T1.md` — `recordTrace`, `traceVisibleCase`, `TraceLimits`, `lib/screens/trace/`, `lib/state/trace_session.dart` |
+| E1 | Block search in the picker and palette, COPY / PASTE, folds that never hide the selection, long-press drag of instructions, a numbered program outline with START / END. | `MILESTONE_E1.md` — `EditorController.checkMove` / `moveTo` / `paste`, `lib/editor/block_*.dart`, `program_outline.dart` |
+| M1 | Puzzles can open with a starter program (`starter: {graph, locked}`); complete, repair and predict modes are playable; validator rules for starters; nine puzzles in worlds 01, 02 and 04. | `MILESTONE_M1.md` — `puzzles/predict.dart`, `starter_check.dart`, `lib/screens/puzzle/predict_view.dart` |
+| L3 | algorun-lang D1 and D5–D12: text blocks, deque blocks, SORT, pairs (with a fixture form), a deep COPY, CALL with up to six values, missing-RETURN and SORT-type static checks; `blocks.texts`; world 15 "Text, Sorting & Pairs" with ten puzzles. | `MILESTONE_L3.md`, `MILESTONE_L3_PLAN.md` |
+| MS16 | 36 puzzles with the pre-L3 blocks across eleven worlds; tier 5 went from 2 to 15. | `MILESTONE_16.md` |
+
+**What the merge itself changed (not in any milestone document):**
+
+- `EditorController.canDrag` refuses a locked block and a read-only program,
+  so E1's drag respects M1's locks (`test/puzzle_modes_test.dart`, "a locked
+  block cannot be deleted, moved or changed").
+- `lib/editor/statement_tile.dart`: the list-end drop anchor (E1) sits inside
+  M1's `if (!controller.readOnly)`.
+- The ARB files and `assets/l10n/content_tr.json` were merged by key;
+  `lib/l10n/gen` and `content/coverage.json` were regenerated.
+- Campaign sizes pinned in tests: 204 campaign puzzles, 209 with the probes;
+  Foundations 15, Arrays 20. The pipeline test's examples of things still
+  blocked are the `bit_manipulation` family and the `ops` mode.
+
+**Checked across milestones:** L3's new instructions lower to `ExprStmt`, so
+the trace stops on them like any other; a predict puzzle's result rows have
+no trace button (they are answers, not a run); the engine's
+`trace_parity_test` passes with every merged puzzle.
+
+**Open, the owner's decisions:**
+
+- **Number model (L3).** Arithmetic is still Dart `num` as before L3.
+  algorun-lang's signed 64-bit integers cannot be exact in a browser. Four
+  options were measured (`MILESTONE_L3_PLAN.md` §5); the recommendation is
+  "safe whole numbers": whole numbers only, DIVIDE truncates, a result
+  outside ±(2^53 − 1) is "This number is too big." on every platform. Not
+  implemented until the owner says so.
+- Campaign locks are still off; publishing an APK or the web build with this
+  merge waits for the owner.
+
+**Not tested:** a physical phone, TalkBack, and iOS for every milestone; the
+web build for T1, E1, M1 and MS16 on their own branches. Full content
+validation now takes about 29 s on this machine (MS12 asked for it to stay
+fast; `MILESTONE_16.md` "Known limits").
 
 ---
 
@@ -609,10 +664,17 @@ Authoring contract for people and AI sessions:
 [`CONTENT_AUTHORING.md`](CONTENT_AUTHORING.md). Details:
 [`MILESTONE_12.md`](MILESTONE_12.md).
 
-### Editor (MS3, MS13) — do not regress
+### Editor (MS3, MS13, E1) — do not regress
 
-Scratch-style vertical stacks + typed holes, tap to place. No canvas, no
-drag, no TextField (names are chips, numbers a pad). Labels via
+Scratch-style vertical stacks + typed holes, tap to place. No canvas; no
+TextField except the opt-in block search (names are chips, numbers a pad);
+the selection bar is UP / DOWN / OUT / IN / CLONE / DELETE for instructions,
+REPLACE / DELETE for values, COPY for both. E1 added search, copy / paste,
+long-press drag (`EditorController.checkMove` is the rule), the outline, and
+folds that never hide the selection; M1 added locked blocks, read-only
+programs and Start over; L3 added TEXT chips and COPY's two name chips. The
+rules for each are in `MILESTONE_E1.md`, `MILESTONE_M1.md` and
+`MILESTONE_L3.md` and must not regress either. Labels via
 `BlockChrome` (GREATER THAN, never `cmp.gt`). IF + ELSE draw as one card.
 
 - **Typed insertion.** Picker = `allowlist ∩ GraphTyping.compatiblePlacements`
@@ -670,6 +732,17 @@ inside Turkish stories and hints. Turkish capitals go through `l.upper()`.
 The block reference (Blok Rehberi, `/guide`) opens from home, settings, the
 puzzle app bar and the piece picker. Details:
 [`MILESTONE_U1.md`](MILESTONE_U1.md).
+
+## Test results after the 2026-11-18 merge
+
+Run on the merged tree (Flutter 3.47.2, Linux):
+
+| Suite | Result |
+|---|---|
+| `packages/algorun_engine` `dart analyze` / `dart test` | no issues / **487 passed** |
+| `packages/algorun_content` `dart analyze` / `dart test` | no issues / **114 passed** |
+| Content validator, with references and `--coverage` | **204 of 204** campaign puzzles accepted, 5 probes checked, `OK 209 puzzle(s), 5 warning(s)` (the five unlisted probes) |
+| `flutter analyze` / `flutter test` | no issues / **820 passed** |
 
 ## Test results at U1 closeout
 
@@ -738,23 +811,22 @@ test waits on it forever.
 - **Reference authoring has no tool.** References are hand-authored JSON checked by the validator; saving an editor graph as a reference would make authoring scale. MS12 authoring used scratch scripts outside the repository.
 - **Random inputs are for checking only (MS12).** Oracles sample small inputs to compare with the reference; nothing generates shipped fixtures. A future generator must produce plain `TestCase` data for `TestRunner.runCases`, deterministic and within `FixtureLimits`, never executable content.
 - **Content pipeline limits (MS12).** Redundancy relies on an honest `pattern` plus program structure — a differently programmed restatement can pass as "related". Oracles are hand-written per puzzle and only as independent as their author made them; sampled inputs are small. Coverage targets are a plan; difficulty advice is a heuristic.
-- **Modes without a UI.** complete, repair, trace, predict, structure and ops need a starter program or an answer input the schema and editor do not have; every shipped puzzle is build-style in its mode (build, budget, optimize, restricted, edge).
+- **Modes without a UI.** Since M1 complete, repair and predict are playable. `trace`, `structure` and `ops` (and `complexity`, by decision) remain blocked; what each needs is in `MILESTONE_M1.md` "The remaining modes".
 - **World size (MS14).** Completion still needs every listed puzzle: Arrays is 9 puzzles before four worlds open, Graphs 13. Decide on a mastery threshold after the playtest.
 - **World prerequisites.** Backtracking (world 12) requires `recursion`, which no world teaches (warning). Dynamic Programming now requires `greedy` (MS12; its puzzles are iterative).
 
 ### Other
 
-- Graph nodes carry no values (the runtime graph has none). `pair` has no fixture form, runtime values or blocks; `heap` (H) has values and blocks but no fixture form, so no puzzle takes or returns one.
+- Graph nodes carry no values (the runtime graph has none). `pair` has runtime values, blocks and a fixture form since L3; `heap` (H) has values and blocks but no fixture form, so no puzzle takes or returns one.
 - A graph whose program marked a node it does not have cannot be written as canonical JSON; the results screen falls back to the display form.
 - `constraints.n` is recorded but not checked against fixture sizes.
 - `hintsUsed` is 0 until hints ship (MS9). The suite runs every case even after a failure.
-- The `PuzzleScreen` → `ResultsScreen` navigation is not pumped in a test; `runPuzzle` covers the logic.
 - The two MS1/MS3 probes stay bundled (tests, the editor seed, the screen's default route) but no world lists them; neither do the two L1 probes.
 - Graph fixtures do not enforce "stations are numbered 0 to n-1"; `fewest_rides` states it and its fixtures follow it.
 - `maxDepth` stays at 1 until player-defined functions ship; `fn.def` / `fn.call` remain unsupported and hidden.
 - Allocation has no collector: an unreachable container keeps its cells for the rest of the run.
 - Generic unification is per-block, not Hindley–Milner. The web version runs locally (`tool/web.sh`); it is not hosted anywhere.
-- **Editor (MS13).** No drag and drop: blocks move one step at a time (UP / DOWN / OUT / IN). A move is typed by `GraphTyping`, but narrowing that changes with the new position is reported by lowering at RUN. The picker has no search. Landscape phones lose the palette (the picker remains). The stress probe opens from Settings in debug builds only.
+- **Editor (E1).** Instructions are dragged (long press, then move); values are not. A drop is typed where it lands; an instruction left behind can still be invalidated and is reported at RUN. UP / DOWN / OUT / IN keep the looser MS13 rule. One clipboard block per visit; no multi-selection. Search opens the system keyboard (opt-in). Landscape phones lose the palette (the picker remains). The stress probe opens from Settings in debug builds only.
 - **Device testing (MS13).** Emulator only (software rendering, three-button navigation); no physical phone, no TalkBack pass, no frame timing on real hardware yet.
 - **Languages (U1).** English and Turkish only. Engine sentences are matched by their English text, so changing one needs its ARB entry (the scan test says which). Fixture values on the results screen are JSON in both languages. Puzzle input and variable names stay English (they are the program's identifiers).
 - `ARCHITECTURE.md` spells the validator command `dart run algorun_content:validate`; use the command below.
@@ -810,9 +882,47 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | 15 | Content batch 3: Foundations 2 → 12, +24 across ten worlds (119 in the campaign) | complete |
 | L2 | Player functions and recursion; world 12 Recursion & Backtracking with 15 puzzles (134 in the campaign) | complete |
 | **H** | Heaps of numbers; world 09 Heaps with 15 puzzles (149 in the campaign) | **complete** |
-| later | Language: starter programs for complete / repair modes, pairs, text | planned, each unblocks content; do not start until playtest |
+| T1 | Step-by-step trace of a visible case | complete (2026-11-18) |
+| E1 | Editor comfort: search, copy / paste, folds, drag, outline | complete (2026-11-18) |
+| M1 | Starter programs; complete, repair and predict puzzles (+9) | complete (2026-11-18) |
+| L3 | Text, deque, SORT, pairs, deep COPY from algorun-lang; world 15 (+10) | complete (2026-11-18); number model open |
+| 16 | Content batch 4: 36 puzzles (204 in the campaign) | complete (2026-11-18) |
+| later | Number model (owner decision, `MILESTONE_L3_PLAN.md` §5); modes trace / structure / ops; building list or tree nodes, bit manipulation, edge weights | only when the owner asks |
 
-## Content backlog and coverage (after H)
+## Content backlog and coverage (after the 2026-11-18 merge)
+
+**204 campaign puzzles** (+ 5 unlisted probes). Source of truth:
+`content/coverage.json`.
+
+| World | Have / target |
+|---|---|
+| 01 Foundations | 15 / 12 |
+| 02 Arrays | 20 / 30 |
+| 03 Hash Maps | 14 / 25 |
+| 04 Two Pointers | 15 / 20 |
+| 05 Sliding Window | 12 / 20 |
+| 06 Stack & Queue | 13 / 25 |
+| 07 Linked Lists | 13 / 20 |
+| 08 Trees | 15 / 30 |
+| 09 Heaps | 15 / 15 |
+| 10 Graphs | 18 / 30 |
+| 11 Greedy | 11 / 20 |
+| 12 Recursion & Backtracking | 15 / 15 |
+| 13 Dynamic Programming | 14 / 30 |
+| 14 Advanced Algorithms | 4 / 8 |
+| 15 Text, Sorting & Pairs (L3) | 10 / no target yet |
+
+By tier: 1: 15 · 2: 53 · 3: 63 · 4: 58 · 5: 15. By mode: build 119 · edge 32
+· budget 30 · optimize 8 · restricted 6 · complete 3 · repair 3 · predict 3.
+
+**Still blocked, and not faked:** building new list or tree nodes, bit
+manipulation, edge weights on graphs. Text, built-in sorting and pairs are
+open since L3; MS16 was written before L3 merged and uses none of them, so
+the old worlds have no text / SORT / pair puzzles yet. Ideas MS16 kept in
+reserve: edit distance, a palindrome list in no extra memory, the shortest
+stretch with the top frequency (`MILESTONE_16.md`).
+
+### Before the merge (after H) — history
 
 Accepted: **149 campaign puzzles** (+ 5 unlisted probes) against a planning
 target of ~300 (`content/coverage_targets.json`). That target is paused.
@@ -849,7 +959,7 @@ built-in sorting, bit manipulation, pairs / tuples, edge weights on graphs
 (weighted shortest paths use a grid of costs since H). Product modes that
 need a starter program stay blocked.
 
-**Next content decision waits on playtest.** Do not add another batch, and do
+**(History, lifted 2026-11-18.)** Next content decision waits on playtest. Do not add another batch, and do
 not start the language milestone, until the player has tried this one.
 
 ## Milestone 14 (this batch — done)
@@ -893,5 +1003,11 @@ Each world now lists its puzzles by tier.
 | [`MILESTONE_W1.md`](MILESTONE_W1.md) | complete — the web version on a computer (browser save, wide windows) |
 | [`MILESTONE_15.md`](MILESTONE_15.md) | complete — content batch 3 (Foundations 2 → 12, +24 across ten worlds) |
 | [`MILESTONE_L2.md`](MILESTONE_L2.md) | complete — player functions and recursion; world 12 opens |
-| this file | MS14 handoff |
+| [`MILESTONE_H.md`](MILESTONE_H.md) | complete — heaps of numbers; world 09 |
+| [`MILESTONE_T1.md`](MILESTONE_T1.md) | complete — step-by-step trace |
+| [`MILESTONE_E1.md`](MILESTONE_E1.md) | complete — editor comfort for long programs |
+| [`MILESTONE_M1.md`](MILESTONE_M1.md) | complete — starter programs; complete, repair, predict |
+| [`MILESTONE_L3.md`](MILESTONE_L3.md) | complete — algorun-lang additions; world 15; number model open ([plan](MILESTONE_L3_PLAN.md)) |
+| [`MILESTONE_16.md`](MILESTONE_16.md) | complete — content batch 4 (36 puzzles) |
+| this file | handoff after the 2026-11-18 merge |
 
