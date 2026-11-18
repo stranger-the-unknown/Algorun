@@ -155,19 +155,19 @@ class _TraceScreenState extends ConsumerState<TraceScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _CaseStrip(result: args.caseResult),
-                  const Divider(height: 1),
+                  Divider(height: 1, color: context.palette.border),
                   Expanded(
                     child: wide
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(flex: 5, child: program),
-                              const VerticalDivider(width: 1),
+                              VerticalDivider(width: 1, color: context.palette.border),
                               Expanded(
                                 flex: 4,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [status, const Divider(height: 1), Expanded(child: values)],
+                                  children: [status, Divider(height: 1, color: context.palette.border), Expanded(child: values)],
                                 ),
                               ),
                             ],
@@ -176,14 +176,14 @@ class _TraceScreenState extends ConsumerState<TraceScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(flex: 5, child: program),
-                              const Divider(height: 1),
+                              Divider(height: 1, color: context.palette.border),
                               status,
-                              const Divider(height: 1),
+                              Divider(height: 1, color: context.palette.border),
                               Expanded(flex: 4, child: values),
                             ],
                           ),
                   ),
-                  const Divider(height: 1),
+                  Divider(height: 1, color: context.palette.border),
                   _Controls(
                     session: session,
                     drag: _drag,
@@ -505,6 +505,9 @@ class _Controls extends StatelessWidget {
                 key: const Key('trace-play'),
                 tooltip: session.playing ? l.tracePause : l.tracePlay,
                 onPressed: total > 1 ? session.togglePlay : null,
+                // The app's icon-button theme paints icons in the text
+                // colour; on the accent they need the accent's own.
+                style: IconButton.styleFrom(backgroundColor: p.accent, foregroundColor: p.accentFg),
                 icon: Icon(session.playing ? Icons.pause : Icons.play_arrow),
               ),
               IconButton(

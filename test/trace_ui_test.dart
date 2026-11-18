@@ -451,7 +451,7 @@ void main() {
       expect(variableTexts(tester, 'q'), ['q', 'front', '21', '', '22']);
       expect(variableTexts(tester, 'h'), ['h', 'top', '39', '', '31']);
       expect(variableTexts(tester, 's'), ['s', 'empty']);
-      expect(variableTexts(tester, 'm'), ['m', 'changed', '41 → 42']);
+      expect(variableTexts(tester, 'm'), ['m', 'changed', '41: 42']);
     });
 
     testWidgets('linked nodes are a chain with the names that hold each node; a tree is an outline', (tester) async {

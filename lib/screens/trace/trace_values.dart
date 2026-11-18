@@ -62,7 +62,7 @@ String traceValueText(
           final chain = traceChain(recording, id, step, max: maxItems);
           return [
             for (final node in chain.nodes) '${node.value}',
-            if (chain.loopsBack) '↻' else if (chain.more) '…',
+            if (chain.loopsBack || chain.more) '…',
           ].join(' → ');
         case TraceTreeNode(:final value, :final left, :final right):
           if (left is TraceNothing && right is TraceNothing) return '($value)';
@@ -419,7 +419,7 @@ final class TraceValueView extends StatelessWidget {
         for (var i = 0; i < shown; i++)
           _Cell(
             text:
-                '${_text(o.entries[i].key, l)} → ${_text(o.entries[i].value, l)}',
+                '${_text(o.entries[i].key, l)}: ${_text(o.entries[i].value, l)}',
             changed: changed.contains(i),
           ),
         if (o.entries.length > shown) _more(context, o.entries.length - shown),
@@ -451,9 +451,7 @@ final class TraceValueView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 18, left: 2),
           child: Text(
-            chain.loopsBack
-                ? '↻ ${l.traceLoopsBack}'
-                : (chain.more ? '…' : 'NOTHING'),
+            chain.loopsBack ? l.traceLoopsBack : (chain.more ? '…' : 'NOTHING'),
             style: TextStyle(
               color: chain.loopsBack ? p.warn : p.muted,
               fontSize: 12,
@@ -501,7 +499,7 @@ final class TraceValueView extends StatelessWidget {
                   ),
                 ),
               _Cell(
-                text: again ? '↻ ${node.value}' : '${node.value}',
+                text: again ? '… ${node.value}' : '${node.value}',
                 changed: step.changedObjects.contains(ref.id),
               ),
               if (labels[ref.id] case final names?)
@@ -634,9 +632,13 @@ class _Cell extends StatelessWidget {
     final p = context.palette;
     final caption = TextStyle(color: p.faint, fontSize: 11, height: 1.2);
     final box = Container(
-      constraints: const BoxConstraints(minWidth: 30, minHeight: 28),
+      // As wide as its text, within limits: cells sit side by side.
+      constraints: const BoxConstraints(
+        minWidth: 30,
+        maxWidth: 160,
+        minHeight: 28,
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: changed
             ? Color.alphaBlend(p.warn.withValues(alpha: 0.22), p.subtle)
@@ -647,39 +649,40 @@ class _Cell extends StatelessWidget {
           width: changed ? 2 : 1,
         ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 3),
-              child: Icon(
-                icon,
-                size: 13,
-                color: p.ok,
-                semanticLabel: iconLabel,
+      child: Center(
+        widthFactor: 1,
+        heightFactor: 1,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 3),
+                child: Icon(
+                  icon,
+                  size: 13,
+                  color: p.ok,
+                  semanticLabel: iconLabel,
+                ),
+              ),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: p.fg,
+                  fontSize: 13,
+                  fontWeight: changed ? FontWeight.w800 : FontWeight.w600,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
               ),
             ),
-          Flexible(
-            child: Text(
-              text,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: p.fg,
-                fontSize: 13,
-                fontWeight: changed ? FontWeight.w800 : FontWeight.w600,
-                fontFeatures: const [FontFeature.tabularFigures()],
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
-    final cell = ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 160),
-      child: box,
-    );
+    final cell = box;
     if (above == null && below == null) {
       return Semantics(
         label: changed ? '$text, ${context.l10n.traceChanged}' : null,
