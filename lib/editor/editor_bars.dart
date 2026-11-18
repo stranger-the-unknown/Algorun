@@ -111,7 +111,7 @@ final class BlockActionsBar extends StatelessWidget {
           icon: Icons.swap_horiz,
           label: l.actionReplace,
           tooltip: l.replaceValue,
-          onPressed: () => _replace(context),
+          onPressed: info.canDelete ? () => _replace(context) : null,
         ),
       _BarAction(
         icon: Icons.delete_outline,
@@ -139,6 +139,10 @@ final class BlockActionsBar extends StatelessWidget {
                 children: [
                   Text(l.selected, style: AppText.label(context)),
                   const SizedBox(width: 8),
+                  if (info.locked) ...[
+                    Icon(Icons.lock_outline, key: const Key('selection-locked'), size: 16, color: context.palette.muted, semanticLabel: l.lockedBlock),
+                    const SizedBox(width: 4),
+                  ],
                   Expanded(
                     child: Text(
                       title,

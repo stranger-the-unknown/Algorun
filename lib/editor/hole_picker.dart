@@ -20,6 +20,8 @@ abstract final class HolePicker {
     EditorController controller,
     PortRef hole,
   ) async {
+    // A program that is only shown (predict, M1) takes no pieces.
+    if (controller.readOnly) return;
     controller.selectHole(hole);
     await _keepAboveSheet(context);
     if (!context.mounted) return;

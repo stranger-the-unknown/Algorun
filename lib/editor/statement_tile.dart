@@ -166,7 +166,12 @@ class _Hat extends StatelessWidget {
   Widget _hatBody(BuildContext context) {
     final exprIns = def.inputs.where((p) => p.isExpr).toList();
     final name = block.literals['name'] as String?;
-    final children = <Widget>[BlockLabel(chrome.label)];
+    final children = <Widget>[
+      // A block the puzzle locked (M1) says so before it is tapped.
+      if (controller.isLocked(block.id))
+        Icon(Icons.lock_outline, size: 14, color: context.palette.muted, semanticLabel: context.l10n.lockedBlock),
+      BlockLabel(chrome.label),
+    ];
     if (_named(block.catalogId)) {
       // INCREMENT / DECREMENT only take numbers; SET takes any variable.
       final numbersOnly = block.catalogId != BlockIds.varSet;
@@ -174,6 +179,7 @@ class _Hat extends StatelessWidget {
         name: name ?? context.l10n.namePlaceholder,
         onTap: () {
           controller.selectBlock(block.id);
+          if (!controller.canEdit(block.id)) return;
           LiteralSheet.showVariable(
             context,
             controller,
@@ -314,7 +320,9 @@ class _CBlock extends StatelessWidget {
                         rail: strip,
                         onRemove: () => controller.deleteTree(elseBlock.id),
                       )
-                    : _AddElse(controller: controller, ifId: block.id),
+                    : controller.readOnly
+                        ? const SizedBox.shrink()
+                        : _AddElse(controller: controller, ifId: block.id),
             ],
             const SizedBox(height: 4),
           ],
@@ -326,7 +334,12 @@ class _CBlock extends StatelessWidget {
   Widget _hat(BuildContext context) {
     final exprIns = def.inputs.where((p) => p.isExpr).toList();
     final name = block.literals['name'] as String?;
-    final children = <Widget>[BlockLabel(chrome.label)];
+    final children = <Widget>[
+      // A block the puzzle locked (M1) says so before it is tapped.
+      if (controller.isLocked(block.id))
+        Icon(Icons.lock_outline, size: 14, color: context.palette.muted, semanticLabel: context.l10n.lockedBlock),
+      BlockLabel(chrome.label),
+    ];
     // FUNCTION name (parameters): given by the puzzle, not editable (L2).
     final signature = FunctionSignature.of(block);
     if (signature != null) {
@@ -339,6 +352,7 @@ class _CBlock extends StatelessWidget {
         name: name ?? context.l10n.itemPlaceholder,
         onTap: () {
           controller.selectBlock(block.id);
+          if (!controller.canEdit(block.id)) return;
           LiteralSheet.showVariable(
             context,
             controller,
@@ -478,11 +492,12 @@ class _Well extends StatelessWidget {
                   StatementTile(controller: controller, blockId: id),
                   const SizedBox(height: 6),
                 ],
-                AddStepButton(
-                  key: ValueKey('add-step:$parentId.$port'),
-                  compact: ids.isNotEmpty,
-                  onTap: () => HolePicker.open(context, controller, hole),
-                ),
+                if (!controller.readOnly)
+                  AddStepButton(
+                    key: ValueKey('add-step:$parentId.$port'),
+                    compact: ids.isNotEmpty,
+                    onTap: () => HolePicker.open(context, controller, hole),
+                  ),
               ],
             ),
           ),

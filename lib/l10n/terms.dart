@@ -39,8 +39,24 @@ String modeText(PuzzleMode mode, AppLocalizations l) => switch (mode) {
       PuzzleMode.optimize => l.modeOptimize,
       PuzzleMode.edge => l.modeEdge,
       PuzzleMode.restricted => l.modeRestricted,
+      PuzzleMode.complete => l.modeComplete,
+      PuzzleMode.repair => l.modeRepair,
+      PuzzleMode.predict => l.modePredict,
       _ => l.modeOther,
     };
+
+/// One line that says what a starter-program mode asks of the player (M1);
+/// null for a mode that needs no explaining.
+String? modeHelp(PuzzleMode mode, AppLocalizations l) => switch (mode) {
+      PuzzleMode.complete => l.modeHelpComplete,
+      PuzzleMode.repair => l.modeHelpRepair,
+      PuzzleMode.predict => l.modeHelpPredict,
+      _ => null,
+    };
+
+/// Whether a mode gets its own badge in the world and puzzle lists (M1): the
+/// modes that do not start from an empty editor.
+bool hasModeBadge(PuzzleMode mode) => modeHelp(mode, englishStrings) != null;
 
 /// The headline of a verdict: `WRONG ANSWER`.
 String verdictText(ResultKind kind, AppLocalizations l) => switch (kind) {

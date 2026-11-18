@@ -148,10 +148,26 @@ final class ResultsScreen extends StatelessWidget {
     }
     final suite = args.suite;
     final kind = suite.kind;
-    final style = verdictStyle(kind, context.palette, l);
+    final predict = args.puzzle.isPredict;
+    final right = suite.visible.where((c) => c.ok).length;
+    // A predict puzzle (M1) is answers, not a program: its verdict says how
+    // many were right, and nothing is said about steps or budgets.
+    final answersGraded = predict && (kind == ResultKind.correct || kind == ResultKind.wrongAnswer);
+    final base = verdictStyle(kind, context.palette, l);
+    final style = answersGraded
+        ? (
+            icon: base.icon,
+            color: base.color,
+            meaning: kind == ResultKind.correct
+                ? l.predictMeaningCorrect
+                : l.predictMeaningWrong(right, suite.visible.length),
+          )
+        : base;
     final progress = progressLines(args.progress, l, args.text);
     final engineDetail = suite.message ?? (args.validation.ok ? null : args.validation.messages.first.message);
-    final detail = performanceMessage(suite, l) ?? (engineDetail == null ? null : engineText(engineDetail, l));
+    final detail = answersGraded
+        ? null
+        : performanceMessage(suite, l) ?? (engineDetail == null ? null : engineText(engineDetail, l));
     final next = kind == ResultKind.correct ? args.next : null;
     return Scaffold(
       appBar: AppBar(title: Text(l.resultTitle)),
@@ -233,7 +249,16 @@ final class ResultsScreen extends StatelessWidget {
                         ),
                       ),
                   ],
-                  if (suite.visible.isNotEmpty) ...[
+                  if (predict && suite.visible.isNotEmpty) ...[
+                    const SizedBox(height: AppSpace.s5),
+                    _SectionLabel(l.predictAnswers),
+                    for (final (i, result) in suite.visible.indexed)
+                      _AnswerRow(number: i + 1, result: result, puzzle: args.puzzle),
+                    if (kind == ResultKind.wrongAnswer) ...[
+                      const SizedBox(height: AppSpace.s4),
+                      Text(l.predictNotShown, style: TextStyle(color: context.palette.muted, fontSize: 13, height: 1.4)),
+                    ],
+                  ] else if (suite.visible.isNotEmpty) ...[
                     const SizedBox(height: AppSpace.s5),
                     _SectionLabel(l.cases),
                     for (final result in suite.visible)
@@ -250,6 +275,18 @@ final class ResultsScreen extends StatelessWidget {
                       ),
                     ),
                   ],
+                  // The cost of a program the player did not write is not
+                  // theirs; a predict result only says how many hints it took.
+                  if (predict) ...[
+                    if (suite.metrics.hintsUsed > 0) ...[
+                      const SizedBox(height: AppSpace.s4),
+                      Text(
+                        '${l.costHints}: ${l.hintsCount(suite.metrics.hintsUsed)}',
+                        key: const Key('predict-hints'),
+                        style: TextStyle(color: context.palette.muted),
+                      ),
+                    ],
+                  ] else ...[
                   const SizedBox(height: AppSpace.s5),
                   _SectionLabel(l.whatItCost),
                   const SizedBox(height: AppSpace.s2),
@@ -267,6 +304,7 @@ final class ResultsScreen extends StatelessWidget {
                     l.hiddenNotShown,
                     style: TextStyle(color: context.palette.muted, fontSize: 13),
                   ),
+                  ],
                 ],
               ),
             ),
@@ -284,12 +322,12 @@ final class ResultsScreen extends StatelessWidget {
                     const SizedBox(height: AppSpace.s2),
                     OutlinedButton(
                       onPressed: () => Navigator.pop(context, ResultsAction.back),
-                      child: Text(l.backToPuzzle),
+                      child: Text(predict ? l.predictBack : l.backToPuzzle),
                     ),
                   ] else
                     FilledButton(
                       onPressed: () => Navigator.pop(context, ResultsAction.back),
-                      child: Text(l.backToPuzzle),
+                      child: Text(predict ? l.predictBack : l.backToPuzzle),
                     ),
                 ],
               ),
@@ -435,6 +473,77 @@ class _CostRow extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// One answer of a predict puzzle (M1): what the program was given, what the
+/// player said it returns, and whether that is right. The real answer of a
+/// wrong one is not here to show — the engine never hands it over.
+class _AnswerRow extends StatelessWidget {
+  const _AnswerRow({required this.number, required this.result, required this.puzzle});
+  final int number;
+  final CaseResult result;
+  final Puzzle puzzle;
+
+  static String _text(Object? json) => switch (json) {
+        null => 'NOTHING',
+        true => 'TRUE',
+        false => 'FALSE',
+        final List<Object?> list => '[${list.map(_text).join(', ')}]',
+        final Map<Object?, Object?> tagged => jsonEncode(tagged),
+        _ => '$json',
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final ok = result.ok;
+    final l = context.l10n;
+    final input = result.input ?? const {};
+    final detail = TextStyle(color: context.palette.muted, fontSize: 13, height: 1.4);
+    return Padding(
+      key: Key('predict-result-$number'),
+      padding: const EdgeInsets.only(top: AppSpace.s3),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                ok ? Icons.check_circle_outline : Icons.cancel_outlined,
+                size: 18,
+                color: ok ? context.palette.ok : context.palette.danger,
+              ),
+              const SizedBox(width: AppSpace.s2),
+              Text(
+                l.predictQuestionSemantics(number),
+                style: TextStyle(color: context.palette.fg, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(width: AppSpace.s2),
+              Flexible(
+                child: Text(
+                  ok ? l.predictRight : l.predictWrong,
+                  style: TextStyle(color: ok ? context.palette.muted : context.palette.warn),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 26, top: 4),
+            child: Text(
+              [for (final b in puzzle.io.inputs) '${b.name} = ${_text(input[b.name])}'].join('   '),
+              style: detail,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 26, top: 2),
+            child: Text(
+              '${l.predictYourAnswer}: ${result.actual == null ? l.predictNoAnswer : _text(result.actual)}',
+              style: detail,
+            ),
+          ),
+        ],
       ),
     );
   }

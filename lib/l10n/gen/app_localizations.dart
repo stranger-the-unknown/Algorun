@@ -2497,6 +2497,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Case {id} did not come out the way the puzzle expects.'**
   String engineCaseFailed(String id);
+
+  /// No description provided for @modeComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'complete'**
+  String get modeComplete;
+
+  /// No description provided for @modeRepair.
+  ///
+  /// In en, this message translates to:
+  /// **'repair'**
+  String get modeRepair;
+
+  /// No description provided for @modePredict.
+  ///
+  /// In en, this message translates to:
+  /// **'predict'**
+  String get modePredict;
+
+  /// No description provided for @modeHelpComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of this program is already here. Fill in what is missing, then RUN.'**
+  String get modeHelpComplete;
+
+  /// No description provided for @modeHelpRepair.
+  ///
+  /// In en, this message translates to:
+  /// **'This program has a mistake. Find it and fix it, then RUN.'**
+  String get modeHelpRepair;
+
+  /// No description provided for @modeHelpPredict.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the program. Without running it, say what it returns for each input, then CHECK.'**
+  String get modeHelpPredict;
+
+  /// No description provided for @startOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Start over'**
+  String get startOver;
+
+  /// No description provided for @startOverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start over?'**
+  String get startOverTitle;
+
+  /// No description provided for @startOverBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The program goes back to how the puzzle gave it. Your changes are replaced; UNDO brings them back.'**
+  String get startOverBody;
+
+  /// No description provided for @startOverConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Start over'**
+  String get startOverConfirm;
+
+  /// No description provided for @programReset.
+  ///
+  /// In en, this message translates to:
+  /// **'The program is back to how the puzzle gave it. UNDO brings your version back.'**
+  String get programReset;
+
+  /// No description provided for @noticeLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'This block is part of the puzzle: it stays as it is.'**
+  String get noticeLocked;
+
+  /// No description provided for @lockedBlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked block'**
+  String get lockedBlock;
+
+  /// No description provided for @predictReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'read only'**
+  String get predictReadOnly;
+
+  /// No description provided for @predictQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'QUESTION {n} OF {total}'**
+  String predictQuestion(int n, int total);
+
+  /// No description provided for @predictQuestionSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {n}'**
+  String predictQuestionSemantics(int n);
+
+  /// No description provided for @predictItReturns.
+  ///
+  /// In en, this message translates to:
+  /// **'IT RETURNS'**
+  String get predictItReturns;
+
+  /// No description provided for @predictTapToAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to answer'**
+  String get predictTapToAnswer;
+
+  /// No description provided for @predictAnswered.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} answered'**
+  String predictAnswered(int done, int total);
+
+  /// No description provided for @predictCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'CHECK'**
+  String get predictCheck;
+
+  /// No description provided for @predictChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'CHECKING'**
+  String get predictChecking;
+
+  /// No description provided for @predictMeaningCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Every answer is what the program returns.'**
+  String get predictMeaningCorrect;
+
+  /// No description provided for @predictMeaningWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'{right} of {total} answers are what the program returns.'**
+  String predictMeaningWrong(int right, int total);
+
+  /// No description provided for @predictAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR ANSWERS'**
+  String get predictAnswers;
+
+  /// No description provided for @predictRight.
+  ///
+  /// In en, this message translates to:
+  /// **'right'**
+  String get predictRight;
+
+  /// No description provided for @predictWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'not what the program returns'**
+  String get predictWrong;
+
+  /// No description provided for @predictNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'no answer'**
+  String get predictNoAnswer;
+
+  /// No description provided for @predictYourAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'your answer'**
+  String get predictYourAnswer;
+
+  /// No description provided for @predictNotShown.
+  ///
+  /// In en, this message translates to:
+  /// **'The right answer is not shown. Read the program again, step by step, or take a hint.'**
+  String get predictNotShown;
+
+  /// No description provided for @predictBack.
+  ///
+  /// In en, this message translates to:
+  /// **'BACK TO THE QUESTIONS'**
+  String get predictBack;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'That is not what the program returns for this input.'**
+  String get enginePredictWrong;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'Every answer is what the program returns.'**
+  String get enginePredictRight;
 }
 
 class _AppLocalizationsDelegate

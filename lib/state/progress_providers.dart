@@ -159,7 +159,7 @@ final class ProgressNotifier extends AsyncNotifier<PlayerSave> {
     _set(ledger.saveDraft(_current, campaign, puzzle, graph, edited: edited), now: false);
   }
 
-  ledger.RunRecordOutcome recordRun(Campaign campaign, Puzzle puzzle, BlockGraph graph, SuiteResult suite) {
+  ledger.RunRecordOutcome recordRun(Campaign campaign, Puzzle puzzle, BlockGraph? graph, SuiteResult suite) {
     if (!state.hasValue) return const ledger.RunRecordOutcome();
     final (next, outcome) = ledger.recordRun(_current, campaign, puzzle, graph, suite);
     _set(next, now: true);

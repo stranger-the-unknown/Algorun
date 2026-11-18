@@ -105,4 +105,6 @@ final _exact = <String, String Function(AppLocalizations)>{
   'Every case passed.': (l) => l.engineEveryCasePassed,
   'This case did not come out the way the puzzle expects.': (l) => l.engineThisCaseDidNotComeOutThe,
   'A hidden case did not come out the way the puzzle expects.': (l) => l.engineAHiddenCaseDidNotComeOut,
+  'That is not what the program returns for this input.': (l) => l.enginePredictWrong,
+  'Every answer is what the program returns.': (l) => l.enginePredictRight,
 };

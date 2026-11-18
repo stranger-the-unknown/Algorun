@@ -1151,5 +1151,80 @@
         "type": "String"
       }
     }
+  },
+  "modeComplete": "complete",
+  "modeRepair": "repair",
+  "modePredict": "predict",
+  "modeHelpComplete": "Part of this program is already here. Fill in what is missing, then RUN.",
+  "modeHelpRepair": "This program has a mistake. Find it and fix it, then RUN.",
+  "modeHelpPredict": "Read the program. Without running it, say what it returns for each input, then CHECK.",
+  "startOver": "Start over",
+  "startOverTitle": "Start over?",
+  "startOverBody": "The program goes back to how the puzzle gave it. Your changes are replaced; UNDO brings them back.",
+  "startOverConfirm": "Start over",
+  "programReset": "The program is back to how the puzzle gave it. UNDO brings your version back.",
+  "noticeLocked": "This block is part of the puzzle: it stays as it is.",
+  "lockedBlock": "Locked block",
+  "predictReadOnly": "read only",
+  "predictQuestion": "QUESTION {n} OF {total}",
+  "@predictQuestion": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "predictQuestionSemantics": "Question {n}",
+  "@predictQuestionSemantics": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "predictItReturns": "IT RETURNS",
+  "predictTapToAnswer": "Tap to answer",
+  "predictAnswered": "{done} of {total} answered",
+  "@predictAnswered": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "predictCheck": "CHECK",
+  "predictChecking": "CHECKING",
+  "predictMeaningCorrect": "Every answer is what the program returns.",
+  "predictMeaningWrong": "{right} of {total} answers are what the program returns.",
+  "@predictMeaningWrong": {
+    "placeholders": {
+      "right": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "predictAnswers": "YOUR ANSWERS",
+  "predictRight": "right",
+  "predictWrong": "not what the program returns",
+  "predictNoAnswer": "no answer",
+  "predictYourAnswer": "your answer",
+  "predictNotShown": "The right answer is not shown. Read the program again, step by step, or take a hint.",
+  "predictBack": "BACK TO THE QUESTIONS",
+  "enginePredictWrong": "That is not what the program returns for this input.",
+  "@enginePredictWrong": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "enginePredictRight": "Every answer is what the program returns.",
+  "@enginePredictRight": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
   }
 }

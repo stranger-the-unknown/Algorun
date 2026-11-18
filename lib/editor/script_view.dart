@@ -57,6 +57,9 @@ final class ScriptView extends StatelessWidget {
               ),
             ),
           ),
+          if (controller.readOnly)
+            const SliverPadding(padding: EdgeInsets.only(bottom: 24))
+          else
           SliverPadding(
             // Room past the end, so the last slots can scroll up above the
             // picker sheet.

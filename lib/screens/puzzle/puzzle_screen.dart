@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +8,7 @@ import '../../dev/stress_probe.dart';
 import '../../editor/editor_bars.dart';
 import '../../editor/editor_controller.dart';
 import '../../editor/givens_bar.dart';
+import '../../editor/literal_sheet.dart';
 import '../../editor/palette_tray.dart';
 import '../../editor/script_view.dart';
 import '../../l10n/content_text.dart';
@@ -22,6 +25,8 @@ import '../../state/providers.dart';
 import '../../state/run_puzzle.dart';
 import '../guide/guide_screen.dart';
 import '../results/results_screen.dart';
+
+part 'predict_view.dart';
 
 /// Route `/puzzle`, arguments `{'worldId': …, 'puzzleId': …}`.
 ///
@@ -123,6 +128,9 @@ class _PuzzleScreenState extends ConsumerState<PuzzleScreen> {
         if (opening.locked case final missing?) {
           return _LockedPuzzle(puzzle: opening.puzzle, missing: missing);
         }
+        if (opening.puzzle.isPredict) {
+          return PredictPuzzle(puzzle: opening.puzzle, save: opening.save, briefOpen: opening.briefOpen);
+        }
         return PuzzleEditor(
           puzzle: opening.puzzle,
           initialGraph: opening.opened?.graph,
@@ -183,7 +191,8 @@ abstract interface class PuzzleSaveHooks {
   void graphChanged(BlockGraph graph, {bool edited = true});
 
   /// A RUN finished. Returns what it changed in the player's progress.
-  RunRecordOutcome runFinished(BlockGraph graph, SuiteResult suite);
+  /// [graph] is null when the player built nothing (a predict puzzle, M1).
+  RunRecordOutcome runFinished(BlockGraph? graph, SuiteResult suite);
 
   /// The player is leaving the puzzle: write now.
   void leaving();
@@ -209,7 +218,7 @@ final class _SavedPuzzle implements PuzzleSaveHooks {
       notifier.saveDraft(campaign, puzzle, graph, edited: edited);
 
   @override
-  RunRecordOutcome runFinished(BlockGraph graph, SuiteResult suite) =>
+  RunRecordOutcome runFinished(BlockGraph? graph, SuiteResult suite) =>
       notifier.recordRun(campaign, puzzle, graph, suite);
 
   @override
@@ -253,7 +262,8 @@ final class PuzzleEditor extends ConsumerStatefulWidget {
 
   final Puzzle puzzle;
 
-  /// A saved program to restore.
+  /// A saved program to restore. Without one the editor opens with the
+  /// puzzle's starter program (M1), or empty.
   final BlockGraph? initialGraph;
   final PuzzleSaveHooks? save;
   final bool briefOpen;
@@ -280,7 +290,7 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
     _controller = EditorController(
       puzzle: widget.puzzle,
       seedExample: widget.puzzle.id == 'ms3_editor_probe',
-      initialGraph: widget.initialGraph,
+      initialGraph: widget.initialGraph ?? widget.puzzle.starter?.graph,
     );
     if (widget.puzzle.id == stressProbeId && widget.initialGraph == null) {
       buildStressProgram(_controller);
@@ -370,6 +380,28 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
     _controller.showFlash(EditorNotice((l) => l.programCleared));
   }
 
+  /// Back to the puzzle's starter program (M1), after asking: it replaces
+  /// everything the player did. UNDO still brings their version back.
+  Future<void> _startOver() async {
+    final l = context.l10n;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.startOverTitle),
+        content: Text(l.startOverBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel)),
+          TextButton(
+            key: const Key('start-over-confirm'),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l.startOverConfirm),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) _controller.resetToStarter();
+  }
+
   void _openGuide() => Navigator.pushNamed(
         context,
         '/guide',
@@ -447,6 +479,7 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
                     'fold' => _controller.collapseAll(),
                     'unfold' => _controller.expandAll(),
                     'clear' => _clearProgram(),
+                    'reset' => _startOver(),
                     _ => null,
                   },
                   itemBuilder: (_) => [
@@ -460,11 +493,16 @@ class _PuzzleEditorState extends ConsumerState<PuzzleEditor> {
                       enabled: _controller.collapsedIds.isNotEmpty,
                       child: Text(l.unfoldAll),
                     ),
-                    PopupMenuItem(
-                      value: 'clear',
-                      enabled: _controller.graph.blocks.isNotEmpty,
-                      child: Text(l.clearProgram),
-                    ),
+                    // A puzzle that opens with a program (M1) goes back to
+                    // it instead of to nothing.
+                    if (widget.puzzle.starter != null)
+                      PopupMenuItem(value: 'reset', child: Text(l.startOver))
+                    else
+                      PopupMenuItem(
+                        value: 'clear',
+                        enabled: _controller.graph.blocks.isNotEmpty,
+                        child: Text(l.clearProgram),
+                      ),
                   ],
                 ),
               ],
@@ -536,6 +574,13 @@ class _SolvedLine extends StatelessWidget {
   }
 }
 
+IconData _modeIcon(PuzzleMode mode) => switch (mode) {
+      PuzzleMode.complete => Icons.extension_outlined,
+      PuzzleMode.repair => Icons.build_outlined,
+      PuzzleMode.predict => Icons.visibility_outlined,
+      _ => Icons.flag_outlined,
+    };
+
 class _Brief extends StatelessWidget {
   const _Brief({
     required this.puzzle,
@@ -587,6 +632,22 @@ class _Brief extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: Text(story, style: TextStyle(color: context.palette.fg, height: 1.5, fontSize: 15)),
           ),
+          if (modeHelp(puzzle.mode, l) case final help?)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Row(
+                key: const Key('mode-help'),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Icon(_modeIcon(puzzle.mode), size: 16, color: context.palette.accent),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(help, style: TextStyle(color: context.palette.muted, height: 1.45))),
+                ],
+              ),
+            ),
           _InputsAndOutput(puzzle: puzzle),
         ],
       ],

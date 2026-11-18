@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../progress/campaign.dart';
 import '../../l10n/content_text.dart';
 import '../../l10n/l10n.dart';
+import '../../l10n/terms.dart';
 import '../../shared/load_failed.dart';
+import '../../shared/mode_badge.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/content_width.dart';
 import '../../state/l10n_providers.dart';
@@ -48,6 +50,10 @@ final class WorldSelectScreen extends ConsumerWidget {
                 subtitle: worldStatusText(world, view.progress.worldStatus(world.id), view.progress, l, text),
                 text: text,
                 current: world.id == currentWorld,
+                modes: {
+                  for (final id in world.puzzleIds)
+                    if (view.campaign.puzzles[id] case final puzzle? when hasModeBadge(puzzle.mode)) puzzle.mode,
+                },
                 solved: world.puzzleIds
                     .where((id) => view.progress.puzzleStatus(id) == PuzzleStatus.completed)
                     .length,
@@ -68,8 +74,11 @@ class _WorldCard extends StatelessWidget {
     required this.current,
     required this.solved,
     required this.text,
+    this.modes = const {},
   });
 
+  /// The starter-program modes (M1) this world has puzzles of.
+  final Set<PuzzleMode> modes;
   final WorldDef world;
   final WorldStatus status;
   final String subtitle;
@@ -148,6 +157,17 @@ class _WorldCard extends StatelessWidget {
                       Text(
                         l.worldTeaches(text.concepts(world.concepts)),
                         style: TextStyle(color: context.palette.muted, fontSize: 12),
+                      ),
+                    ],
+                    if (modes.isNotEmpty) ...[
+                      const SizedBox(height: AppSpace.s2),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: [
+                          for (final mode in PuzzleMode.values)
+                            if (modes.contains(mode)) ModeBadge(mode: mode),
+                        ],
                       ),
                     ],
                     if (status == WorldStatus.open && total > 0) ...[
