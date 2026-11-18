@@ -10,7 +10,7 @@
     "traps": ["rows of a single plank", "the best joint deep inside the rows, not the first one", "identical rows", "the edge of the wall is not a joint", "a wide wall makes trying every place over budget"],
     "oracle": "plank_wall"
   },
-  "metrics": {"blocks": 46, "ops": 15845, "peakAlloc": 50, "peakDepth": 1},
+  "metrics": {"blocks": 46, "ops": 17015, "peakAlloc": 50, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

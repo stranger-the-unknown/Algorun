@@ -10,7 +10,7 @@
     "traps": ["a kind listed twice", "a kind the aisle does not have, or has too few of", "a list longer than the aisle", "the best stretch at the very end", "starting again from every bin is over budget"],
     "oracle": "parts_aisle"
   },
-  "metrics": {"blocks": 101, "ops": 103852, "peakAlloc": 10, "peakDepth": 1},
+  "metrics": {"blocks": 101, "ops": 46178, "peakAlloc": 10, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

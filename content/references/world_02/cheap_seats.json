@@ -10,7 +10,7 @@
     "traps": ["a budget below every price", "a budget above every price", "a single row and a single column", "prices equal to the budget", "checking every seat is over budget"],
     "oracle": "cheap_seats"
   },
-  "metrics": {"blocks": 44, "ops": 5362, "peakAlloc": 0, "peakDepth": 1},
+  "metrics": {"blocks": 44, "ops": 3475, "peakAlloc": 0, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

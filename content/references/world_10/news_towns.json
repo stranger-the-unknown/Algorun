@@ -10,7 +10,7 @@
     "traps": ["a town with no roads at all", "a town that hears the story from a town with a higher number", "a town reached by two roads", "as many towns without a way in as without a way out is a coincidence"],
     "oracle": "news_towns"
   },
-  "metrics": {"blocks": 40, "ops": 3067, "peakAlloc": 356, "peakDepth": 1},
+  "metrics": {"blocks": 40, "ops": 3063, "peakAlloc": 355, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

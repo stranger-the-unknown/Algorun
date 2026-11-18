@@ -10,7 +10,7 @@
     "traps": ["the busiest nights are nights he is awake anyway", "awake every night", "asleep every night", "a coffee that lasts the whole log", "the best run at the very end"],
     "oracle": "night_coffee"
   },
-  "metrics": {"blocks": 56, "ops": 6606, "peakAlloc": 0, "peakDepth": 1},
+  "metrics": {"blocks": 56, "ops": 6694, "peakAlloc": 0, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

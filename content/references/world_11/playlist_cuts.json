@@ -10,7 +10,7 @@
     "traps": ["a style inside a set that is played again after the set's opening style has finished", "two styles that interleave", "one style all night", "every track a different style", "an empty night"],
     "oracle": "playlist_cuts"
   },
-  "metrics": {"blocks": 53, "ops": 4845, "peakAlloc": 202, "peakDepth": 1},
+  "metrics": {"blocks": 53, "ops": 5413, "peakAlloc": 202, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

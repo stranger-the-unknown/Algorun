@@ -10,7 +10,7 @@
     "traps": ["the longest crawl does not pass through the entrance", "a cave that is one long passage", "a single chamber", "an empty cave"],
     "oracle": "longest_crawl"
   },
-  "metrics": {"blocks": 102, "ops": 21911, "peakAlloc": 303, "peakDepth": 1},
+  "metrics": {"blocks": 102, "ops": 10961, "peakAlloc": 153, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

@@ -10,7 +10,7 @@
     "traps": ["a right place taken beside an empty left place", "an empty place in the middle of the last row", "a singer in a lower row after an empty place", "an empty stage", "a single singer"],
     "oracle": "full_rows"
   },
-  "metrics": {"blocks": 49, "ops": 7813, "peakAlloc": 151, "peakDepth": 1},
+  "metrics": {"blocks": 49, "ops": 3133, "peakAlloc": 61, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

@@ -10,7 +10,7 @@
     "traps": ["the farthest drummer in reach is a dead end", "a stretch of drummers nobody can get past", "a single drummer", "a table from every drummer to every drummer it reaches is over budget"],
     "oracle": "drum_line"
   },
-  "metrics": {"blocks": 51, "ops": 28919, "peakAlloc": 0, "peakDepth": 1},
+  "metrics": {"blocks": 51, "ops": 28971, "peakAlloc": 0, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

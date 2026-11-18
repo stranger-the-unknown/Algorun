@@ -10,7 +10,7 @@
     "traps": ["a street that only rises or only falls", "the tallest tower in the middle", "equal neighbours and flat roofs", "fewer than three towers", "two more lists run out of memory", "looking both ways from every tower is over budget"],
     "oracle": "after_rain"
   },
-  "metrics": {"blocks": 71, "ops": 14937, "peakAlloc": 0, "peakDepth": 1},
+  "metrics": {"blocks": 71, "ops": 14941, "peakAlloc": 0, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

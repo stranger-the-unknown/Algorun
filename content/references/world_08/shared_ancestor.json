@@ -10,7 +10,7 @@
     "traps": ["one member is the ancestor of the other", "the larger member given first", "both members deep in one branch", "a tree as deep as it is large: the way down does not fit in memory"],
     "oracle": "shared_ancestor"
   },
-  "metrics": {"blocks": 34, "ops": 3550, "peakAlloc": 0, "peakDepth": 1},
+  "metrics": {"blocks": 34, "ops": 1210, "peakAlloc": 0, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

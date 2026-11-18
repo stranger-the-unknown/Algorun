@@ -10,7 +10,7 @@
     "traps": ["one long watch across several short ones", "watches that only touch", "a guard with no watches", "one watch inside another", "comparing every watch with every watch is over budget"],
     "oracle": "shared_watch"
   },
-  "metrics": {"blocks": 60, "ops": 13484, "peakAlloc": 0, "peakDepth": 1},
+  "metrics": {"blocks": 60, "ops": 13488, "peakAlloc": 0, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

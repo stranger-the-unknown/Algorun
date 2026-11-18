@@ -10,7 +10,7 @@
     "traps": ["two rods that exactly reach the third make no triangle", "equal rods", "fewer than three rods", "testing every set of three is over budget"],
     "oracle": "rod_triangles"
   },
-  "metrics": {"blocks": 44, "ops": 127212, "peakAlloc": 0, "peakDepth": 1},
+  "metrics": {"blocks": 44, "ops": 71852, "peakAlloc": 0, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {

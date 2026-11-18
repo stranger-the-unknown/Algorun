@@ -10,7 +10,7 @@
     "traps": ["several pairs with the same total", "equal prices on one shelf", "an empty shelf", "a target no lunch reaches", "trying every lunch is over budget"],
     "oracle": "four_shelves"
   },
-  "metrics": {"blocks": 50, "ops": 21364, "peakAlloc": 68, "peakDepth": 1},
+  "metrics": {"blocks": 50, "ops": 21256, "peakAlloc": 76, "peakDepth": 1},
   "solution": {
     "blocks": {
       "b0": {
