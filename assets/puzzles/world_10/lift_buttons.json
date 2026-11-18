@@ -1,0 +1,124 @@
+{
+  "id": "lift_buttons",
+  "version": 1,
+  "title": "Two Buttons",
+  "world": "world_10",
+  "chapter": "bfs_over_generated_states",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["graph", "bfs", "queue"],
+  "prerequisites": [],
+  "story": "An old lift has two buttons. One moves it up by a fixed number of floors, the other moves it down by a fixed number of floors: the inputs up and down. The building's floors are numbered 1 to the input floors, and a press that would take the lift out of the building does nothing. What is the fewest presses that take the lift from the floor start to the floor goal? If no sequence of presses gets there, report -1; if the lift is already there, 0.",
+  "io": {
+    "inputs": [
+      {"name": "floors", "type": "num"},
+      {"name": "start", "type": "num"},
+      {"name": "goal", "type": "num"},
+      {"name": "up", "type": "num"},
+      {"name": "down", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {"notes": ["1 to 500 floors; start and goal are floors of the building.", "up and down are at least 1."]},
+  "blocks": {
+    "allow": ["arith.add", "arith.max", "arith.min", "arith.mod", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.not", "logic.or", "new.array", "new.queue", "new.stack", "queue.deq", "queue.empty", "queue.enq", "stack.empty", "stack.pop", "stack.push", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 138
+  },
+  "limits": {"maxOps": 53450, "maxDepth": 32, "maxAlloc": 1050},
+  "hints": ["Think of every floor as a stop with at most two rides out of it: one up, one down. The fewest presses is a shortest route, but nobody hands you the map: your program works out each floor's neighbours itself.", "Search in waves from the start with a queue. Keep a list with one entry per floor: the presses needed to reach it, or -1 while it has not been reached.", "DEQUEUE a floor. For the floor above (PLUS up) and the floor below (MINUS down): IF it is inside the building AND its entry is still -1, SET ELEMENT to this floor's count PLUS 1 and ENQUEUE it. RETURN the goal's entry when you DEQUEUE the goal, or -1 when the queue is empty."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"floors": 10, "start": 1, "goal": 8, "up": 3, "down": 1},
+        "out": 5
+      },
+      {
+        "id": "v2",
+        "in": {"floors": 12, "start": 11, "goal": 4, "up": 5, "down": 4},
+        "out": 4
+      },
+      {
+        "id": "v3",
+        "in": {"floors": 10, "start": 1, "goal": 2, "up": 3, "down": 3},
+        "out": -1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"floors": 10, "start": 3, "goal": 9, "up": 4, "down": 2},
+        "out": 3
+      },
+      {
+        "id": "h02",
+        "in": {"floors": 9, "start": 5, "goal": 5, "up": 2, "down": 3},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"floors": 1, "start": 1, "goal": 1, "up": 1, "down": 1},
+        "out": 0
+      },
+      {
+        "id": "h04",
+        "in": {"floors": 12, "start": 2, "goal": 3, "up": 5, "down": 3},
+        "out": 5
+      },
+      {
+        "id": "h05",
+        "in": {"floors": 20, "start": 1, "goal": 20, "up": 3, "down": 7},
+        "out": 13
+      },
+      {
+        "id": "h06",
+        "in": {"floors": 50, "start": 1, "goal": 2, "up": 7, "down": 4},
+        "out": 8
+      },
+      {
+        "id": "h07",
+        "in": {"floors": 100, "start": 37, "goal": 38, "up": 11, "down": 9},
+        "out": 11
+      },
+      {
+        "id": "h08",
+        "in": {"floors": 30, "start": 30, "goal": 1, "up": 4, "down": 7},
+        "out": 12
+      },
+      {
+        "id": "h09",
+        "in": {"floors": 8, "start": 4, "goal": 5, "up": 6, "down": 6},
+        "out": -1
+      },
+      {
+        "id": "h10",
+        "in": {"floors": 500, "start": 1, "goal": 500, "up": 7, "down": 3},
+        "out": 77
+      },
+      {
+        "id": "h11",
+        "in": {"floors": 500, "start": 2, "goal": 499, "up": 6, "down": 4},
+        "out": -1
+      },
+      {
+        "id": "h12",
+        "in": {"floors": 500, "start": 250, "goal": 249, "up": 499, "down": 498},
+        "out": -1
+      }
+    ]
+  },
+  "edgeCases": ["the lift must first move away from the goal", "a goal no sequence of presses reaches", "start and goal are the same floor", "a press that would leave the building", "a building of one floor"],
+  "variables": {
+    "pool": [
+      {"name": "dist", "type": "array<num>"},
+      {"name": "line", "type": "queue<num>"},
+      {"name": "here", "type": "num"},
+      {"name": "next", "type": "num"},
+      {"name": "i", "type": "num"},
+      {"name": "presses", "type": "num"},
+      {"name": "pile", "type": "stack<num>"}
+    ]
+  },
+  "reference": {"strategy": "bfs_over_generated_states"}
+}

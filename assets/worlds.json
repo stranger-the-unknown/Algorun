@@ -125,9 +125,12 @@
         "quota_hours",
         "one_dropout",
         "calm_stretches",
+        "night_coffee",
         "market_variety",
         "peak_windows",
-        "window_variety"
+        "window_variety",
+        "both_ends",
+        "parts_aisle"
       ]
     },
     {
@@ -197,11 +200,14 @@
         "canopy_height",
         "leaf_census",
         "lowest_leaf",
+        "shared_ancestor",
         "widest_level",
         "trail_sum",
         "sorted_grove",
         "mirror_tree",
-        "range_count"
+        "range_count",
+        "full_rows",
+        "longest_crawl"
       ]
     },
     {
@@ -259,7 +265,10 @@
         "task_order",
         "nearest_depot",
         "source_radius",
-        "ring_road"
+        "ring_road",
+        "lift_buttons",
+        "news_towns",
+        "shortest_ring"
       ]
     },
     {
@@ -279,8 +288,11 @@
         "dock_overlap",
         "leap_reach",
         "one_room",
+        "sign_flips",
         "fuel_loop",
-        "medal_row"
+        "medal_row",
+        "drum_line",
+        "playlist_cuts"
       ]
     },
     {

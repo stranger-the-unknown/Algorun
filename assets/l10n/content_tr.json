@@ -1499,6 +1499,114 @@
         "Her uçta birer işaret tut. İki işaretin altındaki değerlerin ABSOLUTE değerlerini karşılaştır, büyük olanı yeni listeye APPEND et ve o işareti içeri kaydır.",
         "Alt işaret üst işareti geçmediği sürece (WHILE … LESS OR EQUAL) devam et ki ortada kalan son ölçüm unutulmasın."
       ]
+    },
+    "shared_ancestor": {
+      "title": "Ortak Ata",
+      "story": "Bir aile arşivi, üye numaralarından oluşan bir arama ağacında tutuluyor: bir düğümün sol dalındaki her numara ondan küçük, sağ dalındaki her numara ondan büyük. a ve b numaralı iki üye de ağaçta; hangisinin küçük olduğu belli değil. İkisinin en yakın ortak atasının numarasını bildir: ikisini de kendisinde ya da altında bulunduran en derin düğüm. Yani bir üye kendi atası sayılır. Arşiv okuyucusunun belleği yok denecek kadar az: yol üstündeki düğümleri bir listede ya da yığında tutmak sığmaz.",
+      "hints": [
+        "Bir düğümde dur ve a ile b'nin nerede olduğuna bak. İkisi de ondan küçükse ortak ata LEFT dalındadır; ikisi de büyükse RIGHT dalındadır.",
+        "Değilse ikisi burada ayrı yönlere gidiyordur ya da biri tam bu düğümdür: yanıt bu düğüm. Kökten aşağı inen tek bir değişken yeter.",
+        "Düğüm boş değilken (WHILE … IS NOT NOTHING): IF a AND b ikisi de NODE VALUE değerinden küçükse (LESS THAN), düğümü LEFT yap (SET); ELSE IF ikisi de büyükse (GREATER THAN), düğümü RIGHT yap (SET); ELSE NODE VALUE değerini RETURN et."
+      ]
+    },
+    "full_rows": {
+      "title": "Dolu Sıralar",
+      "story": "Koro, ağaç gibi dallanan basamaklarda duruyor: en üstte tek bir şarkıcı, her şarkıcının altında solda bir yer ve sağda bir yer var; her yer ya dolu ya boş. Yerleri en üstten başlayarak sıra sıra, her sırayı soldan sağa oku. Boş bir yere rastladıktan sonra o sırada da alt sıralarda da hiç şarkıcı gelmiyorsa koro düzenlidir. Koro düzenli mi? Boş sahne düzenli sayılır.",
+      "hints": [
+        "Sıra sıra okumak, bir düğüm kuyruğunun yaptığı iştir: bir şarkıcıyı DEQUEUE et, önce LEFT sonra RIGHT yerine bak ve orada bulduğun şarkıcıları ENQUEUE et.",
+        "Tek bir evet/hayır değişkeni tut: şimdiye kadar boş bir yer görüldü mü? Hayır ile başlar ve bir daha geri dönmez; yeni bir sıra başlasa bile.",
+        "İki yerin her biri için: IF yer IS NOT NOTHING ise, daha önce boş yer görüldüyse (IF) hayır RETURN et, görülmediyse ENQUEUE et; ELSE boş yer görüldüğünü not al. Kuyruk bittiğinde evet RETURN et."
+      ]
+    },
+    "longest_crawl": {
+      "title": "En Uzun Geçiş",
+      "story": "Bir mağara, odalardan oluşan bir ağaç: giriş odasından başlayarak her oda en çok iki daha derin odaya açılır, biri solda biri sağda; her odanın kendine ait bir numarası var. Bir mağaracı mağaradaki en uzun geçişi arıyor: herhangi iki oda arasında, hiçbir odadan iki kez geçmeyen bir yol. Bu yolun kaç tünel kullandığını bildir. En uzun geçiş girişten geçmek zorunda değil. Boş mağara ya da tek oda 0 verir.",
+      "hints": [
+        "Tek bir oda için, o odada dönen en uzun geçiş solda inebildiği kadar derine, sağda da inebildiği kadar derine iner. Yanıt, bütün odalar içinde bunların en iyisidir.",
+        "Demek ki her oda dallarının ne kadar derine indiğini bilmeli; yani çocuklar anne babalarından önce ele alınmalı. Odaları bir yığından POP et ve her birini ikinci bir yığına PUSH et: ikinci yığını sonra boşaltırken her çocuk anne babasından önce çıkar.",
+        "Odanın NODE VALUE değerinden derinliğine giden bir eşleme tut. İkinci yığından çıkan her oda için: LEFT ve RIGHT odalarının derinliğini GET ile al (NOTHING ise 0), toplamlarıyla en iyiyi güncelle ve bu oda için büyük olana 1 PLUS ekleyip PUT et."
+      ]
+    },
+    "lift_buttons": {
+      "title": "İki Düğme",
+      "story": "Eski bir asansörün iki düğmesi var. Biri asansörü sabit sayıda kat yukarı, öbürü sabit sayıda kat aşağı götürür: up ve down girdileri. Binanın katları 1'den floors girdisine kadar numaralı; asansörü binanın dışına çıkaracak bir basış hiçbir şey yapmaz. Asansörü start katından goal katına götüren en az basış sayısı kaç? Hiçbir basış dizisi oraya varamıyorsa -1, asansör zaten oradaysa 0 bildir.",
+      "hints": [
+        "Her katı, en çok iki çıkışı olan bir durak gibi düşün: biri yukarı, biri aşağı. En az basış en kısa yol demek; ama haritayı kimse vermiyor: her katın komşularını programın kendisi hesaplıyor.",
+        "Başlangıçtan dalga dalga, bir kuyrukla ara. Her kat için bir girdisi olan bir liste tut: o kata varmak için gereken basış sayısı, henüz varılmadıysa -1.",
+        "Bir katı DEQUEUE et. Üstteki kat (PLUS up) ve alttaki kat (MINUS down) için: IF kat binanın içindeyse AND girdisi hâlâ -1 ise, SET ELEMENT ile bu katın sayısı PLUS 1 yaz ve katı ENQUEUE et. goal katını DEQUEUE ettiğinde onun girdisini RETURN et; kuyruk boşalırsa -1."
+      ]
+    },
+    "news_towns": {
+      "title": "Son Dakika",
+      "story": "Bir haber ajansı bir haberin her kasabaya ulaşmasını istiyor. Kasabalar arasındaki yollar tek yönlü; haberi duyan kasaba onu kendisinden çıkan her yoldan iletir. Hiçbir güzergâh ayrıldığı kasabaya geri dönmez. Ajans olabildiğince az kasabayı telefonla arayacak, gerisini yollar halledecek. Kaç kasabayı araması gerekir? Kasabalar 0'dan başlayarak numaralı.",
+      "hints": [
+        "Kendisine giren bir yolu olan kasaba, haberi er ya da geç yolun öbür ucundaki kasabadan duyar. Peki hangi kasabalar haberi hiç kimseden duyamaz?",
+        "Yalnızca kendisine hiç yol girmeyen kasabaları aramak gerekir ve hepsini aramak yeter: herhangi bir kasabaya giren yolları geriye doğru izlersen böyle bir kasabada durmak zorundasın, çünkü hiçbir güzergâh daire çizmez.",
+        "Her kasaba için 0 içeren bir liste kur (kaç kasaba olduğunu NODE COUNT söyler). Her kasaba için (FOR), NEIGHBORS listesindeki her komşunun (FOR EACH) girdisine 1 ekle. Sonra hâlâ 0 olan girdileri say."
+      ]
+    },
+    "shortest_ring": {
+      "title": "En Kısa Halka",
+      "story": "Köyler, iki yönde de gidilebilen yollarla bağlı; her yol, bağladığı iki köyün listesinde de yer alır, hiçbir yol bir köyü kendisine bağlamaz ve aynı iki köy arasında birden fazla yol yoktur. Halka, aynı köyde başlayıp biten ve hiçbir yolu ya da başka köyü iki kez kullanmayan bir turdur. En kısa halka kaç yoldan oluşur? Hiç halka yoksa -1 bildir.",
+      "hints": [
+        "Bir köyden dalga dalga ara; her köy için uzaklığını ve ona hangi köyden varıldığını aklında tut. Bir yola baktığında uzaklığı zaten belli olan bir köy bulursan ve bu köy geldiğin köy değilse, başlangıçtan çıkan iki yol buluşmuş demektir: bir halka kapanmıştır.",
+        "Bu halkada en çok iki uzaklık PLUS 1 kadar yol vardır; başlangıç en kısa halkanın üstündeyse bu sayı tam olarak onun uzunluğudur. Öyleyse aramayı her köyden tekrarla ve en küçüğü sakla.",
+        "MARK geri alınamaz, bu yüzden kendi listelerini tut: her aramadan önce bütün uzaklıkları SET ELEMENT ile -1 yap. Aramada: IF komşunun uzaklığı -1 ise ona bir uzaklık ver, nereden geldiğini yaz ve ENQUEUE et; ELSE IF komşu, geldiğin köye NOT EQUAL ise halkada senin uzaklığın PLUS onun uzaklığı PLUS 1 yol vardır."
+      ]
+    },
+    "drum_line": {
+      "title": "Davul Hattı",
+      "story": "Davulcular bir vadi boyunca sıra olmuş, bir haberi davul çalarak iletiyor. i. davulcuyu sıradaki sonraki reach[i] davulcu duyabilir; haberi bunlardan herhangi birine devredebilir. Menzili 0 olan davulcu haberi kimseye devredemez. Haber ilk davulcuda başlıyor. Haberi son davulcuya ulaştıran en az devir sayısı kaç? Haber ulaşamıyorsa -1 bildir. Uzun bir sıra işlem bütçesi içinde bitmeli.",
+      "hints": [
+        "Haberi kimin alacağına karar verme. Şunu sor: bir devirden sonra haber sırada en çok nereye kadar gitmiş olabilir? İki devirden sonra?",
+        "Sırayı bir kez yürü ve iki konum tut: şimdiki devir sayısıyla ulaşılabilen bölümün sonu ve bir devir daha yapılırsa ulaşılabilecek en uzak yer; bu, geçtiğin davulcular için konum PLUS menzil değerlerinin MAX'ıdır.",
+        "Konumun bölümün sonuna EQUAL olduğunda bir devir daha gerekir: IF en uzak yer konumundan ileride değilse -1 RETURN et, değilse sayıyı 1 artır ve sonu en uzak yere SET et. Son, son davulcuyu kapsar kapsamaz sayıyı RETURN et."
+      ]
+    },
+    "playlist_cuts": {
+      "title": "Set Araları",
+      "story": "Bir DJ uzun bir parça listesi çalıyor; her parça, tarzının numarasıyla yazılı: 0'dan 99'a. Geceyi setlere bölmek istiyor: her set art arda çalınan parçalardan oluşacak, hiçbir tarz iki ayrı sette duyulmayacak ve set sayısı olabildiğince çok olacak. Her setteki parça sayısını sırasıyla bildir. Tarzlar 4 7 4 2 2 ise setler 4 7 4 ve 2 2 olur; yanıt 3 2'dir. Boş gecede set yoktur.",
+      "hints": [
+        "Bir tarzı içeren set, en az o tarzın son parçasına kadar sürmek zorunda. Önce her tarz için son kez çalındığı konumu bul.",
+        "Parçaları sırayla gez ve şimdiki setin sonunu tut: bu sette şimdiye kadar rastladığın tarzların son konumlarının MAX'ı. Yolda karşına çıkan tarzlar sonu daha ileri itebilir.",
+        "Konumun bu sona EQUAL olduğunda set burada kapanır: setin boyunu APPEND et, yani konum MINUS setin ilk konumu PLUS 1; sonraki set bir sonraki parçada başlar."
+      ]
+    },
+    "sign_flips": {
+      "title": "İşaret Çevirme",
+      "story": "Bir hesap defterinde kazançlar ve zararlar, en küçük sayıdan en büyüğe sıralı duruyor. Denetçi toplam tam k kez bir kaydın işaretini çevirmek zorunda; aynı kaydı birden çok kez seçebilir ve her çevirme sayılır. Defter sonunda en çok kaç toplam gösterebilir? Kayıtlar -4 -2 7 ve k = 3 ise: -4 ile -2, 4 ve 2 olur; üçüncü çevirme de bir yere harcanmak zorunda. En az zararı 2'de verir ve toplam 9 olur.",
+      "hints": [
+        "Bir zararı kazanca çevirmek her zaman işe yarar ve en büyük zararlar defterin başındadır. Aynı kaydı iki kez çevirmek hiçbir şeyi değiştirmez.",
+        "Defteri sırayla gez: çevirme hakkın varken ve kayıt negatifken onu çevir. Bundan sonra kalan haklar herhangi bir kayda ikişer ikişer harcanırsa toplam değişmez.",
+        "IF geriye tek sayıda hak kaldıysa (REMAINDER 2, 1 ise), bir kayıt çevrilmiş kalmak zorunda: sıfıra en yakın olanı seç, yani ABSOLUTE değerlerin MIN'i, ve onu toplamdan iki kez çıkar."
+      ]
+    },
+    "parts_aisle": {
+      "title": "Parça Reyonu",
+      "story": "Bir nalbur reyonu, her biri tek tür parça tutan kutulardan oluşan bir sıra; türler sayıyla yazılı. Bir tamir için listedeki parçalar gerekiyor: listede iki kez geçen türden iki tane lazım ve her kutudan yalnızca bir parça alınabiliyor. Listedeki her parçayı veren, kesintisiz en kısa kutu dizisi hangisi? Kaç kutudan oluştuğunu bildir; böyle bir dizi yoksa -1. Uzun bir reyon işlem bütçesi içinde bitmeli.",
+      "hints": [
+        "Diziyi, listeyi karşılayana kadar sağa doğru büyüt; sonra listeyi hâlâ karşıladığı sürece soldan kısalt. En kısa dizilerin hepsi bu yolla karşına çıkar.",
+        "Her tür için dizinin o türden hâlâ kaç tane istediğini bir eşlemede tut: diziye giren kutu sayıyı düşürür, diziden çıkan kutu yükseltir. Sıfırın altındaki sayı, dizide fazlalık var demektir. Bir sayı daha tut: listeden kaç parça hâlâ eksik.",
+        "Bir kutu diziye girerken: IF sayısı 0'dan büyükse (GREATER THAN) eksik bir azalır. Eksik yokken (WHILE): uzunluğu kaydet, sonra soldaki kutuyu çıkar; IF sayısı yükselmeden önce 0 ya da daha büyükse (GREATER OR EQUAL) bir parça yine eksiktir."
+      ]
+    },
+    "both_ends": {
+      "title": "İki Uç",
+      "story": "Uzun bir masada elma sepetleri yan yana duruyor. Bir konuk tam k sepet alabilir; her seferinde yalnızca kalanların en solundaki ya da en sağındaki sepeti. Konuk en çok kaç elmayla ayrılabilir? Masa uzun olabilir: her olası seçimi baştan toplamak fazla yavaş.",
+      "hints": [
+        "Konuk nasıl seçerse seçsin, aldığı sepetlerin bir kısmı sol uçtan, kalanı sağ uçtandır. Serbest olan tek sayı var: soldan kaç tane alındığı.",
+        "k sepetin hepsini soldan alarak başla ve topla. Sonra soldan aldığın son sepeti geri bırak, sağdan bir sepet daha al: toplam yalnızca bu iki sepet kadar değişir.",
+        "Bunu k kez tekrarla ve gördüğün en büyük toplamı MAX ile sakla. i. adımda geri bırakılan sepet k MINUS i konumundadır, alınan sepet LENGTH MINUS i konumundadır."
+      ]
+    },
+    "night_coffee": {
+      "title": "Gece Kahvesi",
+      "story": "Bir fener bekçisi her gece geçen gemileri sayıyor, ama yalnızca uyanık kaldığı gecelerde: awake listesinde uyanık olduğu gece 1, uyuyakaldığı gece 0 yazıyor; ships listesinde ise sayılsın sayılmasın o gece geçen gemi sayısı var. Sert bir kahve onu art arda k gece uyanık tutar ve elinde tek bir kahve var. Kahveyi en doğru gecede içerse toplamda en çok kaç gemi sayabilir?",
+      "hints": [
+        "Zaten uyanık olduğu gecelerin gemileri, ne yaparsa yapsın sayılır. Kahve yalnızca kapsadığı uykulu gecelerin gemilerini ekler.",
+        "Öyleyse uykulu gecelerinde en çok gemi geçen k gecelik diziyi bul. Diziyi her adımda bir gece kaydır: giren geceyi ekle, çıkan geceyi çıkar; bir geceyi yalnızca awake değeri 0 ise say.",
+        "Geceler üzerinde tek bir FOR ile üç sayı tut: zaten sayılan gemiler, şimdiki dizinin ek gemileri ve görülen en büyük ek (MAX). Konum k'ye GREATER OR EQUAL olduğunda bir gece diziden çıkar. Birinci PLUS üçüncüyü RETURN et."
+      ]
     }
   }
 }

@@ -1,0 +1,3172 @@
+{
+  "id": "longest_crawl",
+  "version": 1,
+  "title": "Longest Crawl",
+  "world": "world_08",
+  "chapter": "postorder_depths_longest_path",
+  "tier": 5,
+  "mode": "build",
+  "concepts": ["tree", "stack", "hash_map"],
+  "prerequisites": [],
+  "story": "A cave is a tree of chambers: from the entrance chamber, each chamber leads to at most two deeper ones, one on the left and one on the right, and every chamber has its own number. A caver wants the longest crawl in the cave: a route between any two chambers that never passes through a chamber twice. Report how many tunnels it uses. The longest crawl need not pass through the entrance. An empty cave or a single chamber gives 0.",
+  "io": {
+    "inputs": [
+      {"name": "root", "type": "treeNode?"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 300},
+    "notes": ["0 to 300 chambers, all numbers different.", "The cave can be as deep as it has chambers."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.max", "arith.min", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.is_not_nothing", "logic.is_nothing", "logic.not", "logic.or", "map.get", "map.has", "map.set", "new.array", "new.map", "new.queue", "new.stack", "queue.deq", "queue.empty", "queue.enq", "stack.empty", "stack.pop", "stack.push", "tree.left", "tree.right", "tree.value", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 164
+  },
+  "limits": {"maxOps": 80000, "maxDepth": 32, "maxAlloc": 2000},
+  "hints": ["For one chamber, the longest crawl that turns around in it goes as deep as it can on the left and as deep as it can on the right. The answer is the best such crawl over all chambers.", "So every chamber must know how deep its branches go, which means children are handled before their parents. POP chambers from one stack and PUSH each onto a second stack: emptying the second stack later gives every child before its parent.", "Keep a map from a chamber's NODE VALUE to its depth. For each chamber from the second stack: GET the depths of its LEFT and RIGHT chambers (0 for NOTHING), update the best with their sum, and PUT 1 PLUS the larger one for this chamber."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 8,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 1, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 6, "left": null, "right": null}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 10,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 14,
+                "left": {"type": "treeNode", "value": 13, "left": null, "right": null},
+                "right": null
+              }
+            }
+          }
+        },
+        "out": 5
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 1, "left": null, "right": null},
+              "right": null
+            },
+            "right": {"type": "treeNode", "value": 9, "left": null, "right": null}
+          }
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"root": null},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {"type": "treeNode", "value": 4, "left": null, "right": null}
+        },
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 4,
+            "left": null,
+            "right": {"type": "treeNode", "value": 7, "left": null, "right": null}
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "left": {"type": "treeNode", "value": 6, "left": null, "right": null},
+                    "right": null
+                  },
+                  "right": null
+                },
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": null,
+                "right": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {"type": "treeNode", "value": 9, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 10, "left": null, "right": null}
+                }
+              }
+            },
+            "right": null
+          }
+        },
+        "out": 7
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 6,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 7,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 8,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 9,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 10,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 11,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 12,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 13,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 14,
+                                      "left": {
+                                        "type": "treeNode",
+                                        "value": 15,
+                                        "left": {
+                                          "type": "treeNode",
+                                          "value": 16,
+                                          "left": {
+                                            "type": "treeNode",
+                                            "value": 17,
+                                            "left": {
+                                              "type": "treeNode",
+                                              "value": 18,
+                                              "left": {
+                                                "type": "treeNode",
+                                                "value": 19,
+                                                "left": {
+                                                  "type": "treeNode",
+                                                  "value": 20,
+                                                  "left": {
+                                                    "type": "treeNode",
+                                                    "value": 21,
+                                                    "left": {
+                                                      "type": "treeNode",
+                                                      "value": 22,
+                                                      "left": {
+                                                        "type": "treeNode",
+                                                        "value": 23,
+                                                        "left": {
+                                                          "type": "treeNode",
+                                                          "value": 24,
+                                                          "left": {
+                                                            "type": "treeNode",
+                                                            "value": 25,
+                                                            "left": {
+                                                              "type": "treeNode",
+                                                              "value": 26,
+                                                              "left": {
+                                                                "type": "treeNode",
+                                                                "value": 27,
+                                                                "left": {
+                                                                  "type": "treeNode",
+                                                                  "value": 28,
+                                                                  "left": {
+                                                                    "type": "treeNode",
+                                                                    "value": 29,
+                                                                    "left": {
+                                                                      "type": "treeNode",
+                                                                      "value": 30,
+                                                                      "left": {
+                                                                        "type": "treeNode",
+                                                                        "value": 31,
+                                                                        "left": {
+                                                                          "type": "treeNode",
+                                                                          "value": 32,
+                                                                          "left": {
+                                                                            "type": "treeNode",
+                                                                            "value": 33,
+                                                                            "left": {
+                                                                              "type": "treeNode",
+                                                                              "value": 34,
+                                                                              "left": {
+                                                                                "type": "treeNode",
+                                                                                "value": 35,
+                                                                                "left": {
+                                                                                  "type": "treeNode",
+                                                                                  "value": 36,
+                                                                                  "left": {
+                                                                                    "type": "treeNode",
+                                                                                    "value": 37,
+                                                                                    "left": {
+                                                                                      "type": "treeNode",
+                                                                                      "value": 38,
+                                                                                      "left": {
+                                                                                        "type": "treeNode",
+                                                                                        "value": 39,
+                                                                                        "left": {
+                                                                                          "type": "treeNode",
+                                                                                          "value": 40,
+                                                                                          "left": {
+                                                                                            "type": "treeNode",
+                                                                                            "value": 41,
+                                                                                            "left": {
+                                                                                              "type": "treeNode",
+                                                                                              "value": 42,
+                                                                                              "left": {
+                                                                                                "type": "treeNode",
+                                                                                                "value": 43,
+                                                                                                "left": {
+                                                                                                  "type": "treeNode",
+                                                                                                  "value": 44,
+                                                                                                  "left": {
+                                                                                                    "type": "treeNode",
+                                                                                                    "value": 45,
+                                                                                                    "left": {
+                                                                                                      "type": "treeNode",
+                                                                                                      "value": 46,
+                                                                                                      "left": {
+                                                                                                        "type": "treeNode",
+                                                                                                        "value": 47,
+                                                                                                        "left": {
+                                                                                                          "type": "treeNode",
+                                                                                                          "value": 48,
+                                                                                                          "left": {
+                                                                                                            "type": "treeNode",
+                                                                                                            "value": 49,
+                                                                                                            "left": {
+                                                                                                              "type": "treeNode",
+                                                                                                              "value": 50,
+                                                                                                              "left": {
+                                                                                                                "type": "treeNode",
+                                                                                                                "value": 51,
+                                                                                                                "left": {
+                                                                                                                  "type": "treeNode",
+                                                                                                                  "value": 52,
+                                                                                                                  "left": {
+                                                                                                                    "type": "treeNode",
+                                                                                                                    "value": 53,
+                                                                                                                    "left": {
+                                                                                                                      "type": "treeNode",
+                                                                                                                      "value": 54,
+                                                                                                                      "left": {
+                                                                                                                        "type": "treeNode",
+                                                                                                                        "value": 55,
+                                                                                                                        "left": {
+                                                                                                                          "type": "treeNode",
+                                                                                                                          "value": 56,
+                                                                                                                          "left": {
+                                                                                                                            "type": "treeNode",
+                                                                                                                            "value": 57,
+                                                                                                                            "left": {
+                                                                                                                              "type": "treeNode",
+                                                                                                                              "value": 58,
+                                                                                                                              "left": {
+                                                                                                                                "type": "treeNode",
+                                                                                                                                "value": 59,
+                                                                                                                                "left": {
+                                                                                                                                  "type": "treeNode",
+                                                                                                                                  "value": 60,
+                                                                                                                                  "left": null,
+                                                                                                                                  "right": null
+                                                                                                                                },
+                                                                                                                                "right": null
+                                                                                                                              },
+                                                                                                                              "right": null
+                                                                                                                            },
+                                                                                                                            "right": null
+                                                                                                                          },
+                                                                                                                          "right": null
+                                                                                                                        },
+                                                                                                                        "right": null
+                                                                                                                      },
+                                                                                                                      "right": null
+                                                                                                                    },
+                                                                                                                    "right": null
+                                                                                                                  },
+                                                                                                                  "right": null
+                                                                                                                },
+                                                                                                                "right": null
+                                                                                                              },
+                                                                                                              "right": null
+                                                                                                            },
+                                                                                                            "right": null
+                                                                                                          },
+                                                                                                          "right": null
+                                                                                                        },
+                                                                                                        "right": null
+                                                                                                      },
+                                                                                                      "right": null
+                                                                                                    },
+                                                                                                    "right": null
+                                                                                                  },
+                                                                                                  "right": null
+                                                                                                },
+                                                                                                "right": null
+                                                                                              },
+                                                                                              "right": null
+                                                                                            },
+                                                                                            "right": null
+                                                                                          },
+                                                                                          "right": null
+                                                                                        },
+                                                                                        "right": null
+                                                                                      },
+                                                                                      "right": null
+                                                                                    },
+                                                                                    "right": null
+                                                                                  },
+                                                                                  "right": null
+                                                                                },
+                                                                                "right": null
+                                                                              },
+                                                                              "right": null
+                                                                            },
+                                                                            "right": null
+                                                                          },
+                                                                          "right": null
+                                                                        },
+                                                                        "right": null
+                                                                      },
+                                                                      "right": null
+                                                                    },
+                                                                    "right": null
+                                                                  },
+                                                                  "right": null
+                                                                },
+                                                                "right": null
+                                                              },
+                                                              "right": null
+                                                            },
+                                                            "right": null
+                                                          },
+                                                          "right": null
+                                                        },
+                                                        "right": null
+                                                      },
+                                                      "right": null
+                                                    },
+                                                    "right": null
+                                                  },
+                                                  "right": null
+                                                },
+                                                "right": null
+                                              },
+                                              "right": null
+                                            },
+                                            "right": null
+                                          },
+                                          "right": null
+                                        },
+                                        "right": null
+                                      },
+                                      "right": null
+                                    },
+                                    "right": null
+                                  },
+                                  "right": null
+                                },
+                                "right": null
+                              },
+                              "right": null
+                            },
+                            "right": null
+                          },
+                          "right": null
+                        },
+                        "right": null
+                      },
+                      "right": null
+                    },
+                    "right": null
+                  },
+                  "right": null
+                },
+                "right": null
+              },
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 59
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 50,
+            "left": {
+              "type": "treeNode",
+              "value": 20,
+              "left": {
+                "type": "treeNode",
+                "value": 1,
+                "left": {
+                  "type": "treeNode",
+                  "value": 2,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 3,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 4,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 5,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 6,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 7,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 8,
+                              "left": {"type": "treeNode", "value": 9, "left": null, "right": null},
+                              "right": null
+                            },
+                            "right": null
+                          },
+                          "right": null
+                        },
+                        "right": null
+                      },
+                      "right": null
+                    },
+                    "right": null
+                  },
+                  "right": null
+                },
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 30,
+                "left": null,
+                "right": {
+                  "type": "treeNode",
+                  "value": 31,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 32,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 33,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 34,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 35,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 36,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 37,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 38,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 39,
+                                  "left": {"type": "treeNode", "value": 40, "left": null, "right": null},
+                                  "right": null
+                                },
+                                "right": null
+                              },
+                              "right": null
+                            },
+                            "right": null
+                          },
+                          "right": null
+                        },
+                        "right": null
+                      },
+                      "right": null
+                    },
+                    "right": null
+                  },
+                  "right": null
+                }
+              }
+            },
+            "right": {"type": "treeNode", "value": 60, "left": null, "right": null}
+          }
+        },
+        "out": 20
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {"type": "treeNode", "value": 16, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 17, "left": null, "right": null}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {"type": "treeNode", "value": 18, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 19, "left": null, "right": null}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {
+                  "type": "treeNode",
+                  "value": 10,
+                  "left": {"type": "treeNode", "value": 20, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 21, "left": null, "right": null}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 11,
+                  "left": {"type": "treeNode", "value": 22, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 23, "left": null, "right": null}
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {
+                  "type": "treeNode",
+                  "value": 12,
+                  "left": {"type": "treeNode", "value": 24, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 25, "left": null, "right": null}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 13,
+                  "left": {"type": "treeNode", "value": 26, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 27, "left": null, "right": null}
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 14,
+                  "left": {"type": "treeNode", "value": 28, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 29, "left": null, "right": null}
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 15,
+                  "left": {"type": "treeNode", "value": 30, "left": null, "right": null},
+                  "right": {"type": "treeNode", "value": 31, "left": null, "right": null}
+                }
+              }
+            }
+          }
+        },
+        "out": 8
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 3,
+                "left": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 6,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 7,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 8,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 9,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 10,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 11,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 12,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 13,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 14,
+                                      "left": {
+                                        "type": "treeNode",
+                                        "value": 15,
+                                        "left": {
+                                          "type": "treeNode",
+                                          "value": 16,
+                                          "left": {
+                                            "type": "treeNode",
+                                            "value": 17,
+                                            "left": {
+                                              "type": "treeNode",
+                                              "value": 18,
+                                              "left": {
+                                                "type": "treeNode",
+                                                "value": 19,
+                                                "left": {
+                                                  "type": "treeNode",
+                                                  "value": 20,
+                                                  "left": {
+                                                    "type": "treeNode",
+                                                    "value": 21,
+                                                    "left": {
+                                                      "type": "treeNode",
+                                                      "value": 22,
+                                                      "left": {
+                                                        "type": "treeNode",
+                                                        "value": 23,
+                                                        "left": {
+                                                          "type": "treeNode",
+                                                          "value": 24,
+                                                          "left": {
+                                                            "type": "treeNode",
+                                                            "value": 25,
+                                                            "left": {
+                                                              "type": "treeNode",
+                                                              "value": 26,
+                                                              "left": {
+                                                                "type": "treeNode",
+                                                                "value": 27,
+                                                                "left": {
+                                                                  "type": "treeNode",
+                                                                  "value": 28,
+                                                                  "left": {
+                                                                    "type": "treeNode",
+                                                                    "value": 29,
+                                                                    "left": {
+                                                                      "type": "treeNode",
+                                                                      "value": 30,
+                                                                      "left": {
+                                                                        "type": "treeNode",
+                                                                        "value": 31,
+                                                                        "left": {
+                                                                          "type": "treeNode",
+                                                                          "value": 32,
+                                                                          "left": {
+                                                                            "type": "treeNode",
+                                                                            "value": 33,
+                                                                            "left": {
+                                                                              "type": "treeNode",
+                                                                              "value": 34,
+                                                                              "left": {
+                                                                                "type": "treeNode",
+                                                                                "value": 35,
+                                                                                "left": {
+                                                                                  "type": "treeNode",
+                                                                                  "value": 36,
+                                                                                  "left": {
+                                                                                    "type": "treeNode",
+                                                                                    "value": 37,
+                                                                                    "left": {
+                                                                                      "type": "treeNode",
+                                                                                      "value": 38,
+                                                                                      "left": {
+                                                                                        "type": "treeNode",
+                                                                                        "value": 39,
+                                                                                        "left": {
+                                                                                          "type": "treeNode",
+                                                                                          "value": 40,
+                                                                                          "left": {
+                                                                                            "type": "treeNode",
+                                                                                            "value": 100,
+                                                                                            "left": {
+                                                                                              "type": "treeNode",
+                                                                                              "value": 101,
+                                                                                              "left": {
+                                                                                                "type": "treeNode",
+                                                                                                "value": 102,
+                                                                                                "left": {
+                                                                                                  "type": "treeNode",
+                                                                                                  "value": 103,
+                                                                                                  "left": {
+                                                                                                    "type": "treeNode",
+                                                                                                    "value": 104,
+                                                                                                    "left": {
+                                                                                                      "type": "treeNode",
+                                                                                                      "value": 105,
+                                                                                                      "left": {
+                                                                                                        "type": "treeNode",
+                                                                                                        "value": 106,
+                                                                                                        "left": {
+                                                                                                          "type": "treeNode",
+                                                                                                          "value": 107,
+                                                                                                          "left": {
+                                                                                                            "type": "treeNode",
+                                                                                                            "value": 108,
+                                                                                                            "left": {
+                                                                                                              "type": "treeNode",
+                                                                                                              "value": 109,
+                                                                                                              "left": {
+                                                                                                                "type": "treeNode",
+                                                                                                                "value": 110,
+                                                                                                                "left": {
+                                                                                                                  "type": "treeNode",
+                                                                                                                  "value": 111,
+                                                                                                                  "left": {
+                                                                                                                    "type": "treeNode",
+                                                                                                                    "value": 112,
+                                                                                                                    "left": {
+                                                                                                                      "type": "treeNode",
+                                                                                                                      "value": 113,
+                                                                                                                      "left": {
+                                                                                                                        "type": "treeNode",
+                                                                                                                        "value": 114,
+                                                                                                                        "left": {
+                                                                                                                          "type": "treeNode",
+                                                                                                                          "value": 115,
+                                                                                                                          "left": {
+                                                                                                                            "type": "treeNode",
+                                                                                                                            "value": 116,
+                                                                                                                            "left": {
+                                                                                                                              "type": "treeNode",
+                                                                                                                              "value": 117,
+                                                                                                                              "left": {
+                                                                                                                                "type": "treeNode",
+                                                                                                                                "value": 118,
+                                                                                                                                "left": {
+                                                                                                                                  "type": "treeNode",
+                                                                                                                                  "value": 119,
+                                                                                                                                  "left": {
+                                                                                                                                    "type": "treeNode",
+                                                                                                                                    "value": 120,
+                                                                                                                                    "left": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 121,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 122,
+                                                                                                                                        "left": {
+                                                                                                                                          "type": "treeNode",
+                                                                                                                                          "value": 123,
+                                                                                                                                          "left": {
+                                                                                                                                            "type": "treeNode",
+                                                                                                                                            "value": 124,
+                                                                                                                                            "left": {
+                                                                                                                                              "type": "treeNode",
+                                                                                                                                              "value": 125,
+                                                                                                                                              "left": {
+                                                                                                                                                "type": "treeNode",
+                                                                                                                                                "value": 126,
+                                                                                                                                                "left": {
+                                                                                                                                                  "type": "treeNode",
+                                                                                                                                                  "value": 127,
+                                                                                                                                                  "left": {
+                                                                                                                                                    "type": "treeNode",
+                                                                                                                                                    "value": 128,
+                                                                                                                                                    "left": {
+                                                                                                                                                      "type": "treeNode",
+                                                                                                                                                      "value": 129,
+                                                                                                                                                      "left": {
+                                                                                                                                                        "type": "treeNode",
+                                                                                                                                                        "value": 130,
+                                                                                                                                                        "left": null,
+                                                                                                                                                        "right": null
+                                                                                                                                                      },
+                                                                                                                                                      "right": null
+                                                                                                                                                    },
+                                                                                                                                                    "right": null
+                                                                                                                                                  },
+                                                                                                                                                  "right": null
+                                                                                                                                                },
+                                                                                                                                                "right": null
+                                                                                                                                              },
+                                                                                                                                              "right": null
+                                                                                                                                            },
+                                                                                                                                            "right": null
+                                                                                                                                          },
+                                                                                                                                          "right": null
+                                                                                                                                        },
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": null
+                                                                                                                                    },
+                                                                                                                                    "right": null
+                                                                                                                                  },
+                                                                                                                                  "right": null
+                                                                                                                                },
+                                                                                                                                "right": null
+                                                                                                                              },
+                                                                                                                              "right": null
+                                                                                                                            },
+                                                                                                                            "right": null
+                                                                                                                          },
+                                                                                                                          "right": null
+                                                                                                                        },
+                                                                                                                        "right": null
+                                                                                                                      },
+                                                                                                                      "right": null
+                                                                                                                    },
+                                                                                                                    "right": null
+                                                                                                                  },
+                                                                                                                  "right": null
+                                                                                                                },
+                                                                                                                "right": null
+                                                                                                              },
+                                                                                                              "right": null
+                                                                                                            },
+                                                                                                            "right": null
+                                                                                                          },
+                                                                                                          "right": null
+                                                                                                        },
+                                                                                                        "right": null
+                                                                                                      },
+                                                                                                      "right": null
+                                                                                                    },
+                                                                                                    "right": null
+                                                                                                  },
+                                                                                                  "right": null
+                                                                                                },
+                                                                                                "right": null
+                                                                                              },
+                                                                                              "right": null
+                                                                                            },
+                                                                                            "right": {
+                                                                                              "type": "treeNode",
+                                                                                              "value": 200,
+                                                                                              "left": null,
+                                                                                              "right": {
+                                                                                                "type": "treeNode",
+                                                                                                "value": 201,
+                                                                                                "left": {
+                                                                                                  "type": "treeNode",
+                                                                                                  "value": 202,
+                                                                                                  "left": {
+                                                                                                    "type": "treeNode",
+                                                                                                    "value": 203,
+                                                                                                    "left": {
+                                                                                                      "type": "treeNode",
+                                                                                                      "value": 204,
+                                                                                                      "left": {
+                                                                                                        "type": "treeNode",
+                                                                                                        "value": 205,
+                                                                                                        "left": {
+                                                                                                          "type": "treeNode",
+                                                                                                          "value": 206,
+                                                                                                          "left": {
+                                                                                                            "type": "treeNode",
+                                                                                                            "value": 207,
+                                                                                                            "left": {
+                                                                                                              "type": "treeNode",
+                                                                                                              "value": 208,
+                                                                                                              "left": {
+                                                                                                                "type": "treeNode",
+                                                                                                                "value": 209,
+                                                                                                                "left": {
+                                                                                                                  "type": "treeNode",
+                                                                                                                  "value": 210,
+                                                                                                                  "left": {
+                                                                                                                    "type": "treeNode",
+                                                                                                                    "value": 211,
+                                                                                                                    "left": {
+                                                                                                                      "type": "treeNode",
+                                                                                                                      "value": 212,
+                                                                                                                      "left": {
+                                                                                                                        "type": "treeNode",
+                                                                                                                        "value": 213,
+                                                                                                                        "left": {
+                                                                                                                          "type": "treeNode",
+                                                                                                                          "value": 214,
+                                                                                                                          "left": {
+                                                                                                                            "type": "treeNode",
+                                                                                                                            "value": 215,
+                                                                                                                            "left": {
+                                                                                                                              "type": "treeNode",
+                                                                                                                              "value": 216,
+                                                                                                                              "left": {
+                                                                                                                                "type": "treeNode",
+                                                                                                                                "value": 217,
+                                                                                                                                "left": {
+                                                                                                                                  "type": "treeNode",
+                                                                                                                                  "value": 218,
+                                                                                                                                  "left": {
+                                                                                                                                    "type": "treeNode",
+                                                                                                                                    "value": 219,
+                                                                                                                                    "left": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 220,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 221,
+                                                                                                                                        "left": {
+                                                                                                                                          "type": "treeNode",
+                                                                                                                                          "value": 222,
+                                                                                                                                          "left": {
+                                                                                                                                            "type": "treeNode",
+                                                                                                                                            "value": 223,
+                                                                                                                                            "left": {
+                                                                                                                                              "type": "treeNode",
+                                                                                                                                              "value": 224,
+                                                                                                                                              "left": {
+                                                                                                                                                "type": "treeNode",
+                                                                                                                                                "value": 225,
+                                                                                                                                                "left": {
+                                                                                                                                                  "type": "treeNode",
+                                                                                                                                                  "value": 226,
+                                                                                                                                                  "left": {
+                                                                                                                                                    "type": "treeNode",
+                                                                                                                                                    "value": 227,
+                                                                                                                                                    "left": {
+                                                                                                                                                      "type": "treeNode",
+                                                                                                                                                      "value": 228,
+                                                                                                                                                      "left": {
+                                                                                                                                                        "type": "treeNode",
+                                                                                                                                                        "value": 229,
+                                                                                                                                                        "left": {
+                                                                                                                                                          "type": "treeNode",
+                                                                                                                                                          "value": 230,
+                                                                                                                                                          "left": {
+                                                                                                                                                            "type": "treeNode",
+                                                                                                                                                            "value": 231,
+                                                                                                                                                            "left": {
+                                                                                                                                                              "type": "treeNode",
+                                                                                                                                                              "value": 232,
+                                                                                                                                                              "left": {
+                                                                                                                                                                "type": "treeNode",
+                                                                                                                                                                "value": 233,
+                                                                                                                                                                "left": {
+                                                                                                                                                                  "type": "treeNode",
+                                                                                                                                                                  "value": 234,
+                                                                                                                                                                  "left": {
+                                                                                                                                                                    "type": "treeNode",
+                                                                                                                                                                    "value": 235,
+                                                                                                                                                                    "left": null,
+                                                                                                                                                                    "right": null
+                                                                                                                                                                  },
+                                                                                                                                                                  "right": null
+                                                                                                                                                                },
+                                                                                                                                                                "right": null
+                                                                                                                                                              },
+                                                                                                                                                              "right": null
+                                                                                                                                                            },
+                                                                                                                                                            "right": null
+                                                                                                                                                          },
+                                                                                                                                                          "right": null
+                                                                                                                                                        },
+                                                                                                                                                        "right": null
+                                                                                                                                                      },
+                                                                                                                                                      "right": null
+                                                                                                                                                    },
+                                                                                                                                                    "right": null
+                                                                                                                                                  },
+                                                                                                                                                  "right": null
+                                                                                                                                                },
+                                                                                                                                                "right": null
+                                                                                                                                              },
+                                                                                                                                              "right": null
+                                                                                                                                            },
+                                                                                                                                            "right": null
+                                                                                                                                          },
+                                                                                                                                          "right": null
+                                                                                                                                        },
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": null
+                                                                                                                                    },
+                                                                                                                                    "right": null
+                                                                                                                                  },
+                                                                                                                                  "right": null
+                                                                                                                                },
+                                                                                                                                "right": null
+                                                                                                                              },
+                                                                                                                              "right": null
+                                                                                                                            },
+                                                                                                                            "right": null
+                                                                                                                          },
+                                                                                                                          "right": null
+                                                                                                                        },
+                                                                                                                        "right": null
+                                                                                                                      },
+                                                                                                                      "right": null
+                                                                                                                    },
+                                                                                                                    "right": null
+                                                                                                                  },
+                                                                                                                  "right": null
+                                                                                                                },
+                                                                                                                "right": null
+                                                                                                              },
+                                                                                                              "right": null
+                                                                                                            },
+                                                                                                            "right": null
+                                                                                                          },
+                                                                                                          "right": null
+                                                                                                        },
+                                                                                                        "right": null
+                                                                                                      },
+                                                                                                      "right": null
+                                                                                                    },
+                                                                                                    "right": null
+                                                                                                  },
+                                                                                                  "right": null
+                                                                                                },
+                                                                                                "right": null
+                                                                                              }
+                                                                                            }
+                                                                                          },
+                                                                                          "right": null
+                                                                                        },
+                                                                                        "right": null
+                                                                                      },
+                                                                                      "right": null
+                                                                                    },
+                                                                                    "right": null
+                                                                                  },
+                                                                                  "right": null
+                                                                                },
+                                                                                "right": null
+                                                                              },
+                                                                              "right": null
+                                                                            },
+                                                                            "right": null
+                                                                          },
+                                                                          "right": null
+                                                                        },
+                                                                        "right": null
+                                                                      },
+                                                                      "right": null
+                                                                    },
+                                                                    "right": null
+                                                                  },
+                                                                  "right": null
+                                                                },
+                                                                "right": null
+                                                              },
+                                                              "right": null
+                                                            },
+                                                            "right": null
+                                                          },
+                                                          "right": null
+                                                        },
+                                                        "right": null
+                                                      },
+                                                      "right": null
+                                                    },
+                                                    "right": null
+                                                  },
+                                                  "right": null
+                                                },
+                                                "right": null
+                                              },
+                                              "right": null
+                                            },
+                                            "right": null
+                                          },
+                                          "right": null
+                                        },
+                                        "right": null
+                                      },
+                                      "right": null
+                                    },
+                                    "right": null
+                                  },
+                                  "right": null
+                                },
+                                "right": null
+                              },
+                              "right": null
+                            },
+                            "right": null
+                          },
+                          "right": null
+                        },
+                        "right": null
+                      },
+                      "right": null
+                    },
+                    "right": null
+                  },
+                  "right": null
+                },
+                "right": null
+              },
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": 76
+      },
+      {
+        "id": "h09",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 167,
+            "left": {
+              "type": "treeNode",
+              "value": 258,
+              "left": {
+                "type": "treeNode",
+                "value": 171,
+                "left": {
+                  "type": "treeNode",
+                  "value": 45,
+                  "left": null,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 278,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 265,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 129,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 194,
+                          "left": {"type": "treeNode", "value": 1, "left": null, "right": null},
+                          "right": {"type": "treeNode", "value": 173, "left": null, "right": null}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 146,
+                        "left": {"type": "treeNode", "value": 135, "left": null, "right": null},
+                        "right": {"type": "treeNode", "value": 5, "left": null, "right": null}
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 216,
+                      "left": {"type": "treeNode", "value": 32, "left": null, "right": null},
+                      "right": {
+                        "type": "treeNode",
+                        "value": 211,
+                        "left": {"type": "treeNode", "value": 174, "left": null, "right": null},
+                        "right": null
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 126,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 94,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 125,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 118,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 88,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 55, "left": null, "right": null}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 157,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 164,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 49,
+                              "left": {"type": "treeNode", "value": 58, "left": null, "right": null},
+                              "right": null
+                            },
+                            "right": null
+                          },
+                          "right": {"type": "treeNode", "value": 127, "left": null, "right": null}
+                        }
+                      },
+                      "right": null
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 20,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 275,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 85,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 299,
+                            "left": null,
+                            "right": {"type": "treeNode", "value": 141, "left": null, "right": null}
+                          },
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 96,
+                          "left": {"type": "treeNode", "value": 107, "left": null, "right": null},
+                          "right": {
+                            "type": "treeNode",
+                            "value": 33,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 57,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 78, "left": null, "right": null}
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 246,
+                        "left": {"type": "treeNode", "value": 176, "left": null, "right": null},
+                        "right": null
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 284,
+                    "left": null,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 220,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 124,
+                        "left": {"type": "treeNode", "value": 11, "left": null, "right": null},
+                        "right": null
+                      }
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 195,
+                "left": {
+                  "type": "treeNode",
+                  "value": 91,
+                  "left": null,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 89,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 237,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 235,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 234,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 101,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 133,
+                              "left": {"type": "treeNode", "value": 198, "left": null, "right": null},
+                              "right": null
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 128,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 17, "left": null, "right": null}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 115,
+                            "left": {"type": "treeNode", "value": 263, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 158,
+                              "left": {"type": "treeNode", "value": 297, "left": null, "right": null},
+                              "right": null
+                            }
+                          }
+                        }
+                      },
+                      "right": {"type": "treeNode", "value": 274, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 209,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 288,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 268,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 4,
+                            "left": {"type": "treeNode", "value": 149, "left": null, "right": null},
+                            "right": null
+                          },
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 41,
+                          "left": {"type": "treeNode", "value": 283, "left": null, "right": null},
+                          "right": null
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 69,
+                        "left": null,
+                        "right": {"type": "treeNode", "value": 103, "left": null, "right": null}
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 267,
+                  "left": {"type": "treeNode", "value": 292, "left": null, "right": null},
+                  "right": {
+                    "type": "treeNode",
+                    "value": 28,
+                    "left": null,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 226,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 249,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 104,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 217,
+                            "left": null,
+                            "right": {"type": "treeNode", "value": 92, "left": null, "right": null}
+                          },
+                          "right": {"type": "treeNode", "value": 218, "left": null, "right": null}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 296,
+                        "left": {"type": "treeNode", "value": 154, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 291,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 123,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 61,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 16,
+                                "left": null,
+                                "right": {"type": "treeNode", "value": 52, "left": null, "right": null}
+                              },
+                              "right": null
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 59,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 30, "left": null, "right": null}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 260,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 29,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 77, "left": null, "right": null}
+                            },
+                            "right": null
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 270,
+              "left": {
+                "type": "treeNode",
+                "value": 87,
+                "left": {
+                  "type": "treeNode",
+                  "value": 138,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 222,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 40,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 192,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 80,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 214, "left": null, "right": null}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 84,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 175,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 178,
+                              "left": {"type": "treeNode", "value": 50, "left": null, "right": null},
+                              "right": {"type": "treeNode", "value": 262, "left": null, "right": null}
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 285,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 117,
+                          "left": {"type": "treeNode", "value": 22, "left": null, "right": null},
+                          "right": null
+                        },
+                        "right": null
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 238,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 273,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 14,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 276,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 205,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 204, "left": null, "right": null}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 206,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 132,
+                                "left": null,
+                                "right": {"type": "treeNode", "value": 19, "left": null, "right": null}
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 229,
+                            "left": null,
+                            "right": {"type": "treeNode", "value": 37, "left": null, "right": null}
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 116,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 62,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 86,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 231, "left": null, "right": null}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 12,
+                            "left": {"type": "treeNode", "value": 102, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 233,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 100,
+                                "left": {"type": "treeNode", "value": 232, "left": null, "right": null},
+                                "right": {"type": "treeNode", "value": 159, "left": null, "right": null}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 180,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 71,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 261,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 293,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 224,
+                            "left": {"type": "treeNode", "value": 90, "left": null, "right": null},
+                            "right": {"type": "treeNode", "value": 18, "left": null, "right": null}
+                          },
+                          "right": {"type": "treeNode", "value": 193, "left": null, "right": null}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 257,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 219,
+                            "left": {"type": "treeNode", "value": 60, "left": null, "right": null},
+                            "right": null
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 6,
+                        "left": {"type": "treeNode", "value": 184, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 295,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 72,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 208,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 277, "left": null, "right": null}
+                            }
+                          },
+                          "right": {"type": "treeNode", "value": 9, "left": null, "right": null}
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 177,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 99,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 83,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 140,
+                            "left": {"type": "treeNode", "value": 108, "left": null, "right": null},
+                            "right": {"type": "treeNode", "value": 203, "left": null, "right": null}
+                          },
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 281,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 48,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 264,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 160,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 221,
+                                  "left": {"type": "treeNode", "value": 243, "left": null, "right": null},
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 259,
+                                    "left": {"type": "treeNode", "value": 183, "left": null, "right": null},
+                                    "right": null
+                                  }
+                                },
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 31,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 271,
+                                    "left": {"type": "treeNode", "value": 139, "left": null, "right": null},
+                                    "right": null
+                                  },
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 213,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 251,
+                                      "left": {"type": "treeNode", "value": 185, "left": null, "right": null},
+                                      "right": null
+                                    },
+                                    "right": null
+                                  }
+                                }
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 239,
+                                "left": null,
+                                "right": {"type": "treeNode", "value": 191, "left": null, "right": null}
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 269,
+                            "left": {"type": "treeNode", "value": 43, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 111,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 169,
+                                "left": {"type": "treeNode", "value": 186, "left": null, "right": null},
+                                "right": null
+                              },
+                              "right": {"type": "treeNode", "value": 254, "left": null, "right": null}
+                            }
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 162,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 120,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 26,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 151,
+                              "left": {"type": "treeNode", "value": 70, "left": null, "right": null},
+                              "right": null
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 230,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 68,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 97,
+                                "left": null,
+                                "right": {"type": "treeNode", "value": 282, "left": null, "right": null}
+                              },
+                              "right": null
+                            },
+                            "right": {"type": "treeNode", "value": 280, "left": null, "right": null}
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 245,
+                          "left": {"type": "treeNode", "value": 21, "left": null, "right": null},
+                          "right": {
+                            "type": "treeNode",
+                            "value": 10,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 131,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 155, "left": null, "right": null}
+                            },
+                            "right": null
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 65,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 266,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 236,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 47,
+                        "left": {"type": "treeNode", "value": 181, "left": null, "right": null},
+                        "right": null
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 298,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 63,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 188,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 145,
+                            "left": {"type": "treeNode", "value": 110, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 247,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 105,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 112,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 82,
+                                    "left": {"type": "treeNode", "value": 250, "left": null, "right": null},
+                                    "right": null
+                                  },
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 279,
+                                    "left": {"type": "treeNode", "value": 272, "left": null, "right": null},
+                                    "right": null
+                                  }
+                                },
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 13,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 75,
+                                    "left": {"type": "treeNode", "value": 136, "left": null, "right": null},
+                                    "right": {
+                                      "type": "treeNode",
+                                      "value": 187,
+                                      "left": {
+                                        "type": "treeNode",
+                                        "value": 179,
+                                        "left": null,
+                                        "right": {"type": "treeNode", "value": 8, "left": null, "right": null}
+                                      },
+                                      "right": {"type": "treeNode", "value": 253, "left": null, "right": null}
+                                    }
+                                  },
+                                  "right": {"type": "treeNode", "value": 130, "left": null, "right": null}
+                                }
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 53,
+                                "left": {"type": "treeNode", "value": 286, "left": null, "right": null},
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 150,
+                                  "left": null,
+                                  "right": {"type": "treeNode", "value": 163, "left": null, "right": null}
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "right": {"type": "treeNode", "value": 56, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 74,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 300,
+                      "left": {"type": "treeNode", "value": 42, "left": null, "right": null},
+                      "right": {
+                        "type": "treeNode",
+                        "value": 147,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 2,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 142,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 54,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 182,
+                                "left": {"type": "treeNode", "value": 113, "left": null, "right": null},
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 201,
+                                  "left": null,
+                                  "right": {"type": "treeNode", "value": 152, "left": null, "right": null}
+                                }
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 79,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 165,
+                                  "left": null,
+                                  "right": {"type": "treeNode", "value": 294, "left": null, "right": null}
+                                },
+                                "right": {"type": "treeNode", "value": 95, "left": null, "right": null}
+                              }
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 168,
+                              "left": {"type": "treeNode", "value": 190, "left": null, "right": null},
+                              "right": {"type": "treeNode", "value": 189, "left": null, "right": null}
+                            }
+                          }
+                        },
+                        "right": {"type": "treeNode", "value": 114, "left": null, "right": null}
+                      }
+                    },
+                    "right": {"type": "treeNode", "value": 148, "left": null, "right": null}
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 109,
+                "left": {
+                  "type": "treeNode",
+                  "value": 81,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 289,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 227,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 67,
+                        "left": {"type": "treeNode", "value": 39, "left": null, "right": null},
+                        "right": {"type": "treeNode", "value": 3, "left": null, "right": null}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 290,
+                        "left": null,
+                        "right": {"type": "treeNode", "value": 207, "left": null, "right": null}
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 244,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 223,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 153,
+                          "left": {"type": "treeNode", "value": 196, "left": null, "right": null},
+                          "right": {
+                            "type": "treeNode",
+                            "value": 143,
+                            "left": {"type": "treeNode", "value": 199, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 248,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 225,
+                                "left": {"type": "treeNode", "value": 7, "left": null, "right": null},
+                                "right": null
+                              }
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 46,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 172,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 215,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 64,
+                                "left": {"type": "treeNode", "value": 76, "left": null, "right": null},
+                                "right": null
+                              },
+                              "right": null
+                            },
+                            "right": {"type": "treeNode", "value": 134, "left": null, "right": null}
+                          },
+                          "right": {"type": "treeNode", "value": 51, "left": null, "right": null}
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 144,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 23,
+                      "left": {"type": "treeNode", "value": 256, "left": null, "right": null},
+                      "right": {
+                        "type": "treeNode",
+                        "value": 287,
+                        "left": {"type": "treeNode", "value": 66, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 166,
+                          "left": {"type": "treeNode", "value": 73, "left": null, "right": null},
+                          "right": null
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 27,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 255,
+                        "left": null,
+                        "right": {"type": "treeNode", "value": 212, "left": null, "right": null}
+                      },
+                      "right": null
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 156,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 200,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 38,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 197,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 34,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 93,
+                            "left": {"type": "treeNode", "value": 137, "left": null, "right": null},
+                            "right": null
+                          },
+                          "right": {"type": "treeNode", "value": 36, "left": null, "right": null}
+                        }
+                      },
+                      "right": null
+                    },
+                    "right": null
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 35,
+                    "left": null,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 106,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 121,
+                        "left": {"type": "treeNode", "value": 44, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 98,
+                          "left": {"type": "treeNode", "value": 242, "left": null, "right": null},
+                          "right": {
+                            "type": "treeNode",
+                            "value": 240,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 24,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 241,
+                                "left": {"type": "treeNode", "value": 119, "left": null, "right": null},
+                                "right": null
+                              },
+                              "right": {
+                                "type": "treeNode",
+                                "value": 252,
+                                "left": null,
+                                "right": {"type": "treeNode", "value": 202, "left": null, "right": null}
+                              }
+                            },
+                            "right": null
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 210,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 161,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 25,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 228,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 122, "left": null, "right": null}
+                            },
+                            "right": null
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 15,
+                          "left": {"type": "treeNode", "value": 170, "left": null, "right": null},
+                          "right": null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": 26
+      },
+      {
+        "id": "h10",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 150,
+            "left": {
+              "type": "treeNode",
+              "value": 213,
+              "left": {
+                "type": "treeNode",
+                "value": 275,
+                "left": {
+                  "type": "treeNode",
+                  "value": 82,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 38,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 23,
+                      "left": {"type": "treeNode", "value": 67, "left": null, "right": null},
+                      "right": {
+                        "type": "treeNode",
+                        "value": 246,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 208,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 30, "left": null, "right": null}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 295,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 35,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 125,
+                              "left": {"type": "treeNode", "value": 145, "left": null, "right": null},
+                              "right": {"type": "treeNode", "value": 291, "left": null, "right": null}
+                            },
+                            "right": null
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 123,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 79,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 73,
+                          "left": {"type": "treeNode", "value": 282, "left": null, "right": null},
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 231,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 74,
+                            "left": {"type": "treeNode", "value": 101, "left": null, "right": null},
+                            "right": null
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 126,
+                            "left": {"type": "treeNode", "value": 176, "left": null, "right": null},
+                            "right": null
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 257,
+                        "left": null,
+                        "right": {"type": "treeNode", "value": 130, "left": null, "right": null}
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 111,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 187,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 276,
+                        "left": null,
+                        "right": {"type": "treeNode", "value": 41, "left": null, "right": null}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 70,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 225,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 219, "left": null, "right": null}
+                        },
+                        "right": null
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 151,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 98,
+                        "left": {"type": "treeNode", "value": 159, "left": null, "right": null},
+                        "right": null
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 131,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 161,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 21,
+                            "left": {"type": "treeNode", "value": 51, "left": null, "right": null},
+                            "right": {"type": "treeNode", "value": 293, "left": null, "right": null}
+                          },
+                          "right": {"type": "treeNode", "value": 49, "left": null, "right": null}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 146,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 115,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 26,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 192,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 234,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 290,
+                            "left": null,
+                            "right": {"type": "treeNode", "value": 258, "left": null, "right": null}
+                          },
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 90,
+                          "left": {"type": "treeNode", "value": 241, "left": null, "right": null},
+                          "right": {"type": "treeNode", "value": 60, "left": null, "right": null}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 80,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 24,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 25, "left": null, "right": null}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 40,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 16,
+                            "left": {"type": "treeNode", "value": 207, "left": null, "right": null},
+                            "right": null
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 232,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 155,
+                              "left": {"type": "treeNode", "value": 245, "left": null, "right": null},
+                              "right": {
+                                "type": "treeNode",
+                                "value": 238,
+                                "left": null,
+                                "right": {"type": "treeNode", "value": 11, "left": null, "right": null}
+                              }
+                            },
+                            "right": {"type": "treeNode", "value": 148, "left": null, "right": null}
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 286,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 54,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 139,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 209,
+                            "left": {"type": "treeNode", "value": 185, "left": null, "right": null},
+                            "right": {"type": "treeNode", "value": 288, "left": null, "right": null}
+                          },
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 108,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 143,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 271,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 119,
+                                "left": null,
+                                "right": {"type": "treeNode", "value": 217, "left": null, "right": null}
+                              },
+                              "right": null
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 224,
+                              "left": {"type": "treeNode", "value": 269, "left": null, "right": null},
+                              "right": {"type": "treeNode", "value": 100, "left": null, "right": null}
+                            }
+                          },
+                          "right": {"type": "treeNode", "value": 129, "left": null, "right": null}
+                        }
+                      },
+                      "right": {"type": "treeNode", "value": 158, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 142,
+                    "left": {"type": "treeNode", "value": 71, "left": null, "right": null},
+                    "right": {
+                      "type": "treeNode",
+                      "value": 200,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 22,
+                        "left": {"type": "treeNode", "value": 102, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 17,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 267,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 287,
+                              "left": {"type": "treeNode", "value": 259, "left": null, "right": null},
+                              "right": {"type": "treeNode", "value": 177, "left": null, "right": null}
+                            },
+                            "right": {"type": "treeNode", "value": 36, "left": null, "right": null}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 254,
+                "left": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 170,
+                    "left": null,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 248,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 156,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 86,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 202,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 277,
+                              "left": {"type": "treeNode", "value": 204, "left": null, "right": null},
+                              "right": null
+                            },
+                            "right": null
+                          },
+                          "right": null
+                        },
+                        "right": null
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 89,
+                    "left": null,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 278,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 228,
+                        "left": null,
+                        "right": {"type": "treeNode", "value": 92, "left": null, "right": null}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 78,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 103,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 114,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 180,
+                              "left": {"type": "treeNode", "value": 5, "left": null, "right": null},
+                              "right": null
+                            },
+                            "right": null
+                          },
+                          "right": {"type": "treeNode", "value": 153, "left": null, "right": null}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 48,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 147,
+                            "left": {"type": "treeNode", "value": 121, "left": null, "right": null},
+                            "right": null
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 281,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 32,
+                              "left": {"type": "treeNode", "value": 20, "left": null, "right": null},
+                              "right": null
+                            },
+                            "right": null
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 136,
+                  "left": null,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 88,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 15,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 75,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 168,
+                          "left": {"type": "treeNode", "value": 97, "left": null, "right": null},
+                          "right": {"type": "treeNode", "value": 96, "left": null, "right": null}
+                        },
+                        "right": null
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 14,
+                        "left": {"type": "treeNode", "value": 242, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 197,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 132, "left": null, "right": null}
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 261,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 84,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 62,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 112, "left": null, "right": null}
+                        },
+                        "right": null
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 298,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 194,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 206,
+                            "left": {"type": "treeNode", "value": 226, "left": null, "right": null},
+                            "right": null
+                          }
+                        },
+                        "right": null
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 171,
+              "left": {
+                "type": "treeNode",
+                "value": 117,
+                "left": {
+                  "type": "treeNode",
+                  "value": 64,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 52,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 137,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 2,
+                        "left": {"type": "treeNode", "value": 8, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 272,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 255, "left": null, "right": null}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 250,
+                        "left": {"type": "treeNode", "value": 274, "left": null, "right": null},
+                        "right": null
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 237,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 162,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 222,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 268,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 57,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 221,
+                                "left": null,
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 215,
+                                  "left": {"type": "treeNode", "value": 128, "left": null, "right": null},
+                                  "right": {"type": "treeNode", "value": 191, "left": null, "right": null}
+                                }
+                              }
+                            },
+                            "right": null
+                          },
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 65,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 297,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 244,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 264,
+                                "left": {"type": "treeNode", "value": 196, "left": null, "right": null},
+                                "right": null
+                              }
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 172,
+                              "left": {"type": "treeNode", "value": 83, "left": null, "right": null},
+                              "right": null
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 239,
+                            "left": null,
+                            "right": {"type": "treeNode", "value": 292, "left": null, "right": null}
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 122,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 175,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 124,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 34,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 230, "left": null, "right": null}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 284,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 223,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 205, "left": null, "right": null}
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 189,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 218,
+                            "left": {"type": "treeNode", "value": 1, "left": null, "right": null},
+                            "right": null
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 109,
+                            "left": null,
+                            "right": {"type": "treeNode", "value": 190, "left": null, "right": null}
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 77,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 266,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 210,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 10,
+                            "left": {"type": "treeNode", "value": 33, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 279,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 116,
+                                "left": {"type": "treeNode", "value": 247, "left": null, "right": null},
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 296,
+                                  "left": null,
+                                  "right": {"type": "treeNode", "value": 195, "left": null, "right": null}
+                                }
+                              },
+                              "right": {"type": "treeNode", "value": 45, "left": null, "right": null}
+                            }
+                          },
+                          "right": null
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 179,
+                          "left": {"type": "treeNode", "value": 29, "left": null, "right": null},
+                          "right": null
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 118,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 294,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 134,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 95,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 216,
+                                "left": {"type": "treeNode", "value": 262, "left": null, "right": null},
+                                "right": null
+                              }
+                            }
+                          },
+                          "right": null
+                        },
+                        "right": {"type": "treeNode", "value": 198, "left": null, "right": null}
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 260,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 251,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 243,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 252,
+                        "left": null,
+                        "right": {"type": "treeNode", "value": 72, "left": null, "right": null}
+                      }
+                    },
+                    "right": null
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 66,
+                    "left": {"type": "treeNode", "value": 19, "left": null, "right": null},
+                    "right": {"type": "treeNode", "value": 93, "left": null, "right": null}
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 174,
+                "left": {
+                  "type": "treeNode",
+                  "value": 43,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 55,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 212,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 58,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 44,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 39, "left": null, "right": null}
+                        },
+                        "right": {"type": "treeNode", "value": 13, "left": null, "right": null}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 37,
+                        "left": {"type": "treeNode", "value": 149, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 144,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 27,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 94,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 12, "left": null, "right": null}
+                            },
+                            "right": {"type": "treeNode", "value": 181, "left": null, "right": null}
+                          },
+                          "right": null
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 18,
+                      "left": null,
+                      "right": {"type": "treeNode", "value": 3, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 157,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 59,
+                      "left": null,
+                      "right": {"type": "treeNode", "value": 106, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 253,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 220,
+                        "left": {"type": "treeNode", "value": 289, "left": null, "right": null},
+                        "right": {
+                          "type": "treeNode",
+                          "value": 236,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 240,
+                            "left": {"type": "treeNode", "value": 47, "left": null, "right": null},
+                            "right": {"type": "treeNode", "value": 87, "left": null, "right": null}
+                          },
+                          "right": null
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 273,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 63,
+                          "left": null,
+                          "right": {"type": "treeNode", "value": 167, "left": null, "right": null}
+                        }
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 299,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 56,
+                    "left": {"type": "treeNode", "value": 81, "left": null, "right": null},
+                    "right": {
+                      "type": "treeNode",
+                      "value": 178,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 85,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 285,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 127,
+                            "left": {"type": "treeNode", "value": 265, "left": null, "right": null},
+                            "right": {"type": "treeNode", "value": 42, "left": null, "right": null}
+                          },
+                          "right": {"type": "treeNode", "value": 68, "left": null, "right": null}
+                        }
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 263,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 110,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 165,
+                            "left": {"type": "treeNode", "value": 283, "left": null, "right": null},
+                            "right": null
+                          }
+                        },
+                        "right": {"type": "treeNode", "value": 4, "left": null, "right": null}
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 249,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 141,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 61,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 233,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 173,
+                            "left": {"type": "treeNode", "value": 186, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 201,
+                              "left": {"type": "treeNode", "value": 229, "left": null, "right": null},
+                              "right": {"type": "treeNode", "value": 31, "left": null, "right": null}
+                            }
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 256,
+                            "left": {"type": "treeNode", "value": 154, "left": null, "right": null},
+                            "right": null
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 76,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 7,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 211,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 133, "left": null, "right": null}
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 203,
+                              "left": {
+                                "type": "treeNode",
+                                "value": 99,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 182,
+                                  "left": {
+                                    "type": "treeNode",
+                                    "value": 91,
+                                    "left": {"type": "treeNode", "value": 188, "left": null, "right": null},
+                                    "right": {"type": "treeNode", "value": 120, "left": null, "right": null}
+                                  },
+                                  "right": null
+                                },
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 164,
+                                  "left": null,
+                                  "right": {"type": "treeNode", "value": 214, "left": null, "right": null}
+                                }
+                              },
+                              "right": null
+                            }
+                          }
+                        }
+                      },
+                      "right": null
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 169,
+                      "left": {
+                        "type": "treeNode",
+                        "value": 166,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 235,
+                          "left": {
+                            "type": "treeNode",
+                            "value": 69,
+                            "left": {"type": "treeNode", "value": 105, "left": null, "right": null},
+                            "right": {"type": "treeNode", "value": 193, "left": null, "right": null}
+                          },
+                          "right": {
+                            "type": "treeNode",
+                            "value": 270,
+                            "left": {"type": "treeNode", "value": 163, "left": null, "right": null},
+                            "right": {
+                              "type": "treeNode",
+                              "value": 140,
+                              "left": null,
+                              "right": {"type": "treeNode", "value": 46, "left": null, "right": null}
+                            }
+                          }
+                        },
+                        "right": {"type": "treeNode", "value": 104, "left": null, "right": null}
+                      },
+                      "right": {
+                        "type": "treeNode",
+                        "value": 28,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 50,
+                          "left": {"type": "treeNode", "value": 152, "left": null, "right": null},
+                          "right": {
+                            "type": "treeNode",
+                            "value": 138,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 199,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 107,
+                                "left": null,
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 184,
+                                  "left": null,
+                                  "right": {"type": "treeNode", "value": 6, "left": null, "right": null}
+                                }
+                              }
+                            },
+                            "right": {
+                              "type": "treeNode",
+                              "value": 280,
+                              "left": {"type": "treeNode", "value": 160, "left": null, "right": null},
+                              "right": {"type": "treeNode", "value": 53, "left": null, "right": null}
+                            }
+                          }
+                        },
+                        "right": {
+                          "type": "treeNode",
+                          "value": 113,
+                          "left": {"type": "treeNode", "value": 135, "left": null, "right": null},
+                          "right": {
+                            "type": "treeNode",
+                            "value": 183,
+                            "left": {"type": "treeNode", "value": 227, "left": null, "right": null},
+                            "right": null
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": 24
+      }
+    ]
+  },
+  "edgeCases": ["the longest crawl does not pass through the entrance", "a cave that is one long passage", "a single chamber", "an empty cave"],
+  "variables": {
+    "pool": [
+      {"name": "todo", "type": "stack<treeNode>"},
+      {"name": "order", "type": "stack<treeNode>"},
+      {"name": "deep", "type": "map<num,num>"},
+      {"name": "node", "type": "treeNode"},
+      {"name": "kid", "type": "treeNode?"},
+      {"name": "h", "type": "num?"},
+      {"name": "l", "type": "num"},
+      {"name": "r", "type": "num"},
+      {"name": "best", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "postorder_depths_longest_path"}
+}

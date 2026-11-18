@@ -1,32 +1,32 @@
 {
-  "total": 161,
+  "total": 173,
   "targetTotal": 300,
   "tiers": {
     "1": 9,
     "2": 43,
-    "3": 55,
-    "4": 45,
-    "5": 9
+    "3": 58,
+    "4": 51,
+    "5": 12
   },
   "modes": {
-    "budget": 24,
-    "build": 99,
-    "edge": 27,
-    "optimize": 6,
-    "restricted": 5
+    "budget": 26,
+    "build": 105,
+    "edge": 29,
+    "optimize": 7,
+    "restricted": 6
   },
   "structures": {
-    "array": 62,
-    "graph": 16,
+    "array": 67,
+    "graph": 18,
     "grid": 5,
-    "hash_map": 13,
+    "hash_map": 14,
     "hash_set": 4,
     "heap": 14,
     "linked_list": 11,
-    "queue": 2,
+    "queue": 3,
     "scalar": 12,
     "stack": 7,
-    "tree": 15
+    "tree": 18
   },
   "families": {
     "array_scan": 13,
@@ -35,10 +35,10 @@
     "control_flow": 7,
     "dp_grid": 3,
     "dp_iterative": 7,
-    "graph_bfs": 5,
-    "graph_connectivity": 7,
+    "graph_bfs": 7,
+    "graph_connectivity": 8,
     "graph_dfs_iterative": 2,
-    "greedy": 8,
+    "greedy": 11,
     "hash_map": 10,
     "hash_set": 4,
     "heap": 14,
@@ -49,27 +49,27 @@
     "prefix_sum": 6,
     "queue": 3,
     "recursion": 9,
-    "sliding_window": 9,
+    "sliding_window": 12,
     "stack": 5,
     "topological_order": 1,
-    "tree_traversal": 12,
+    "tree_traversal": 15,
     "two_pointers": 12,
     "weighted_shortest_path": 1
   },
   "performance": {
-    "budget": 37,
-    "correctness": 114,
-    "optimization": 6,
-    "restricted": 4
+    "budget": 39,
+    "correctness": 122,
+    "optimization": 7,
+    "restricted": 5
   },
   "concepts": {
     "array_scan": 11,
     "arrays": 16,
     "backtracking": 6,
-    "bfs": 9,
+    "bfs": 12,
     "binary_search": 3,
     "binary_search_answer": 1,
-    "bst": 2,
+    "bst": 3,
     "complement_lookup": 1,
     "control": 12,
     "counting": 1,
@@ -77,12 +77,12 @@
     "dp": 11,
     "dp_iterative": 1,
     "fast_slow_pointers": 2,
-    "graph": 17,
+    "graph": 20,
     "graph_bfs": 3,
     "graph_dfs_iterative": 1,
-    "greedy": 13,
+    "greedy": 16,
     "greedy_choice": 1,
-    "hash_map": 14,
+    "hash_map": 16,
     "hash_set": 3,
     "heap": 15,
     "linked_list": 11,
@@ -91,15 +91,15 @@
     "neighbour_order": 1,
     "nullable_check": 11,
     "prefix_sum": 10,
-    "queue": 11,
+    "queue": 13,
     "recursion": 9,
     "relinking": 2,
     "shortest_path": 1,
-    "sliding_window": 9,
-    "stack": 9,
+    "sliding_window": 12,
+    "stack": 10,
     "topological_order": 1,
-    "tree": 12,
-    "two_pointers": 17,
+    "tree": 15,
+    "two_pointers": 18,
     "variables": 12
   },
   "worlds": [
@@ -255,25 +255,28 @@
       "concepts": [
         "sliding_window"
       ],
-      "count": 9,
+      "count": 12,
       "tiers": {
         "1": 0,
         "2": 2,
-        "3": 4,
-        "4": 3,
-        "5": 0
+        "3": 5,
+        "4": 4,
+        "5": 1
       },
       "families": {
-        "sliding_window": 9
+        "sliding_window": 12
       },
       "patterns": {
         "count_fixed_windows_at_least": 1,
         "count_windows_sum_at_most": 1,
         "distinct_count_per_window": 1,
+        "fixed_window_best_gain_over_base": 1,
         "fixed_window_max_sum": 1,
         "longest_window_at_most_k_bad": 1,
         "longest_window_k_distinct": 1,
         "longest_window_one_zero": 1,
+        "shortest_window_covering_multiset": 1,
+        "slide_split_between_two_ends": 1,
         "sum_of_window_peaks": 1,
         "variable_window_shortest": 1
       },
@@ -353,27 +356,30 @@
         "tree",
         "bst"
       ],
-      "count": 12,
+      "count": 15,
       "tiers": {
         "1": 0,
         "2": 4,
-        "3": 3,
-        "4": 5,
-        "5": 0
+        "3": 4,
+        "4": 6,
+        "5": 1
       },
       "families": {
-        "tree_traversal": 12
+        "tree_traversal": 15
       },
       "patterns": {
         "bfs_depth_levels": 1,
         "bfs_level_width": 1,
+        "bfs_no_node_after_gap": 1,
         "bst_range_pruning": 1,
+        "bst_split_point_descent": 1,
         "inorder_stack_check": 1,
         "iterative_leaf_count": 1,
         "iterative_tree_size": 1,
         "left_spine_length": 1,
         "minimum_leaf_value": 1,
         "mirror_pairs_stack": 1,
+        "postorder_depths_longest_path": 1,
         "right_spine_sum": 1,
         "root_to_leaf_state": 1,
         "single_node_tree": 1
@@ -425,27 +431,30 @@
         "bfs",
         "dfs"
       ],
-      "count": 15,
+      "count": 18,
       "tiers": {
         "1": 0,
         "2": 3,
         "3": 7,
-        "4": 5,
-        "5": 0
+        "4": 7,
+        "5": 1
       },
       "families": {
-        "graph_bfs": 5,
-        "graph_connectivity": 7,
+        "graph_bfs": 7,
+        "graph_connectivity": 8,
         "graph_dfs_iterative": 2,
         "topological_order": 1
       },
       "patterns": {
         "bfs_eccentricity": 1,
         "bfs_farthest_layer_width": 1,
+        "bfs_from_every_node_shortest_cycle": 1,
+        "bfs_over_generated_states": 1,
         "bfs_shortest_path": 1,
         "bfs_two_coloring": 1,
         "bfs_within_hops": 1,
         "count_components": 1,
+        "count_sources_of_one_way_network": 1,
         "count_zero_outdegree": 1,
         "cycle_by_edge_count": 1,
         "direct_edge_exists": 1,
@@ -464,21 +473,24 @@
       "concepts": [
         "greedy"
       ],
-      "count": 8,
+      "count": 11,
       "tiers": {
         "1": 0,
         "2": 3,
-        "3": 3,
-        "4": 2,
+        "3": 4,
+        "4": 4,
         "5": 0
       },
       "families": {
-        "greedy": 8
+        "greedy": 11
       },
       "patterns": {
         "assign_sorted_cookies": 1,
         "circuit_start_reset": 1,
+        "cut_at_farthest_last_occurrence": 1,
         "earliest_finish_selection": 1,
+        "fewest_handovers_by_reach_layers": 1,
+        "flip_losses_then_parity_on_smallest": 1,
         "jump_game_reach": 1,
         "max_overlap_two_pointers": 1,
         "running_min_profit": 1,
@@ -653,6 +665,21 @@
       "concepts": [
         "graph",
         "dfs"
+      ]
+    },
+    {
+      "id": "both_ends",
+      "world": "world_05",
+      "tier": 4,
+      "mode": "optimize",
+      "family": "sliding_window",
+      "pattern": "slide_split_between_two_ends",
+      "structure": "array",
+      "secondary": [],
+      "performance": "optimization",
+      "concepts": [
+        "sliding_window",
+        "two_pointers"
       ]
     },
     {
@@ -965,6 +992,20 @@
       ]
     },
     {
+      "id": "drum_line",
+      "world": "world_11",
+      "tier": 4,
+      "mode": "budget",
+      "family": "greedy",
+      "pattern": "fewest_handovers_by_reach_layers",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "greedy"
+      ]
+    },
+    {
       "id": "dry_spell",
       "world": "world_01",
       "tier": 2,
@@ -1203,6 +1244,21 @@
       "concepts": [
         "heap",
         "greedy"
+      ]
+    },
+    {
+      "id": "full_rows",
+      "world": "world_08",
+      "tier": 4,
+      "mode": "edge",
+      "family": "tree_traversal",
+      "pattern": "bfs_no_node_after_gap",
+      "structure": "tree",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "tree",
+        "bfs"
       ]
     },
     {
@@ -1488,6 +1544,22 @@
       ]
     },
     {
+      "id": "lift_buttons",
+      "world": "world_10",
+      "tier": 4,
+      "mode": "build",
+      "family": "graph_bfs",
+      "pattern": "bfs_over_generated_states",
+      "structure": "queue",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "bfs",
+        "queue"
+      ]
+    },
+    {
       "id": "lift_trips",
       "world": "world_01",
       "tier": 2,
@@ -1542,6 +1614,22 @@
       "secondary": [],
       "performance": "correctness",
       "concepts": [
+        "hash_map"
+      ]
+    },
+    {
+      "id": "longest_crawl",
+      "world": "world_08",
+      "tier": 5,
+      "mode": "build",
+      "family": "tree_traversal",
+      "pattern": "postorder_depths_longest_path",
+      "structure": "tree",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "tree",
+        "stack",
         "hash_map"
       ]
     },
@@ -1842,6 +1930,20 @@
       ]
     },
     {
+      "id": "news_towns",
+      "world": "world_10",
+      "tier": 4,
+      "mode": "build",
+      "family": "graph_connectivity",
+      "pattern": "count_sources_of_one_way_network",
+      "structure": "graph",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "graph"
+      ]
+    },
+    {
       "id": "next_lineup",
       "world": "world_02",
       "tier": 4,
@@ -1853,6 +1955,20 @@
       "performance": "correctness",
       "concepts": [
         "arrays"
+      ]
+    },
+    {
+      "id": "night_coffee",
+      "world": "world_05",
+      "tier": 3,
+      "mode": "build",
+      "family": "sliding_window",
+      "pattern": "fixed_window_best_gain_over_base",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "sliding_window"
       ]
     },
     {
@@ -1984,6 +2100,21 @@
       ]
     },
     {
+      "id": "parts_aisle",
+      "world": "world_05",
+      "tier": 5,
+      "mode": "budget",
+      "family": "sliding_window",
+      "pattern": "shortest_window_covering_multiset",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "sliding_window",
+        "hash_map"
+      ]
+    },
+    {
       "id": "party_tables",
       "world": "world_01",
       "tier": 1,
@@ -2084,6 +2215,20 @@
       "performance": "correctness",
       "concepts": [
         "graph"
+      ]
+    },
+    {
+      "id": "playlist_cuts",
+      "world": "world_11",
+      "tier": 4,
+      "mode": "build",
+      "family": "greedy",
+      "pattern": "cut_at_farthest_last_occurrence",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "greedy"
       ]
     },
     {
@@ -2468,6 +2613,21 @@
       ]
     },
     {
+      "id": "shared_ancestor",
+      "world": "world_08",
+      "tier": 3,
+      "mode": "restricted",
+      "family": "tree_traversal",
+      "pattern": "bst_split_point_descent",
+      "structure": "tree",
+      "secondary": [],
+      "performance": "restricted",
+      "concepts": [
+        "tree",
+        "bst"
+      ]
+    },
+    {
       "id": "shared_values",
       "world": "world_03",
       "tier": 2,
@@ -2510,6 +2670,36 @@
       "concepts": [
         "arrays",
         "prefix_sum"
+      ]
+    },
+    {
+      "id": "shortest_ring",
+      "world": "world_10",
+      "tier": 5,
+      "mode": "build",
+      "family": "graph_bfs",
+      "pattern": "bfs_from_every_node_shortest_cycle",
+      "structure": "graph",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "graph",
+        "bfs",
+        "queue"
+      ]
+    },
+    {
+      "id": "sign_flips",
+      "world": "world_11",
+      "tier": 3,
+      "mode": "edge",
+      "family": "greedy",
+      "pattern": "flip_losses_then_parity_on_smallest",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "greedy"
       ]
     },
     {
@@ -3009,15 +3199,8 @@
     {
       "area": "world",
       "id": "world_05",
-      "have": 9,
+      "have": 12,
       "want": 20
-    },
-    {
-      "area": "tiers",
-      "id": "world_05",
-      "missing": [
-        5
-      ]
     },
     {
       "area": "world",
@@ -3034,33 +3217,19 @@
     {
       "area": "world",
       "id": "world_08",
-      "have": 12,
-      "want": 30
-    },
-    {
-      "area": "tiers",
-      "id": "world_08",
-      "missing": [
-        5
-      ]
-    },
-    {
-      "area": "world",
-      "id": "world_10",
       "have": 15,
       "want": 30
     },
     {
-      "area": "tiers",
+      "area": "world",
       "id": "world_10",
-      "missing": [
-        5
-      ]
+      "have": 18,
+      "want": 30
     },
     {
       "area": "world",
       "id": "world_11",
-      "have": 8,
+      "have": 11,
       "want": 20
     },
     {
@@ -3122,7 +3291,7 @@
     {
       "area": "family",
       "id": "sliding_window",
-      "have": 9,
+      "have": 12,
       "want": 15
     },
     {
@@ -3164,13 +3333,13 @@
     {
       "area": "family",
       "id": "tree_traversal",
-      "have": 12,
+      "have": 15,
       "want": 25
     },
     {
       "area": "family",
       "id": "graph_bfs",
-      "have": 5,
+      "have": 7,
       "want": 10
     },
     {
@@ -3181,12 +3350,6 @@
     },
     {
       "area": "family",
-      "id": "graph_connectivity",
-      "have": 7,
-      "want": 8
-    },
-    {
-      "area": "family",
       "id": "topological_order",
       "have": 1,
       "want": 4
@@ -3194,7 +3357,7 @@
     {
       "area": "family",
       "id": "greedy",
-      "have": 8,
+      "have": 11,
       "want": 20
     },
     {
@@ -3236,25 +3399,25 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 99,
+      "have": 105,
       "want": 150
     },
     {
       "area": "mode",
       "id": "budget",
-      "have": 24,
+      "have": 26,
       "want": 30
     },
     {
       "area": "mode",
       "id": "optimize",
-      "have": 6,
+      "have": 7,
       "want": 20
     },
     {
       "area": "mode",
       "id": "restricted",
-      "have": 5,
+      "have": 6,
       "want": 15
     },
     {

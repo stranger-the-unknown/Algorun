@@ -1,0 +1,147 @@
+{
+  "id": "sign_flips",
+  "version": 1,
+  "title": "Sign Flips",
+  "world": "world_11",
+  "chapter": "flip_losses_then_parity_on_smallest",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": ["greedy"],
+  "prerequisites": [],
+  "story": "A ledger lists gains and losses, sorted from the lowest number to the highest. An auditor must flip the sign of an entry exactly k times in all; she may pick the same entry more than once, and every flip counts. What is the largest total the ledger can show afterwards? With entries -4 -2 7 and k = 3: -4 and -2 become 4 and 2, and the third flip still has to go somewhere. It costs least on the 2, for a total of 9.",
+  "io": {
+    "inputs": [
+      {"name": "ledger", "type": "array<num>"},
+      {"name": "k", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 200},
+    "notes": ["1 to 200 entries from -1000 to 1000, lowest first.", "k is 0 to 1000."]
+  },
+  "blocks": {
+    "allow": ["arith.abs", "arith.add", "arith.max", "arith.min", "arith.mod", "arith.mul", "arith.sub", "arr.get", "arr.len", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.not", "logic.or", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 85
+  },
+  "limits": {"maxOps": 10900, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Flipping a loss into a gain always helps, and the biggest losses come first in the ledger. Flipping the same entry twice changes nothing.", "Walk the ledger: while flips are left and the entry is negative, flip it. Whatever flips remain after that can be spent two at a time on any entry without changing the total.", "IF an odd number of flips is left over (REMAINDER 2 is 1), one entry must end up flipped: pick the one closest to zero, the MIN of the ABSOLUTE values, and subtract it twice from the total."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"ledger": [-8, -3, -1, 4, 6], "k": 2},
+        "out": 20
+      },
+      {
+        "id": "v2",
+        "in": {"ledger": [-5, -2, 3], "k": 4},
+        "out": 10
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"ledger": [-4, -2, 7], "k": 3},
+        "out": 9
+      },
+      {
+        "id": "h02",
+        "in": {"ledger": [-1, 5], "k": 2},
+        "out": 4
+      },
+      {
+        "id": "h03",
+        "in": {"ledger": [-4, 1], "k": 2},
+        "out": 3
+      },
+      {
+        "id": "h04",
+        "in": {"ledger": [2, 3, 9], "k": 1},
+        "out": 10
+      },
+      {
+        "id": "h05",
+        "in": {"ledger": [2, 3, 9], "k": 2},
+        "out": 14
+      },
+      {
+        "id": "h06",
+        "in": {"ledger": [0, 3, 5], "k": 1},
+        "out": 8
+      },
+      {
+        "id": "h07",
+        "in": {"ledger": [-3, 0, 2], "k": 4},
+        "out": 5
+      },
+      {
+        "id": "h08",
+        "in": {"ledger": [-7], "k": 1},
+        "out": 7
+      },
+      {
+        "id": "h09",
+        "in": {"ledger": [-7], "k": 2},
+        "out": -7
+      },
+      {
+        "id": "h10",
+        "in": {"ledger": [5], "k": 3},
+        "out": -5
+      },
+      {
+        "id": "h11",
+        "in": {"ledger": [-9, -6, -2], "k": 2},
+        "out": 13
+      },
+      {
+        "id": "h12",
+        "in": {"ledger": [-9, -6, -2], "k": 4},
+        "out": 13
+      },
+      {
+        "id": "h13",
+        "in": {"ledger": [-9, -6, -2, 1], "k": 0},
+        "out": -16
+      },
+      {
+        "id": "h14",
+        "in": {
+          "ledger": [-995, -988, -972, -966, -957, -936, -923, -910, -897, -887, -884, -853, -845, -829, -814, -794, -791, -786, -770, -757, -747, -740, -737, -735, -723, -720, -719, -716, -661, -654, -651, -651, -639, -638, -615, -600, -560, -542, -506, -490, -489, -483, -446, -444, -435, -433, -401, -384, -369, -359, -353, -353, -348, -346, -334, -333, -325, -321, -304, -287, -283, -282, -266, -252, -251, -248, -238, -238, -220, -208, -204, -201, -199, -194, -192, -188, -186, -182, -179, -151, -150, -129, -128, -104, -99, -89, -88, -87, -46, -41, -40, 12, 20, 28, 31, 56, 58, 59, 63, 73, 78, 79, 82, 87, 88, 109, 112, 132, 143, 148, 148, 159, 162, 165, 176, 178, 207, 209, 215, 216, 249, 253, 254, 257, 258, 261, 261, 267, 274, 291, 294, 297, 300, 301, 320, 322, 326, 327, 340, 347, 349, 353, 367, 367, 374, 396, 400, 415, 429, 438, 466, 475, 479, 499, 503, 510, 517, 519, 528, 539, 542, 555, 562, 565, 568, 571, 574, 587, 598, 598, 616, 625, 634, 653, 656, 663, 665, 673, 678, 681, 691, 695, 724, 728, 739, 764, 772, 805, 818, 825, 852, 857, 867, 895, 908, 915, 932, 938, 943, 955],
+          "k": 37
+        },
+        "out": 61514
+      },
+      {
+        "id": "h15",
+        "in": {
+          "ledger": [-994, -986, -984, -982, -970, -969, -967, -946, -938, -931, -926, -923, -913, -900, -897, -882, -867, -854, -824, -811, -806, -802, -795, -767, -756, -755, -754, -752, -745, -739, -738, -730, -729, -729, -723, -722, -703, -660, -650, -625, -623, -616, -603, -597, -582, -535, -518, -518, -503, -486, -480, -458, -456, -443, -439, -428, -428, -397, -386, -383, -371, -367, -366, -361, -351, -343, -340, -326, -311, -307, -304, -299, -294, -283, -274, -273, -272, -253, -247, -246, -241, -234, -223, -221, -204, -195, -123, -121, -119, -115, -107, -103, -93, -86, -79, -69, -63, -54, -51, -50, -47, -44, -32, -21, -16, -14, -11, -7, 17, 36, 57, 76, 83, 113, 118, 172, 182, 182, 183, 194, 208, 225, 233, 260, 267, 278, 282, 291, 291, 293, 294, 310, 317, 319, 322, 337, 359, 371, 375, 380, 382, 391, 396, 397, 410, 428, 463, 467, 468, 472, 474, 483, 497, 500, 504, 518, 535, 551, 563, 569, 571, 572, 575, 579, 599, 599, 610, 612, 634, 639, 657, 700, 701, 705, 706, 713, 736, 766, 777, 784, 792, 818, 838, 840, 841, 845, 861, 864, 867, 872, 882, 884, 888, 900, 908, 918, 939, 949, 975, 989],
+          "k": 1000
+        },
+        "out": 99752
+      },
+      {
+        "id": "h16",
+        "in": {
+          "ledger": [-999, -992, -992, -982, -971, -964, -959, -957, -946, -942, -926, -924, -923, -922, -917, -915, -908, -907, -903, -883, -879, -878, -866, -865, -846, -837, -830, -827, -825, -820, -818, -815, -815, -814, -808, -807, -804, -804, -795, -785, -773, -771, -760, -743, -743, -742, -742, -733, -728, -727, -718, -703, -702, -702, -691, -685, -680, -675, -667, -665, -663, -661, -659, -657, -625, -625, -620, -618, -605, -604, -603, -600, -597, -594, -593, -579, -573, -570, -569, -568, -559, -556, -554, -551, -550, -539, -537, -535, -534, -519, -511, -510, -504, -495, -493, -489, -488, -477, -474, -471, -466, -462, -453, -453, -449, -447, -445, -438, -437, -436, -425, -419, -417, -392, -387, -386, -386, -383, -370, -369, -368, -355, -352, -346, -345, -344, -341, -340, -337, -334, -332, -325, -313, -310, -309, -308, -305, -299, -297, -294, -293, -291, -281, -280, -279, -279, -275, -273, -272, -271, -270, -269, -264, -256, -249, -246, -241, -241, -239, -231, -221, -204, -204, -203, -200, -177, -176, -175, -162, -151, -147, -145, -144, -142, -133, -124, -114, -113, -103, -94, -94, -92, -92, -77, -77, -74, -71, -69, -67, -65, -61, -57, -54, -53, -46, -42, -40, -20, -12, -9],
+          "k": 999
+        },
+        "out": 96809
+      }
+    ]
+  },
+  "edgeCases": ["more flips than losses, with an odd number left over", "more flips than losses, with an even number left over", "a loss turned into a gain smaller than every other entry", "a zero in the ledger", "no losses at all", "k of 0"],
+  "variables": {
+    "pool": [
+      {"name": "total", "type": "num"},
+      {"name": "small", "type": "num"},
+      {"name": "left", "type": "num"},
+      {"name": "i", "type": "num"},
+      {"name": "v", "type": "num"},
+      {"name": "done", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "flip_losses_then_parity_on_smallest"}
+}
