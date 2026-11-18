@@ -236,16 +236,6 @@ Future<int?> _numberFromPad(BuildContext context, Puzzle puzzle, int? current) a
   return chosen && value is int ? value : null;
 }
 
-/// A fixture value the way a player reads it: `[3, 1, 4]`, `7`, `TRUE`.
-String _valueText(Object? json) => switch (json) {
-      null => 'NOTHING',
-      true => 'TRUE',
-      false => 'FALSE',
-      final List<Object?> list => '[${list.map(_valueText).join(', ')}]',
-      final Map<Object?, Object?> tagged => jsonEncode(tagged),
-      _ => '$json',
-    };
-
 /// One question: which one, what the program is given, and the answer.
 class _QuestionPanel extends StatelessWidget {
   const _QuestionPanel({
@@ -307,7 +297,7 @@ class _QuestionPanel extends StatelessWidget {
                   child: Text.rich(
                     TextSpan(children: [
                       TextSpan(text: input.name, style: name),
-                      TextSpan(text: ' = ${_valueText(valueToJson(question.input[input.name]!))}', style: value),
+                      TextSpan(text: ' = ${fixtureText(valueToJson(question.input[input.name]!))}', style: value),
                     ]),
                     key: Key('predict-input-${input.name}'),
                     maxLines: 3,
@@ -338,7 +328,7 @@ class _QuestionPanel extends StatelessWidget {
                             ),
                             onPressed: onAskNumber,
                             child: Text(
-                              answer == null ? l.predictTapToAnswer : _valueText(valueToJson(answer)),
+                              answer == null ? l.predictTapToAnswer : fixtureText(valueToJson(answer)),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: answer == null

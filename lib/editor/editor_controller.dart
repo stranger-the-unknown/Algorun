@@ -116,14 +116,37 @@ final class EditorController extends ChangeNotifier {
   final bool readOnly;
 
   /// A block the puzzle's starter program locks (M1).
-  bool isLocked(String id) =>
-      (puzzle.starter?.locked.contains(id) ?? false) && graph.blocks.containsKey(id);
+  bool isLocked(String id) => _locksInForce && puzzle.starter!.locked.contains(id);
 
   /// [id] or something inside it is locked.
-  bool holdsLocked(String id) {
-    final locked = puzzle.starter?.locked;
-    if (locked == null || locked.isEmpty) return false;
-    return subtreeOf(id).any(locked.contains);
+  bool holdsLocked(String id) => _locksInForce && subtreeOf(id).any(puzzle.starter!.locked.contains);
+
+  BlockGraph? _locksCheckedFor;
+  bool _locksHold = false;
+
+  /// Locks are in force while the program still holds every locked block as
+  /// the starter gave it — the same kind with the same contents. A program
+  /// that came from the starter always does (a locked block cannot be
+  /// deleted or changed). One that never held it — built from nothing, or
+  /// saved on another version of the puzzle — does not, and there a block
+  /// that merely reuses a locked block's id must not be frozen.
+  bool get _locksInForce {
+    final starter = puzzle.starter;
+    if (starter == null || starter.locked.isEmpty) return false;
+    final now = graph;
+    if (!identical(_locksCheckedFor, now)) {
+      _locksCheckedFor = now;
+      _locksHold = starter.locked.every((id) {
+        final mine = now.blocks[id];
+        final given = starter.graph.blocks[id];
+        return mine != null &&
+            given != null &&
+            mine.catalogId == given.catalogId &&
+            mine.literals.length == given.literals.length &&
+            mine.literals.entries.every((e) => given.literals[e.key] == e.value);
+      });
+    }
+    return _locksHold;
   }
 
   /// Whether the block's own contents (a number, a name) may be changed.

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +16,7 @@ import '../../progress/campaign.dart';
 import '../../progress/progress_ledger.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/content_width.dart';
+import '../../shared/value_text.dart';
 import '../../state/hint_session.dart';
 import '../../state/l10n_providers.dart';
 import '../../state/progress_providers.dart';

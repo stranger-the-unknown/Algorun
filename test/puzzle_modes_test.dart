@@ -264,6 +264,20 @@ void main() {
       expect(c.graph.blocks.containsKey('step'), isTrue);
     });
 
+    test('a program that never held the starter has no locks', () {
+      // The campaign harness builds references from nothing, and the editor
+      // hands out the same ids there: a block that merely shares a locked
+      // block's id — even its kind and contents — must not be frozen.
+      final c = EditorController(puzzle: _flags);
+      final first = c.place(const Placement(catalogId: BlockIds.varSet, literals: {'name': 'total'}), to: PortRef.mainBody)!;
+      expect(_flags.starter!.locked, contains(first));
+      expect(_flags.starter!.graph.blocks[first]!.literals, {'name': 'total'});
+      expect(c.isLocked(first), isFalse);
+      c.setLiteral(first, 'name', 'flags');
+      expect(c.graph.blocks[first]!.literals['name'], 'flags');
+      expect(c.deleteTree(first), isTrue);
+    });
+
     test('unlocked blocks next to locked ones edit as always, and UNDO works', () {
       final c = _editor(_posts);
       expect(c.isLocked('b6'), isFalse);

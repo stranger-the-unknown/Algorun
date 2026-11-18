@@ -11,6 +11,7 @@ import '../../progress/progress_ledger.dart';
 import '../../progress/save_data.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/content_width.dart';
+import '../../shared/value_text.dart';
 import '../../state/performance_text.dart';
 
 /// A puzzle to go on to after a solve.
@@ -487,15 +488,6 @@ class _AnswerRow extends StatelessWidget {
   final CaseResult result;
   final Puzzle puzzle;
 
-  static String _text(Object? json) => switch (json) {
-        null => 'NOTHING',
-        true => 'TRUE',
-        false => 'FALSE',
-        final List<Object?> list => '[${list.map(_text).join(', ')}]',
-        final Map<Object?, Object?> tagged => jsonEncode(tagged),
-        _ => '$json',
-      };
-
   @override
   Widget build(BuildContext context) {
     final ok = result.ok;
@@ -532,14 +524,14 @@ class _AnswerRow extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 26, top: 4),
             child: Text(
-              [for (final b in puzzle.io.inputs) '${b.name} = ${_text(input[b.name])}'].join('   '),
+              [for (final b in puzzle.io.inputs) '${b.name} = ${fixtureText(input[b.name])}'].join('   '),
               style: detail,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 26, top: 2),
             child: Text(
-              '${l.predictYourAnswer}: ${result.actual == null ? l.predictNoAnswer : _text(result.actual)}',
+              '${l.predictYourAnswer}: ${result.actual == null ? l.predictNoAnswer : fixtureText(result.actual)}',
               style: detail,
             ),
           ),
