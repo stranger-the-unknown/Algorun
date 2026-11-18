@@ -439,6 +439,16 @@
   },
   "close": "Close",
   "nothingFits": "Nothing in this puzzle fits here.",
+  "searchBlocks": "Search blocks",
+  "closeSearch": "Close search",
+  "noBlockMatches": "No block matches “{query}”.",
+  "@noBlockMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
   "targetProgram": "the program",
   "targetSlot": "this slot",
   "targetElse": "ELSE",

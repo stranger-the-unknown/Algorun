@@ -950,6 +950,24 @@ abstract class AppLocalizations {
   /// **'Nothing in this puzzle fits here.'**
   String get nothingFits;
 
+  /// No description provided for @searchBlocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Search blocks'**
+  String get searchBlocks;
+
+  /// No description provided for @closeSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Close search'**
+  String get closeSearch;
+
+  /// No description provided for @noBlockMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'No block matches “{query}”.'**
+  String noBlockMatches(String query);
+
   /// No description provided for @targetProgram.
   ///
   /// In en, this message translates to:

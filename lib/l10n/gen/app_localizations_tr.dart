@@ -519,6 +519,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nothingFits => 'Bu bulmacada buraya uyan bir şey yok.';
 
   @override
+  String get searchBlocks => 'Blok ara';
+
+  @override
+  String get closeSearch => 'Aramayı kapat';
+
+  @override
+  String noBlockMatches(String query) {
+    return '“$query” ile eşleşen blok yok.';
+  }
+
+  @override
   String get targetProgram => 'program';
 
   @override

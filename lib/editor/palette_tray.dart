@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import '../l10n/l10n.dart';
 import '../l10n/terms.dart';
 import '../shared/theme/app_theme.dart';
+import 'block_search.dart';
+import 'block_search_field.dart';
 import 'editor_controller.dart';
 import 'editor_theme.dart';
 import 'hole_picker.dart';
@@ -25,6 +27,17 @@ final class PaletteTray extends StatefulWidget {
 
 class _PaletteTrayState extends State<PaletteTray> {
   BlockCategory? _filter;
+
+  /// The search box is only built once asked for (E1), so the palette never
+  /// opens the keyboard by itself. While searching, the category filter is
+  /// set aside: a name is looked up among every block the puzzle allows.
+  bool _searching = false;
+  String _query = '';
+
+  void _closeSearch() => setState(() {
+        _searching = false;
+        _query = '';
+      });
 
   void _add(String id) {
     if (EditorController.needsName(id)) {
@@ -47,7 +60,10 @@ class _PaletteTrayState extends State<PaletteTray> {
     };
     final shown = [
       for (final id in ids)
-        if (_filter == null || BlockChrome.of(id).category == _filter) id,
+        if (_searching
+            ? BlockSearch.matches(id, _query)
+            : _filter == null || BlockChrome.of(id).category == _filter)
+          id,
     ];
     final scale = (MediaQuery.textScalerOf(context).scale(14) / 14).clamp(1.0, maxTextScale);
     final l = context.l10n;
@@ -69,17 +85,38 @@ class _PaletteTrayState extends State<PaletteTray> {
       for (final id in shown)
         _BlockChip(catalogId: id, onTap: () => _add(id), wraps: widget.vertical),
     ];
+    final searchButton = IconButton(
+      key: const Key('palette-search'),
+      tooltip: l.searchBlocks,
+      onPressed: () => setState(() => _searching = true),
+      icon: Icon(Icons.search, color: context.palette.muted),
+    );
+    final searchField = BlockSearchField(
+      onChanged: (text) => setState(() => _query = text),
+      onClose: _closeSearch,
+    );
+    final noMatch = Text(
+      l.noBlockMatches(_query.trim()),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(color: context.palette.muted),
+    );
     if (widget.vertical) {
       return Material(
         color: context.palette.elevated,
         child: ListView(
           padding: const EdgeInsets.all(12),
           children: [
-            Text(l.paletteBlocks, style: AppText.label(context)),
+            Row(
+              children: [
+                Expanded(child: Text(l.paletteBlocks, style: AppText.label(context))),
+                if (!_searching) searchButton,
+              ],
+            ),
             const SizedBox(height: 8),
-            Wrap(spacing: 8, runSpacing: 8, children: filters),
+            if (_searching) searchField else Wrap(spacing: 8, runSpacing: 8, children: filters),
             const SizedBox(height: 12),
-            Wrap(spacing: 8, runSpacing: 8, children: chips),
+            if (chips.isEmpty) noMatch else Wrap(spacing: 8, runSpacing: 8, children: chips),
           ],
         ),
       );
@@ -93,22 +130,33 @@ class _PaletteTrayState extends State<PaletteTray> {
           children: [
             SizedBox(
               height: 48 * scale,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: filters.length,
-                separatorBuilder: (_, _) => const SizedBox(width: 8),
-                itemBuilder: (_, i) => Center(child: filters[i]),
-              ),
+              child: _searching
+                  ? Center(child: searchField)
+                  : Row(
+                      children: [
+                        searchButton,
+                        Expanded(
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: filters.length,
+                            separatorBuilder: (_, _) => const SizedBox(width: 8),
+                            itemBuilder: (_, i) => Center(child: filters[i]),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
             const SizedBox(height: 4),
             SizedBox(
               height: 48 * scale,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: chips.length,
-                separatorBuilder: (_, _) => const SizedBox(width: 8),
-                itemBuilder: (_, i) => chips[i],
-              ),
+              child: chips.isEmpty
+                  ? Align(alignment: Alignment.centerLeft, child: noMatch)
+                  : ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: chips.length,
+                      separatorBuilder: (_, _) => const SizedBox(width: 8),
+                      itemBuilder: (_, i) => chips[i],
+                    ),
             ),
           ],
         ),

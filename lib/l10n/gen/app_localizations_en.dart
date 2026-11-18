@@ -519,6 +519,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nothingFits => 'Nothing in this puzzle fits here.';
 
   @override
+  String get searchBlocks => 'Search blocks';
+
+  @override
+  String get closeSearch => 'Close search';
+
+  @override
+  String noBlockMatches(String query) {
+    return 'No block matches “$query”.';
+  }
+
+  @override
   String get targetProgram => 'the program';
 
   @override
