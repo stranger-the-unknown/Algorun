@@ -174,7 +174,7 @@ void main() {
       expect(_engine.runTests(program, puzzle).kind, ResultKind.operationLimit);
     });
 
-    test('smallest_cart: the midpoint needs FLOOR DIVIDE, not DIVIDE', () {
+    test('smallest_cart: a DIVIDE midpoint is as good as FLOOR DIVIDE since L3', () {
       final puzzle = _puzzle('smallest_cart');
       final solution = _graph(_reference('smallest_cart')['solution']);
       expect(
@@ -192,8 +192,12 @@ void main() {
                 )
               : entry.value,
       });
+      // Before L3 DIVIDE gave 3.5 for 7 / 2 and this program failed; now it
+      // truncates, which equals FLOOR DIVIDE for the positive loads here, and
+      // costs the same.
       final suite = _engine.runTests(_lowered(divide, puzzle), puzzle);
-      expect(suite.kind, isNot(ResultKind.correct));
+      expect(suite.kind, ResultKind.correct);
+      expect(suite.metrics.ops, _engine.runTests(_lowered(solution, puzzle), puzzle).metrics.ops);
     });
 
     test('fewest_rides: a stack explores deep first and reports a longer route', () {

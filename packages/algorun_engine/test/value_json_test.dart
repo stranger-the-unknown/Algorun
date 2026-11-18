@@ -22,9 +22,34 @@ void main() {
   group('round trips', () {
     test('num', () {
       _roundTrip(3);
-      _roundTrip(-2.5);
+      _roundTrip(-25);
       _roundTrip(0, type: ValueType.number);
+      _roundTrip(maxSafeNumber);
+      _roundTrip(-maxSafeNumber);
       expect(valueFromJson(3), isA<NumValue>());
+    });
+
+    test('numbers are whole and inside the safe range (L3)', () {
+      // A whole 2.0 is the number 2, never a fraction that happens to be whole.
+      final two = valueFromJson(2.0) as NumValue;
+      expect(two.value, isA<int>());
+      expect(valueToJson(two), 2);
+      expect((valueFromJson(-0.0) as NumValue).value.isNegative, isFalse);
+      expect(() => valueFromJson(-2.5), _fails(r'$', 'has a fraction'));
+      expect(() => valueFromJson([1, 2.5], type: ValueType.array(ValueType.number)), _fails(r'$[1]', 'has a fraction'));
+      expect(() => valueFromJson(9007199254740992), _fails(r'$', 'Numbers go from'));
+      expect(() => valueFromJson(-9007199254740992), _fails(r'$', 'Numbers go from'));
+      expect(() => valueFromJson({'type': 'listNode', 'values': [1, 0.5]}), _fails(r'$.values[1]', 'has a fraction'));
+      expect(() => valueFromJson({'type': 'treeNode', 'value': 1.5}), _fails(r'$.value', 'has a fraction'));
+      expect(
+        () => valueFromJson({
+          'type': 'graph',
+          'nodes': [
+            {'id': 0.5, 'neighbors': <Object?>[]},
+          ],
+        }),
+        _fails(r'$.nodes[0].id', 'has a fraction'),
+      );
     });
 
     test('bool', () {

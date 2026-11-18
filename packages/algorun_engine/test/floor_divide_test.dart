@@ -118,8 +118,14 @@ void main() {
     });
 
     test('non-exact division never leaves a fraction', () {
-      expect(_floorDivide(7.5, 2), 3);
+      expect(_floorDivide(10, 4), 2);
       expect(_floorDivide(10, 4), isA<int>());
+    });
+
+    test('a fraction is not a number any more (L3)', () {
+      final result = _run([ReturnStmt(value: _floorDiv(_n(7.5), _n(2)))]);
+      expect(result.kind, ResultKind.invalidProgram);
+      expect(result.message, 'Only whole numbers can be used.');
     });
 
     test('negative values round down, toward minus infinity', () {
@@ -138,11 +144,19 @@ void main() {
       expect(result.message, 'You cannot divide by zero.');
     });
 
-    test('DIVIDE is unchanged', () {
-      final result = _run([
-        ReturnStmt(value: BinaryExpr(BinaryOp.div, _n(7), _n(2), type: ValueType.number)),
-      ]);
-      expect((result.output as NumValue).value, 3.5);
+    test('DIVIDE truncates toward zero (L3; it was 3.5 before)', () {
+      num divide(num a, num b) => (_run([
+            ReturnStmt(value: BinaryExpr(BinaryOp.div, _n(a), _n(b), type: ValueType.number)),
+          ]).output as NumValue)
+              .value;
+      expect(divide(7, 2), 3);
+      expect(divide(-7, 2), -3);
+      expect(divide(7, -2), -3);
+      expect(divide(-7, -2), 3);
+      expect(divide(8, 2), 4);
+      // FLOOR DIVIDE differs from it only below zero.
+      expect(_floorDivide(-7, 2), -4);
+      expect(_floorDivide(7, -2), -4);
     });
 
     test('costs one op, like every other block', () {
@@ -179,13 +193,13 @@ void main() {
       expect((result.output as NumValue).value, 20);
     });
 
-    test('the same midpoint with DIVIDE is not', () {
+    test('the same midpoint with DIVIDE works too (L3: it truncates; it was a fraction before)', () {
       final result = _run(
         [midpoint(BinaryOp.div)],
         input: {'nums': valueFromJson([10, 20, 30, 40])},
       );
-      expect(result.kind, ResultKind.runtimeError);
-      expect(result.message, 'A position has to be a whole number.');
+      expect(result.kind, ResultKind.correct);
+      expect((result.output as NumValue).value, 20);
     });
 
     test('graph → lower → runTests: the middle of a list', () {

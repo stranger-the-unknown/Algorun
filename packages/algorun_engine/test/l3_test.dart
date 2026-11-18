@@ -1,7 +1,6 @@
 // L3: what the game adds on top of the algorun-lang port — pairs as fixture
-// input, `blocks.texts`, and the text <-> number blocks under the game's own
-// number model (fractions exist; conversions stay inside 2^53 - 1 so the
-// phone and the web agree).
+// input, `blocks.texts`, and the text <-> number blocks, which stay inside
+// 2^53 - 1 like every other number (test/whole_number_test.dart).
 import 'package:algorun_engine/algorun_engine.dart';
 import 'package:test/test.dart';
 
@@ -114,16 +113,14 @@ void main() {
     });
   });
 
-  group('text positions under the game number model', () {
-    test('LETTER AT and PART OF TEXT need whole positions', () {
+  group('text positions', () {
+    test('a fraction cannot be a position: it is not a number', () {
       final at = _eval(_call(BlockIds.strCharAt, [_s('abc'), _n(1.5)], ValueType.string));
-      expect(at.kind, ResultKind.runtimeError);
-      expect(at.message, 'A position has to be a whole number.');
-      final part = _eval(_call(BlockIds.strSubstring, [_s('abc'), _n(0), _n(2.5)], ValueType.string));
-      expect(part.message, 'A position has to be a whole number.');
+      expect(at.kind, ResultKind.invalidProgram);
+      expect(at.message, 'Only whole numbers can be used.');
     });
 
-    test('a whole fraction is a position', () {
+    test('a whole 2.0 is the position 2', () {
       expect(_out(_call(BlockIds.strCharAt, [_s('abc'), _n(2.0)], ValueType.string)), 'c');
     });
 
@@ -148,25 +145,20 @@ void main() {
       expect(_out(text(_n(-9007199254740991))), '-9007199254740991');
     });
 
-    test('a whole fraction prints without a decimal point, on every platform', () {
-      // 7 / 2 * 2 is 7.0 on the phone and 7 in a browser; both must read "7".
-      final seven = BinaryExpr(
+    test('what DIVIDE gives prints as digits, the same on every platform', () {
+      // Before L3 `7 / 2 * 2` was 7.0 on the phone and 7 in a browser.
+      final six = BinaryExpr(
         BinaryOp.mul,
         BinaryExpr(BinaryOp.div, _n(7), _n(2), type: ValueType.number),
         _n(2),
         type: ValueType.number,
       );
-      expect(_out(text(seven)), '7');
+      expect(_out(text(six)), '6');
       expect(_out(text(_n(-0.0))), '0');
+      expect(_out(text(BinaryExpr(BinaryOp.mul, _n(0), _n(-3), type: ValueType.number))), '0');
     });
 
-    test('a fraction has no digits to write', () {
-      final r = _eval(text(_n(3.5)));
-      expect(r.kind, ResultKind.runtimeError);
-      expect(r.message, 'NUMBER AS TEXT needs a whole number.');
-    });
-
-    test('a number the web cannot hold exactly is too big', () {
+    test('a number past 2^53 - 1 never gets as far as being written', () {
       for (final n in [9007199254740992, -9007199254740992, 1e300]) {
         final r = _eval(text(_n(n)));
         expect(r.kind, ResultKind.runtimeError, reason: '$n');

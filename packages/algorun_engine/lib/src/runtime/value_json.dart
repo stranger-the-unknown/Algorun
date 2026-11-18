@@ -6,7 +6,7 @@
 /// | JSON | Runtime value |
 /// |---|---|
 /// | `null` | nothing |
-/// | a number | `num` |
+/// | a whole number from -(2^53 - 1) to 2^53 - 1 | `num` |
 /// | `true` / `false` | `bool` |
 /// | a string | `str` |
 /// | an array | `array` |
@@ -32,6 +32,7 @@ library;
 
 import '../types/value_type.dart';
 import 'runtime_value.dart';
+import 'whole_number.dart';
 
 /// Bounds for one fixture value, so a pathological file cannot exhaust memory
 /// or the stack while it is being read or written.
@@ -185,10 +186,7 @@ final class _Decoder {
     switch (json) {
       case final num n:
         _expect(type, TypeAtom.number, json, path);
-        if (!n.isFinite) {
-          throw FixtureFormatException(path, 'Numbers must be finite.');
-        }
-        return NumValue(n);
+        return NumValue(_whole(n, path));
       case final bool b:
         _expect(type, TypeAtom.boolean, json, path);
         return BoolValue(b);
@@ -471,9 +469,21 @@ final class _Decoder {
     }
   }
 
-  num _number(Object? json, String path) {
-    if (json is num && json.isFinite) return json;
+  int _number(Object? json, String path) {
+    if (json is num) return _whole(json, path);
     throw FixtureFormatException(path, 'Expected a number, got ${_describe(json)}.');
+  }
+
+  /// The game's numbers are whole and inside +-[maxSafeNumber] (L3): the
+  /// range every platform holds exactly. `2.0` is read as 2.
+  int _whole(num n, String path) {
+    if (!n.isFinite) throw FixtureFormatException(path, 'Numbers must be finite.');
+    return switch (numberProblem(n)) {
+      null => wholeNumber(n),
+      NumberProblem.fraction => throw FixtureFormatException(path, 'Numbers are whole: $n has a fraction.'),
+      NumberProblem.tooBig =>
+        throw FixtureFormatException(path, 'Numbers go from -$maxSafeNumber to $maxSafeNumber.'),
+    };
   }
 
   Object _key(RuntimeValue value, String path) {

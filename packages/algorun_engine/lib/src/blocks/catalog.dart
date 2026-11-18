@@ -54,8 +54,9 @@ abstract final class BlockIds {
   static const arithMul = 'arith.mul';
   static const arithDiv = 'arith.div';
 
-  /// Whole-number division that rounds down. DIVIDE is untouched: `7 / 2`
-  /// is still `3.5`; FLOOR DIVIDE gives `3`, a valid list position.
+  /// Whole-number division that rounds down: `-7 FLOOR DIVIDE 2` is `-4`.
+  /// Since L3 DIVIDE gives a whole number too, truncating toward zero
+  /// (`-7 / 2` is `-3`); the two differ only below zero.
   static const arithFloorDiv = 'arith.floor_div';
   static const arithMod = 'arith.mod';
   static const arithMin = 'arith.min';

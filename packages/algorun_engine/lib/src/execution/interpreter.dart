@@ -4,6 +4,7 @@ import '../ast/ir.dart';
 import '../blocks/catalog.dart';
 import '../runtime/limits.dart';
 import '../runtime/runtime_value.dart';
+import '../runtime/whole_number.dart';
 import '../types/value_type.dart';
 import 'engine.dart';
 import 'result_kind.dart';
@@ -272,7 +273,7 @@ final class Interpreter {
         s.srcBlockId,
       );
     }
-    var cursor = start;
+    var cursor = start.toInt();
     while (step > 0 ? cursor < end : cursor > end) {
       _tick(s.srcBlockId);
       // The counter belongs to the loop: changing the loop variable inside
@@ -282,7 +283,7 @@ final class Interpreter {
       final flow = _loopBody(s.body, vars);
       if (flow is _Return) return flow;
       if (flow != null) return null;
-      cursor += step;
+      cursor = _add(cursor, step, s.srcBlockId);
     }
     _emit(TraceKinds.loopEnd, s.srcBlockId, vars);
     return null;
@@ -323,7 +324,7 @@ final class Interpreter {
   ) {
     _tick(blockId);
     final current = _num(_read(target, vars, blockId), blockId);
-    _assign(target, NumValue(current + delta), vars);
+    _assign(target, NumValue(_add(current, delta, blockId)), vars);
     _emit(delta > 0 ? TraceKinds.inc : TraceKinds.dec, blockId, vars);
   }
 
@@ -403,7 +404,7 @@ final class Interpreter {
     final value = expr.value;
     return switch (value) {
       null => const NilValue(),
-      final num n => NumValue(n),
+      final num n => NumValue(_whole(n, expr.srcBlockId, 'Only whole numbers can be used.')),
       final bool b => BoolValue(b),
       final String s => StrValue(s),
       _ => throw _Halt(
@@ -443,9 +444,9 @@ final class Interpreter {
     final a = _num(left, expr.left.srcBlockId ?? id);
     final b = _num(right, expr.right.srcBlockId ?? id);
     return switch (expr.op) {
-      BinaryOp.add => NumValue(a + b),
-      BinaryOp.sub => NumValue(a - b),
-      BinaryOp.mul => NumValue(a * b),
+      BinaryOp.add => NumValue(_add(a, b, id)),
+      BinaryOp.sub => NumValue(_safe(a.toInt() - b.toInt(), id)),
+      BinaryOp.mul => NumValue(_mul(a, b, id)),
       BinaryOp.div => NumValue(_divide(a, b, id)),
       BinaryOp.floorDiv => NumValue(_floorDivide(a, b, id)),
       BinaryOp.mod => NumValue(_modulo(a, b, id)),
@@ -460,40 +461,84 @@ final class Interpreter {
     };
   }
 
-  /// Whole results stay whole: `4 / 2` is `2`, `3 / 2` is `1.5`.
-  num _divide(num a, num b, String? blockId) {
+  // --- numbers (L3: safe whole numbers; runtime/whole_number.dart) ----------
+  //
+  // Every number in a run is a whole number inside +-maxSafeNumber: literals
+  // and inputs are checked on the way in (_whole), and every operation that
+  // can leave the range goes through _safe. Inside the range the Dart VM,
+  // dart2js and dart2wasm agree bit for bit; tool/number_model_probe.dart and
+  // tool/web_parity.sh measure it.
+
+  Never _tooBig(String? blockId) => throw _Halt(ResultKind.runtimeError, 'This number is too big.', blockId);
+
+  /// [r] when it is inside the range, else "This number is too big."
+  /// (algorun-lang D2, with the limit at 2^53 - 1).
+  int _safe(int r, String? blockId) {
+    if (r > maxSafeNumber || r < -maxSafeNumber) _tooBig(blockId);
+    return r;
+  }
+
+  /// Two numbers inside the range cannot wrap 64 bits when added, and a sum
+  /// that JavaScript has to round is already outside the range.
+  int _add(num a, num b, String? blockId) => _safe(a.toInt() + b.toInt(), blockId);
+
+  int _mul(num a, num b, String? blockId) {
+    // On the phone a product can wrap around 64 bits and land back inside
+    // the range, so its size is judged on the double product first: that one
+    // only rounds, and never down past 2^53.
+    final size = a.toDouble() * b.toDouble();
+    if (size > maxSafeNumber || size < -maxSafeNumber) _tooBig(blockId);
+    return _unsigned0(a.toInt() * b.toInt());
+  }
+
+  /// JavaScript has a negative zero (`0 * -3`, `-1 ~/ 5`, `-0`) and prints
+  /// it; the phone does not have one.
+  static int _unsigned0(int r) => r == 0 ? 0 : r;
+
+  /// A number on its way into a run: a literal or part of an input. A whole
+  /// `2.0` is the number 2; a fraction is refused with [fraction]
+  /// (algorun-lang D4); a number outside the range is too big.
+  int _whole(num n, String? blockId, String fraction) {
+    switch (numberProblem(n)) {
+      case null:
+        return wholeNumber(n);
+      case NumberProblem.fraction:
+        throw _Halt(ResultKind.invalidProgram, fraction, blockId);
+      case NumberProblem.tooBig:
+        _tooBig(blockId);
+    }
+  }
+
+  static const _wholeInputs = 'This program only works with whole numbers.';
+
+  /// A map key or set member of an input: a number key is a number too.
+  Object _inputKey(Object key) => key is num ? _whole(key, null, _wholeInputs) : key;
+
+  /// DIVIDE truncates toward zero: `7 / 2` is 3 and `-7 / 2` is -3
+  /// (algorun-lang D3). FLOOR DIVIDE rounds down instead.
+  int _divide(num a, num b, String? blockId) {
     if (b == 0) {
       throw _Halt(ResultKind.runtimeError, 'You cannot divide by zero.', blockId);
     }
-    if (a is int && b is int && a % b == 0) return a ~/ b;
-    return a / b;
+    return _unsigned0(a.toInt() ~/ b.toInt());
   }
 
   /// FLOOR DIVIDE: the largest whole number not above `a / b`, so 7 FLOOR
-  /// DIVIDE 2 is 3 and -7 FLOOR DIVIDE 2 is -4. The result is always whole, which
-  /// makes it a valid list position. Whole operands use exact integer
-  /// arithmetic; anything else floors the real quotient.
+  /// DIVIDE 2 is 3 and -7 FLOOR DIVIDE 2 is -4.
   int _floorDivide(num a, num b, String? blockId) {
-    if (b == 0) {
-      throw _Halt(ResultKind.runtimeError, 'You cannot divide by zero.', blockId);
-    }
-    if (a is int && b is int) {
-      final truncated = a ~/ b;
-      final inexact = truncated * b != a;
-      return inexact && (a < 0) != (b < 0) ? truncated - 1 : truncated;
-    }
-    final quotient = a / b;
-    if (!quotient.isFinite) {
-      throw _Halt(ResultKind.runtimeError, 'This number is too big.', blockId);
-    }
-    return quotient.floor();
+    final x = a.toInt();
+    final y = b.toInt();
+    final truncated = _divide(x, y, blockId);
+    final inexact = truncated * y != x;
+    return inexact && (x < 0) != (y < 0) ? truncated - 1 : truncated;
   }
 
-  num _modulo(num a, num b, String? blockId) {
+  /// REMAINDER is never negative for a divisor other than zero.
+  int _modulo(num a, num b, String? blockId) {
     if (b == 0) {
       throw _Halt(ResultKind.runtimeError, 'You cannot divide by zero.', blockId);
     }
-    return a % b;
+    return _unsigned0(a.toInt() % b.toInt());
   }
 
   RuntimeValue _unary(UnaryExpr expr, Map<String, RuntimeValue> vars) {
@@ -501,8 +546,8 @@ final class Interpreter {
     final id = expr.arg.srcBlockId ?? expr.srcBlockId;
     return switch (expr.op) {
       UnaryOp.not => BoolValue(!_bool(arg, id)),
-      UnaryOp.neg => NumValue(-_num(arg, id)),
-      UnaryOp.abs => NumValue(_num(arg, id).abs()),
+      UnaryOp.neg => NumValue(_unsigned0(-_num(arg, id).toInt())),
+      UnaryOp.abs => NumValue(_num(arg, id).toInt().abs()),
       // A real check on the value: never an error, whatever it holds.
       UnaryOp.isNothing => BoolValue(arg is NilValue),
       UnaryOp.isNotNothing => BoolValue(arg is! NilValue),
@@ -600,7 +645,7 @@ final class Interpreter {
       case BlockIds.strCompare:
         return NumValue(_compareText(_str(at(0), id), _str(at(1), id)));
       case BlockIds.strFromNum:
-        return StrValue(_digits(_num(at(0), id), id));
+        return StrValue(_digits(_num(at(0), id)));
       case BlockIds.strToNum:
         {
           final n = _parseWhole(_str(at(0), id));
@@ -1026,35 +1071,16 @@ final class Interpreter {
   /// (LETTER AT: the last letter; PART OF TEXT: the length, a cut after it).
   int _bound(RuntimeValue value, int last, String? blockId) {
     final raw = _num(value, blockId);
-    if (raw % 1 != 0) {
-      throw _Halt(ResultKind.runtimeError, 'A position has to be a whole number.', blockId);
-    }
     if (raw < 0 || raw > last) {
       throw _Halt(ResultKind.runtimeError, 'That position is outside the text.', blockId);
     }
     return raw.toInt();
   }
 
-  /// The largest whole number every platform the game runs on holds exactly
-  /// (2^53 - 1): the phone's 64-bit integers and a browser's JavaScript
-  /// numbers agree up to here. Text <-> number conversion stays inside it so
-  /// that it gives the same answer on the phone and on the web.
-  static const int _maxSafe = 9007199254740991;
+  /// NUMBER AS TEXT: decimal digits, `-` for a negative number.
+  String _digits(num n) => n.toInt().toString();
 
-  /// NUMBER AS TEXT: decimal digits, `-` for a negative number. Only a whole
-  /// number has digits to write (algorun-lang has no fractions, D4).
-  String _digits(num n, String? blockId) {
-    if (n % 1 != 0) {
-      throw _Halt(ResultKind.runtimeError, 'NUMBER AS TEXT needs a whole number.', blockId);
-    }
-    if (n > _maxSafe || n < -_maxSafe) {
-      throw _Halt(ResultKind.runtimeError, 'This number is too big.', blockId);
-    }
-    // A whole fraction (7.0) and JavaScript's negative zero print as digits.
-    return n == 0 ? '0' : n.toInt().toString();
-  }
-
-  /// TEXT AS NUMBER: `-?[0-9]+` that fits [_maxSafe], else null. Digit by
+  /// TEXT AS NUMBER: `-?[0-9]+` that fits [maxSafeNumber], else null. Digit by
   /// digit, because `int.parse` rounds large values in a browser.
   static int? _parseWhole(String s) {
     var i = 0;
@@ -1065,7 +1091,7 @@ final class Interpreter {
     for (; i < s.length; i++) {
       final digit = s.codeUnitAt(i) - 0x30;
       if (digit < 0 || digit > 9) return null;
-      if (n > (_maxSafe - digit) ~/ 10) return null;
+      if (n > (maxSafeNumber - digit) ~/ 10) return null;
       n = n * 10 + digit;
     }
     return negative && n != 0 ? -n : n;
@@ -1225,15 +1251,7 @@ final class Interpreter {
   }
 
   int _position(RuntimeValue value, int length, String? blockId) {
-    final raw = _num(value, blockId);
-    if (raw % 1 != 0) {
-      throw _Halt(
-        ResultKind.runtimeError,
-        'A position has to be a whole number.',
-        blockId,
-      );
-    }
-    final index = raw.toInt();
+    final index = _num(value, blockId).toInt();
     if (index < 0 || index >= length) {
       throw _Halt(
         ResultKind.runtimeError,
@@ -1332,7 +1350,9 @@ final class Interpreter {
     final existing = seen[value];
     if (existing != null) return existing;
     switch (value) {
-      case NilValue() || NumValue() || BoolValue() || StrValue():
+      case NumValue(value: final n):
+        return NumValue(_whole(n, null, _wholeInputs));
+      case NilValue() || BoolValue() || StrValue():
         return value;
       case final ArrayValue v:
         final copy =
@@ -1351,18 +1371,18 @@ final class Interpreter {
         );
         seen[value] = copy;
         for (final entry in v.entries.entries) {
-          copy.entries[entry.key] = _copy(entry.value, seen);
+          copy.entries[_inputKey(entry.key)] = _copy(entry.value, seen);
         }
         return copy;
       case final SetValue v:
         final copy = SetValue({}, id: _nextId++, elementType: v.elementType);
         seen[value] = copy;
         for (final entry in v.members.entries) {
-          copy.members[entry.key] = _copy(entry.value, seen);
+          copy.members[_inputKey(entry.key)] = _copy(entry.value, seen);
         }
         return copy;
       case final HeapValue v:
-        final copy = HeapValue(List.of(v.items), isMax: v.isMax, id: _nextId++);
+        final copy = HeapValue([for (final n in v.items) _whole(n, null, _wholeInputs)], isMax: v.isMax, id: _nextId++);
         seen[value] = copy;
         return copy;
       case final StackValue v:
@@ -1387,13 +1407,13 @@ final class Interpreter {
         }
         return copy;
       case final ListNodeValue v:
-        final copy = ListNodeValue(v.value, id: _nextId++);
+        final copy = ListNodeValue(_whole(v.value, null, _wholeInputs), id: _nextId++);
         seen[value] = copy;
         final next = v.next;
         if (next != null) copy.next = _copy(next, seen) as ListNodeValue;
         return copy;
       case final TreeNodeValue v:
-        final copy = TreeNodeValue(v.value, id: _nextId++);
+        final copy = TreeNodeValue(_whole(v.value, null, _wholeInputs), id: _nextId++);
         seen[value] = copy;
         final left = v.left;
         final right = v.right;
@@ -1406,8 +1426,11 @@ final class Interpreter {
         return copy;
       case final GraphValue v:
         final copy = GraphValue(
-          {for (final entry in v.adjacency.entries) entry.key: List.of(entry.value)},
-          visited: Set.of(v.visited),
+          {
+            for (final entry in v.adjacency.entries)
+              _whole(entry.key, null, _wholeInputs): [for (final n in entry.value) _whole(n, null, _wholeInputs)],
+          },
+          visited: {for (final n in v.visited) _whole(n, null, _wholeInputs)},
           id: _nextId++,
         );
         seen[value] = copy;
