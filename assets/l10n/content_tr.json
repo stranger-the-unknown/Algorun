@@ -1391,6 +1391,114 @@
         "Her kare için bir tane olmak üzere 0'lardan oluşan bir done listesi tut. Bir kare öncelik kuyruğundan ilk kez çıktığında maliyeti en ucuzdur: done'ı SET ELEMENT ile 1 yap. IF son kareyse maliyeti RETURN et.",
         "Bir kareden dört adımı dene (1, -1, 0, 0 tutan dr ve dc listeleri işe yarar): tarlanın içindeki ve done olmayan her komşu için (maliyet PLUS ücreti) × 1000 PLUS numarasını INSERT et. Bir kare birkaç kez girebilir; yalnızca ilk çıkışı sayılır."
       ]
+    },
+    "turned_belt": {
+      "title": "Dönen Bant",
+      "story": "Bir suşi bandındaki tabaklar küçükten büyüğe numaralı ve hepsi farklı. Bant bir miktar dönmüş, kaç tabak kadar döndüğü bilinmiyor; yani liste ortadan bir yerden başlıyor: 6 8 9 2 3 5. En küçük numaralı tabağın konumunu, 0'dan sayarak bildir. Bant hiç dönmemiş de olabilir. Uzun bir bant işlem bütçesi içinde bitmeli: her tabağa tek tek bakmak fazla yavaş.",
+      "hints": [
+        "Ortadaki bir tabağı son tabakla karşılaştır. Ortadaki daha büyükse en küçük tabak ondan sonradır; değilse en küçük ya ortadakidir ya da ondan öncedir.",
+        "En küçük tabağın hâlâ bulunabileceği bölümün iki ucunu, lo ve hi, tut. Orta nokta (lo PLUS hi) FLOOR DIVIDE 2'dir.",
+        "lo, hi'den küçükken (WHILE … LESS THAN): IF ortadaki tabak hi'deki tabaktan büyükse (GREATER THAN), lo'yu orta PLUS 1 yap (SET), ELSE hi'yi orta yap (SET). Sonra lo'yu RETURN et."
+      ]
+    },
+    "fence_coats": {
+      "title": "Kat Kat Boya",
+      "story": "Bir çitin tahtaları 0'dan başlayarak numaralı. Boyacılar vardiyalarla çalışıyor: k. vardiya starts[k] ile ends[k] arasındaki her tahtaya, ikisi de dahil, coats[k] kat boya sürüyor. Her tahtada sonunda kaç kat boya olduğunu, tahta başına bir sayı içeren bir listeyle bildir. Her vardiyada tahtaları tek tek boyamak uzun bir çit için fazla yavaş.",
+      "hints": [
+        "Bir vardiya çiti yalnızca iki yerde değiştirir: boyanın başladığı yerde ve bittiği yerin hemen sonrasında.",
+        "Tahta başına bir sıfır içeren bir liste kur. Her vardiyanın kat sayısını başlangıç tahtasına ekle, bitişten sonraki tahtada da (öyle bir tahta varsa) geri çıkar.",
+        "Sonra listeyi bir kez, toplamı biriktirerek dolaş: her konuma o ana kadarki toplamı SET ELEMENT ile yaz. Bu toplam o tahtadaki kat sayısıdır."
+      ]
+    },
+    "cheap_seats": {
+      "title": "Ucuz Koltuklar",
+      "story": "Bir tiyatroda fiyatlar bir sırada sağa gittikçe hiç düşmüyor, bir sıradan arkasındakine geçince de hiç düşmüyor. Tablo fiyatları sıra sıra veriyor, en öndeki sıra ilk. Fiyatı bütçeyi aşmayan kaç koltuk var? Büyük bir salonda her koltuğa tek tek bakmak fazla yavaş.",
+      "hints": [
+        "Ön sıranın son koltuğunda dur. O koltuğa paran yetiyorsa aynı sırada solundaki bütün koltuklara da yeter.",
+        "O koltuk pahalıysa aynı sütunda arkasındaki bütün koltuklar da pahalıdır; o sütunu tümüyle unutabilirsin.",
+        "Bir sıra r ve bir sütun c tut. İkisi de salonun içindeyken (WHILE): IF koltuğun fiyatı bütçeyi aşmıyorsa sayıya c PLUS 1 ekle ve sonraki sıraya geç, ELSE bir sütun sola kay."
+      ]
+    },
+    "next_lineup": {
+      "title": "Yarının Sırası",
+      "story": "Bir grup her gece aynı şarkıları çalıyor, ama her gece sabit bir dizinin bir sonraki sıralamasıyla. Sıralamalar sözlükteki kelimeler gibi dizilir: önce ilk şarkı numarasına, sonra ikincisine bakılır. Bu geceki sıralama veriliyor; yarınkini, yani ondan sonra gelen en küçük sıralamayı bildir. En son sıralamadan sonra grup baştan, numaraların küçükten büyüğe dizildiği ilk sıralamadan başlar. Aynı şarkı numarası birden çok kez geçebilir.",
+      "hints": [
+        "Olabildiğince az şeyi, olabildiğince sağda değiştir. Sağdan gelerek, hemen ardındaki şarkıdan küçük olan ilk şarkıyı bul.",
+        "O şarkı büyümeli, ama en az kadar: onu, kendisinden büyük olan en sağdaki şarkıyla yer değiştir. O konumdan sonrası hâlâ büyükten küçüğe dizilidir.",
+        "Son olarak o konumdan sonrasını ters çevir ki kuyruk küçükten büyüğe dizilsin. Öyle bir şarkı yoksa bu geceki sıralama sonuncuydu: bütün listeyi ters çevir. Eşit numaralarda eşit şarkı ne küçük ne büyük sayılır."
+      ]
+    },
+    "level_score": {
+      "title": "Eşit Skor",
+      "story": "Hakemin kâğıdında uzun bir maçın golleri sırayla yazılı: ev sahibinin golü 1, konuk takımın golü 0. İki takımın eşit sayıda gol attığı, art arda gelen en uzun gol dizisini bul ve kaç gol içerdiğini bildir. Böyle bir dizi yoksa 0 bildir. Uzun bir maç işlem bütçesi içinde bitmeli.",
+      "hints": [
+        "Kâğıdı okurken ev sahibinin farkını tut: 1 gelince bir artır, 0 gelince bir azalt. Fark iki ayrı anda aynıysa aradaki goller eşit paylaşılmıştır.",
+        "Her farkın ilk görüldüğü konumu bir eşlemede sakla. Hiç gol yokken fark 0'dır: bunu eşlemeye -1 konumuyla PUT et.",
+        "Her golde farkı eşlemeden GET et. IF sonuç IS NOT NOTHING ise oradan buraya kadarki dizi eşittir: en uzununu sakla. ELSE farkı bu konumla PUT et. Sakladığın bir farkın üstüne asla yazma."
+      ]
+    },
+    "spy_cipher": {
+      "title": "Casusun Şifresi",
+      "story": "Bir casusun şifresi her sayıyı başka bir sayıyla değiştirir: aynı sayı hep aynı sayıya döner, iki farklı sayı da asla aynı sayıya dönmez. Elinde aynı uzunlukta bir açık mesaj ve bir şifreli mesaj var. Şifreli mesaj, açık mesajdan böyle bir şifreyle üretilmiş olabilir mi? Uzun mesajlar işlem bütçesi içinde bitmeli.",
+      "hints": [
+        "İki mesajı yan yana oku. Her konum şunu söyler: bu açık sayı şu şifreli sayıya dönüyor.",
+        "Açık sayılardan şifreli sayılara giden bir eşleme tut. Bir açık sayı yeniden çıkıp başka bir şifreli sayıyla eşleşiyorsa yanıt hayırdır.",
+        "Bu, kuralın yalnızca yarısı. Şifreli sayılardan açık sayılara geri giden ikinci bir eşleme tut ve aynı şekilde denetle: iki farklı açık sayı asla aynı şifreli sayıyı paylaşamaz."
+      ]
+    },
+    "four_shelves": {
+      "title": "Dört Raf",
+      "story": "Bir öğle yemeği tezgâhında dört raf var: başlangıçlar, ana yemekler, garnitürler ve tatlılar; her rafın bir fiyat listesi var. Bir menü, her raftan birer üründür. Tam olarak hedef tutarı ödeten kaç farklı menü var? Aynı rafta fiyatı aynı olan iki ürün yine de farklı üründür. Bütün menüleri tek tek denemek fazla yavaş.",
+      "hints": [
+        "Menüyü iki yarıya böl: bir başlangıçla bir ana yemek, bir garnitürle bir tatlı. İki yarının toplamı hedefi vermeli.",
+        "Her başlangıcı her ana yemekle eşleştir ve her toplamı kaç çiftin verdiğini bir eşlemede say.",
+        "Sonra her garnitürü her tatlıyla eşleştir: ilk yarı, hedef MINUS bu çift kadar tutmalı. O toplamı eşlemeden GET et ve IF sonuç IS NOT NOTHING ise sayısını yanıta ekle."
+      ]
+    },
+    "plank_wall": {
+      "title": "Tek Düz Kesik",
+      "story": "Bir duvar, uç uca dizilmiş tahta sıralarından örülmüş. Bütün sıralar aynı genişlikte, ama içlerindeki tahtalar öyle değil. Bir marangoz duvarı, iki ucunun arasında bir yerden, yukarıdan aşağıya dümdüz kesecek. Kesik bir sırada tam iki tahtanın birleştiği yerden geçerse o sıra zarar görmez; yoksa testere o sıradaki bir tahtayı keser. Tek kesik en az kaç tahtayı kesmek zorunda? Tahtalar çok geniş olabilir; duvar boyunca her yeri tek tek denemek fazla yavaş.",
+      "hints": [
+        "Kesik bir sıranın ek yerinden geçerse o sıra kurtulur. Öyleyse en çok sıranın ek yeri olduğu noktayı ara.",
+        "Bir ek yerinin konumu, ondan önceki tahtaların toplam genişliğidir. Her sırayı toplamı biriktirerek dolaş ve her ek yerini bir eşlemede say. Son tahtanın bitişini sayma: orası ek yeri değil, duvarın kenarıdır.",
+        "Gördüğün en yüksek sayıyı sakla. Yanıt, sıra sayısı MINUS o sayıdır. Hiçbir sırasında ek yeri olmayan bir duvarda her sıra kesilir."
+      ]
+    },
+    "after_rain": {
+      "title": "Yağmurdan Sonra",
+      "story": "Bir cadde boyunca, her biri bir blok genişliğinde, farklı yükseklikte kuleler yan yana duruyor. Şiddetli yağmurdan sonra su, iki yanında da daha yüksek bir kule bulunan her çukurda kalıyor; caddenin iki açık ucundan ise akıp gidiyor. Kaç blok su kalır? Ölçüm cihazı yalnızca birkaç sayıyı aklında tutabiliyor, cadde uzunluğunda ikinci bir liste tutamıyor; her kuleden sola ve sağa bakmak da fazla yavaş.",
+      "hints": [
+        "Bir kulenin üstündeki su iki yükseklikten küçük olanına kadar çıkar: solundaki en yüksek kule ile sağındaki en yüksek kule.",
+        "Her uçta birer işaret ve her uçtan o ana kadar görülen en yüksek kuleyi tut. İşaretlerin altındaki iki kuleye bak: alçak olanın hesabı şimdi kapatılabilir, çünkü öbür tarafta en az o kadar yüksek bir kule olduğu belli.",
+        "Alçak kulenin üstündeki işareti içeri kaydır. IF o kule kendi tarafında görülen en yüksek kuleden alçak değilse yeni en yüksek odur; ELSE aradaki farkı suya ekle."
+      ]
+    },
+    "rod_triangles": {
+      "title": "Çubuk Üçgenleri",
+      "story": "Bir atölye rafında çubuklar en kısadan en uzuna dizili; aynı uzunlukta çubuklar olabilir. Üç çubuk ancak kısa olan ikisinin toplamı en uzundan kesinlikle fazlaysa üçgen olur. Kaç farklı üçlü üçgen oluşturur? Farklı konumlardaki çubuklar, uzunlukları eşit olsa da farklı çubuklardır. Dolu bir rafta her üçlüyü denemek fazla yavaş.",
+      "hints": [
+        "Üçlünün en uzun çubuğunu sabitle. Şimdi ondan önceki çubuklar arasında, toplamı ondan fazla olan çiftleri arıyorsun.",
+        "Bir işareti en kısa çubuğa, birini de en uzunun hemen öncesine koy. Bu ikisi birlikte yetiyorsa, aradaki her çubuk da üstteki çubukla birlikte yeter.",
+        "O durumda sayıya (üst işaret MINUS alt işaret) ekle ve üst işareti aşağı indir; yetmiyorsa alt işareti yukarı çıkar. İşaretler buluşunca dur, sonra bir sonraki en uzun çubuğa geç."
+      ]
+    },
+    "shared_watch": {
+      "title": "Ortak Nöbet",
+      "story": "İki gece bekçisinin her biri nöbetlerini en erkenden başlayarak listeliyor; bir bekçinin kendi nöbetleri ne çakışıyor ne de birbirine değiyor. İlk bekçinin i. nöbeti startsA[i]. dakikada başlıyor ve endsA[i]. dakikaya kadar sürüyor (o dakika dahil değil); ikinci bekçinin startsB ve endsB listeleri de aynı şekilde. İki bekçi toplam kaç dakika aynı anda nöbette? Uzun listeler işlem bütçesi içinde bitmeli.",
+      "hints": [
+        "Her bekçiden birer nöbete bak. Ortak dakikaları, geç olan başlangıçtan erken olan bitişe kadardır; tabii bu pozitif bir sayıysa.",
+        "Her bekçinin listesinde birer işaret tut. İki nöbeti karşılaştırdıktan sonra, önce biten nöbetin öbür bekçinin sonraki nöbetleriyle ortak hiçbir dakikası olamaz.",
+        "Öyleyse önce biten nöbetten ilerle, öbürünü yerinde tut: uzun bir nöbet birkaç kısa nöbetle çakışabilir. Listelerden biri bitince dur."
+      ]
+    },
+    "far_from_zero": {
+      "title": "Sıfırdan Uzak",
+      "story": "Bir termometre kaydı en soğuktan en sıcağa sıralı ve sıfırın altında ölçümler içerebiliyor. Her ölçümün sıfırdan ne kadar uzak olduğunu, en uzak olan başta olacak şekilde yeni bir listede ver: -7 -2 1 4 kaydı 7 4 2 1 olur. Uzun bir kayıt işlem bütçesi içinde bitmeli: her ölçüm için bütün kaydı yeniden taramak fazla yavaş.",
+      "hints": [
+        "Sıfırdan en uzak ölçüm her zaman kaydın iki ucundan birindedir: ya en soğuk ya da en sıcak ölçüm.",
+        "Her uçta birer işaret tut. İki işaretin altındaki değerlerin ABSOLUTE değerlerini karşılaştır, büyük olanı yeni listeye APPEND et ve o işareti içeri kaydır.",
+        "Alt işaret üst işareti geçmediği sürece (WHILE … LESS OR EQUAL) devam et ki ortada kalan son ölçüm unutulmasın."
+      ]
     }
   }
 }

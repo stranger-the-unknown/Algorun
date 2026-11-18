@@ -1,25 +1,25 @@
 {
-  "total": 149,
+  "total": 161,
   "targetTotal": 300,
   "tiers": {
     "1": 9,
     "2": 43,
-    "3": 52,
-    "4": 37,
-    "5": 8
+    "3": 55,
+    "4": 45,
+    "5": 9
   },
   "modes": {
-    "budget": 20,
-    "build": 95,
-    "edge": 25,
-    "optimize": 5,
-    "restricted": 4
+    "budget": 24,
+    "build": 99,
+    "edge": 27,
+    "optimize": 6,
+    "restricted": 5
   },
   "structures": {
-    "array": 55,
+    "array": 62,
     "graph": 16,
-    "grid": 4,
-    "hash_map": 9,
+    "grid": 5,
+    "hash_map": 13,
     "hash_set": 4,
     "heap": 14,
     "linked_list": 11,
@@ -29,9 +29,9 @@
     "tree": 15
   },
   "families": {
-    "array_scan": 11,
+    "array_scan": 13,
     "backtracking": 6,
-    "binary_search": 2,
+    "binary_search": 3,
     "control_flow": 7,
     "dp_grid": 3,
     "dp_iterative": 7,
@@ -39,35 +39,35 @@
     "graph_connectivity": 7,
     "graph_dfs_iterative": 2,
     "greedy": 8,
-    "hash_map": 6,
+    "hash_map": 10,
     "hash_set": 4,
     "heap": 14,
     "linked_list_relink": 3,
     "linked_list_traversal": 8,
     "monotonic_stack": 2,
     "multi_concept": 1,
-    "prefix_sum": 5,
+    "prefix_sum": 6,
     "queue": 3,
     "recursion": 9,
     "sliding_window": 9,
     "stack": 5,
     "topological_order": 1,
     "tree_traversal": 12,
-    "two_pointers": 8,
+    "two_pointers": 12,
     "weighted_shortest_path": 1
   },
   "performance": {
-    "budget": 29,
-    "correctness": 112,
-    "optimization": 5,
-    "restricted": 3
+    "budget": 37,
+    "correctness": 114,
+    "optimization": 6,
+    "restricted": 4
   },
   "concepts": {
     "array_scan": 11,
-    "arrays": 12,
+    "arrays": 16,
     "backtracking": 6,
     "bfs": 9,
-    "binary_search": 2,
+    "binary_search": 3,
     "binary_search_answer": 1,
     "bst": 2,
     "complement_lookup": 1,
@@ -82,7 +82,7 @@
     "graph_dfs_iterative": 1,
     "greedy": 13,
     "greedy_choice": 1,
-    "hash_map": 10,
+    "hash_map": 14,
     "hash_set": 3,
     "heap": 15,
     "linked_list": 11,
@@ -90,7 +90,7 @@
     "multi_concept": 1,
     "neighbour_order": 1,
     "nullable_check": 11,
-    "prefix_sum": 7,
+    "prefix_sum": 10,
     "queue": 11,
     "recursion": 9,
     "relinking": 2,
@@ -99,7 +99,7 @@
     "stack": 9,
     "topological_order": 1,
     "tree": 12,
-    "two_pointers": 13,
+    "two_pointers": 17,
     "variables": 12
   },
   "worlds": [
@@ -146,21 +146,22 @@
         "prefix_sum",
         "binary_search"
       ],
-      "count": 13,
+      "count": 17,
       "tiers": {
         "1": 2,
         "2": 5,
-        "3": 5,
-        "4": 1,
+        "3": 6,
+        "4": 4,
         "5": 0
       },
       "families": {
-        "array_scan": 6,
-        "binary_search": 2,
-        "prefix_sum": 5
+        "array_scan": 8,
+        "binary_search": 3,
+        "prefix_sum": 6
       },
       "patterns": {
         "binary_search_on_answer": 1,
+        "difference_marks_then_running_total": 1,
         "even_prefix_count": 1,
         "first_balance_index": 1,
         "first_strict_descent": 1,
@@ -169,9 +170,12 @@
         "majority_vote_cancelling": 1,
         "max_product_of_two": 1,
         "nested_distinct_count": 1,
+        "next_arrangement_in_place": 1,
         "prefix_sum_range_queries": 1,
+        "rotated_sorted_minimum": 1,
         "running_minimum_of_prefix": 1,
         "running_total_list": 1,
+        "staircase_count_sorted_grid": 1,
         "strict_second_maximum": 1
       },
       "target": 30
@@ -182,16 +186,16 @@
       "concepts": [
         "hash_map"
       ],
-      "count": 10,
+      "count": 14,
       "tiers": {
         "1": 0,
         "2": 6,
-        "3": 2,
-        "4": 2,
+        "3": 3,
+        "4": 5,
         "5": 0
       },
       "families": {
-        "hash_map": 6,
+        "hash_map": 10,
         "hash_set": 4
       },
       "patterns": {
@@ -202,8 +206,12 @@
         "count_values_seen_once": 1,
         "first_repeated_scan": 1,
         "frequency_mode_smallest_tie": 1,
+        "longest_run_between_equal_leads": 1,
+        "most_shared_running_total": 1,
+        "pair_totals_meet_in_the_middle": 1,
         "prefix_sum_count_map": 1,
         "same_multiset_counts": 1,
+        "two_way_mapping_check": 1,
         "widest_equal_span": 1
       },
       "target": 25
@@ -214,26 +222,30 @@
       "concepts": [
         "two_pointers"
       ],
-      "count": 8,
+      "count": 12,
       "tiers": {
         "1": 0,
         "2": 3,
-        "3": 3,
-        "4": 2,
-        "5": 0
+        "3": 4,
+        "4": 4,
+        "5": 1
       },
       "families": {
-        "two_pointers": 8
+        "two_pointers": 12
       },
       "patterns": {
         "closest_pair_sum_to_target": 1,
         "count_distinct_sorted_neighbours": 1,
         "count_exact_gap_sorted": 1,
+        "count_pairs_above_fixed_longest": 1,
         "count_pairs_under_limit": 1,
         "count_sorted_union": 1,
+        "fill_from_the_lower_end": 1,
+        "merge_inward_by_distance": 1,
         "opposite_ends_pair_sum": 1,
         "ordered_subsequence_check": 1,
-        "shrink_shorter_side": 1
+        "shrink_shorter_side": 1,
+        "two_interval_lists_shared_time": 1
       },
       "target": 20
     },
@@ -570,6 +582,20 @@
   ],
   "puzzles": [
     {
+      "id": "after_rain",
+      "world": "world_04",
+      "tier": 5,
+      "mode": "restricted",
+      "family": "two_pointers",
+      "pattern": "fill_from_the_lower_end",
+      "structure": "array",
+      "secondary": [],
+      "performance": "restricted",
+      "concepts": [
+        "two_pointers"
+      ]
+    },
+    {
       "id": "aisle_cost",
       "world": "world_13",
       "tier": 3,
@@ -702,6 +728,20 @@
       "performance": "correctness",
       "concepts": [
         "backtracking"
+      ]
+    },
+    {
+      "id": "cheap_seats",
+      "world": "world_02",
+      "tier": 4,
+      "mode": "optimize",
+      "family": "array_scan",
+      "pattern": "staircase_count_sorted_grid",
+      "structure": "grid",
+      "secondary": [],
+      "performance": "optimization",
+      "concepts": [
+        "arrays"
       ]
     },
     {
@@ -1060,6 +1100,35 @@
       ]
     },
     {
+      "id": "far_from_zero",
+      "world": "world_04",
+      "tier": 3,
+      "mode": "build",
+      "family": "two_pointers",
+      "pattern": "merge_inward_by_distance",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "two_pointers"
+      ]
+    },
+    {
+      "id": "fence_coats",
+      "world": "world_02",
+      "tier": 4,
+      "mode": "budget",
+      "family": "prefix_sum",
+      "pattern": "difference_marks_then_running_total",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "arrays",
+        "prefix_sum"
+      ]
+    },
+    {
       "id": "fewest_rides",
       "world": "world_10",
       "tier": 3,
@@ -1089,6 +1158,20 @@
       "performance": "correctness",
       "concepts": [
         "arrays"
+      ]
+    },
+    {
+      "id": "four_shelves",
+      "world": "world_03",
+      "tier": 4,
+      "mode": "budget",
+      "family": "hash_map",
+      "pattern": "pair_totals_meet_in_the_middle",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "hash_map"
       ]
     },
     {
@@ -1369,6 +1452,21 @@
       "performance": "correctness",
       "concepts": [
         "tree"
+      ]
+    },
+    {
+      "id": "level_score",
+      "world": "world_03",
+      "tier": 4,
+      "mode": "build",
+      "family": "hash_map",
+      "pattern": "longest_run_between_equal_leads",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "hash_map",
+        "prefix_sum"
       ]
     },
     {
@@ -1744,6 +1842,20 @@
       ]
     },
     {
+      "id": "next_lineup",
+      "world": "world_02",
+      "tier": 4,
+      "mode": "edge",
+      "family": "array_scan",
+      "pattern": "next_arrangement_in_place",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "arrays"
+      ]
+    },
+    {
       "id": "no_repeats",
       "world": "world_07",
       "tier": 3,
@@ -1915,6 +2027,21 @@
       "performance": "budget",
       "concepts": [
         "sliding_window"
+      ]
+    },
+    {
+      "id": "plank_wall",
+      "world": "world_03",
+      "tier": 4,
+      "mode": "build",
+      "family": "hash_map",
+      "pattern": "most_shared_running_total",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "hash_map",
+        "prefix_sum"
       ]
     },
     {
@@ -2169,6 +2296,20 @@
       ]
     },
     {
+      "id": "rod_triangles",
+      "world": "world_04",
+      "tier": 4,
+      "mode": "budget",
+      "family": "two_pointers",
+      "pattern": "count_pairs_above_fixed_longest",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "two_pointers"
+      ]
+    },
+    {
       "id": "rope_joining",
       "world": "world_09",
       "tier": 3,
@@ -2341,6 +2482,20 @@
       ]
     },
     {
+      "id": "shared_watch",
+      "world": "world_04",
+      "tier": 4,
+      "mode": "build",
+      "family": "two_pointers",
+      "pattern": "two_interval_lists_shared_time",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "two_pointers"
+      ]
+    },
+    {
       "id": "shelf_totals",
       "world": "world_02",
       "tier": 3,
@@ -2462,6 +2617,20 @@
       "concepts": [
         "graph",
         "bfs"
+      ]
+    },
+    {
+      "id": "spy_cipher",
+      "world": "world_03",
+      "tier": 3,
+      "mode": "edge",
+      "family": "hash_map",
+      "pattern": "two_way_mapping_check",
+      "structure": "hash_map",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "hash_map"
       ]
     },
     {
@@ -2661,6 +2830,21 @@
       ]
     },
     {
+      "id": "turned_belt",
+      "world": "world_02",
+      "tier": 3,
+      "mode": "budget",
+      "family": "binary_search",
+      "pattern": "rotated_sorted_minimum",
+      "structure": "array",
+      "secondary": [],
+      "performance": "budget",
+      "concepts": [
+        "arrays",
+        "binary_search"
+      ]
+    },
+    {
       "id": "twin_beacons",
       "world": "world_03",
       "tier": 2,
@@ -2807,19 +2991,19 @@
     {
       "area": "world",
       "id": "world_02",
-      "have": 13,
+      "have": 17,
       "want": 30
     },
     {
       "area": "world",
       "id": "world_03",
-      "have": 10,
+      "have": 14,
       "want": 25
     },
     {
       "area": "world",
       "id": "world_04",
-      "have": 8,
+      "have": 12,
       "want": 20
     },
     {
@@ -2907,26 +3091,20 @@
     },
     {
       "area": "family",
-      "id": "array_scan",
-      "have": 11,
-      "want": 12
-    },
-    {
-      "area": "family",
       "id": "prefix_sum",
-      "have": 5,
+      "have": 6,
       "want": 8
     },
     {
       "area": "family",
       "id": "binary_search",
-      "have": 2,
+      "have": 3,
       "want": 10
     },
     {
       "area": "family",
       "id": "hash_map",
-      "have": 6,
+      "have": 10,
       "want": 12
     },
     {
@@ -2938,7 +3116,7 @@
     {
       "area": "family",
       "id": "two_pointers",
-      "have": 8,
+      "have": 12,
       "want": 15
     },
     {
@@ -3058,25 +3236,25 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 95,
+      "have": 99,
       "want": 150
     },
     {
       "area": "mode",
       "id": "budget",
-      "have": 20,
+      "have": 24,
       "want": 30
     },
     {
       "area": "mode",
       "id": "optimize",
-      "have": 5,
+      "have": 6,
       "want": 20
     },
     {
       "area": "mode",
       "id": "restricted",
-      "have": 4,
+      "have": 5,
       "want": 15
     },
     {
