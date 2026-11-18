@@ -113,7 +113,9 @@ Program _sum() => _program(
     );
 
 /// `fact(n)`: `if n < 2 return 1; return n * fact(n - 1)`, called from main.
-Program _factorial() => _program(
+/// k × fact(k − 1); with [op] `add` the same shape without the size (150!
+/// is far past the numbers the game counts with).
+Program _factorial({BinaryOp op = BinaryOp.mul}) => _program(
       [ReturnStmt(value: _call('fact', [_get('n')], src: 'call'), srcBlockId: 'main-ret')],
       params: [const Param('n', _num)],
       functions: [
@@ -129,7 +131,7 @@ Program _factorial() => _program(
               srcBlockId: 'if',
             ),
             ReturnStmt(
-              value: _bin(BinaryOp.mul, _get('k'), _call('fact', [_bin(BinaryOp.sub, _get('k'), _n(1))], src: 'rec')),
+              value: _bin(op, _get('k'), _call('fact', [_bin(BinaryOp.sub, _get('k'), _n(1))], src: 'rec')),
               srcBlockId: 'step',
             ),
           ],
@@ -668,7 +670,7 @@ void main() {
     test('deep recursion and a long loop stay small: shared frames, bounded steps', () {
       // 150 frames deep, then back out: without sharing this would hold
       // steps × depth frame copies.
-      final r = recordTrace(_factorial(), {'n': const NumValue(150)}, const RunLimits(maxDepth: 200, maxOps: 1000000));
+      final r = recordTrace(_factorial(op: BinaryOp.add), {'n': const NumValue(150)}, const RunLimits(maxDepth: 200, maxOps: 1000000));
       expect(r.result.kind, ResultKind.correct);
       expect(r.complete, isTrue);
       final distinct = Set<TraceFrameSnapshot>.identity();

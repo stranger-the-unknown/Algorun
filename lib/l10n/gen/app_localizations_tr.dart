@@ -1366,6 +1366,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get engineThisNumberIsTooBig => 'Bu sayı çok büyük.';
 
   @override
+  String get engineOnlyWholeNumbers => 'Yalnızca tam sayılar kullanılabilir.';
+
+  @override
+  String get engineWholeNumberInputs =>
+      'Bu program yalnızca tam sayılarla çalışır.';
+
+  @override
   String get engineThisCallIsMissingAValue => 'Bu çağrıda bir değer eksik.';
 
   @override
@@ -1423,9 +1430,6 @@ class AppLocalizationsTr extends AppLocalizations {
       'SORT bir sayı listesi ya da bir metin listesi bekliyor.';
 
   @override
-  String get engineNumberAsTextWhole => 'NUMBER AS TEXT bir tam sayı bekliyor.';
-
-  @override
   String get engineThisQueueGotTooBig => 'Bu kuyruk çok büyüdü.';
 
   @override
@@ -1451,9 +1455,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get engineThisBlockNeedsANumberSomeText =>
       'Bu blok anahtar olarak bir sayı, metin ya da evet / hayır değeri bekliyor.';
-
-  @override
-  String get engineAPositionHasToBeAWhole => 'Bir konum tam sayı olmalı.';
 
   @override
   String get engineThatPositionIsOutsideTheList => 'Bu konum listenin dışında.';

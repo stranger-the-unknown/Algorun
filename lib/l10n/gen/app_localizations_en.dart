@@ -1375,6 +1375,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get engineThisNumberIsTooBig => 'This number is too big.';
 
   @override
+  String get engineOnlyWholeNumbers => 'Only whole numbers can be used.';
+
+  @override
+  String get engineWholeNumberInputs =>
+      'This program only works with whole numbers.';
+
+  @override
   String get engineThisCallIsMissingAValue => 'This call is missing a value.';
 
   @override
@@ -1432,9 +1439,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'SORT needs a list of numbers or a list of text.';
 
   @override
-  String get engineNumberAsTextWhole => 'NUMBER AS TEXT needs a whole number.';
-
-  @override
   String get engineThisQueueGotTooBig => 'This queue got too big.';
 
   @override
@@ -1460,10 +1464,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get engineThisBlockNeedsANumberSomeText =>
       'This block needs a number, some text, or a yes or no value as the key.';
-
-  @override
-  String get engineAPositionHasToBeAWhole =>
-      'A position has to be a whole number.';
 
   @override
   String get engineThatPositionIsOutsideTheList =>

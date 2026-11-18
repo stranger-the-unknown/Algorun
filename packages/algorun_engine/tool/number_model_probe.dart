@@ -1,6 +1,9 @@
-// L3 measurement, not part of the game: a prototype of "safe whole numbers"
-// (docs/MILESTONE_L3_PLAN.md, option C). Run it on the three targets the game
-// has and compare the digest line:
+// L3 measurement, not part of the game: the prototype of "safe whole numbers"
+// (docs/MILESTONE_L3_PLAN.md, option C) that the owner's decision was based
+// on. The engine now has this model (lib/src/runtime/whole_number.dart, the
+// interpreter's _safe / _mul / _unsigned0); test/whole_number_test.dart pins
+// the real thing. Run the prototype on the three targets the game has and
+// compare the digest line:
 //
 //   dart compile exe tool/number_model_probe.dart -o /tmp/probe && /tmp/probe
 //   dart compile js -O2 tool/number_model_probe.dart -o /tmp/probe.js

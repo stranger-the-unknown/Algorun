@@ -280,7 +280,7 @@ void main() {
   });
 
   group('expressions', () {
-    test('whole division stays whole, uneven division does not', () {
+    test('DIVIDE gives a whole number: uneven division truncates (L3)', () {
       final result = _run(_program([
         ReturnStmt(
           value: BinaryExpr(
@@ -291,7 +291,7 @@ void main() {
           ),
         ),
       ]));
-      expect(_number(result), 3.5);
+      expect(_number(result), 3);
       final exact = _run(_program([
         ReturnStmt(
           value: BinaryExpr(BinaryOp.div, _n(8), _n(2), type: ValueType.number),

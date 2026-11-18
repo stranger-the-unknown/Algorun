@@ -14,7 +14,7 @@
 //
 // `--known` names the cases where the game is known to differ from
 // algorun-lang, one per line: `<file relative to the suite>[#<case id>]`,
-// then the reason. A known case must really differ: one that starts to agree
+// two or more spaces, then the reason. A known case must really differ: one that starts to agree
 // is reported, so the list cannot go stale. Files with `parseError` belong to
 // the text form, which the game does not have, and are counted as not run.
 //
@@ -49,7 +49,8 @@ Map<String, String> _readKnown(String path) {
   for (final line in File(path).readAsLinesSync()) {
     final text = line.trim();
     if (text.isEmpty || text.startsWith('#')) continue;
-    final space = text.indexOf(RegExp(r'\s'));
+    // A case id may hold single spaces: the reason starts after two.
+    final space = text.indexOf(RegExp(r'\s{2,}|\t'));
     out[space < 0 ? text : text.substring(0, space)] = space < 0
         ? ''
         : text.substring(space).trim();
