@@ -278,15 +278,15 @@ const Map<String, GuideEntry> blockGuide = {
   BlockIds.arithDiv: GuideEntry(
     term: 'DIVIDE',
     tr: 'BÖLÜ',
-    en: 'Divides the left number by the right one; 7 DIVIDE 2 is 3.5. Dividing by zero is an error.',
-    trText: 'Soldaki sayıyı sağdakine böler; 7 DIVIDE 2 sonucu 3.5\'tir. Sıfıra bölmek hatadır.',
+    en: 'Divides the left number by the right one and drops what is left over, so the result is a whole number: 7 DIVIDE 2 is 3, and -7 DIVIDE 2 is -3. Dividing by zero is an error.',
+    trText: 'Soldaki sayıyı sağdakine böler ve kalanı atar; sonuç tam sayıdır: 7 DIVIDE 2 sonucu 3, -7 DIVIDE 2 sonucu -3\'tür. Sıfıra bölmek hatadır.',
     example: 'SET half TO total DIVIDE 2',
   ),
   BlockIds.arithFloorDiv: GuideEntry(
     term: 'FLOOR DIVIDE',
     tr: 'TAM BÖLME',
-    en: 'Divides and rounds down to a whole number; 7 FLOOR DIVIDE 2 is 3. Good for a middle position.',
-    trText: 'Böler ve sonucu aşağı yuvarlayarak tam sayı yapar; 7 FLOOR DIVIDE 2 sonucu 3\'tür. Orta konumu bulmak için uygundur.',
+    en: 'Divides and rounds down to a whole number; 7 FLOOR DIVIDE 2 is 3. Good for a middle position. It differs from DIVIDE only below zero: -7 FLOOR DIVIDE 2 is -4, -7 DIVIDE 2 is -3.',
+    trText: 'Böler ve sonucu aşağı yuvarlayarak tam sayı yapar; 7 FLOOR DIVIDE 2 sonucu 3\'tür. Orta konumu bulmak için uygundur. DIVIDE\'dan yalnızca sıfırın altında ayrılır: -7 FLOOR DIVIDE 2 sonucu -4, -7 DIVIDE 2 sonucu -3\'tür.',
     example: 'SET mid TO (lo PLUS hi) FLOOR DIVIDE 2',
   ),
   BlockIds.arithMod: GuideEntry(
@@ -904,5 +904,11 @@ const List<GuideEntry> conceptGuide = [
     tr: 'Adımlar ve bütçe',
     en: 'Every block the program runs costs steps. Some puzzles set a budget: a correct program that needs too many steps shows OPERATION LIMIT.',
     trText: 'Programın çalıştırdığı her blok adım tutar. Bazı bulmacalar bir bütçe koyar: çok fazla adım gerektiren doğru bir program ADIM SINIRI gösterir.',
+  ),
+  GuideEntry(
+    term: 'Number',
+    tr: 'Sayı',
+    en: 'Every number is a whole number: there are no fractions, so DIVIDE drops what is left over. The largest number is 9,007,199,254,740,991 and the smallest is the same below zero; a result outside that is the error "This number is too big.", the same on a phone and in a browser.',
+    trText: 'Her sayı bir tam sayıdır: kesir yoktur, bu yüzden DIVIDE kalanı atar. En büyük sayı 9.007.199.254.740.991, en küçüğü bunun sıfırın altındaki karşılığıdır; bunun dışına çıkan bir sonuç "Bu sayı çok büyük." hatasıdır ve telefonda da tarayıcıda da aynıdır.',
   ),
 ];

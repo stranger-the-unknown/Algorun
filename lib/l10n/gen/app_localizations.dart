@@ -2429,6 +2429,18 @@ abstract class AppLocalizations {
   /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
   ///
   /// In en, this message translates to:
+  /// **'Only whole numbers can be used.'**
+  String get engineOnlyWholeNumbers;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'This program only works with whole numbers.'**
+  String get engineWholeNumberInputs;
+
+  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
+  ///
+  /// In en, this message translates to:
   /// **'This call is missing a value.'**
   String get engineThisCallIsMissingAValue;
 
@@ -2537,12 +2549,6 @@ abstract class AppLocalizations {
   /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
   ///
   /// In en, this message translates to:
-  /// **'NUMBER AS TEXT needs a whole number.'**
-  String get engineNumberAsTextWhole;
-
-  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
-  ///
-  /// In en, this message translates to:
   /// **'This queue got too big.'**
   String get engineThisQueueGotTooBig;
 
@@ -2587,12 +2593,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This block needs a number, some text, or a yes or no value as the key.'**
   String get engineThisBlockNeedsANumberSomeText;
-
-  /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
-  ///
-  /// In en, this message translates to:
-  /// **'A position has to be a whole number.'**
-  String get engineAPositionHasToBeAWhole;
 
   /// Engine message, looked up by its English text (lib/l10n/engine_text.dart).
   ///

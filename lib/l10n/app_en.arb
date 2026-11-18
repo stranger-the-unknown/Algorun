@@ -1067,6 +1067,14 @@
   "@engineThisNumberIsTooBig": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
   },
+  "engineOnlyWholeNumbers": "Only whole numbers can be used.",
+  "@engineOnlyWholeNumbers": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineWholeNumberInputs": "This program only works with whole numbers.",
+  "@engineWholeNumberInputs": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
   "engineThisCallIsMissingAValue": "This call is missing a value.",
   "@engineThisCallIsMissingAValue": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
@@ -1139,10 +1147,6 @@
   "@engineSortType": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
   },
-  "engineNumberAsTextWhole": "NUMBER AS TEXT needs a whole number.",
-  "@engineNumberAsTextWhole": {
-    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
-  },
   "engineThisQueueGotTooBig": "This queue got too big.",
   "@engineThisQueueGotTooBig": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
@@ -1173,10 +1177,6 @@
   },
   "engineThisBlockNeedsANumberSomeText": "This block needs a number, some text, or a yes or no value as the key.",
   "@engineThisBlockNeedsANumberSomeText": {
-    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
-  },
-  "engineAPositionHasToBeAWhole": "A position has to be a whole number.",
-  "@engineAPositionHasToBeAWhole": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
   },
   "engineThatPositionIsOutsideTheList": "That position is outside the list.",
