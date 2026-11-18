@@ -106,6 +106,8 @@ bool valuesEqual(RuntimeValue a, RuntimeValue b) {
     ListNodeValue() => _chainEqual(a, b as ListNodeValue),
     TreeNodeValue() => _treeNodeEqual(a, b as TreeNodeValue),
     GraphValue() => _graphEqual(a, b as GraphValue),
+    PairValue(:final first, :final second) => valuesEqual(first, (b as PairValue).first) &&
+        valuesEqual(second, b.second),
   };
 }
 

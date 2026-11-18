@@ -1,0 +1,95 @@
+{
+  "id": "two_doors",
+  "version": 1,
+  "title": "Two Doors",
+  "world": "world_15",
+  "chapter": "two_ended_line_simulation",
+  "tier": 3,
+  "mode": "edge",
+  "concepts": ["deque"],
+  "prerequisites": [],
+  "story": "A narrow tram has a front door and a back door, and its passengers stand in one line between them. The driver logs every move as a number. A positive number is a passenger with that ticket boarding through the back door and standing behind everyone else. 0 means the passenger nearest the front door gets off; -1 means the passenger nearest the back door gets off. When the tram is empty, a 0 or a -1 was pressed by mistake and nothing happens. Return the tickets of the passengers still on board, from the front door to the back door.",
+  "io": {
+    "inputs": [
+      {"name": "moves", "type": "array<num>"}
+    ],
+    "output": {"type": "array<num>"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 60},
+    "notes": ["Every move is a ticket number from 1 to 999, 0 or -1."]
+  },
+  "blocks": {
+    "allow": ["arr.append", "cmp.eq", "cmp.gt", "ctrl.else", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "deque.empty", "deque.pop_back", "deque.pop_front", "deque.push_back", "lit.num", "logic.not", "new.array", "new.deque", "var.get", "var.set"],
+    "maxBlocks": 63
+  },
+  "limits": {"maxOps": 300, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Passengers leave from both ends of the line, so the line is a deque.", "Boarding is PUSH BACK. Getting off is POP FRONT for 0 and POP BACK for -1; both give the ticket that left, which you can SET into a spare variable.", "An empty deque cannot give anything: check NOT (tram IS EMPTY) before every POP FRONT or POP BACK. At the end, move what is left into a NEW LIST with POP FRONT."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"moves": [14, 27, 35, 0, 48, -1]},
+        "out": [27, 35]
+      },
+      {
+        "id": "v2",
+        "in": {"moves": [8, 9, -1, 6]},
+        "out": [8, 6]
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"moves": []},
+        "out": []
+      },
+      {
+        "id": "h02",
+        "in": {"moves": [0, -1, 51]},
+        "out": [51]
+      },
+      {
+        "id": "h03",
+        "in": {"moves": [3, 0, 0, 4, 5]},
+        "out": [4, 5]
+      },
+      {
+        "id": "h04",
+        "in": {"moves": [21, 22, 23, -1, -1, 24]},
+        "out": [21, 24]
+      },
+      {
+        "id": "h05",
+        "in": {"moves": [61, 62, 63, 0, 0]},
+        "out": [63]
+      },
+      {
+        "id": "h06",
+        "in": {"moves": [7, 8, 0, -1, -1, 0]},
+        "out": []
+      },
+      {
+        "id": "h07",
+        "in": {"moves": [10, 20, -1, 30, 0, 40, 50, -1, 0, 60]},
+        "out": [40, 60]
+      },
+      {
+        "id": "h08",
+        "in": {"moves": [5, -1, 0, 6, 0, -1, 7]},
+        "out": [7]
+      }
+    ]
+  },
+  "edgeCases": ["no moves", "a door opens on an empty tram", "the tram empties and fills again", "only the back door is used", "only the front door is used", "everybody gets off"],
+  "variables": {
+    "pool": [
+      {"name": "tram", "type": "deque<num>"},
+      {"name": "out", "type": "array<num>"},
+      {"name": "move", "type": "num"},
+      {"name": "gone", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "two_ended_line_simulation"}
+}

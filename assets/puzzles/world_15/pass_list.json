@@ -1,0 +1,112 @@
+{
+  "id": "pass_list",
+  "version": 1,
+  "title": "Pass List",
+  "world": "world_15",
+  "chapter": "zip_filter_into_pairs",
+  "tier": 2,
+  "mode": "build",
+  "concepts": ["pairs"],
+  "prerequisites": [],
+  "story": "The exam board has two lists in the same order: the candidates' names and their scores. It publishes a pass list: for every candidate whose score is at least the pass mark, a pair with the name first and the score second, in the order of the original lists. Return the pass list.",
+  "io": {
+    "inputs": [
+      {"name": "names", "type": "array<str>"},
+      {"name": "scores", "type": "array<num>"},
+      {"name": "mark", "type": "num"}
+    ],
+    "output": {"type": "array<pair<str,num>>"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 30},
+    "notes": ["names and scores have the same length.", "Scores and the mark are whole numbers from 0 to 100."]
+  },
+  "blocks": {
+    "allow": ["arr.append", "arr.get", "arr.len", "cmp.ge", "cmp.gt", "ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "new.array", "pair.make", "var.get", "var.set"],
+    "maxBlocks": 37
+  },
+  "limits": {"maxOps": 150, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Walk both lists with one position: the name and the score at the same position belong together.", "MAKE PAIR ties two values into one value, so a list can hold name and score together.", "SET passed TO NEW LIST. FOR every position i: IF the score at i is GREATER OR EQUAL to mark, APPEND to passed the name at i MAKE PAIR the score at i. RETURN passed."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"names": ["nora", "emre", "sofia"], "scores": [71, 48, 90], "mark": 60},
+        "out": [
+          {"type": "pair", "first": "nora", "second": 71},
+          {"type": "pair", "first": "sofia", "second": 90}
+        ]
+      },
+      {
+        "id": "v2",
+        "in": {"names": ["kai", "lea"], "scores": [30, 55], "mark": 50},
+        "out": [
+          {"type": "pair", "first": "lea", "second": 55}
+        ]
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"names": [], "scores": [], "mark": 50},
+        "out": []
+      },
+      {
+        "id": "h02",
+        "in": {"names": ["a", "b", "c"], "scores": [10, 20, 30], "mark": 40},
+        "out": []
+      },
+      {
+        "id": "h03",
+        "in": {"names": ["a", "b", "c"], "scores": [70, 80, 90], "mark": 65},
+        "out": [
+          {"type": "pair", "first": "a", "second": 70},
+          {"type": "pair", "first": "b", "second": 80},
+          {"type": "pair", "first": "c", "second": 90}
+        ]
+      },
+      {
+        "id": "h04",
+        "in": {"names": ["ilke", "jan", "oya"], "scores": [59, 60, 61], "mark": 60},
+        "out": [
+          {"type": "pair", "first": "jan", "second": 60},
+          {"type": "pair", "first": "oya", "second": 61}
+        ]
+      },
+      {
+        "id": "h05",
+        "in": {"names": ["p", "q"], "scores": [0, 0], "mark": 0},
+        "out": [
+          {"type": "pair", "first": "p", "second": 0},
+          {"type": "pair", "first": "q", "second": 0}
+        ]
+      },
+      {
+        "id": "h06",
+        "in": {"names": ["deniz", "deniz", "arda"], "scores": [45, 88, 88], "mark": 88},
+        "out": [
+          {"type": "pair", "first": "deniz", "second": 88},
+          {"type": "pair", "first": "arda", "second": 88}
+        ]
+      },
+      {
+        "id": "h07",
+        "in": {"names": ["r", "s", "t", "u", "v"], "scores": [100, 0, 50, 49, 51], "mark": 50},
+        "out": [
+          {"type": "pair", "first": "r", "second": 100},
+          {"type": "pair", "first": "t", "second": 50},
+          {"type": "pair", "first": "v", "second": 51}
+        ]
+      }
+    ]
+  },
+  "edgeCases": ["no candidates", "nobody passes", "everybody passes", "a score exactly on the mark", "a mark of 0"],
+  "variables": {
+    "pool": [
+      {"name": "passed", "type": "array<pair<str,num>>"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "zip_filter_into_pairs"}
+}

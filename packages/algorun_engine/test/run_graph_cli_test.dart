@@ -139,6 +139,57 @@ void main() {
     expect(result['output'], 3);
   });
 
+  test('L3: pairs and text go in, a deque and a pair come out', () {
+    // PUSH BACK line (FIRST of the first pair) JOIN "!"; RETURN line
+    final graph = {
+      'blocks': {
+        'new': _block('new', 'new.deque'),
+        'set': _block('set', 'var.set', slots: {'value': {'ref': 'new'}}, literals: {'name': 'line'}),
+        'line': _block('line', 'var.get', literals: {'name': 'line'}),
+        'rows': _block('rows', 'var.get', literals: {'name': 'rows'}),
+        'zero': _block('zero', 'lit.num', literals: {'value': 0}),
+        'row': _block('row', 'arr.get', slots: {'array': {'ref': 'rows'}, 'index': {'ref': 'zero'}}),
+        'first': _block('first', 'pair.first', slots: {'pair': {'ref': 'row'}}),
+        'bang': _block('bang', 'lit.str', literals: {'value': '!'}),
+        'join': _block('join', 'str.concat', slots: {'left': {'ref': 'first'}, 'right': {'ref': 'bang'}}),
+        'push': _block('push', 'deque.push_back', slots: {'deque': {'ref': 'line'}, 'value': {'ref': 'join'}}),
+        'out': _block('out', 'var.get', literals: {'name': 'line'}),
+        'return': _block('return', 'ctrl.return', slots: {'value': {'ref': 'out'}}),
+      },
+      'entryIds': ['set', 'push', 'return'],
+      'variables': {'rows': 'array<pair<str,num>>', 'line': 'deque<str>'},
+    };
+    final response = runGraphRequest(jsonEncode({
+      'protocol': 1,
+      'io': {
+        'inputs': [
+          {'name': 'rows', 'type': 'array<pair<str,num>>'},
+        ],
+        'output': 'deque<str>',
+      },
+      'allow': ['new.deque', 'var.set', 'var.get', 'lit.num', 'lit.str', 'arr.get', 'pair.first', 'str.concat', 'deque.push_back', 'ctrl.return'],
+      'cases': [
+        {
+          'id': 'one',
+          'input': {
+            'rows': [
+              {'type': 'pair', 'first': 'ada', 'second': 3},
+            ],
+          },
+        },
+      ],
+      'programs': [
+        {'id': 'p', 'graph': graph},
+      ],
+    }));
+    expect(response['status'], 'ok', reason: '$response');
+    final program = (response['programs']! as List).single as Map;
+    expect(program['status'], 'ok', reason: '$program');
+    final result = (program['cases'] as List).single as Map;
+    expect(result['status'], 'ok');
+    expect(result['output'], {'type': 'deque', 'items': ['ada!']});
+  });
+
   test('an empty graph is an invalid program and is not run', () {
     final response = _run(_request(programs: [
       {

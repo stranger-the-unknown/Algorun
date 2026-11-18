@@ -574,6 +574,88 @@ final class Interpreter {
     }
 
     switch (expr.callee) {
+      // --- algorun-lang A3 ------------------------------------------------
+      case BlockIds.varCopy:
+        return _copyCharged(at(0), id);
+      case BlockIds.strLen:
+        return NumValue(_str(at(0), id).runes.length);
+      case BlockIds.strCharAt:
+        {
+          final cps = _str(at(0), id).runes.toList();
+          final i = _bound(at(1), cps.length - 1, id);
+          return StrValue(String.fromCharCode(cps[i]));
+        }
+      case BlockIds.strConcat:
+        return _text(_str(at(0), id) + _str(at(1), id), id);
+      case BlockIds.strSubstring:
+        {
+          final cps = _str(at(0), id).runes.toList();
+          final start = _bound(at(1), cps.length, id);
+          final end = _bound(at(2), cps.length, id);
+          if (start > end) {
+            throw _Halt(ResultKind.runtimeError, 'That position is outside the text.', id);
+          }
+          return StrValue(String.fromCharCodes(cps.sublist(start, end)));
+        }
+      case BlockIds.strCompare:
+        return NumValue(_compareText(_str(at(0), id), _str(at(1), id)));
+      case BlockIds.strFromNum:
+        return StrValue(_digits(_num(at(0), id), id));
+      case BlockIds.strToNum:
+        {
+          final n = _parseWhole(_str(at(0), id));
+          return n == null ? const NilValue() : NumValue(n);
+        }
+      case BlockIds.dequePushFront || BlockIds.dequePushBack:
+        {
+          final deque = _deque(at(0), id);
+          if (deque.items.length >= limits.maxArrayLen) {
+            throw _Halt(ResultKind.memoryLimit, 'This deque got too big.', id);
+          }
+          _alloc(1, id);
+          if (expr.callee == BlockIds.dequePushFront) {
+            deque.items.insert(0, at(1));
+          } else {
+            deque.items.add(at(1));
+          }
+          return const NilValue();
+        }
+      case BlockIds.dequePopFront ||
+            BlockIds.dequePopBack ||
+            BlockIds.dequeFront ||
+            BlockIds.dequeBack:
+        {
+          final deque = _deque(at(0), id);
+          if (deque.items.isEmpty) {
+            throw _Halt(ResultKind.runtimeError, 'This deque is empty.', id);
+          }
+          switch (expr.callee) {
+            case BlockIds.dequePopFront:
+              _free(1);
+              return deque.items.removeAt(0);
+            case BlockIds.dequePopBack:
+              _free(1);
+              return deque.items.removeLast();
+            case BlockIds.dequeFront:
+              return deque.items.first;
+            default:
+              return deque.items.last;
+          }
+        }
+      case BlockIds.dequeSize:
+        return NumValue(_deque(at(0), id).items.length);
+      case BlockIds.dequeEmpty:
+        return BoolValue(_deque(at(0), id).items.isEmpty);
+      case BlockIds.arrSort:
+        _sort(_array(at(0), id).elements, id);
+        return const NilValue();
+      case BlockIds.pairMake:
+        _alloc(1, id);
+        return PairValue(at(0), at(1), id: _nextId++);
+      case BlockIds.pairFirst:
+        return _pair(at(0), id).first;
+      case BlockIds.pairSecond:
+        return _pair(at(0), id).second;
       case BlockIds.arrLen:
         return NumValue(_array(at(0), id).elements.length);
       case BlockIds.arrAppend:
@@ -915,6 +997,170 @@ final class Interpreter {
     };
   }
 
+  // --- algorun-lang A3 helpers --------------------------------------------
+
+  String _str(RuntimeValue value, String? blockId) {
+    if (value is StrValue) return value.value;
+    throw _Halt(ResultKind.runtimeError, 'This block needs some text.', blockId);
+  }
+
+  DequeValue _deque(RuntimeValue value, String? blockId) {
+    if (value is DequeValue) return value;
+    throw _Halt(ResultKind.runtimeError, 'This block needs a deque.', blockId);
+  }
+
+  PairValue _pair(RuntimeValue value, String? blockId) {
+    if (value is PairValue) return value;
+    throw _Halt(ResultKind.runtimeError, 'This block needs a pair.', blockId);
+  }
+
+  /// Text longer than maxArrayLen code points is a memory limit.
+  StrValue _text(String s, String? blockId) {
+    if (s.runes.length > limits.maxArrayLen) {
+      throw _Halt(ResultKind.memoryLimit, 'This text got too long.', blockId);
+    }
+    return StrValue(s);
+  }
+
+  /// A position in text: a whole number from 0 to [last] inclusive
+  /// (LETTER AT: the last letter; PART OF TEXT: the length, a cut after it).
+  int _bound(RuntimeValue value, int last, String? blockId) {
+    final raw = _num(value, blockId);
+    if (raw % 1 != 0) {
+      throw _Halt(ResultKind.runtimeError, 'A position has to be a whole number.', blockId);
+    }
+    if (raw < 0 || raw > last) {
+      throw _Halt(ResultKind.runtimeError, 'That position is outside the text.', blockId);
+    }
+    return raw.toInt();
+  }
+
+  /// The largest whole number every platform the game runs on holds exactly
+  /// (2^53 - 1): the phone's 64-bit integers and a browser's JavaScript
+  /// numbers agree up to here. Text <-> number conversion stays inside it so
+  /// that it gives the same answer on the phone and on the web.
+  static const int _maxSafe = 9007199254740991;
+
+  /// NUMBER AS TEXT: decimal digits, `-` for a negative number. Only a whole
+  /// number has digits to write (algorun-lang has no fractions, D4).
+  String _digits(num n, String? blockId) {
+    if (n % 1 != 0) {
+      throw _Halt(ResultKind.runtimeError, 'NUMBER AS TEXT needs a whole number.', blockId);
+    }
+    if (n > _maxSafe || n < -_maxSafe) {
+      throw _Halt(ResultKind.runtimeError, 'This number is too big.', blockId);
+    }
+    // A whole fraction (7.0) and JavaScript's negative zero print as digits.
+    return n == 0 ? '0' : n.toInt().toString();
+  }
+
+  /// TEXT AS NUMBER: `-?[0-9]+` that fits [_maxSafe], else null. Digit by
+  /// digit, because `int.parse` rounds large values in a browser.
+  static int? _parseWhole(String s) {
+    var i = 0;
+    final negative = s.startsWith('-');
+    if (negative) i = 1;
+    if (i >= s.length) return null;
+    var n = 0;
+    for (; i < s.length; i++) {
+      final digit = s.codeUnitAt(i) - 0x30;
+      if (digit < 0 || digit > 9) return null;
+      if (n > (_maxSafe - digit) ~/ 10) return null;
+      n = n * 10 + digit;
+    }
+    return negative && n != 0 ? -n : n;
+  }
+
+  /// -1, 0 or 1 by Unicode code point order (not UTF-16 units).
+  static int _compareText(String a, String b) {
+    final x = a.runes.toList();
+    final y = b.runes.toList();
+    final n = x.length < y.length ? x.length : y.length;
+    for (var i = 0; i < n; i++) {
+      if (x[i] != y[i]) return x[i] < y[i] ? -1 : 1;
+    }
+    return x.length == y.length ? 0 : (x.length < y.length ? -1 : 1);
+  }
+
+  /// SORT (D8): ascending, stable, in place. Only numbers or only text.
+  /// Bottom-up merge sort; every comparison costs one op, so the op count is
+  /// part of the spec (docs/spec.md §10.10).
+  void _sort(List<RuntimeValue> items, String? blockId) {
+    if (items.length < 2) return;
+    final allNum = items.every((v) => v is NumValue);
+    final allStr = items.every((v) => v is StrValue);
+    if (!allNum && !allStr) {
+      throw _Halt(
+        ResultKind.runtimeError,
+        'SORT needs a list of only numbers or only text.',
+        blockId,
+      );
+    }
+    int cmp(RuntimeValue a, RuntimeValue b) {
+      _tick(blockId);
+      if (allNum) {
+        final x = (a as NumValue).value;
+        final y = (b as NumValue).value;
+        return x < y ? -1 : (x > y ? 1 : 0);
+      }
+      return _compareText((a as StrValue).value, (b as StrValue).value);
+    }
+
+    var src = List.of(items);
+    var dst = List<RuntimeValue>.filled(items.length, const NilValue());
+    final n = items.length;
+    for (var width = 1; width < n; width *= 2) {
+      for (var lo = 0; lo < n; lo += 2 * width) {
+        final mid = lo + width < n ? lo + width : n;
+        final hi = lo + 2 * width < n ? lo + 2 * width : n;
+        var i = lo, j = mid, k = lo;
+        while (i < mid && j < hi) {
+          dst[k++] = cmp(src[j], src[i]) < 0 ? src[j++] : src[i++];
+        }
+        while (i < mid) {
+          dst[k++] = src[i++];
+        }
+        while (j < hi) {
+          dst[k++] = src[j++];
+        }
+      }
+      final t = src;
+      src = dst;
+      dst = t;
+    }
+    for (var i = 0; i < n; i++) {
+      items[i] = src[i];
+    }
+  }
+
+  /// COPY (D5): a deep copy, charged one alloc cell per copied container,
+  /// pair and node plus one per element stored in a container.
+  RuntimeValue _copyCharged(RuntimeValue value, String? blockId) {
+    final copy = _copy(value, {});
+    _alloc(_cells(copy, Set.identity()), blockId);
+    return copy;
+  }
+
+  int _cells(RuntimeValue v, Set<RuntimeValue> seen) {
+    if (v is NilValue || v is NumValue || v is BoolValue || v is StrValue) return 0;
+    if (!seen.add(v)) return 0;
+    return switch (v) {
+      ArrayValue(:final elements) => 1 + elements.length + elements.fold(0, (a, e) => a + _cells(e, seen)),
+      MapValue(:final entries) => 1 + entries.length + entries.values.fold(0, (a, e) => a + _cells(e, seen)),
+      SetValue(:final members) => 1 + members.length,
+      StackValue(:final items) => 1 + items.length + items.fold(0, (a, e) => a + _cells(e, seen)),
+      QueueValue(:final items) => 1 + items.length + items.fold(0, (a, e) => a + _cells(e, seen)),
+      DequeValue(:final items) => 1 + items.length + items.fold(0, (a, e) => a + _cells(e, seen)),
+      HeapValue(:final items) => 1 + items.length,
+      PairValue(:final first, :final second) => 1 + _cells(first, seen) + _cells(second, seen),
+      ListNodeValue(:final next) => 1 + (next == null ? 0 : _cells(next, seen)),
+      TreeNodeValue(:final left, :final right) =>
+        1 + (left == null ? 0 : _cells(left, seen)) + (right == null ? 0 : _cells(right, seen)),
+      GraphValue(:final adjacency) => 1 + adjacency.length,
+      _ => 0,
+    };
+  }
+
   // --- coercions ----------------------------------------------------------
 
   bool _bool(RuntimeValue value, String? blockId) {
@@ -1153,6 +1399,10 @@ final class Interpreter {
         final right = v.right;
         if (left != null) copy.left = _copy(left, seen) as TreeNodeValue;
         if (right != null) copy.right = _copy(right, seen) as TreeNodeValue;
+        return copy;
+      case final PairValue v:
+        final copy = PairValue(_copy(v.first, seen), _copy(v.second, seen), id: _nextId++);
+        seen[value] = copy;
         return copy;
       case final GraphValue v:
         final copy = GraphValue(

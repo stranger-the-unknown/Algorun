@@ -1,0 +1,43 @@
+# Cases of the algorun-lang conformance suite where the game differs on
+# purpose (L3). Format: <file>[#<case id>]  <reason>. `tool/conformance.dart
+# --known` fails when a case listed here starts to agree, or when a case not
+# listed here differs.
+#
+# All of them are the number model, which the game has not taken:
+#   D2  a result outside signed 64 bits is "This number is too big."
+#   D3  DIVIDE truncates toward zero
+#   D4  no fractions: a fractional literal or input is refused
+# and two conversions the game keeps inside +-(2^53 - 1) so that the phone and
+# the web give the same answer (docs/MILESTONE_L3.md, "Number model").
+
+# D2 — overflow is an error (the game wraps on the phone)
+edge/a2_abs_min.json#x=-9223372036854775808            D2
+edge/a2_div_min_neg1.json#x=-9223372036854775808       D2
+edge/a2_for_range_overflow.json#x=0                    D2
+edge/a2_inc_overflow.json#x=9223372036854775807        D2
+edge/a2_mul_edges.json#x=-9223372036854775808          D2
+edge/a2_neg_abs_min.json#x=-9223372036854775808        D2
+edge/a2_sub_overflow.json#x=-9223372036854775808       D2
+edge/arith_overflow_add.json#x=9223372036854775807     D2
+edge/arith_overflow_mul.json#x=3037000500              D2
+edge/arith_overflow_mul.json#x=4294967296              D2
+text/factorial.json#x=21                               D2
+
+# D3 — DIVIDE truncates (the game keeps 3.5)
+edge/a2_div_trunc.json#x=7                             D3
+edge/a2_div_trunc.json#x=-7                            D3
+edge/a2_div_trunc.json#x=1                             D3
+edge/arith_div_exact.json#x=3                          D3
+edge/arith_div_exact.json#x=-3                         D3
+edge/arith_floordiv_frac.json#x=-3                     D3 (the dividend comes from a DIVIDE)
+edge/array_index_frac.json#x=0                         D3 (the position comes from a DIVIDE)
+
+# D4 — no fractions (the game accepts them)
+edge/a2_input_fraction.json#frac                       D4
+edge/a2_input_fraction.json#whole-double               D4 (2.0 stays 2.0 in the game)
+edge/a2_input_fraction_nested.json#a                   D4
+edge/literal_frac.json#x=0                             D4
+
+# Text <-> number beyond 2^53 - 1 (the game: "too big" / NOTHING)
+edge/a3_str_from_num.json#x=9223372036854775807        safe range
+edge/a3_str_to_num.json#'9223372036854775807'          safe range

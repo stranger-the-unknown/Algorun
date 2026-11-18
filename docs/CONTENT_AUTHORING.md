@@ -18,7 +18,7 @@ A content request names what to make, not how to phrase it. Fill
 | `world` / `concepts` / `prerequisites` | where the puzzle lives and what it builds on; prerequisites must be concepts the manifest teaches |
 | `tier` | 1–5 (see §5) |
 | `mode` | a mode with status `supported` in the capability audit |
-| `structure` | the primary data structure (`array`, `grid`, `hash_map`, `hash_set`, `stack`, `queue`, `linked_list`, `tree`, `graph`, `scalar`) |
+| `structure` | the primary data structure (`array`, `grid`, `hash_map`, `hash_set`, `stack`, `queue`, `heap`, `linked_list`, `tree`, `graph`, `scalar`; since L3 `text`, `deque`, `pair`) |
 | `blocks` | the block patterns the intended solution needs (catalog ids) |
 | `scale` | the largest input the hidden cases hold |
 | `performance` | `correctness`, `budget`, `optimization` or `restricted` |
@@ -74,9 +74,9 @@ never read translations.
   honest.
 - **No unsupported language features.** Only blocks in the catalog, only
   families and modes the capability audit marks supported or partial. No
-  weighted graph edges, text operations, pairs or starter programs until the
+  weighted graph edges, bit operations or starter programs until the
   language or product has them (recursion and player functions came with
-  L2, heaps of numbers with H). A
+  L2, heaps of numbers with H, text, SORT, COPY, deques and pairs with L3). A
   family the language cannot express is a gap to record, not a problem to
   weaken until it fits.
 - **No redundant variants.** A new story, new names, new number ranges or
@@ -108,6 +108,16 @@ never read translations.
   idea to the approach, three of them.
 - **Never "fix" an expected answer to match the reference.** If the oracle
   disagrees with a fixture or the reference, find out which is wrong.
+- **Text (L3).** The editor has no keyboard. A TEXT block offers the empty
+  text and the puzzle's `blocks.texts` (at most 24 texts of at most 24
+  letters), so list there every text constant the intended solution needs,
+  or pass it in as an input; the replay (level 3) refuses a reference that
+  uses any other text. SORT and COMPARE TEXT order text by Unicode code
+  point, which is dictionary order only for one case of the letters a to z:
+  keep fixtures that depend on order to those letters and say so in
+  `constraints.notes`. An oracle must compare text by code point too, not
+  with Dart's `compareTo`. A pair is written
+  `{"type": "pair", "first": …, "second": …}` in fixtures.
 
 ## 4. The pipeline
 

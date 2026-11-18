@@ -1,0 +1,86 @@
+{
+  "id": "seat_label",
+  "version": 1,
+  "title": "Seat Label",
+  "world": "world_15",
+  "chapter": "build_padded_label",
+  "tier": 1,
+  "mode": "edge",
+  "concepts": ["text"],
+  "prerequisites": [],
+  "story": "A theatre prints a label for every seat: the row letter, a dash, and the seat number written with two digits. Seat 12 in row C is C-12, and seat 7 in row C is C-07. Given a row letter and a seat number from 1 to 99, return the label.",
+  "io": {
+    "inputs": [
+      {"name": "row", "type": "str"},
+      {"name": "seat", "type": "num"}
+    ],
+    "output": {"type": "str"}
+  },
+  "constraints": {"notes": ["row is one capital letter.", "seat is a whole number from 1 to 99."]},
+  "blocks": {
+    "allow": ["cmp.lt", "ctrl.if", "ctrl.return", "lit.num", "lit.str", "str.concat", "str.from_num", "var.get", "var.set"],
+    "maxBlocks": 28,
+    "texts": ["-", "0"]
+  },
+  "limits": {"maxOps": 100, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["A label is built from pieces of text put together; the seat is a number and must become text first.", "JOIN puts two texts together. NUMBER AS TEXT turns the seat into text. The TEXT block offers the pieces this puzzle needs: \"-\" and \"0\".", "SET label TO row JOIN \"-\". IF seat is LESS THAN 10, SET label TO label JOIN \"0\". RETURN label JOIN (seat NUMBER AS TEXT)."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"row": "C", "seat": 12},
+        "out": "C-12"
+      },
+      {
+        "id": "v2",
+        "in": {"row": "K", "seat": 30},
+        "out": "K-30"
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"row": "C", "seat": 7},
+        "out": "C-07"
+      },
+      {
+        "id": "h02",
+        "in": {"row": "A", "seat": 1},
+        "out": "A-01"
+      },
+      {
+        "id": "h03",
+        "in": {"row": "B", "seat": 9},
+        "out": "B-09"
+      },
+      {
+        "id": "h04",
+        "in": {"row": "B", "seat": 10},
+        "out": "B-10"
+      },
+      {
+        "id": "h05",
+        "in": {"row": "H", "seat": 99},
+        "out": "H-99"
+      },
+      {
+        "id": "h06",
+        "in": {"row": "D", "seat": 40},
+        "out": "D-40"
+      },
+      {
+        "id": "h07",
+        "in": {"row": "J", "seat": 5},
+        "out": "J-05"
+      }
+    ]
+  },
+  "edgeCases": ["a seat below 10 needs a 0 in front", "seat 10 does not", "seat 99", "seat 1"],
+  "variables": {
+    "pool": [
+      {"name": "label", "type": "str"}
+    ]
+  },
+  "reference": {"strategy": "build_padded_label"}
+}

@@ -117,6 +117,28 @@ abstract final class BlockIds {
   static const newMinHeap = 'new.min_heap';
   static const newMaxHeap = 'new.max_heap';
 
+  // algorun-lang A3 (D6–D9): text, deque, sort, pair.
+  static const strLen = 'str.len';
+  static const strCharAt = 'str.char_at';
+  static const strConcat = 'str.concat';
+  static const strSubstring = 'str.substring';
+  static const strCompare = 'str.compare';
+  static const strFromNum = 'str.from_num';
+  static const strToNum = 'str.to_num';
+  static const newDeque = 'new.deque';
+  static const dequePushFront = 'deque.push_front';
+  static const dequePushBack = 'deque.push_back';
+  static const dequePopFront = 'deque.pop_front';
+  static const dequePopBack = 'deque.pop_back';
+  static const dequeFront = 'deque.front';
+  static const dequeBack = 'deque.back';
+  static const dequeSize = 'deque.size';
+  static const dequeEmpty = 'deque.empty';
+  static const arrSort = 'arr.sort';
+  static const pairMake = 'pair.make';
+  static const pairFirst = 'pair.first';
+  static const pairSecond = 'pair.second';
+
   static const fnDef = 'fn.def';
   static const fnCall = 'fn.call';
   static const fnCall1 = 'fn.call1';
@@ -124,7 +146,10 @@ abstract final class BlockIds {
   static const fnCall3 = 'fn.call3';
 
   /// CALL blocks by number of values passed (L2): `fn.call` passes none.
-  static const calls = [fnCall, fnCall1, fnCall2, fnCall3];
+  static const fnCall4 = 'fn.call4';
+  static const fnCall5 = 'fn.call5';
+  static const fnCall6 = 'fn.call6';
+  static const calls = [fnCall, fnCall1, fnCall2, fnCall3, fnCall4, fnCall5, fnCall6];
 
   static bool isCall(String id) => calls.contains(id);
 
@@ -150,7 +175,11 @@ abstract final class BlockIds {
     treeValue, treeLeft, treeRight,
     graphNeighbors, graphMark, graphVisited, graphNodeCount,
     newArray, newMap, newSet, newStack, newQueue, newMinHeap, newMaxHeap,
-    fnDef, fnCall, fnCall1, fnCall2, fnCall3,
+    strLen, strCharAt, strConcat, strSubstring, strCompare, strFromNum, strToNum,
+    newDeque, dequePushFront, dequePushBack, dequePopFront, dequePopBack,
+    dequeFront, dequeBack, dequeSize, dequeEmpty, arrSort,
+    pairMake, pairFirst, pairSecond,
+    fnDef, fnCall, fnCall1, fnCall2, fnCall3, fnCall4, fnCall5, fnCall6,
   };
 
   static bool exists(String id) => all.contains(id);
@@ -508,6 +537,65 @@ abstract final class BlockCatalog {
     // FUNCTION: its signature lives in literals (`name`, `params`, `returns`);
     // CALL: `name` picks the function, a1..a3 are the values passed. Their
     // types come from the signature (`typing.dart`), not from these ports.
+    // --- algorun-lang A3 ---
+    BlockIds.strLen: reporter(BlockIds.strLen, ValueType.number, [exprIn('text', ValueType.string)]),
+    BlockIds.strCharAt: reporter(BlockIds.strCharAt, ValueType.string, [
+      exprIn('text', ValueType.string),
+      exprIn('index', ValueType.number),
+    ]),
+    BlockIds.strConcat: reporter(BlockIds.strConcat, ValueType.string, [
+      exprIn('left', ValueType.string),
+      exprIn('right', ValueType.string),
+    ]),
+    BlockIds.strSubstring: reporter(BlockIds.strSubstring, ValueType.string, [
+      exprIn('text', ValueType.string),
+      exprIn('start', ValueType.number),
+      exprIn('end', ValueType.number),
+    ]),
+    BlockIds.strCompare: reporter(BlockIds.strCompare, ValueType.number, [
+      exprIn('left', ValueType.string),
+      exprIn('right', ValueType.string),
+    ]),
+    BlockIds.strFromNum: reporter(BlockIds.strFromNum, ValueType.string, [exprIn('value', ValueType.number)]),
+    BlockIds.strToNum: reporter(BlockIds.strToNum, ValueType.number.asNullable, [exprIn('text', ValueType.string)]),
+    BlockIds.newDeque: reporter(
+      BlockIds.newDeque,
+      ValueType.dequeOf(ValueType.t),
+      const [],
+      typeParams: const ['T'],
+    ),
+    BlockIds.dequePushFront: _dequePush(BlockIds.dequePushFront),
+    BlockIds.dequePushBack: _dequePush(BlockIds.dequePushBack),
+    BlockIds.dequePopFront: _dequeRead(BlockIds.dequePopFront, ValueType.t),
+    BlockIds.dequePopBack: _dequeRead(BlockIds.dequePopBack, ValueType.t),
+    BlockIds.dequeFront: _dequeRead(BlockIds.dequeFront, ValueType.t),
+    BlockIds.dequeBack: _dequeRead(BlockIds.dequeBack, ValueType.t),
+    BlockIds.dequeSize: _dequeRead(BlockIds.dequeSize, ValueType.number),
+    BlockIds.dequeEmpty: _dequeRead(BlockIds.dequeEmpty, ValueType.boolean),
+    BlockIds.arrSort: BlockDefinition(
+      id: BlockIds.arrSort,
+      role: BlockRole.statement,
+      typeParams: const ['T'],
+      ports: [stmtOut, exprIn('array', ValueType.array(ValueType.t))],
+    ),
+    BlockIds.pairMake: reporter(
+      BlockIds.pairMake,
+      ValueType.pairOf(ValueType.t, ValueType.generic('U')),
+      [exprIn('first', ValueType.t), exprIn('second', ValueType.generic('U'))],
+      typeParams: const ['T', 'U'],
+    ),
+    BlockIds.pairFirst: reporter(
+      BlockIds.pairFirst,
+      ValueType.t,
+      [exprIn('pair', ValueType.pairOf(ValueType.t, ValueType.generic('U')))],
+      typeParams: const ['T', 'U'],
+    ),
+    BlockIds.pairSecond: reporter(
+      BlockIds.pairSecond,
+      ValueType.generic('U'),
+      [exprIn('pair', ValueType.pairOf(ValueType.t, ValueType.generic('U')))],
+      typeParams: const ['T', 'U'],
+    ),
     BlockIds.fnDef: stackBlock(BlockIds.fnDef, [stmtList('body')]),
     BlockIds.fnCall: reporter(BlockIds.fnCall, ValueType.t, const [],
         typeParams: const ['T']),
@@ -518,6 +606,9 @@ abstract final class BlockCatalog {
     BlockIds.fnCall3: reporter(
         BlockIds.fnCall3, ValueType.t, [exprIn('a1', ValueType.t), exprIn('a2', ValueType.t), exprIn('a3', ValueType.t)],
         typeParams: const ['T']),
+    for (final (id, n) in [(BlockIds.fnCall4, 4), (BlockIds.fnCall5, 5), (BlockIds.fnCall6, 6)])
+      id: reporter(id, ValueType.t, [for (var i = 1; i <= n; i++) exprIn('a$i', ValueType.t)],
+          typeParams: const ['T']),
   };
 }
 
@@ -556,3 +647,21 @@ BlockDefinition _nothingCheck(String id) => reporter(
     );
 
 const _numHeap = ValueType(TypeAtom.heap, param: ValueType.number);
+
+BlockDefinition _dequePush(String id) => BlockDefinition(
+      id: id,
+      role: BlockRole.statement,
+      typeParams: const ['T'],
+      ports: [
+        stmtOut,
+        exprIn('deque', ValueType.dequeOf(ValueType.t)),
+        exprIn('value', ValueType.t),
+      ],
+    );
+
+BlockDefinition _dequeRead(String id, ValueType out) => reporter(
+      id,
+      out,
+      [exprIn('deque', ValueType.dequeOf(ValueType.t))],
+      typeParams: const ['T'],
+    );

@@ -32,6 +32,10 @@ const structures = {
   'linked_list',
   'tree',
   'graph',
+  // L3
+  'text',
+  'deque',
+  'pair',
 };
 
 /// Fields of a reference file's `spec`.

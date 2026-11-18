@@ -121,6 +121,10 @@ final class _Replay {
       final ok = switch (block.catalogId) {
         BlockIds.litNum => key == 'value' && _padNumber(value),
         BlockIds.litBool => key == 'value' && value is bool,
+        // TEXT is chosen from the puzzle's texts, never typed (L3).
+        BlockIds.litStr => key == 'value' && puzzle.blocks.textChoices.contains(value),
+        // COPY names its source and its target with two chips (L3).
+        BlockIds.varCopy => (key == 'name' || key == 'from') && value is String,
         final id when _namedBlocks.contains(id) => key == 'name' && value is String,
         _ => false,
       };
@@ -130,11 +134,15 @@ final class _Replay {
           '$path.literals.$key',
           padNumber
               ? 'The number pad enters whole numbers from -$editorNumberLimit to $editorNumberLimit.'
-              : 'The editor cannot set "$key" on ${BlockChrome.labelOf(block.catalogId)}.',
+              : block.catalogId == BlockIds.litStr && key == 'value'
+                  ? 'TEXT offers only the empty text and the puzzle\'s blocks.texts; ${_quoted(value)} is not one of them.'
+                  : 'The editor cannot set "$key" on ${BlockChrome.labelOf(block.catalogId)}.',
         ));
       }
     }
   }
+
+  static String _quoted(Object? value) => value is String ? '"$value"' : '$value';
 
   bool _padNumber(Object? value) =>
       value is int && value.abs() <= editorNumberLimit;

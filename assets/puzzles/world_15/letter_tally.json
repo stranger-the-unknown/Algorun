@@ -1,0 +1,94 @@
+{
+  "id": "letter_tally",
+  "version": 1,
+  "title": "Letter Tally",
+  "world": "world_15",
+  "chapter": "count_matching_letters",
+  "tier": 1,
+  "mode": "build",
+  "concepts": ["text"],
+  "prerequisites": [],
+  "story": "A sign painter charges extra for one fancy letter. Given the text of a sign and that one letter, count how many times the letter appears on the sign. A capital letter and its small letter are two different letters, and a space is a letter too.",
+  "io": {
+    "inputs": [
+      {"name": "sign", "type": "str"},
+      {"name": "letter", "type": "str"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 60},
+    "notes": ["letter is exactly one letter.", "The sign has at most 60 letters."]
+  },
+  "blocks": {
+    "allow": ["cmp.eq", "ctrl.for_range", "ctrl.if", "ctrl.return", "lit.num", "str.char_at", "str.len", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 24
+  },
+  "limits": {"maxOps": 250, "maxDepth": 32, "maxAlloc": 100},
+  "hints": ["Look at the sign one letter at a time and keep a count.", "TEXT LENGTH tells you how many positions the sign has; LETTER AT gives the letter at one position, starting from 0.", "FOR i from 0 to the TEXT LENGTH of sign: IF the LETTER AT i is EQUAL to letter, INCREMENT count. RETURN count."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"sign": "fresh bread", "letter": "e"},
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {"sign": "Banana Bar", "letter": "a"},
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"sign": "", "letter": "x"},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"sign": "open", "letter": "z"},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"sign": "Anna and Ada", "letter": "A"},
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {"sign": "zzzz", "letter": "z"},
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {"sign": "tea  and  cake", "letter": " "},
+        "out": 4
+      },
+      {
+        "id": "h06",
+        "in": {"sign": "closed on monday", "letter": "y"},
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {"sign": "çiçekçi", "letter": "ç"},
+        "out": 3
+      },
+      {
+        "id": "h08",
+        "in": {"sign": "x", "letter": "x"},
+        "out": 1
+      }
+    ]
+  },
+  "edgeCases": ["an empty sign", "the letter does not appear", "capital and small letters differ", "the letter is a space", "the letter is the last one"],
+  "variables": {
+    "pool": [
+      {"name": "count", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "count_matching_letters"}
+}

@@ -32,12 +32,24 @@ final class BlockPolicy {
     required this.allow,
     this.forbid = const {},
     this.maxBlocks,
+    this.texts = const [],
   });
+
+  /// At most this many `blocks.texts`, each at most [maxTextLength] characters.
+  static const maxTexts = 24;
+  static const maxTextLength = 24;
 
   /// Closed allowlist. The editor palette is exactly this set.
   final Set<String> allow;
   final Set<String> forbid;
   final int? maxBlocks;
+
+  /// The text constants the TEXT block offers besides the empty text (L3).
+  /// The editor has no keyboard, so a text is chosen, never typed.
+  final List<String> texts;
+
+  /// Every value a TEXT block may hold in this puzzle: the empty text first.
+  List<String> get textChoices => ['', ...texts];
 
   bool allows(String catalogId) =>
       allow.contains(catalogId) && !forbid.contains(catalogId);

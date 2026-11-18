@@ -41,8 +41,8 @@ final class GuideEntry {
 }
 
 /// One entry per block a puzzle can offer (a test checks that every block
-/// the campaign allows has one). SWAP, COPY and TEXT are left out: no puzzle
-/// offers them and they have nothing to plug in yet.
+/// the campaign allows has one). SWAP is left out: no puzzle offers it and
+/// the editor has no way to choose its two names yet.
 /// CALL, whatever the number of values it passes (one entry in the guide).
 const _call = GuideEntry(
   term: 'CALL',
@@ -122,6 +122,9 @@ const Map<String, GuideEntry> blockGuide = {
   BlockIds.fnCall1: _call,
   BlockIds.fnCall2: _call,
   BlockIds.fnCall3: _call,
+  BlockIds.fnCall4: _call,
+  BlockIds.fnCall5: _call,
+  BlockIds.fnCall6: _call,
   // ---- values and variables ----
   BlockIds.varSet: GuideEntry(
     term: 'SET',
@@ -635,6 +638,165 @@ const Map<String, GuideEntry> blockGuide = {
     trText: 'Çizgenin kaç düğümü olduğu; düğümler 0\'dan (NODE COUNT) MINUS 1\'e kadar numaralıdır.',
     example: 'FOR s FROM 0 TO (islands NODE COUNT) BY 1',
   ),
+  // ---- L3: text ----
+  BlockIds.litStr: GuideEntry(
+    term: 'TEXT',
+    tr: 'METİN',
+    en: 'A fixed piece of text, shown in quotes. There is no keyboard: tap it to choose one of the texts the puzzle offers. "" is the empty text, the usual start for a text you build with JOIN.',
+    trText: 'Sabit bir metin; tırnak içinde gösterilir. Klavye yoktur: bulmacanın sunduğu metinlerden birini seçmek için dokun. "" boş metindir; JOIN ile kurulan bir metnin olağan başlangıcıdır.',
+    example: 'SET result TO ""',
+  ),
+  BlockIds.strLen: GuideEntry(
+    term: 'TEXT LENGTH',
+    tr: 'METİN UZUNLUĞU',
+    en: 'How many letters a text has. Spaces and digits count as letters; the empty text has 0.',
+    trText: 'Bir metinde kaç harf olduğunu verir. Boşluklar ve rakamlar da harf sayılır; boş metnin uzunluğu 0\'dır.',
+    example: 'FOR i FROM 0 TO (word TEXT LENGTH)',
+  ),
+  BlockIds.strCharAt: GuideEntry(
+    term: 'LETTER AT',
+    tr: 'KONUMDAKİ HARF',
+    en: 'The one letter at a position of a text, as a text. Positions start at 0, like a list; a position outside the text is an error.',
+    trText: 'Metnin bir konumundaki tek harfi, yine metin olarak verir. Konumlar listedeki gibi 0\'dan başlar; metnin dışındaki bir konum hatadır.',
+    example: 'IF (word LETTER AT i) EQUAL "a"',
+  ),
+  BlockIds.strConcat: GuideEntry(
+    term: 'JOIN',
+    tr: 'BİRLEŞTİR',
+    en: 'Puts two texts together, the left one first. Neither text changes: the result is a new text.',
+    trText: 'İki metni, soldaki önce gelecek şekilde uç uca ekler. İki metin de değişmez: sonuç yeni bir metindir.',
+    example: 'SET result TO result JOIN (word LETTER AT i)',
+  ),
+  BlockIds.strSubstring: GuideEntry(
+    term: 'PART OF TEXT',
+    tr: 'METNİN PARÇASI',
+    en: 'The letters of a text from a start position up to, but not including, an end position. Start 0 and end TEXT LENGTH give the whole text.',
+    trText: 'Metnin başlangıç konumundan bitiş konumuna kadar olan harfleri verir; bitiş konumundaki harf dahil değildir. Başlangıç 0, bitiş TEXT LENGTH ise metnin tamamı çıkar.',
+    example: 'SET first TO word PART OF TEXT 0 3',
+    trExample: 'SET first TO word PART OF TEXT 0 3   (ilk üç harf)',
+  ),
+  BlockIds.strCompare: GuideEntry(
+    term: 'COMPARE TEXT',
+    tr: 'METİNLERİ KARŞILAŞTIR',
+    en: 'Compares two texts letter by letter, in dictionary order: -1 when the left one comes first, 1 when the right one does, 0 when they are the same. A text comes before any longer text that starts with it. Capital letters come before small ones.',
+    trText: 'İki metni harf harf, sözlük sırasıyla karşılaştırır: soldaki önce geliyorsa -1, sağdaki önce geliyorsa 1, aynıysalar 0 verir. Bir metin, kendisiyle başlayan daha uzun her metinden önce gelir. Büyük harfler küçük harflerden önce gelir.',
+    example: 'IF (a COMPARE TEXT b) LESS THAN 0',
+  ),
+  BlockIds.strFromNum: GuideEntry(
+    term: 'NUMBER AS TEXT',
+    tr: 'SAYIYI METNE ÇEVİR',
+    en: 'Writes a whole number as text, with a - in front of a negative one: 42 becomes "42".',
+    trText: 'Bir tam sayıyı metin olarak yazar; negatif sayının önüne - koyar: 42, "42" olur.',
+    example: 'SET label TO "n" JOIN (count NUMBER AS TEXT)',
+  ),
+  BlockIds.strToNum: GuideEntry(
+    term: 'TEXT AS NUMBER',
+    tr: 'METNİ SAYIYA ÇEVİR',
+    en: 'Reads a text made only of digits (with an optional - in front) as a number. Any other text gives NOTHING, so check with IS NOTHING before using the result.',
+    trText: 'Yalnızca rakamlardan oluşan (başında isteğe bağlı - olabilen) bir metni sayı olarak okur. Başka her metin NOTHING verir; sonucu kullanmadan önce IS NOTHING ile kontrol et.',
+    example: 'SET n TO (word TEXT AS NUMBER)\nIF n IS NOT NOTHING\n  THEN  SET total TO total PLUS n',
+  ),
+  // ---- L3: sorting and copying ----
+  BlockIds.arrSort: GuideEntry(
+    term: 'SORT',
+    tr: 'SIRALA',
+    en: 'Puts a list of numbers in rising order, or a list of texts in dictionary order. It changes the list itself; equal items keep their order. Each comparison it makes costs one operation.',
+    trText: 'Bir sayı listesini küçükten büyüğe, bir metin listesini sözlük sırasına dizer. Listenin kendisini değiştirir; eşit öğeler kendi sıralarını korur. Yaptığı her karşılaştırma bir işlem sayılır.',
+    example: 'SORT scores',
+  ),
+  BlockIds.varCopy: GuideEntry(
+    term: 'COPY',
+    tr: 'KOPYALA',
+    en: 'Makes a real copy of what one variable holds and puts it into another. Changing the copy leaves the original alone. SET would only give the same list a second name. A copy uses memory cells: one for the collection and one for each item.',
+    trText: 'Bir değişkenin tuttuğu şeyin gerçek bir kopyasını yapar ve başka bir değişkene koyar. Kopyayı değiştirmek aslını değiştirmez. SET ise aynı listeye yalnızca ikinci bir ad verir. Kopya bellek hücresi kullanır: koleksiyon için bir, her öğe için bir.',
+    example: 'COPY scores TO sorted\nSORT sorted',
+  ),
+  // ---- L3: deque ----
+  BlockIds.newDeque: GuideEntry(
+    term: 'NEW DEQUE',
+    tr: 'YENİ ÇİFT UÇLU KUYRUK',
+    en: 'A new, empty deque: a line you can add to and take from at both ends.',
+    trText: 'Yeni ve boş bir çift uçlu kuyruk: iki ucundan da eklenip alınabilen bir sıra.',
+    example: 'SET window TO NEW DEQUE',
+  ),
+  BlockIds.dequePushFront: GuideEntry(
+    term: 'PUSH FRONT',
+    tr: 'ÖNE EKLE',
+    en: 'Adds a value at the front of a deque.',
+    trText: 'Çift uçlu kuyruğun önüne bir değer ekler.',
+    example: 'PUSH FRONT window x',
+  ),
+  BlockIds.dequePushBack: GuideEntry(
+    term: 'PUSH BACK',
+    tr: 'ARKAYA EKLE',
+    en: 'Adds a value at the back of a deque.',
+    trText: 'Çift uçlu kuyruğun arkasına bir değer ekler.',
+    example: 'PUSH BACK window x',
+  ),
+  BlockIds.dequePopFront: GuideEntry(
+    term: 'POP FRONT',
+    tr: 'ÖNDEN AL',
+    en: 'Takes the front value out of a deque and gives it. An empty deque is an error: check IS EMPTY first.',
+    trText: 'Çift uçlu kuyruğun önündeki değeri çıkarır ve verir. Boş kuyruk hatadır: önce IS EMPTY ile kontrol et.',
+    example: 'SET oldest TO (window POP FRONT)',
+  ),
+  BlockIds.dequePopBack: GuideEntry(
+    term: 'POP BACK',
+    tr: 'ARKADAN AL',
+    en: 'Takes the back value out of a deque and gives it. An empty deque is an error: check IS EMPTY first.',
+    trText: 'Çift uçlu kuyruğun arkasındaki değeri çıkarır ve verir. Boş kuyruk hatadır: önce IS EMPTY ile kontrol et.',
+    example: 'SET newest TO (window POP BACK)',
+  ),
+  BlockIds.dequeFront: GuideEntry(
+    term: 'FRONT (deque)',
+    tr: 'ÖNE BAK',
+    en: 'The front value of a deque, without taking it out.',
+    trText: 'Çift uçlu kuyruğun önündeki değer; çıkarmadan bakar.',
+    example: 'IF (window FRONT) LESS THAN x',
+  ),
+  BlockIds.dequeBack: GuideEntry(
+    term: 'BACK',
+    tr: 'ARKAYA BAK',
+    en: 'The back value of a deque, without taking it out.',
+    trText: 'Çift uçlu kuyruğun arkasındaki değer; çıkarmadan bakar.',
+    example: 'WHILE (window BACK) LESS THAN x',
+  ),
+  BlockIds.dequeSize: GuideEntry(
+    term: 'SIZE (deque)',
+    tr: 'ÇİFT UÇLU KUYRUK BOYUTU',
+    en: 'How many values a deque holds.',
+    trText: 'Çift uçlu kuyrukta kaç değer olduğunu verir.',
+    example: 'IF (window SIZE) GREATER THAN k',
+  ),
+  BlockIds.dequeEmpty: GuideEntry(
+    term: 'IS EMPTY (deque)',
+    tr: 'ÇİFT UÇLU KUYRUK BOŞ MU',
+    en: 'TRUE when the deque holds nothing.',
+    trText: 'Çift uçlu kuyruk hiçbir şey tutmuyorsa TRUE olur.',
+    example: 'WHILE NOT (window IS EMPTY)',
+  ),
+  // ---- L3: pairs ----
+  BlockIds.pairMake: GuideEntry(
+    term: 'MAKE PAIR',
+    tr: 'ÇİFT YAP',
+    en: 'Ties two values together as one value, a pair: a name and its score, a position and its height. A pair never changes after it is made.',
+    trText: 'İki değeri tek bir değer olarak, bir çift halinde bağlar: bir ad ile puanı, bir konum ile yüksekliği. Çift, yapıldıktan sonra değişmez.',
+    example: 'APPEND result (name MAKE PAIR score)',
+  ),
+  BlockIds.pairFirst: GuideEntry(
+    term: 'FIRST',
+    tr: 'ÇİFTİN İLKİ',
+    en: 'The first value of a pair.',
+    trText: 'Bir çiftin ilk değeri.',
+    example: 'SET name TO (entry FIRST)',
+  ),
+  BlockIds.pairSecond: GuideEntry(
+    term: 'SECOND',
+    tr: 'ÇİFTİN İKİNCİSİ',
+    en: 'The second value of a pair.',
+    trText: 'Bir çiftin ikinci değeri.',
+    example: 'IF (entry SECOND) GREATER THAN best',
+  ),
 };
 
 /// The ideas the blocks are built on.
@@ -700,6 +862,24 @@ const List<GuideEntry> conceptGuide = [
     tr: 'Yığın / Kuyruk',
     en: 'A stack gives back the last value put in (PUSH / POP); a queue gives back the first (ENQUEUE / DEQUEUE).',
     trText: 'Yığın en son konan değeri geri verir (PUSH / POP); kuyruk ise ilk konanı (ENQUEUE / DEQUEUE).',
+  ),
+  GuideEntry(
+    term: 'Deque',
+    tr: 'Çift uçlu kuyruk',
+    en: 'A line open at both ends: values go in and come out at the front or at the back (PUSH FRONT / PUSH BACK, POP FRONT / POP BACK).',
+    trText: 'İki ucu da açık bir sıra: değerler önden de arkadan da eklenir ve alınır (PUSH FRONT / PUSH BACK, POP FRONT / POP BACK).',
+  ),
+  GuideEntry(
+    term: 'Text',
+    tr: 'Metin',
+    en: 'Letters in a row, written in quotes: "ada". Its letters have positions starting at 0, like a list, but a text never changes: JOIN and PART OF TEXT make new texts.',
+    trText: 'Yan yana harfler; tırnak içinde yazılır: "ada". Harflerinin listedeki gibi 0\'dan başlayan konumları vardır, ama bir metin değişmez: JOIN ve PART OF TEXT yeni metinler üretir.',
+  ),
+  GuideEntry(
+    term: 'Pair',
+    tr: 'Çift',
+    en: 'Two values kept together as one: FIRST and SECOND read them back. A list of pairs keeps things that belong together side by side.',
+    trText: 'Tek bir değer olarak birlikte tutulan iki değer: FIRST ve SECOND onları geri okur. Bir çift listesi, birbirine ait şeyleri yan yana tutar.',
   ),
   GuideEntry(
     term: 'Heap',

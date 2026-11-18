@@ -353,6 +353,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemGraph => 'graphs';
 
   @override
+  String get itemPair => 'pairs';
+
+  @override
   String get itemOther => 'collections';
 
   @override
@@ -378,6 +381,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String typeHeapOf(String item) {
     return 'heap of $item';
+  }
+
+  @override
+  String typePairOf(String first, String second) {
+    return 'pair of $first and $second';
   }
 
   @override
@@ -641,6 +649,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get captionHeap => 'heap';
 
   @override
+  String get captionText => 'text';
+
+  @override
+  String get captionDeque => 'deque';
+
+  @override
+  String get captionPair => 'pair';
+
+  @override
   String get captionKey => 'key';
 
   @override
@@ -728,6 +745,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get namesFromPuzzle =>
       'Names come from the puzzle; there is no typing.';
+
+  @override
+  String get chooseText => 'Choose a text';
+
+  @override
+  String get textsFromPuzzle =>
+      'Texts come from the puzzle; there is no typing.';
 
   @override
   String get padDone => 'DONE';
@@ -1378,6 +1402,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get engineThisHeapIsEmpty => 'This heap is empty.';
 
   @override
+  String get engineThatPositionIsOutsideTheText =>
+      'That position is outside the text.';
+
+  @override
+  String get engineThisBlockNeedsSomeText => 'This block needs some text.';
+
+  @override
+  String get engineThisBlockNeedsADeque => 'This block needs a deque.';
+
+  @override
+  String get engineThisBlockNeedsAPair => 'This block needs a pair.';
+
+  @override
+  String get engineThisDequeGotTooBig => 'This deque got too big.';
+
+  @override
+  String get engineThisDequeIsEmpty => 'This deque is empty.';
+
+  @override
+  String get engineThisTextGotTooLong => 'This text got too long.';
+
+  @override
+  String get engineSortMixed =>
+      'SORT needs a list of only numbers or only text.';
+
+  @override
+  String get engineSortType =>
+      'SORT needs a list of numbers or a list of text.';
+
+  @override
+  String get engineNumberAsTextWhole => 'NUMBER AS TEXT needs a whole number.';
+
+  @override
   String get engineThisQueueGotTooBig => 'This queue got too big.';
 
   @override
@@ -1477,6 +1534,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String engineNoReturn(String name) {
     return 'FUNCTION $name ended without RETURN.';
+  }
+
+  @override
+  String engineCanEndWithoutReturn(String name) {
+    return 'FUNCTION $name can end without RETURN.';
   }
 
   @override

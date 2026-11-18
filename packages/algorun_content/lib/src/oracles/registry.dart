@@ -7,6 +7,7 @@ import 'arrays.dart';
 import 'foundations.dart';
 import 'graphs.dart';
 import 'heaps.dart';
+import 'l3.dart';
 import 'greedy_dp.dart';
 import 'hashing.dart';
 import 'lists.dart';
@@ -37,4 +38,5 @@ const Map<String, Oracle> oracleRegistry = {
   ...batch6Oracles,
   ...heapOracles,
   ...modeOracles,
+  ...l3Oracles,
 };

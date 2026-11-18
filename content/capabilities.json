@@ -12,7 +12,8 @@
     "stack": {"status": "supported", "note": "PUSH / POP / PEEK / IS EMPTY."},
     "monotonic_stack": {"status": "supported", "note": "A stack of positions."},
     "queue": {"status": "supported", "note": "ENQUEUE / DEQUEUE / FRONT / IS EMPTY."},
-    "monotonic_deque": {"status": "partial", "note": "There are no deque blocks; a list with a moving head index stands in for one."},
+    "monotonic_deque": {"status": "supported", "note": "Deque blocks (L3): PUSH BACK / POP BACK keep the order, POP FRONT drops what left the window. Before L3 a list with a moving head index stood in for one."},
+    "deque": {"status": "supported", "note": "NEW DEQUE / PUSH FRONT / PUSH BACK / POP FRONT / POP BACK / FRONT / BACK / SIZE / IS EMPTY (L3); a deque is also a fixture type."},
     "linked_list_traversal": {"status": "supported", "note": "NEXT NODE with IS NOT NOTHING narrowing (L1)."},
     "linked_list_relink": {"status": "supported", "note": "SET NEXT through a checked node; a program can re-link but never create a node."},
     "linked_list_build": {"status": "blocked", "note": "No block creates a list node."},
@@ -30,10 +31,10 @@
     "recursion": {"status": "supported", "note": "Player functions that CALL themselves (L2): a FUNCTION per puzzle, each call with its own variables, depth counted against maxDepth."},
     "backtracking": {"status": "supported", "note": "Recursion that tries a choice, CALLs itself, then undoes it (APPEND / REMOVE AT on a list passed by reference) (L2)."},
     "heap": {"status": "supported", "note": "NEW MIN HEAP / NEW MAX HEAP / INSERT / TAKE TOP / TOP / SIZE / IS EMPTY; numbers only (H)."},
-    "sorting_builtin": {"status": "blocked", "note": "There is no sort block; puzzles give sorted input when order matters."},
-    "strings": {"status": "blocked", "note": "No text operations, and the editor cannot enter text."},
+    "sorting_builtin": {"status": "supported", "note": "SORT (L3): a list of numbers or a list of text, in place, stable; each comparison costs one operation, so a budget sees it. COPY first when the original order is still needed."},
+    "strings": {"status": "supported", "note": "Text blocks (L3): TEXT LENGTH, LETTER AT, JOIN, PART OF TEXT, COMPARE TEXT, NUMBER AS TEXT, TEXT AS NUMBER. The editor has no keyboard: the TEXT block offers the empty text and the puzzle's blocks.texts, so every text constant a solution needs must be listed there or arrive as an input."},
     "bit_manipulation": {"status": "blocked", "note": "No bitwise operators."},
-    "pairs_tuples": {"status": "blocked", "note": "The pair type has no blocks or fixture form; parallel lists stand in."}
+    "pairs_tuples": {"status": "supported", "note": "MAKE PAIR / FIRST / SECOND (L3); a pair is a fixture type ({\"type\": \"pair\", \"first\": …, \"second\": …}). Pairs never change after they are made; there are no triples."}
   },
   "modes": {
     "build": {"status": "supported", "note": "Build the whole program."},

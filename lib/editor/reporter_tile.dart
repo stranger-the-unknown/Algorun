@@ -82,6 +82,8 @@ final class ReporterTile extends StatelessWidget {
       LiteralSheet.showNumber(context, controller, block.id);
     } else if (block.catalogId == BlockIds.litBool) {
       LiteralSheet.showBool(context, controller, block.id);
+    } else if (block.catalogId == BlockIds.litStr) {
+      LiteralSheet.showText(context, controller, block.id);
     } else if (block.catalogId == BlockIds.varGet) {
       LiteralSheet.showVariable(
         context,
@@ -128,6 +130,12 @@ final class ReporterTile extends StatelessWidget {
     }
     if (block.catalogId == BlockIds.litNull) {
       return const Text('NOTHING', style: TextStyle(fontWeight: FontWeight.w600));
+    }
+    if (block.catalogId == BlockIds.litStr) {
+      return Text(
+        quotedText('${block.literals['value'] ?? ''}'),
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      );
     }
 
     Widget hole(PortDefinition port) => HoleWidget(

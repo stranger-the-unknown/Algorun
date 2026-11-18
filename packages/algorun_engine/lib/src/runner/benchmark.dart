@@ -187,6 +187,7 @@ int _size(RuntimeValue value) {
     ListNodeValue() => _chainLength(value),
     TreeNodeValue() => _treeSize(value, <TreeNodeValue>{}),
     NilValue() || NumValue() || BoolValue() || StrValue() => 0,
+    PairValue() => 2,
   };
 }
 

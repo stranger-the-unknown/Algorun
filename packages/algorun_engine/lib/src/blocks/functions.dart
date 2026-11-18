@@ -28,7 +28,8 @@ final class FunctionSignature {
   const FunctionSignature({required this.name, required this.params, required this.returns});
 
   /// At most this many parameters (CALL has one block per arity).
-  static const maxParams = 3;
+  // algorun-lang D10: up to 6 values (game: 3).
+  static const maxParams = 6;
 
   final String name;
   final List<FunctionParam> params;

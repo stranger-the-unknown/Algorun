@@ -231,6 +231,26 @@ class _Hat extends StatelessWidget {
     if (block.catalogId == BlockIds.varSet) {
       children.add(const BlockWord('TO'));
     }
+    if (block.catalogId == BlockIds.varCopy) {
+      // COPY has two names and no slots (L3): COPY source TO target.
+      NameChip chip(String key) => NameChip(
+            name: block.literals[key] as String? ?? context.l10n.namePlaceholder,
+            onTap: () {
+              controller.selectBlock(block.id);
+              LiteralSheet.showVariable(
+                context,
+                controller,
+                blockId: block.id,
+                key: key,
+                names: controller.graph.variables.keys.toList(),
+              );
+            },
+          );
+      children
+        ..add(chip('from'))
+        ..add(const BlockWord('TO'))
+        ..add(chip('name'));
+    }
     for (final p in exprIns) {
       children.add(HoleWidget(
         controller: controller,

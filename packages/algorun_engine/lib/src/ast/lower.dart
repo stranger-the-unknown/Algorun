@@ -126,6 +126,10 @@ final class _Session {
     _inFunction = sig;
     try {
       final body = _stmts(block.id, 'body');
+      // algorun-lang D11: a FUNCTION that promises a value must RETURN on every path.
+      if (sig.returns.atom != TypeAtom.voidType && !alwaysReturns(body)) {
+        _err('missing_return', 'FUNCTION ${sig.name} can end without RETURN.', block.id);
+      }
       return FnDecl(
         name: sig.name,
         params: [for (final p in sig.params) Param(p.name, p.type)],
@@ -174,6 +178,9 @@ final class _Session {
         BlockIds.stackPush ||
         BlockIds.queueEnq ||
         BlockIds.heapInsert ||
+        BlockIds.dequePushFront ||
+        BlockIds.dequePushBack ||
+        BlockIds.arrSort ||
         BlockIds.graphMark =>
           _callStmt(block),
         BlockIds.llSetNext => _fieldAssign(block, 'next', 'node', 'next'),
@@ -412,9 +419,15 @@ final class _Session {
     }
     final fromType = _read(from, block.id)!;
     if (!_fitsVariable(env[dest]!, fromType, block.id)) return null;
+    // algorun-lang D5: COPY makes a real (deep) copy, not a second name.
     return AssignStmt(
       target: VarLValue(dest, srcBlockId: block.id),
-      value: VarExpr(from, type: fromType, srcBlockId: block.id),
+      value: CallExpr(
+        BlockIds.varCopy,
+        [VarExpr(from, type: fromType, srcBlockId: block.id)],
+        type: fromType,
+        srcBlockId: block.id,
+      ),
       srcBlockId: block.id,
     );
   }
@@ -480,6 +493,14 @@ final class _Session {
       final arg = _reqExpr(block.id, port.name);
       if (arg == null) return null;
       args.add(arg);
+    }
+    // algorun-lang D12: SORT only sorts lists of numbers or of text.
+    if (block.catalogId == BlockIds.arrSort) {
+      final item = args.first.type.param;
+      if (item == null || item.nullable || (item.atom != TypeAtom.number && item.atom != TypeAtom.string)) {
+        _err('type_mismatch', 'SORT needs a list of numbers or a list of text.', block.id, 'array');
+        return null;
+      }
     }
     return ExprStmt(
       CallExpr(
@@ -596,6 +617,7 @@ final class _Session {
         BlockIds.newQueue => _new(block, CollKind.queue),
         BlockIds.newMinHeap => _new(block, CollKind.minHeap),
         BlockIds.newMaxHeap => _new(block, CollKind.maxHeap),
+        BlockIds.newDeque => _new(block, CollKind.deque),
         final call when BlockIds.isCall(call) => _call(block),
         _ => _callExpr(block),
       };
@@ -828,4 +850,19 @@ final class _Session {
       _ => 'This piece does not fit here.',
     };
   }
+}
+
+/// algorun-lang D11: whether running [body] always ends in RETURN. IF counts
+/// only with an ELSE whose both branches always return; loops never count
+/// (their body may run zero times), the same rule as LogicSignal Lang.
+bool alwaysReturns(List<Stmt> body) {
+  for (final s in body) {
+    if (s is ReturnStmt) return true;
+    if (s is SeqStmt && alwaysReturns(s.stmts)) return true;
+    if (s is IfStmt) {
+      final otherwise = s.elseBody;
+      if (otherwise != null && alwaysReturns(s.thenBody) && alwaysReturns(otherwise)) return true;
+    }
+  }
+  return false;
 }

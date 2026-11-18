@@ -1,34 +1,37 @@
 {
-  "total": 158,
+  "total": 168,
   "targetTotal": 300,
   "tiers": {
-    "1": 11,
-    "2": 48,
-    "3": 54,
+    "1": 15,
+    "2": 53,
+    "3": 55,
     "4": 37,
     "5": 8
   },
   "modes": {
     "budget": 20,
-    "build": 95,
+    "build": 102,
     "complete": 3,
-    "edge": 25,
+    "edge": 28,
     "optimize": 5,
     "predict": 3,
     "repair": 3,
     "restricted": 4
   },
   "structures": {
-    "array": 61,
+    "array": 63,
+    "deque": 2,
     "graph": 16,
     "grid": 4,
     "hash_map": 9,
     "hash_set": 4,
     "heap": 14,
     "linked_list": 11,
+    "pair": 2,
     "queue": 2,
     "scalar": 15,
     "stack": 7,
+    "text": 4,
     "tree": 15
   },
   "families": {
@@ -36,6 +39,7 @@
     "backtracking": 6,
     "binary_search": 2,
     "control_flow": 10,
+    "deque": 2,
     "dp_grid": 3,
     "dp_iterative": 7,
     "graph_bfs": 5,
@@ -49,11 +53,14 @@
     "linked_list_traversal": 8,
     "monotonic_stack": 2,
     "multi_concept": 1,
+    "pairs_tuples": 2,
     "prefix_sum": 5,
     "queue": 3,
     "recursion": 9,
     "sliding_window": 9,
+    "sorting_builtin": 2,
     "stack": 5,
+    "strings": 4,
     "topological_order": 1,
     "tree_traversal": 12,
     "two_pointers": 11,
@@ -61,7 +68,7 @@
   },
   "performance": {
     "budget": 29,
-    "correctness": 121,
+    "correctness": 131,
     "optimization": 5,
     "restricted": 3
   },
@@ -76,6 +83,7 @@
     "complement_lookup": 1,
     "control": 15,
     "counting": 1,
+    "deque": 2,
     "dfs": 5,
     "dp": 11,
     "dp_iterative": 1,
@@ -93,13 +101,16 @@
     "multi_concept": 1,
     "neighbour_order": 1,
     "nullable_check": 11,
+    "pairs": 2,
     "prefix_sum": 7,
     "queue": 11,
     "recursion": 9,
     "relinking": 2,
     "shortest_path": 1,
     "sliding_window": 9,
+    "sorting": 2,
     "stack": 9,
+    "text": 4,
     "topological_order": 1,
     "tree": 12,
     "two_pointers": 16,
@@ -578,6 +589,42 @@
         "bfs_path_counting": 1
       },
       "target": 8
+    },
+    {
+      "id": "world_15",
+      "title": "Text, Sorting & Pairs",
+      "concepts": [
+        "text",
+        "sorting",
+        "deque",
+        "pairs"
+      ],
+      "count": 10,
+      "tiers": {
+        "1": 4,
+        "2": 5,
+        "3": 1,
+        "4": 0,
+        "5": 0
+      },
+      "families": {
+        "deque": 2,
+        "pairs_tuples": 2,
+        "sorting_builtin": 2,
+        "strings": 4
+      },
+      "patterns": {
+        "alternate_ends_then_drain": 1,
+        "build_padded_label": 1,
+        "copy_sort_compare_positions": 1,
+        "count_matching_letters": 1,
+        "first_maximum_by_second": 1,
+        "parse_or_skip_sum": 1,
+        "reverse_text_by_prepending": 1,
+        "sort_then_lower_median": 1,
+        "two_ended_line_simulation": 1,
+        "zip_filter_into_pairs": 1
+      }
     }
   ],
   "puzzles": [
@@ -1471,6 +1518,20 @@
       ]
     },
     {
+      "id": "letter_tally",
+      "world": "world_15",
+      "tier": 1,
+      "mode": "build",
+      "family": "strings",
+      "pattern": "count_matching_letters",
+      "structure": "text",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "text"
+      ]
+    },
+    {
       "id": "level_stretches",
       "world": "world_03",
       "tier": 4,
@@ -1784,6 +1845,20 @@
       ]
     },
     {
+      "id": "middle_child",
+      "world": "world_15",
+      "tier": 1,
+      "mode": "build",
+      "family": "sorting_builtin",
+      "pattern": "sort_then_lower_median",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "sorting"
+      ]
+    },
+    {
       "id": "mirror_shelf",
       "world": "world_04",
       "tier": 2,
@@ -1795,6 +1870,20 @@
       "performance": "correctness",
       "concepts": [
         "two_pointers"
+      ]
+    },
+    {
+      "id": "mirror_sign",
+      "world": "world_15",
+      "tier": 2,
+      "mode": "build",
+      "family": "strings",
+      "pattern": "reverse_text_by_prepending",
+      "structure": "text",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "text"
       ]
     },
     {
@@ -1971,6 +2060,20 @@
       ]
     },
     {
+      "id": "out_of_place",
+      "world": "world_15",
+      "tier": 2,
+      "mode": "build",
+      "family": "sorting_builtin",
+      "pattern": "copy_sort_compare_positions",
+      "structure": "array",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "sorting"
+      ]
+    },
+    {
       "id": "pack_bins",
       "world": "world_13",
       "tier": 4,
@@ -2025,6 +2128,20 @@
       "concepts": [
         "variables",
         "control"
+      ]
+    },
+    {
+      "id": "pass_list",
+      "world": "world_15",
+      "tier": 2,
+      "mode": "build",
+      "family": "pairs_tuples",
+      "pattern": "zip_filter_into_pairs",
+      "structure": "pair",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "pairs"
       ]
     },
     {
@@ -2426,6 +2543,20 @@
       ]
     },
     {
+      "id": "seat_label",
+      "world": "world_15",
+      "tier": 1,
+      "mode": "edge",
+      "family": "strings",
+      "pattern": "build_padded_label",
+      "structure": "text",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "text"
+      ]
+    },
+    {
       "id": "seating_plan",
       "world": "world_12",
       "tier": 5,
@@ -2527,6 +2658,20 @@
       "concepts": [
         "binary_search",
         "binary_search_answer"
+      ]
+    },
+    {
+      "id": "smudged_tickets",
+      "world": "world_15",
+      "tier": 2,
+      "mode": "edge",
+      "family": "strings",
+      "pattern": "parse_or_skip_sum",
+      "structure": "text",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "text"
       ]
     },
     {
@@ -2756,6 +2901,20 @@
       ]
     },
     {
+      "id": "top_scorer",
+      "world": "world_15",
+      "tier": 1,
+      "mode": "build",
+      "family": "pairs_tuples",
+      "pattern": "first_maximum_by_second",
+      "structure": "pair",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "pairs"
+      ]
+    },
+    {
       "id": "top_scores",
       "world": "world_09",
       "tier": 2,
@@ -2816,6 +2975,20 @@
       "concepts": [
         "hash_set",
         "complement_lookup"
+      ]
+    },
+    {
+      "id": "two_doors",
+      "world": "world_15",
+      "tier": 3,
+      "mode": "edge",
+      "family": "deque",
+      "pattern": "two_ended_line_simulation",
+      "structure": "deque",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "deque"
       ]
     },
     {
@@ -2941,6 +3114,20 @@
       "performance": "correctness",
       "concepts": [
         "sliding_window"
+      ]
+    },
+    {
+      "id": "zigzag_queue",
+      "world": "world_15",
+      "tier": 2,
+      "mode": "build",
+      "family": "deque",
+      "pattern": "alternate_ends_then_drain",
+      "structure": "deque",
+      "secondary": [],
+      "performance": "correctness",
+      "concepts": [
+        "deque"
       ]
     }
   ],
@@ -3193,7 +3380,7 @@
     {
       "area": "mode",
       "id": "build",
-      "have": 95,
+      "have": 102,
       "want": 150
     },
     {

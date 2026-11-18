@@ -263,6 +263,7 @@
   "itemListNode": "chain links",
   "itemTreeNode": "tree nodes",
   "itemGraph": "graphs",
+  "itemPair": "pairs",
   "itemOther": "collections",
   "typeListOf": "list of {item}",
   "@typeListOf": {
@@ -300,6 +301,17 @@
   "@typeHeapOf": {
     "placeholders": {
       "item": {
+        "type": "String"
+      }
+    }
+  },
+  "typePairOf": "pair of {first} and {second}",
+  "@typePairOf": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
         "type": "String"
       }
     }
@@ -555,6 +567,9 @@
   "captionStack": "stack",
   "captionQueue": "queue",
   "captionHeap": "heap",
+  "captionText": "text",
+  "captionDeque": "deque",
+  "captionPair": "pair",
   "captionKey": "key",
   "captionNode": "node",
   "captionGraph": "graph",
@@ -603,6 +618,8 @@
   "itemPlaceholder": "item",
   "chooseName": "Choose a name",
   "namesFromPuzzle": "Names come from the puzzle; there is no typing.",
+  "chooseText": "Choose a text",
+  "textsFromPuzzle": "Texts come from the puzzle; there is no typing.",
   "padDone": "DONE",
   "padClear": "CLEAR",
   "padSelectedHint": "Typing replaces this number",
@@ -1086,6 +1103,46 @@
   "@engineThisHeapIsEmpty": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
   },
+  "engineThatPositionIsOutsideTheText": "That position is outside the text.",
+  "@engineThatPositionIsOutsideTheText": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsSomeText": "This block needs some text.",
+  "@engineThisBlockNeedsSomeText": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsADeque": "This block needs a deque.",
+  "@engineThisBlockNeedsADeque": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisBlockNeedsAPair": "This block needs a pair.",
+  "@engineThisBlockNeedsAPair": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisDequeGotTooBig": "This deque got too big.",
+  "@engineThisDequeGotTooBig": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisDequeIsEmpty": "This deque is empty.",
+  "@engineThisDequeIsEmpty": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineThisTextGotTooLong": "This text got too long.",
+  "@engineThisTextGotTooLong": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineSortMixed": "SORT needs a list of only numbers or only text.",
+  "@engineSortMixed": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineSortType": "SORT needs a list of numbers or a list of text.",
+  "@engineSortType": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
+  "engineNumberAsTextWhole": "NUMBER AS TEXT needs a whole number.",
+  "@engineNumberAsTextWhole": {
+    "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
+  },
   "engineThisQueueGotTooBig": "This queue got too big.",
   "@engineThisQueueGotTooBig": {
     "description": "Engine message, looked up by its English text (lib/l10n/engine_text.dart)."
@@ -1199,6 +1256,14 @@
   },
   "engineNoReturn": "FUNCTION {name} ended without RETURN.",
   "@engineNoReturn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "engineCanEndWithoutReturn": "FUNCTION {name} can end without RETURN.",
+  "@engineCanEndWithoutReturn": {
     "placeholders": {
       "name": {
         "type": "String"
