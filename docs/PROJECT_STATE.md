@@ -71,21 +71,47 @@ the trace stops on them like any other; a predict puzzle's result rows have
 no trace button (they are answers, not a run); the engine's
 `trace_parity_test` passes with every merged puzzle.
 
-**Open, the owner's decisions:**
+**Decided after the merge (owner, 2026-11-18) — the number model is "safe
+whole numbers"** (option C of `MILESTONE_L3_PLAN.md` §5; details in
+`MILESTONE_L3.md` "Number model — decided"):
 
-- **Number model (L3).** Arithmetic is still Dart `num` as before L3.
-  algorun-lang's signed 64-bit integers cannot be exact in a browser. Four
-  options were measured (`MILESTONE_L3_PLAN.md` §5); the recommendation is
-  "safe whole numbers": whole numbers only, DIVIDE truncates, a result
-  outside ±(2^53 − 1) is "This number is too big." on every platform. Not
-  implemented until the owner says so.
-- Campaign locks are still off; publishing an APK or the web build with this
-  merge waits for the owner.
+- A number is a whole number from −(2^53 − 1) to 2^53 − 1 (`maxSafeNumber`,
+  `runtime/whole_number.dart`). Inside that range the phone's integers, a
+  browser's JavaScript numbers and Wasm integers are all exact, so every
+  platform computes the same thing by construction.
+- No fractions: a fractional literal or input is an invalid program; fixture
+  JSON refuses a fraction or a number outside the range (`2.0` reads as 2).
+- DIVIDE truncates toward zero (`7 / 2` → 3, `-7 / 2` → −3). FLOOR DIVIDE
+  still rounds down and REMAINDER is never negative; the two divisions
+  differ only below zero.
+- A result outside the range stops the run with "This number is too big."
+  (PLUS, MINUS, TIMES, INCREMENT, DECREMENT, the FOR counter).
+- No shipped puzzle, reference, reject, fixture or budget changed; the
+  validator's output and the phone / web digest (`tool/web_parity.sh`) are
+  identical before and after. The Smallest Cart is the only puzzle that
+  offers DIVIDE: a DIVIDE midpoint now solves it like FLOOR DIVIDE.
+  **Open content follow-up:** its reference `notes`, `spec.traps` and the
+  puzzle's `edgeCases` still describe that trap; fixing the wording needs a
+  puzzle `version` decision.
+- The game's numbers stop at 2^53 − 1 and algorun-lang's at 2^63 − 1: 18
+  known conformance differences, all this one.
+
+**Content validation is parallel (2026-11-18).** `bin/validate.dart` deals
+the reference checks out to every processor (`--jobs <n>`; `--jobs 1` is one
+after another) and the output is byte for byte the same: 29 s → about 13 s
+on this machine, of which about 5 s is Dart starting. API:
+`ContentValidator.referenceJobs`, `checkReferencesInParallel`,
+`validateContent(referenceOutcomes: …)` (`parallel_check.dart`,
+`test/parallel_check_test.dart`). The content tests still validate the
+campaign on one isolate.
+
+**Open, the owner's decisions:** campaign locks are still off.
 
 **Not tested:** a physical phone, TalkBack, and iOS for every milestone; the
-web build for T1, E1, M1 and MS16 on their own branches. Full content
-validation now takes about 29 s on this machine (MS12 asked for it to stay
-fast; `MILESTONE_16.md` "Known limits").
+web build for T1, E1, M1 and MS16 on their own branches (the merged build
+was opened in a browser and on the emulator: world 15, a SORT program
+stepped through in the trace, a locked starter program, the editor's new
+controls).
 
 ---
 
@@ -292,7 +318,7 @@ Tree-walks the IR. Never sees a `BlockGraph`, never evals, no clock / random / I
 - `ResultKind.correct` = ran to completion; verdicts are the runner's.
 - Budgets are checked *before* a step: `maxOps` = one op per executed block (loop header once per iteration; `seq`, call wrappers and short-circuited operands free), `maxAlloc` = live collection cells, `maxDepth` = function frames (`ResultKind.depthLimit`).
 - Deterministic: insertion-ordered maps and sets, `for each` iterates a snapshot, the `for range` counter is loop-owned, given values are deep-copied on entry.
-- DIVIDE keeps whole results whole (`8 / 2` → `2`, `7 / 2` → `3.5`). FLOOR DIVIDE is below. Dividing by zero is a runtime error. List positions must be whole numbers inside the list.
+- Numbers are whole and stay inside ±(2^53 − 1); a result outside is the run-time error "This number is too big." (L3 number model, `runtime/whole_number.dart`: `maxSafeNumber`, `numberProblem`, `wholeNumber`). DIVIDE truncates toward zero (`7 / 2` → `3`, `-7 / 2` → `-3`). FLOOR DIVIDE is below. Dividing by zero is a runtime error. List positions must be inside the list.
 - Equality is by value for number / text / yes-no / empty; containers, nodes and graphs are only equal to themselves.
 - `RuntimeValue` is sealed: `Nil Num Bool Str Array Map Set Stack Queue Deque ListNode TreeNode Graph`. Adding one means updating `valuesEqual`, `value_json.dart` and the interpreter's copy.
 
@@ -374,7 +400,7 @@ Stacks are bottom → top, queues and deques front → back. An empty linked lis
 
 ### Integer division (MS7)
 
-DIVIDE is unchanged. **FLOOR DIVIDE** (`arith.floor_div`, `num × num → num`,
+Since the L3 number model DIVIDE truncates toward zero, so DIVIDE and FLOOR DIVIDE differ only below zero. **FLOOR DIVIDE** (`arith.floor_div`, `num × num → num`,
 MATH category) returns the largest whole number not above `left / right`:
 `7 → 3`, `8 → 4`, `-7 → -4` (all ÷ 2), `7 ÷ -2 → -4`. Always whole, so it is a
 valid list position (`nums[(lo + hi) FLOOR DIVIDE 2]`). Zero denominator is a
@@ -393,7 +419,7 @@ Errors: every schema rule; an expected answer that fails its own validator; dupl
 | Twin Beacons | `twin_beacons` / 03 | complement lookup, hash set | budget, 2 | all pairs (op budget); add before asking (hidden trap) |
 | Quota Hours | `quota_hours` / 05 | variable sliding window | build, 3 | all runs (op budget); unconverted placeholder (hidden trap) |
 | Relay Towers | `relay_towers` / 06 | monotonic stack | build, 3 | looking east (op budget); popping on equal heights (hidden trap) |
-| The Smallest Cart | `smallest_cart` / 02 | binary search on the answer, FLOOR DIVIDE | build, 3 | one-unit steps (op budget); a DIVIDE midpoint |
+| The Smallest Cart | `smallest_cart` / 02 | binary search on the answer, FLOOR DIVIDE | build, 3 | one-unit steps (op budget); a DIVIDE midpoint was turned away until the L3 number model, and now works like FLOOR DIVIDE |
 | Fewest Rides | `fewest_rides` / 10 | BFS shortest path on a `graph` fixture | build, 3 | depth-first with a stack (hidden trap) |
 
 Tree BFS was not chosen because at MS8 the language could not traverse a tree;
@@ -735,14 +761,14 @@ puzzle app bar and the piece picker. Details:
 
 ## Test results after the 2026-11-18 merge
 
-Run on the merged tree (Flutter 3.47.2, Linux):
+Run on the merged tree with the number model and the parallel validator (Flutter 3.47.2, Linux):
 
 | Suite | Result |
 |---|---|
-| `packages/algorun_engine` `dart analyze` / `dart test` | no issues / **487 passed** |
-| `packages/algorun_content` `dart analyze` / `dart test` | no issues / **114 passed** |
+| `packages/algorun_engine` `dart analyze` / `dart test` | no issues / **506 passed** |
+| `packages/algorun_content` `dart analyze` / `dart test` | no issues / **121 passed** |
 | Content validator, with references and `--coverage` | **204 of 204** campaign puzzles accepted, 5 probes checked, `OK 209 puzzle(s), 5 warning(s)` (the five unlisted probes) |
-| `flutter analyze` / `flutter test` | no issues / **820 passed** |
+| `flutter analyze` / `flutter test` | no issues / **824 passed** |
 
 ## Test results at U1 closeout
 
@@ -885,9 +911,9 @@ Do not add a TypeScript app. Do not eval generated source. Do not start one mile
 | T1 | Step-by-step trace of a visible case | complete (2026-11-18) |
 | E1 | Editor comfort: search, copy / paste, folds, drag, outline | complete (2026-11-18) |
 | M1 | Starter programs; complete, repair and predict puzzles (+9) | complete (2026-11-18) |
-| L3 | Text, deque, SORT, pairs, deep COPY from algorun-lang; world 15 (+10) | complete (2026-11-18); number model open |
+| L3 | Text, deque, SORT, pairs, deep COPY from algorun-lang; world 15 (+10) | complete (2026-11-18), with the number model "safe whole numbers" |
 | 16 | Content batch 4: 36 puzzles (204 in the campaign) | complete (2026-11-18) |
-| later | Number model (owner decision, `MILESTONE_L3_PLAN.md` §5); modes trace / structure / ops; building list or tree nodes, bit manipulation, edge weights | only when the owner asks |
+| later | Modes trace / structure / ops; building list or tree nodes, bit manipulation, edge weights | only when the owner asks |
 
 ## Content backlog and coverage (after the 2026-11-18 merge)
 
@@ -1007,7 +1033,7 @@ Each world now lists its puzzles by tier.
 | [`MILESTONE_T1.md`](MILESTONE_T1.md) | complete — step-by-step trace |
 | [`MILESTONE_E1.md`](MILESTONE_E1.md) | complete — editor comfort for long programs |
 | [`MILESTONE_M1.md`](MILESTONE_M1.md) | complete — starter programs; complete, repair, predict |
-| [`MILESTONE_L3.md`](MILESTONE_L3.md) | complete — algorun-lang additions; world 15; number model open ([plan](MILESTONE_L3_PLAN.md)) |
+| [`MILESTONE_L3.md`](MILESTONE_L3.md) | complete — algorun-lang additions; world 15; safe whole numbers ([plan](MILESTONE_L3_PLAN.md)) |
 | [`MILESTONE_16.md`](MILESTONE_16.md) | complete — content batch 4 (36 puzzles) |
 | this file | handoff after the 2026-11-18 merge |
 
