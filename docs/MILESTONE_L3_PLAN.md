@@ -182,6 +182,16 @@ than C — and every place that reads a number (engine, validators, fixtures,
 the results screen, saved solutions) changes type, across files three other
 sessions are editing.
 
+### Outcome (added 2026-11-18, after the merge)
+
+The owner chose **C**. It is implemented on this branch on top of `main` =
+`d983b6c`; what was done and measured is in
+[`MILESTONE_L3.md`](MILESTONE_L3.md), "Number model". The conformance
+differences dropped from 24 to 18 (not to "the cases past 2^53" alone: two of
+the 18 are fractional inputs the game refuses one step earlier, at the
+fixture). The rest of this section is the plan as it was written before the
+decision.
+
 ### Recommendation
 
 **C.** It is the only option where the phone, a Chrome visitor and a Safari

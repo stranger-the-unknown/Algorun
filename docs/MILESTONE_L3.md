@@ -10,17 +10,23 @@ are now playable: text, a deque, SORT, pairs, a real COPY, functions with up
 to six values and two static checks. They run in the engine, draw and are
 set in the editor, are explained in the block reference in English and
 Turkish, have fixture forms, pass the content pipeline, and ship ten small
-puzzles in a new world 15. **The number model (D2–D4) is not taken: it is an
-owner decision that is still open** — see "Number model".
+puzzles in a new world 15.
+
+**Second part, after the merge (same day, on `main` = `d983b6c`): the number
+model.** The owner chose option C of the plan, "safe whole numbers": numbers
+are whole, DIVIDE truncates, and a result outside ±(2^53 − 1) is "This number
+is too big." on the phone, in JavaScript and in Wasm alike. It is implemented
+on this branch in two commits on top of `main`; see "Number model". Sections
+written before the decision say so where they describe the earlier state.
 
 ## Taken and not taken
 
 | Id | algorun-lang change | In the game |
 |---|---|---|
 | D1 | a single capital letter parses as a generic type, so IR JSON round-trips | taken |
-| D2 | a result outside signed 64 bits is "This number is too big." | **not taken — owner decision** |
-| D3 | DIVIDE truncates toward zero | **not taken — owner decision** |
-| D4 | no fractions | **not taken — owner decision** |
+| D2 | a result outside signed 64 bits is "This number is too big." | taken after the owner's decision, with the limit at ±(2^53 − 1) instead of ±(2^63 − 1) |
+| D3 | DIVIDE truncates toward zero | taken after the owner's decision |
+| D4 | no fractions | taken after the owner's decision |
 | D5 | COPY is a deep copy, charged in memory cells | taken |
 | D6 | text blocks | taken; the two text ↔ number blocks are narrower (below) |
 | D7 | deque blocks | taken |
@@ -46,7 +52,7 @@ other repository (reasons in the plan, §2).
 | JOIN | `str.concat` | `str, str → str` | longer than `maxArrayLen` letters is a memory limit |
 | PART OF TEXT | `str.substring` | `str, num, num → str` | `[start, end)` |
 | COMPARE TEXT | `str.compare` | `str, str → num` | −1 / 0 / 1 by code point |
-| NUMBER AS TEXT | `str.from_num` | `num → str` | whole numbers within ±(2^53 − 1) |
+| NUMBER AS TEXT | `str.from_num` | `num → str` | decimal digits, `-` for a negative number |
 | TEXT AS NUMBER | `str.to_num` | `str → num?` | `-?[0-9]+` within ±(2^53 − 1), else NOTHING |
 | NEW DEQUE | `new.deque` | → `deque<T>` | |
 | PUSH FRONT / PUSH BACK | `deque.push_front` / `push_back` | statement | +1 memory cell |
@@ -57,33 +63,111 @@ other repository (reasons in the plan, §2).
 | MAKE PAIR / FIRST / SECOND | `pair.make` / `first` / `second` | `T, U → pair<T,U>` | immutable, +1 memory cell |
 | CALL with 4–6 values | `fn.call4` … `fn.call6` | | `FunctionSignature.maxParams` = 6 |
 
-## Number model — waiting for the owner
+## Number model — decided: safe whole numbers
 
-algorun-lang's numbers are signed 64-bit integers and its spec says Flutter
-web is not supported. The game's web version must keep working and agree
-with the phone, so D2–D4 were measured, not ported. The four options, the
-measurements and the recommendation ("safe whole numbers": D3 and D4 as
-written, D2 with the limit at ±(2^53 − 1), identical on the phone,
-JavaScript and Wasm) are in the plan, §5.
+**Decision (owner, 2026-11-18, relayed by the coordinating session):** option
+C of [`MILESTONE_L3_PLAN.md`](MILESTONE_L3_PLAN.md) §5. Commits `268f781`
+(engine) and the two after it, on top of `main` = `d983b6c`.
 
-On this branch **arithmetic is exactly what it was on `main`**: Dart `num`,
-fractions, `7 DIVIDE 2` = 3.5, no overflow error. Nothing here makes the
-phone and the web differ, and nothing breaks the web build.
+### The rules
 
-Two new blocks cannot avoid the question and take the one rule that is the
-same on every platform under every option:
+1. **A number is a whole number from −9 007 199 254 740 991 to
+   9 007 199 254 740 991** (±(2^53 − 1), `maxSafeNumber` in
+   `packages/algorun_engine/lib/src/runtime/whole_number.dart`). Inside that
+   range the phone's 64-bit integers, a browser's JavaScript numbers and Wasm
+   integers are all exact, so every platform computes the same thing.
+2. **No fractions** (algorun-lang D4). A fractional literal is
+   `invalidProgram` "Only whole numbers can be used."; a fractional input is
+   `invalidProgram` "This program only works with whole numbers." before
+   anything runs; a whole `2.0` is the number 2.
+3. **DIVIDE truncates toward zero** (D3): `7 DIVIDE 2` = 3, `-7 DIVIDE 2` =
+   −3. FLOOR DIVIDE still rounds down (`-7 FLOOR DIVIDE 2` = −4) and
+   REMAINDER is still never negative; the two divisions differ only below
+   zero. Dividing by zero is the same error as before.
+4. **A result outside the range is the run-time error "This number is too
+   big."** (D2 with the limit at 2^53 − 1): PLUS, MINUS, TIMES, INCREMENT,
+   DECREMENT, the FOR counter, and a literal or input that is already
+   outside. Before, the phone wrapped silently at 2^63 and a browser rounded
+   from 2^53.
+5. **Fixture JSON** (`value_json.dart`, so puzzle files, `run_graph` and the
+   content validator) refuses a fraction ("Numbers are whole: 2.5 has a
+   fraction.") and a number outside the range ("Numbers go from … to …"),
+   also for list-node and tree-node values and graph ids. `2.0` reads as 2.
 
-- NUMBER AS TEXT writes whole numbers within ±9 007 199 254 740 991. A
-  fraction is the error "NUMBER AS TEXT needs a whole number."; a larger
-  number is "This number is too big.". A whole fraction (`7.0`, which the
-  phone and a browser print differently) and negative zero print as digits.
-- TEXT AS NUMBER reads digit by digit (not `int.parse`, which rounds in a
-  browser) and gives NOTHING past the same limit.
+### The two traps the prototype found, in the real interpreter
 
-algorun-lang allows both up to 64 bits. If the owner picks option C these
-two are already right; under option B or D their limit moves to 2^63.
+- **Size before wrap.** On the phone `a × b` can wrap around 64 bits and land
+  back inside the range (`4294967296 × 4294967296` is 0 there). `_mul` judges
+  the size on the double product first — it only rounds, and never down past
+  2^53 — and multiplies as integers only when that passed.
+- **Negative zero.** JavaScript has one (`0 × −3`, `−1 ÷ 5`, `−0`) and prints
+  it; the phone does not. `_unsigned0` removes it after TIMES, DIVIDE,
+  REMAINDER and NEGATE, and `wholeNumber` on the way in.
 
-## The 149 puzzles did not change
+### What became simpler
+
+- NUMBER AS TEXT is `n.toString()`: its "needs a whole number" and "too big"
+  errors cannot happen any more and are gone, with their Turkish.
+- List and text positions lose "A position has to be a whole number.": a
+  position is a number, and a number is whole.
+- TEXT AS NUMBER is unchanged: it already read digit by digit and stopped at
+  the limit.
+
+### What a player notices
+
+- `7 DIVIDE 2` is 3, not 3.5. Only **The Smallest Cart** offers DIVIDE; there
+  a DIVIDE midpoint used to fail and now solves the puzzle exactly like FLOOR
+  DIVIDE, at the same cost (65 204 operations). A saved solution that used
+  DIVIDE there now passes.
+- A program whose numbers run away — a factorial past 18!, doubling in a long
+  loop — stops with "This number is too big." instead of going on with a
+  wrong number. No shipped puzzle reaches the limit: nothing in any fixture is
+  past 2^53 and every reference stays far inside.
+- The block reference says so: DIVIDE and FLOOR DIVIDE have new texts and
+  there is a "Number" concept, in English and Turkish.
+
+### Nothing shipped changed
+
+| Check | Result |
+|---|---|
+| Content validator on the 204 campaign puzzles and 5 probes, compared with a clean copy of `main` (`git archive d983b6c`) | the whole output — every `INFO [L5 performance]` line, every verdict, 492 lines — is identical; `PIPELINE 204 of 204` |
+| `tool/web_parity.sh`: 207 reference programs, 2138 cases; one digest of every output, operation count, memory peak and depth | 516329794 on `main` and on this branch, on the Dart VM, dart2js and dart2wasm alike |
+| T1's `trace_parity_test.dart` (every corpus run untraced, traced, and against its golden file) | passes with the golden file untouched |
+| algorun-lang `conformance/refs` (1455 reference cases from before any of this) | 1455 of 1455 identical |
+| Puzzle files, reference files, rejects, fixtures, budgets, expected answers | none edited |
+
+Why: no reference solution or reject uses DIVIDE (The Smallest Cart is the
+only puzzle whose palette has it, and its reference uses FLOOR DIVIDE), no
+fixture holds a fraction or a number past 2^53, and no reference computes
+one. The Smallest Cart passes the validator as it is — reference, its one
+reject ("raise the capacity one unit at a time", `operationLimit`) and
+fixtures unchanged. Its offline notes still call the DIVIDE midpoint a trap
+(`content/references/world_02/smallest_cart.json` `notes` and `spec.traps`
+"midpoints must be whole numbers"; the puzzle's `edgeCases` "midpoints that
+are not whole numbers"): that wording is now out of date and was left alone,
+because nothing needed changing to pass. See the list for the coordinator.
+
+### Tests changed, each for the stated reason
+
+| Test | Before | Now |
+|---|---|---|
+| `floor_divide_test.dart` "DIVIDE is unchanged" | `7 / 2` = 3.5 | "DIVIDE truncates toward zero": 3, −3, −3, 3 |
+| `floor_divide_test.dart` "non-exact division never leaves a fraction" | `7.5 FLOOR DIVIDE 2` = 3 | the fractional literal is refused; `10 FLOOR DIVIDE 4` = 2 |
+| `floor_divide_test.dart` "the same midpoint with DIVIDE is not" | "A position has to be a whole number." | the DIVIDE midpoint reads `nums[1]` |
+| `interpreter_test.dart` "whole division stays whole…" | 3.5 | 3 |
+| `shipped_puzzles_test.dart` smallest_cart with DIVIDE | not correct | correct, same operations |
+| `value_json_test.dart` round trip of `-2.5` | accepted | refused; new cases for `2.0`, `-0.0`, the limit, nodes and graph ids |
+| `l3_test.dart` text positions and NUMBER AS TEXT with fractions | their own errors | the fraction never becomes a number |
+| `trace_test.dart` 150-deep recursion | 150! (silently wrapped to 0) | the same recursion adding instead of multiplying |
+
+New: `packages/algorun_engine/test/whole_number_test.dart` (18 tests: every
+operator at the limit, the wrap cases, negative zero, fractions on the way
+in, and a pinned digest over 106 edge values × 6 operators) — it uses no
+`dart:io`, so it also runs with `dart test -p node` and `dart test -p node -c
+dart2wasm`, and passes on all three. `test/number_model_test.dart` in the app
+pins the reference texts and The Smallest Cart.
+
+## The 149 puzzles did not change (first part, before the merge)
 
 | Check | Result |
 |---|---|
@@ -179,7 +263,32 @@ cd packages/algorun_engine
 dart run tool/conformance.dart /tmp/algorun-lang/conformance --known tool/conformance_known.txt
 ```
 
-Result at `299315c`:
+Result at `299315c`, **after the number-model decision**:
+
+```
+edge   agree 140, differ 17
+lower  agree 22, differ 0
+refs   agree 1455, differ 0
+text   agree 17, differ 1
+conformance: 281 files, 1634 cases agree, 18 differ (18 known), 4 text-form files not run, 0 problem(s)
+```
+
+The 24 differences of the first part became 18, and they are no longer
+three different things (overflow, DIVIDE, fractions) but one: **the game's
+limit is 2^53 − 1 where algorun-lang's is 2^63 − 1.** Listed one by one in
+`tool/conformance_known.txt`:
+
+| Count | What |
+|---|---|
+| 13 | the case's *input* is past 2^53 − 1 (±2^63 edges); the game refuses it when the fixture is read, so the program never starts |
+| 2 | the same "too big" error, reached sooner: a FOR counter after 4 operations instead of 8, and 20! (21! is past both limits) |
+| 1 | TEXT AS NUMBER of `9223372036854775807` is NOTHING |
+| 2 | a fractional input is refused one step earlier, when the fixture is read; handed the value directly the interpreter answers exactly as algorun-lang does (`whole_number_test.dart`) |
+
+Every DIVIDE case, every fractional-literal case and the overflow cases that
+start inside 2^53 now agree, operation counts and messages included.
+
+Before the decision (first part) it was:
 
 ```
 edge   agree 134, differ 23
@@ -191,14 +300,44 @@ conformance: 281 files, 1628 cases agree, 24 differ (24 known), 4 text-form file
 
 Every case compares the whole expectation (status, output, ops, peakAlloc,
 peakDepth, message, blockId; lowering cases compare the errors) and every
-stored program must survive `Program.fromJson` → `toJson`. The 24
-differences are listed one by one, with the deviation that causes each, in
-`tool/conformance_known.txt`: 11 × D2, 7 × D3, 4 × D4 and the two text ↔
-number cases past 2^53. The tool fails when a listed case starts to agree or
-an unlisted one differs. The four files not run are parse-error cases of the
+stored program must survive `Program.fromJson` → `toJson`. Those 24 were
+11 × D2, 7 × D3, 4 × D4 and the two text ↔ number cases past 2^53. The tool
+fails when a listed case starts to agree or an unlisted one differs (a case
+id may contain spaces, so the reason starts after two spaces). The four files not run are parse-error cases of the
 text form.
 
 ## Phone and web
+
+**After the number-model decision** (the first-part passes follow below):
+
+- **The same engine on three targets, and the same as before.**
+  `tool/web_parity.sh`, now 207 programs and 2138 cases: digest 516329794 on
+  the Dart VM, dart2js and dart2wasm — and the same digest from a clean copy
+  of `main`, so no output, operation count, memory peak or depth of any
+  reference moved. `whole_number_test.dart`, `l3_test.dart` and
+  `algorun_lang_a3_test.dart` pass with `dart test`, `-p node` and `-p node
+  -c dart2wasm` (50 tests each). The prototype
+  (`tool/number_model_probe.dart`) still prints `results 1088014 tooBig
+  265067 digest 345775110` on all three.
+- **The web build, with DIVIDE.** `flutter build web --release`
+  (`main.dart.js` 3.63 MB), served from `build/web`, headless Firefox 160
+  (the JavaScript build):
+  1. The Smallest Cart's reference with its FLOOR DIVIDE swapped for DIVIDE,
+     put into the browser's `algorun_save` as a draft, opened with CONTINUE
+     and RUN: **CORRECT, 65,204 steps of 130,000, 0 memory cells, depth 1, 55
+     blocks, 8 of 8 hidden cases** — the phone runtime (Dart VM, `runPuzzle`)
+     gives correct, 65204, 0, 1, 55 for the same program. Before the decision
+     this program failed on both.
+  2. `RETURN (-7 DIVIDE 2)` built by taps in the same puzzle (picker, number
+     pad with ±): the results screen says **"you gave: -3"** for both visible
+     cases, 4 steps. The engine test gives −3 on the VM, in JavaScript and in
+     Wasm.
+- **Emulator: NOT TESTED** for the number model (the coordinator did not ask
+  for it). The phone side is the Dart VM in the measurements above: the same
+  runtime the APK uses, as a JIT test run and as an AOT executable for the
+  prototype.
+
+**First part:**
 
 - **The same engine on three targets.** `tool/web_parity.sh` runs every
   reference in `content/references` (162 programs, 1550 cases) on the Dart
@@ -228,6 +367,27 @@ text form.
   reset and the emulator stopped.
 
 ## Tests
+
+After the number-model decision, on top of `main` = `d983b6c`:
+
+| Suite | `main` after the merge | This branch |
+|---|---|---|
+| `packages/algorun_engine` `dart analyze` | no issues | no issues |
+| `packages/algorun_engine` `dart test` | 487 | **506** (+18 `whole_number_test.dart`, +1 in `floor_divide_test.dart`) |
+| `packages/algorun_content` `dart analyze` | no issues | no issues |
+| `packages/algorun_content` `dart test` | 114 | **114** |
+| Content validator | 204 of 204, `OK 209`, 5 warnings | **204 of 204**, `OK 209`, the same 5 warnings; output identical line by line |
+| `flutter analyze` | no issues | no issues |
+| `flutter test` | 820 | **824** (+4 `number_model_test.dart`) |
+| algorun-lang conformance | 1628 agree, 24 known differences | **1634 agree, 18 known differences**, 0 problems |
+| `tool/web_parity.sh` | digest 516329794 | **digest 516329794**, identical on VM, dart2js, dart2wasm |
+
+The 487 on `main` was run here before any edit; 114 and 820 are the
+coordinator's numbers for `main` (the first local run of those two suites
+overlapped with the engine edit and was thrown away); the validator's `main`
+output comes from a clean `git archive d983b6c`.
+
+First part, before the merge:
 
 | Suite | Before (2026-10-30) | Now |
 |---|---|---|
@@ -277,16 +437,19 @@ as a timeout under load, not as proven.
 
 ## Differences that remain between the game and algorun-lang
 
-1. Numbers: the game still has Dart `num` — fractions, `7 DIVIDE 2` = 3.5,
-   silent wrap on the phone and rounding in a browser past 2^53 (D2–D4).
-2. NUMBER AS TEXT / TEXT AS NUMBER stop at 2^53 − 1 in the game, 2^63 − 1 in
-   algorun-lang; NUMBER AS TEXT of a fraction is an error in the game (there
-   are no fractions in algorun-lang).
-3. A position that is a fraction (LETTER AT, PART OF TEXT) is "A position has
-   to be a whole number." in the game; it cannot occur in algorun-lang.
-4. Pairs can be puzzle input in the game only; `blocks.texts` exists in the
+1. **The limit of numbers**: ±(2^53 − 1) in the game, ±(2^63 − 1) in
+   algorun-lang. A program that runs without "This number is too big." in
+   the game gives the same answer in algorun-lang; a number between the two
+   limits is an error in the game and fine there. This covers NUMBER AS TEXT
+   and TEXT AS NUMBER too. (All 18 conformance differences.)
+2. Fixture JSON: the game refuses a fraction or an out-of-range number when
+   the fixture is read; algorun-lang reads it and the interpreter refuses it.
+3. Pairs can be puzzle input in the game only; `blocks.texts` exists in the
    game only (algorun-lang has no editor or puzzle schema).
-5. No text form (A5) and no C core in the game.
+4. No text form (A5) and no C core in the game.
+
+Gone since the decision: fractions, `7 DIVIDE 2` = 3.5, silent wrap on the
+phone, rounding in a browser.
 
 ## Known limits
 
@@ -315,6 +478,10 @@ as a timeout under load, not as proven.
   `tool/web_parity.sh`.
 - Turkish on a device with the new blocks (covered by widget tests only).
 - A physical phone; TalkBack with the new sheets.
+- Number model: the emulator (see "Phone and web"); the app compiled to Wasm
+  in a browser (the engine was run as Wasm under Node); Chrome and Safari; a
+  save from before the decision that holds a completed run whose answer was a
+  fraction (no shipped puzzle can produce one, so none should exist).
 - The web version was not published (`tool/publish_web.sh` not run), no APK
   was released, nothing was pushed.
 
@@ -336,3 +503,38 @@ as a timeout under load, not as proven.
   decision.
 - "Exact commands": the conformance command above and `tool/web_parity.sh`.
 - Test table: the counts above.
+
+### After the number-model decision
+
+`docs/PROJECT_STATE.md` and `README.md` were not touched. To move there:
+
+- Current-state line / "Locked decisions": numbers are whole and stay inside
+  ±(2^53 − 1); the phone, JavaScript and Wasm agree by construction; the
+  owner decided it on 2026-11-18 (option C of `MILESTONE_L3_PLAN.md`).
+- "Interpreter (MS5)": replace "DIVIDE keeps whole results whole (`8 / 2` →
+  `2`, `7 / 2` → `3.5`)" with "DIVIDE truncates toward zero (`7 / 2` → `3`,
+  `-7 / 2` → `-3`)"; replace "List positions must be whole numbers inside
+  the list" with "inside the list"; add the "too big" rule and
+  `runtime/whole_number.dart` (`maxSafeNumber`, `numberProblem`,
+  `wholeNumber`).
+- "Integer division (MS7)": "DIVIDE is unchanged" is no longer true; FLOOR
+  DIVIDE and DIVIDE differ only below zero.
+- "Content contract (MS7)", fixture format: numbers are whole and inside the
+  range; `2.0` reads as 2.
+- "The five puzzles (MS8)", The Smallest Cart: "a DIVIDE midpoint" is no
+  longer turned away. Open content follow-up, not done here because the
+  puzzle passes as it is: the reference file's `notes` and `spec.traps`
+  ("midpoints must be whole numbers") and the puzzle's `edgeCases`
+  ("midpoints that are not whole numbers") describe a trap that no longer
+  exists; `arith.div` could leave its palette or stay as a harmless second
+  way. Editing the puzzle JSON would need a `version` decision.
+- "Languages (U1)": two engine sentences were removed ("A position has to be
+  a whole number.", "NUMBER AS TEXT needs a whole number.") and two added
+  ("Only whole numbers can be used.", "This program only works with whole
+  numbers."), with their ARB keys; `lib/l10n/gen` was regenerated.
+- "Known limitations": the game's numbers stop at 2^53 − 1, algorun-lang's
+  at 2^63 − 1 (18 known conformance differences, all this one).
+- Test table: engine 506, content 114, Flutter 824, validator 204 / 204.
+- The web version and the APK are not rebuilt or published by this branch;
+  the published web build still has the old numbers until
+  `tool/publish_web.sh` is run after the merge.
