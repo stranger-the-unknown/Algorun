@@ -1,3 +1,4 @@
+import '../blocks/block_graph.dart';
 import '../blocks/functions.dart';
 import '../runner/validators.dart';
 import '../runtime/limits.dart';
@@ -102,6 +103,22 @@ final class PerformanceSpec {
   static const none = PerformanceSpec();
 }
 
+/// The program a puzzle opens with (M1): half a program to finish (`complete`),
+/// a program with a mistake (`repair`) or a whole program to read (`predict`).
+///
+/// It is data, like everything else in a puzzle: a [BlockGraph] in the
+/// editor's own format, which only ever reaches the sandboxed interpreter
+/// through the same validate → lower path as a program the player built.
+final class StarterProgram {
+  const StarterProgram({required this.graph, this.locked = const {}});
+
+  final BlockGraph graph;
+
+  /// Ids of blocks in [graph] the player cannot delete, move or change. The
+  /// empty holes of a locked block can still be filled.
+  final Set<String> locked;
+}
+
 /// One fixture, already decoded and type-checked against the puzzle's io by
 /// the schema. The runner hands [input] to the interpreter, which copies it on
 /// entry, so a run never changes these values.
@@ -157,6 +174,7 @@ final class Puzzle {
     this.meta = const {},
     this.reference,
     this.performance = PerformanceSpec.none,
+    this.starter,
   });
 
   final String id;
@@ -199,6 +217,15 @@ final class Puzzle {
   final PuzzleReference? reference;
 
   final PerformanceSpec performance;
+
+  /// The program the puzzle opens with, or null for a puzzle built from an
+  /// empty editor. Required by [PuzzleMode.complete], [PuzzleMode.repair] and
+  /// [PuzzleMode.predict].
+  final StarterProgram? starter;
+
+  /// Whether the player answers what [starter] returns instead of building a
+  /// program.
+  bool get isPredict => mode == PuzzleMode.predict;
 
   /// The operation budget for [testCase]: its own, or the puzzle's.
   int opsBudgetFor(TestCase testCase) => testCase.maxOps ?? limits.maxOps;

@@ -1,0 +1,580 @@
+{
+  "id": "closing_in",
+  "version": 1,
+  "title": "Closing In",
+  "world": "world_04",
+  "chapter": "converge_on_maximum",
+  "tier": 3,
+  "mode": "predict",
+  "concepts": [
+    "two_pointers"
+  ],
+  "prerequisites": [],
+  "story": "Two markers start at the two ends of a row of numbered cards and walk toward each other. The program is their rule book. Read it and say what it returns for each row. There is always at least one card.",
+  "io": {
+    "inputs": [
+      {
+        "name": "cards",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "There are 1 to 40 cards.",
+      "Each card is a whole number from 0 to 99."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.lt",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 38
+  },
+  "limits": {
+    "maxOps": 250,
+    "maxDepth": 32,
+    "maxAlloc": 50
+  },
+  "hints": [
+    "Keep two fingers on the row, one for lo and one for hi, and move one finger per trip through WHILE.",
+    "Each trip, the marker on the smaller card moves. When the two cards are equal, hi moves.",
+    "Which card can a marker never walk away from? The loop ends with both markers standing on it."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "cards": [
+            3,
+            8,
+            2
+          ]
+        },
+        "out": 8
+      },
+      {
+        "id": "v2",
+        "in": {
+          "cards": [
+            5,
+            1,
+            4,
+            9,
+            2,
+            6
+          ]
+        },
+        "out": 9
+      },
+      {
+        "id": "v3",
+        "in": {
+          "cards": [
+            7,
+            7,
+            1
+          ]
+        },
+        "out": 7
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "cards": [
+            4
+          ]
+        },
+        "out": 4
+      },
+      {
+        "id": "h02",
+        "in": {
+          "cards": [
+            1,
+            2
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {
+          "cards": [
+            2,
+            1
+          ]
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "cards": [
+            6,
+            6
+          ]
+        },
+        "out": 6
+      },
+      {
+        "id": "h05",
+        "in": {
+          "cards": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "out": 5
+      },
+      {
+        "id": "h06",
+        "in": {
+          "cards": [
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        },
+        "out": 5
+      },
+      {
+        "id": "h07",
+        "in": {
+          "cards": [
+            2,
+            9,
+            9,
+            3
+          ]
+        },
+        "out": 9
+      },
+      {
+        "id": "h08",
+        "in": {
+          "cards": [
+            0,
+            0,
+            0
+          ]
+        },
+        "out": 0
+      }
+    ]
+  },
+  "edgeCases": [
+    "a single card",
+    "two equal largest cards",
+    "the largest card at an end"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "lo",
+        "type": "num"
+      },
+      {
+        "name": "hi",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "converge_on_maximum"
+  },
+  "starter": {
+    "graph": {
+      "blocks": {
+        "b0": {
+          "id": "b0",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b1": {
+          "id": "b1",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b0"
+            }
+          },
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b2": {
+          "id": "b2",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "cards"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b3": {
+          "id": "b3",
+          "catalogId": "arr.len",
+          "slots": {
+            "array": {
+              "ref": "b2"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b4": {
+          "id": "b4",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 1
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b5": {
+          "id": "b5",
+          "catalogId": "arith.sub",
+          "slots": {
+            "left": {
+              "ref": "b3"
+            },
+            "right": {
+              "ref": "b4"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b6": {
+          "id": "b6",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b5"
+            }
+          },
+          "literals": {
+            "name": "hi"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b7": {
+          "id": "b7",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b8": {
+          "id": "b8",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "hi"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b9": {
+          "id": "b9",
+          "catalogId": "cmp.lt",
+          "slots": {
+            "left": {
+              "ref": "b7"
+            },
+            "right": {
+              "ref": "b8"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b10": {
+          "id": "b10",
+          "catalogId": "ctrl.while",
+          "slots": {
+            "condition": {
+              "ref": "b9"
+            },
+            "body": {
+              "list": [
+                "b18"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b11": {
+          "id": "b11",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "cards"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b12": {
+          "id": "b12",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b13": {
+          "id": "b13",
+          "catalogId": "arr.get",
+          "slots": {
+            "array": {
+              "ref": "b11"
+            },
+            "index": {
+              "ref": "b12"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b14": {
+          "id": "b14",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "cards"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b15": {
+          "id": "b15",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "hi"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b16": {
+          "id": "b16",
+          "catalogId": "arr.get",
+          "slots": {
+            "array": {
+              "ref": "b14"
+            },
+            "index": {
+              "ref": "b15"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b17": {
+          "id": "b17",
+          "catalogId": "cmp.lt",
+          "slots": {
+            "left": {
+              "ref": "b13"
+            },
+            "right": {
+              "ref": "b16"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b18": {
+          "id": "b18",
+          "catalogId": "ctrl.if",
+          "slots": {
+            "condition": {
+              "ref": "b17"
+            },
+            "then": {
+              "list": [
+                "b19"
+              ]
+            },
+            "else": {
+              "list": [
+                "b20"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b19": {
+          "id": "b19",
+          "catalogId": "var.inc",
+          "slots": {},
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b20": {
+          "id": "b20",
+          "catalogId": "ctrl.else",
+          "slots": {
+            "body": {
+              "list": [
+                "b21"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b21": {
+          "id": "b21",
+          "catalogId": "var.dec",
+          "slots": {},
+          "literals": {
+            "name": "hi"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b22": {
+          "id": "b22",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "cards"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b23": {
+          "id": "b23",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b24": {
+          "id": "b24",
+          "catalogId": "arr.get",
+          "slots": {
+            "array": {
+              "ref": "b22"
+            },
+            "index": {
+              "ref": "b23"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b25": {
+          "id": "b25",
+          "catalogId": "ctrl.return",
+          "slots": {
+            "value": {
+              "ref": "b24"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        }
+      },
+      "entryIds": [
+        "b1",
+        "b6",
+        "b10",
+        "b25"
+      ],
+      "variables": {
+        "cards": "array<num>",
+        "lo": "num",
+        "hi": "num"
+      }
+    }
+  }
+}

@@ -1,0 +1,396 @@
+{
+  "id": "mirror_shelf",
+  "version": 1,
+  "title": "Mirror Shelf",
+  "world": "world_04",
+  "chapter": "mirror_check_from_both_ends",
+  "tier": 2,
+  "mode": "complete",
+  "concepts": [
+    "two_pointers"
+  ],
+  "prerequisites": [],
+  "story": "A shop window shelf looks right when it reads the same from both ends: the first item matches the last, the second matches the second to last, and so on. The items are given as numbers. Return TRUE when the shelf is a mirror of itself. The program already walks two markers toward each other; where the second marker starts, and what is checked at each stop, are missing.",
+  "io": {
+    "inputs": [
+      {
+        "name": "items",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "bool"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "There are 0 to 60 items.",
+      "Each item is a whole number from 0 to 9."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.sub",
+      "arr.get",
+      "arr.len",
+      "cmp.lt",
+      "cmp.ne",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.bool",
+      "lit.num",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 38
+  },
+  "limits": {
+    "maxOps": 200,
+    "maxDepth": 32,
+    "maxAlloc": 50
+  },
+  "hints": [
+    "lo starts on the first item. Where must hi start so that it points at the last one?",
+    "Each trip through WHILE looks at one pair: the item at lo and the item at hi. One pair that differs settles the answer.",
+    "SET hi to LENGTH of items MINUS 1. Inside WHILE, above the two moves: IF the item at lo is NOT EQUAL to the item at hi, RETURN FALSE."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "items": [
+            1,
+            2,
+            1
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {
+          "items": [
+            3,
+            4,
+            4,
+            3
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "v3",
+        "in": {
+          "items": [
+            1,
+            2,
+            3
+          ]
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "items": []
+        },
+        "out": true
+      },
+      {
+        "id": "h02",
+        "in": {
+          "items": [
+            5
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "h03",
+        "in": {
+          "items": [
+            1,
+            2
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h04",
+        "in": {
+          "items": [
+            2,
+            2
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "h05",
+        "in": {
+          "items": [
+            1,
+            2,
+            3,
+            2,
+            1
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "h06",
+        "in": {
+          "items": [
+            1,
+            2,
+            3,
+            4,
+            1
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h07",
+        "in": {
+          "items": [
+            7,
+            1,
+            1,
+            8
+          ]
+        },
+        "out": false
+      },
+      {
+        "id": "h08",
+        "in": {
+          "items": [
+            4,
+            5,
+            6,
+            6,
+            5,
+            4
+          ]
+        },
+        "out": true
+      },
+      {
+        "id": "h09",
+        "in": {
+          "items": [
+            4,
+            5,
+            6,
+            7,
+            5,
+            4
+          ]
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": [
+    "an empty shelf",
+    "a single item",
+    "a mismatch in the middle pair",
+    "an even number of items"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "lo",
+        "type": "num"
+      },
+      {
+        "name": "hi",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "mirror_check_from_both_ends"
+  },
+  "starter": {
+    "graph": {
+      "blocks": {
+        "b0": {
+          "id": "b0",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b1": {
+          "id": "b1",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b0"
+            }
+          },
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b6": {
+          "id": "b6",
+          "catalogId": "var.set",
+          "slots": {},
+          "literals": {
+            "name": "hi"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b7": {
+          "id": "b7",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b8": {
+          "id": "b8",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "hi"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b9": {
+          "id": "b9",
+          "catalogId": "cmp.lt",
+          "slots": {
+            "left": {
+              "ref": "b7"
+            },
+            "right": {
+              "ref": "b8"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b10": {
+          "id": "b10",
+          "catalogId": "ctrl.while",
+          "slots": {
+            "condition": {
+              "ref": "b9"
+            },
+            "body": {
+              "list": [
+                "b21",
+                "b22"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b21": {
+          "id": "b21",
+          "catalogId": "var.inc",
+          "slots": {},
+          "literals": {
+            "name": "lo"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b22": {
+          "id": "b22",
+          "catalogId": "var.dec",
+          "slots": {},
+          "literals": {
+            "name": "hi"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b23": {
+          "id": "b23",
+          "catalogId": "lit.bool",
+          "slots": {},
+          "literals": {
+            "value": true
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b24": {
+          "id": "b24",
+          "catalogId": "ctrl.return",
+          "slots": {
+            "value": {
+              "ref": "b23"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        }
+      },
+      "entryIds": [
+        "b1",
+        "b6",
+        "b10",
+        "b24"
+      ],
+      "variables": {
+        "items": "array<num>",
+        "lo": "num",
+        "hi": "num"
+      }
+    },
+    "locked": [
+      "b0",
+      "b1",
+      "b6",
+      "b7",
+      "b8",
+      "b9",
+      "b10",
+      "b21",
+      "b22",
+      "b23",
+      "b24"
+    ]
+  }
+}

@@ -107,6 +107,9 @@ final class Prog {
   void setAt(String array, String index, String value) =>
       _stmt(call(BlockIds.arrSet, {'array': get(array), 'index': index, 'value': value}));
 
+  void swap(String array, String i, String j) =>
+      _stmt(call(BlockIds.arrSwap, {'array': get(array), 'i': i, 'j': j}));
+
   void removeAt(String array, String index) =>
       _stmt(call(BlockIds.arrRemove, {'array': get(array), 'index': index}));
 

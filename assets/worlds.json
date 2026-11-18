@@ -17,11 +17,14 @@
         "party_tables",
         "doubling_jar",
         "digit_wheels",
+        "flag_lines",
+        "fence_posts",
         "three_planks",
         "lighthouse_bell",
         "dry_spell",
         "hill_tops",
-        "lift_trips"
+        "lift_trips",
+        "halve_or_step"
       ]
     },
     {
@@ -44,6 +47,9 @@
         "second_highest",
         "even_prefixes",
         "nested_distinct",
+        "high_water_marks",
+        "no_step_down",
+        "one_pass",
         "shelf_totals",
         "departure_board",
         "smallest_cart",
@@ -89,9 +95,12 @@
         "matched_pair",
         "sorted_shelf",
         "recipe_steps",
+        "mirror_shelf",
         "exact_gaps",
         "pairs_under",
         "sorted_union",
+        "glove_pairs",
+        "closing_in",
         "widest_basin",
         "closest_gap"
       ]

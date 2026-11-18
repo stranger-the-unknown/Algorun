@@ -48,6 +48,7 @@ final class SelectionInfo {
     required this.moves,
     this.canDelete = true,
     this.canCopy = false,
+    this.locked = false,
   });
 
   final String blockId;
@@ -61,12 +62,17 @@ final class SelectionInfo {
   final bool canDuplicate;
   final Set<MoveDirection> moves;
 
-  /// A FUNCTION comes from the puzzle (L2): it stays where it is.
+  /// A FUNCTION comes from the puzzle (L2): it stays where it is. So does a
+  /// block that is locked, or holds a locked one (M1).
   final bool canDelete;
 
   /// Whether the block can go on the clipboard (E1), to be pasted wherever
   /// it fits.
   final bool canCopy;
+
+  /// A block the puzzle's starter program locks (M1): it cannot be deleted,
+  /// moved or changed. Its empty slots can still be filled.
+  final bool locked;
 }
 
 /// What a drop would do (E1): nothing (the block is already there), a move,
@@ -129,6 +135,7 @@ final class EditorController extends ChangeNotifier {
     required this.puzzle,
     bool seedExample = false,
     BlockGraph? initialGraph,
+    this.readOnly = false,
   }) : _history = GraphHistory(FunctionSetup.ensure(
           initialGraph == null
               ? BlockGraph(blocks: const {}, variables: _names(puzzle))
@@ -152,6 +159,58 @@ final class EditorController extends ChangeNotifier {
 
   final Puzzle puzzle;
   final GraphHistory _history;
+
+  /// A program that is only shown (a predict puzzle, M1): nothing can be
+  /// selected, placed or changed. Folds still work.
+  final bool readOnly;
+
+  /// A block the puzzle's starter program locks (M1).
+  bool isLocked(String id) => _locksInForce && puzzle.starter!.locked.contains(id);
+
+  /// [id] or something inside it is locked.
+  bool holdsLocked(String id) => _locksInForce && subtreeOf(id).any(puzzle.starter!.locked.contains);
+
+  BlockGraph? _locksCheckedFor;
+  bool _locksHold = false;
+
+  /// Locks are in force while the program still holds every locked block as
+  /// the starter gave it — the same kind with the same contents. A program
+  /// that came from the starter always does (a locked block cannot be
+  /// deleted or changed). One that never held it — built from nothing, or
+  /// saved on another version of the puzzle — does not, and there a block
+  /// that merely reuses a locked block's id must not be frozen.
+  bool get _locksInForce {
+    final starter = puzzle.starter;
+    if (starter == null || starter.locked.isEmpty) return false;
+    final now = graph;
+    if (!identical(_locksCheckedFor, now)) {
+      _locksCheckedFor = now;
+      _locksHold = starter.locked.every((id) {
+        final mine = now.blocks[id];
+        final given = starter.graph.blocks[id];
+        return mine != null &&
+            given != null &&
+            mine.catalogId == given.catalogId &&
+            mine.literals.length == given.literals.length &&
+            mine.literals.entries.every((e) => given.literals[e.key] == e.value);
+      });
+    }
+    return _locksHold;
+  }
+
+  /// Whether the block's own contents (a number, a name) may be changed.
+  bool canEdit(String id) => !readOnly && !isLocked(id);
+
+  static EditorNotice get _lockedNotice => EditorNotice((l) => l.noticeLocked);
+
+  /// Puts the puzzle's starter program back (one undo step). Nothing happens
+  /// for a puzzle without one.
+  void resetToStarter() {
+    final starter = puzzle.starter;
+    if (starter == null || readOnly) return;
+    replaceGraph(starter.graph);
+    showFlash(EditorNotice((l) => l.programReset));
+  }
 
   PortRef? activeHole;
   String? selectedBlockId;
@@ -243,12 +302,14 @@ final class EditorController extends ChangeNotifier {
   }
 
   void selectHole(PortRef? hole) {
+    if (readOnly && hole != null) return;
     activeHole = hole;
     selectedBlockId = null;
     notifyListeners();
   }
 
   void selectBlock(String? id) {
+    if (readOnly && id != null) return;
     selectedBlockId = id;
     activeHole = null;
     notifyListeners();
@@ -360,6 +421,7 @@ final class EditorController extends ChangeNotifier {
   }
 
   bool apply(GraphCommand command) {
+    if (readOnly) return false;
     final result = _history.apply(command);
     if (!result.ok) {
       flash = EditorNotice.engine(result.decision.message);
@@ -552,15 +614,17 @@ final class EditorController extends ChangeNotifier {
     if (id == null || block == null) return null;
     final statement = isStatement(id);
     final given = isFunction(id);
+    final locked = isLocked(id);
     return SelectionInfo(
       blockId: id,
       label: _labelOf(block),
       size: subtreeOf(id).length,
       isStatement: statement,
       canDuplicate: statement && !given && _allAllowed(subtreeOf(id)),
-      moves: statement && !given ? _moves(id) : const {},
-      canDelete: !given,
+      moves: statement && !given && !locked ? _moves(id) : const {},
+      canDelete: !given && !holdsLocked(id),
       canCopy: canCopy(id),
+      locked: locked,
     );
   }
 
@@ -608,6 +672,10 @@ final class EditorController extends ChangeNotifier {
 
   bool deleteTree(String id) {
     if (isFunction(id)) return false;
+    if (holdsLocked(id)) {
+      showFlash(_lockedNotice);
+      return false;
+    }
     final tree = subtreeOf(id);
     final label = _labelOf(graph.blocks[id]!);
     final ok = apply(_Batch([
@@ -860,8 +928,11 @@ final class EditorController extends ChangeNotifier {
 
   // ---- drag to move (E1) ----------------------------------------------------
 
-  /// Whether [id] can be picked up: an instruction of the player's own.
-  bool canDrag(String id) => isStatement(id) && !isFunction(id) && graph.parentOf(id) != null;
+  /// Whether [id] can be picked up: an instruction of the player's own. A
+  /// locked block stays where the starter program put it (M1), and nothing
+  /// moves in a program that is only shown.
+  bool canDrag(String id) =>
+      !readOnly && !isLocked(id) && isStatement(id) && !isFunction(id) && graph.parentOf(id) != null;
 
   /// The finger started moving [id]. The block is selected; nothing changes
   /// in the program until [moveTo].
@@ -1016,6 +1087,10 @@ final class EditorController extends ChangeNotifier {
   }
 
   void setLiteral(String blockId, String key, Object? value) {
+    if (isLocked(blockId)) {
+      showFlash(_lockedNotice);
+      return;
+    }
     apply(SetLiteralsCommand(blockId, {key: value}));
   }
 

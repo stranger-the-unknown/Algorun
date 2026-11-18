@@ -10,6 +10,7 @@ import 'heaps.dart';
 import 'greedy_dp.dart';
 import 'hashing.dart';
 import 'lists.dart';
+import 'modes.dart';
 import 'oracle.dart';
 import 'pointers.dart';
 import 'stacks.dart';
@@ -35,4 +36,5 @@ const Map<String, Oracle> oracleRegistry = {
   ...batch5Oracles,
   ...batch6Oracles,
   ...heapOracles,
+  ...modeOracles,
 };

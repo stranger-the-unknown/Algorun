@@ -13,13 +13,14 @@ void main() {
         for (final id in ids) id: const PuzzleProgress(puzzleVersion: 1, completed: true),
       });
 
-  test('149 puzzles load, and a fresh install starts at Foundations', () {
-    expect(campaign.puzzles, hasLength(149));
+  test('158 puzzles load, and a fresh install starts at Foundations', () {
+    expect(campaign.puzzles, hasLength(158));
     final fresh = evaluateCampaign(campaign, PlayerSave.fresh);
     expect(fresh.worldStatus('world_01'), WorldStatus.open);
-    // MS15: Foundations holds twelve puzzles, all open from the start.
+    // MS15: Foundations holds twelve puzzles, all open from the start; M1
+    // added three (complete, repair, predict).
     final basics = campaign.manifest.byId('world_01')!.puzzleIds;
-    expect(basics, hasLength(12));
+    expect(basics, hasLength(15));
     expect(basics.take(2), ['warm_readings', 'highest_tide']);
     expect([for (final e in fresh.puzzles.entries) if (e.value != PuzzleStatus.locked) e.key], basics);
     expect(fresh.missingFor('world_02'), ['variables']);
@@ -50,9 +51,9 @@ void main() {
     expect(afterBasics.worldStatus('world_02'), WorldStatus.open);
     expect(afterBasics.worldStatus('world_03'), WorldStatus.locked);
     // A world completes when every puzzle it lists is solved (MS15 made
-    // Arrays thirteen puzzles long).
+    // Arrays thirteen puzzles long, M1 sixteen).
     final arrays = campaign.manifest.byId('world_02')!.puzzleIds;
-    expect(arrays, hasLength(13));
+    expect(arrays, hasLength(16));
     final almost = evaluateCampaign(campaign, solved([...basics, ...arrays.skip(1)]));
     expect(almost.worldStatus('world_03'), WorldStatus.locked, reason: 'one Arrays puzzle is still open');
     final afterArrays = evaluateCampaign(campaign, solved([...basics, ...arrays]));

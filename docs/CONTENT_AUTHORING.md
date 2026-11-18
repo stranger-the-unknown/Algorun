@@ -154,3 +154,67 @@ record the family and the puzzle idea in the backlog (`PROJECT_STATE.md`,
 "Content backlog"). Do not fake recursion with puzzle-specific blocks, do
 not simulate a heap with a sorted list inside a budget that makes it
 pointless, do not weaken the problem until it fits.
+
+## 7. Puzzles that open with a program (M1)
+
+Since M1 a puzzle may carry a **starter program**, and three modes are
+built on it. (This supersedes "no starter programs" in §3; everything else
+in §1–§6 applies unchanged: the oracle, the fixtures, the seven levels.)
+
+```json
+"starter": {
+  "graph": { <BlockGraph JSON, the format of a reference solution> },
+  "locked": ["b1", "b6"]
+}
+```
+
+`graph` is data in the editor's own format: it is only ever read by the
+same validate → lower → interpreter path as a player's program. `locked`
+(optional) names blocks the player cannot delete, move or change; the empty
+slots of a locked block can still be filled. The schema refuses a starter
+that uses a block outside `blocks.allow`, a name that is not an input or a
+pool variable, more blocks than `blocks.maxBlocks`, or a lock on a block it
+does not have.
+
+| Mode | The starter is | The pipeline demands |
+|---|---|---|
+| `complete` | half a program: instructions or values are missing | it does **not** pass; the reference **only adds** to it (every starter block is in the reference with the same id, contents and neighbours in the same order) |
+| `repair` | a whole program with one mistake | it lowers and runs; it does **not** pass; it differs from the reference in at most **4 blocks** (`repairMaxChangedBlocks`) |
+| `predict` | the whole program, shown read only | it **is** the reference (the same lowered program); it returns every fixture's answer; at least 2 visible cases; `io.output` is `num` or `bool`; number answers fit the pad (whole, ±999999) |
+
+For every starter: it is rebuilt through the editor's commands like a
+reference (so it is typed and buildable; empty slots are fine), and every
+locked block is in the reference, unchanged and in the same place.
+
+**Write the reference first and derive the starter from it**, so the two
+share block ids — the rules above compare by id. `tool/m1_emit.dart` shows
+how: take blocks out (complete), turn one block into another or drop one
+instruction (repair), change nothing (predict).
+
+Rules for authors:
+
+- **complete** — leave a scaffold that reads as a program with a gap, not a
+  pile of loose blocks. The story's last sentence says what is there and
+  what is missing. Lock the scaffold when the point is the gap; leave it
+  free when rearranging is part of the task.
+- **repair** — one realistic slip: a bound, a comparison that is too strict
+  or too loose, a missing update, a wrong starting value. Never something
+  absurd at a glance. The mistake must let **some visible case pass and
+  some fail**, so the failing case points at it; the validator prints how
+  many cases the starter fails. The story says what goes wrong ("sometimes
+  one short"), never where. Both the wrong block and the right one are in
+  `blocks.allow`. Usually lock nothing: a lock would say where the mistake
+  is not.
+- **predict** — the player is graded against what the interpreter returns,
+  so the story must **not** describe the algorithm; it sets the scene and
+  asks what the program returns. Each visible case is one question; pick
+  inputs whose answers differ and that can be traced by hand in a minute or
+  two (the third hint may trace an input that is *not* a question). Hidden
+  cases are never shown: they exist so the oracle and the program are
+  compared on the edges. The oracle matters most here — it must be a
+  different characterisation of the result (a formula, a property), never
+  the program replayed.
+- Hints work as everywhere: idea, approach, strongest guidance. For repair
+  the last hint may name the fix.
+- Turkish text as in §2. Words like TRUE, FALSE and block labels stay
+  English.

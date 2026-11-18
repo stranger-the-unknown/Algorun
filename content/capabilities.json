@@ -41,12 +41,12 @@
     "optimize": {"status": "supported", "note": "Beat a correct-but-slow baseline by a declared factor (performance.baselineFactor)."},
     "restricted": {"status": "supported", "note": "Scarce memory cells, blocks or palette."},
     "edge": {"status": "supported", "note": "The difficulty is in the edge cases the hidden tests hold."},
-    "complete": {"status": "blocked", "note": "Needs a starter program: the schema and the editor have none yet."},
-    "repair": {"status": "blocked", "note": "Needs a starter (buggy) program: the schema and the editor have none yet."},
-    "structure": {"status": "blocked", "note": "Choosing a data structure among given skeletons needs a starter program."},
+    "complete": {"status": "supported", "note": "Opens with half a program (starter.graph, M1); the reference only adds to it."},
+    "repair": {"status": "supported", "note": "Opens with a program that has one realistic mistake (starter.graph, M1); it differs from the reference in at most 4 blocks."},
+    "structure": {"status": "blocked", "note": "Starter programs exist (M1), but choosing among several given skeletons needs more than one starter and a chooser."},
     "trace": {"status": "blocked", "note": "Needs a step-through view of a given program; there is no player trace UI."},
-    "predict": {"status": "blocked", "note": "Needs a given program and an answer input; there is no predict UI."},
+    "predict": {"status": "supported", "note": "Shows the reference program read-only and asks what it returns for each visible case (M1); number and yes / no answers only."},
     "complexity": {"status": "blocked", "note": "The game never claims a complexity class; budgets stand in (MS10)."},
-    "ops": {"status": "blocked", "note": "Counting operations of a given program needs a starter program and an answer input."}
+    "ops": {"status": "blocked", "note": "The given program and the number answer exist (M1 predict); grading against the operation count of a run does not."}
   }
 }

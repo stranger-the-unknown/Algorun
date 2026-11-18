@@ -44,3 +44,38 @@ RunOutcome runPuzzle(
     suite: engine.runTests(program, puzzle).withHintsUsed(hintsUsed),
   );
 }
+
+/// The CHECK path of a predict puzzle (M1): the puzzle's own program →
+/// validate + lower → run on every visible case → the player's [answers]
+/// compared with what it really returned (`gradePredictions`).
+///
+/// A starter that cannot be lowered is broken content (the pipeline refuses
+/// it); it is reported like any program that cannot run, never as a wrong
+/// answer.
+RunOutcome checkPredictions(
+  AlgorunEngine engine,
+  Puzzle puzzle,
+  Map<String, RuntimeValue> answers, {
+  int hintsUsed = 0,
+}) {
+  final lowered = engine.lower(puzzle.starter?.graph ?? BlockGraph.empty, puzzle);
+  final validation = ValidationReport(messages: lowered.errors);
+  final program = lowered.program;
+  if (program == null) {
+    final first = lowered.errors.isEmpty ? null : lowered.errors.first;
+    return RunOutcome(
+      validation: validation,
+      suite: SuiteResult(
+        kind: ResultKind.invalidProgram,
+        visible: const [],
+        metrics: RunMetrics.zero,
+        message: first?.message ?? 'This program is not ready to run.',
+        firstFailureBlockId: first?.blockId,
+      ).withHintsUsed(hintsUsed),
+    );
+  }
+  return RunOutcome(
+    validation: validation,
+    suite: gradePredictions(program, puzzle, answers).withHintsUsed(hintsUsed),
+  );
+}

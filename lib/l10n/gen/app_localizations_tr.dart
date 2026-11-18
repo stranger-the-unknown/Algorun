@@ -1656,4 +1656,114 @@ class AppLocalizationsTr extends AppLocalizations {
   String traceNowIs(String name, String value) {
     return '$name artık $value.';
   }
+
+  @override
+  String get modeComplete => 'tamamla';
+
+  @override
+  String get modeRepair => 'onar';
+
+  @override
+  String get modePredict => 'tahmin et';
+
+  @override
+  String get modeHelpComplete =>
+      'Programın bir kısmı hazır. Eksikleri tamamla, sonra ÇALIŞTIR.';
+
+  @override
+  String get modeHelpRepair =>
+      'Bu programda bir hata var. Bul ve düzelt, sonra ÇALIŞTIR.';
+
+  @override
+  String get modeHelpPredict =>
+      'Programı oku. Çalıştırmadan, her girdi için ne döndürdüğünü söyle, sonra KONTROL ET.';
+
+  @override
+  String get startOver => 'Başa dön';
+
+  @override
+  String get startOverTitle => 'Başa dönülsün mü?';
+
+  @override
+  String get startOverBody =>
+      'Program, bulmacanın verdiği haline döner. Değişikliklerin yerini o alır; GERİ AL onları geri getirir.';
+
+  @override
+  String get startOverConfirm => 'Başa dön';
+
+  @override
+  String get programReset =>
+      'Program, bulmacanın verdiği haline döndü. GERİ AL senin halini geri getirir.';
+
+  @override
+  String get noticeLocked => 'Bu blok bulmacanın parçası: olduğu gibi kalır.';
+
+  @override
+  String get lockedBlock => 'Kilitli blok';
+
+  @override
+  String get predictReadOnly => 'salt okunur';
+
+  @override
+  String predictQuestion(int n, int total) {
+    return 'SORU $n / $total';
+  }
+
+  @override
+  String predictQuestionSemantics(int n) {
+    return 'Soru $n';
+  }
+
+  @override
+  String get predictItReturns => 'DÖNDÜRDÜĞÜ';
+
+  @override
+  String get predictTapToAnswer => 'Yanıtlamak için dokun';
+
+  @override
+  String predictAnswered(int done, int total) {
+    return '$total sorudan $done yanıtlandı';
+  }
+
+  @override
+  String get predictCheck => 'KONTROL ET';
+
+  @override
+  String get predictChecking => 'KONTROL EDİLİYOR';
+
+  @override
+  String get predictMeaningCorrect => 'Her yanıt, programın döndürdüğü değer.';
+
+  @override
+  String predictMeaningWrong(int right, int total) {
+    return '$total yanıttan $right tanesi programın döndürdüğü değer.';
+  }
+
+  @override
+  String get predictAnswers => 'YANITLARIN';
+
+  @override
+  String get predictRight => 'doğru';
+
+  @override
+  String get predictWrong => 'programın döndürdüğü bu değil';
+
+  @override
+  String get predictNoAnswer => 'yanıt yok';
+
+  @override
+  String get predictYourAnswer => 'yanıtın';
+
+  @override
+  String get predictNotShown =>
+      'Doğru yanıt gösterilmez. Programı adım adım yeniden oku ya da bir ipucu al.';
+
+  @override
+  String get predictBack => 'SORULARA DÖN';
+
+  @override
+  String get enginePredictWrong => 'Program bu girdi için bunu döndürmüyor.';
+
+  @override
+  String get enginePredictRight => 'Her yanıt, programın döndürdüğü değer.';
 }

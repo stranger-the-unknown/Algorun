@@ -1,0 +1,493 @@
+{
+  "id": "halve_or_step",
+  "version": 1,
+  "title": "Halve or Step",
+  "world": "world_01",
+  "chapter": "halve_even_decrement_odd_count",
+  "tier": 2,
+  "mode": "predict",
+  "concepts": [
+    "variables",
+    "control"
+  ],
+  "prerequisites": [],
+  "story": "A counting machine is given a starting number and plays with it until nothing is left. The program is the machine's rule book, and what it returns is how long the game lasted. Read the program and say what it returns for each starting number.",
+  "io": {
+    "inputs": [
+      {
+        "name": "start",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "The starting number is a whole number from 0 to 1000."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.floor_div",
+      "arith.mod",
+      "cmp.eq",
+      "cmp.gt",
+      "ctrl.else",
+      "ctrl.if",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "var.dec",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 33
+  },
+  "limits": {
+    "maxOps": 700,
+    "maxDepth": 32,
+    "maxAlloc": 50
+  },
+  "hints": [
+    "Keep a small table on paper: one row per trip through WHILE, with x and moves in it.",
+    "REMAINDER 2 is 0 for an even number. Even numbers take the first branch, odd numbers the ELSE branch.",
+    "For 5 the number goes 5, 4, 2, 1, 0: four moves. Count the steps between the numbers, not the numbers."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "start": 6
+        },
+        "out": 4
+      },
+      {
+        "id": "v2",
+        "in": {
+          "start": 7
+        },
+        "out": 5
+      },
+      {
+        "id": "v3",
+        "in": {
+          "start": 16
+        },
+        "out": 5
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "start": 0
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "start": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "start": 2
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "start": 15
+        },
+        "out": 7
+      },
+      {
+        "id": "h05",
+        "in": {
+          "start": 64
+        },
+        "out": 7
+      },
+      {
+        "id": "h06",
+        "in": {
+          "start": 100
+        },
+        "out": 9
+      },
+      {
+        "id": "h07",
+        "in": {
+          "start": 255
+        },
+        "out": 15
+      },
+      {
+        "id": "h08",
+        "in": {
+          "start": 1000
+        },
+        "out": 15
+      }
+    ]
+  },
+  "edgeCases": [
+    "starting at 0",
+    "a power of two",
+    "a run of odd numbers"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "x",
+        "type": "num"
+      },
+      {
+        "name": "moves",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "halve_even_decrement_odd_count"
+  },
+  "starter": {
+    "graph": {
+      "blocks": {
+        "b0": {
+          "id": "b0",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "start"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b1": {
+          "id": "b1",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b0"
+            }
+          },
+          "literals": {
+            "name": "x"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b2": {
+          "id": "b2",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b3": {
+          "id": "b3",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b2"
+            }
+          },
+          "literals": {
+            "name": "moves"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b4": {
+          "id": "b4",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "x"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b5": {
+          "id": "b5",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b6": {
+          "id": "b6",
+          "catalogId": "cmp.gt",
+          "slots": {
+            "left": {
+              "ref": "b4"
+            },
+            "right": {
+              "ref": "b5"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b7": {
+          "id": "b7",
+          "catalogId": "ctrl.while",
+          "slots": {
+            "condition": {
+              "ref": "b6"
+            },
+            "body": {
+              "list": [
+                "b13",
+                "b20"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b8": {
+          "id": "b8",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "x"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b9": {
+          "id": "b9",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 2
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b10": {
+          "id": "b10",
+          "catalogId": "arith.mod",
+          "slots": {
+            "left": {
+              "ref": "b8"
+            },
+            "right": {
+              "ref": "b9"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b11": {
+          "id": "b11",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b12": {
+          "id": "b12",
+          "catalogId": "cmp.eq",
+          "slots": {
+            "left": {
+              "ref": "b10"
+            },
+            "right": {
+              "ref": "b11"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b13": {
+          "id": "b13",
+          "catalogId": "ctrl.if",
+          "slots": {
+            "condition": {
+              "ref": "b12"
+            },
+            "then": {
+              "list": [
+                "b17"
+              ]
+            },
+            "else": {
+              "list": [
+                "b18"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b14": {
+          "id": "b14",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "x"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b15": {
+          "id": "b15",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 2
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b16": {
+          "id": "b16",
+          "catalogId": "arith.floor_div",
+          "slots": {
+            "left": {
+              "ref": "b14"
+            },
+            "right": {
+              "ref": "b15"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b17": {
+          "id": "b17",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b16"
+            }
+          },
+          "literals": {
+            "name": "x"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b18": {
+          "id": "b18",
+          "catalogId": "ctrl.else",
+          "slots": {
+            "body": {
+              "list": [
+                "b19"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b19": {
+          "id": "b19",
+          "catalogId": "var.dec",
+          "slots": {},
+          "literals": {
+            "name": "x"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b20": {
+          "id": "b20",
+          "catalogId": "var.inc",
+          "slots": {},
+          "literals": {
+            "name": "moves"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b21": {
+          "id": "b21",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "moves"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b22": {
+          "id": "b22",
+          "catalogId": "ctrl.return",
+          "slots": {
+            "value": {
+              "ref": "b21"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        }
+      },
+      "entryIds": [
+        "b1",
+        "b3",
+        "b7",
+        "b22"
+      ],
+      "variables": {
+        "start": "num",
+        "x": "num",
+        "moves": "num"
+      }
+    }
+  }
+}

@@ -136,8 +136,8 @@ void main() {
     await tester.tap(find.byKey(const Key('world-world_01')));
     await tester.pumpAndSettle();
     expect(find.text('01 · Foundations'), findsOneWidget);
-    expect(find.text('0 of 12 solved · teaches variables, control'), findsOneWidget);
-    // Twelve puzzles since MS15; the list builds the rows on screen.
+    expect(find.text('0 of 15 solved · teaches variables, control'), findsOneWidget);
+    // Twelve puzzles since MS15, fifteen since M1; the list builds the rows on screen.
     expect(find.text('Tier 1'), findsWidgets);
     expect(find.text('In progress'), findsOneWidget);
     expect(find.text('Not started'), findsWidgets);

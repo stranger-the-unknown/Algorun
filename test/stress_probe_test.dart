@@ -40,7 +40,7 @@ final class _Hooks implements PuzzleSaveHooks {
   }
 
   @override
-  RunRecordOutcome runFinished(BlockGraph graph, SuiteResult suite) => const RunRecordOutcome();
+  RunRecordOutcome runFinished(BlockGraph? graph, SuiteResult suite) => const RunRecordOutcome();
   @override
   void leaving() {}
   @override

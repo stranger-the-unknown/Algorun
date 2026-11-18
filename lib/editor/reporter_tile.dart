@@ -43,7 +43,8 @@ final class ReporterTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           onTap: () {
             controller.selectBlock(blockId);
-            _maybeOpenLiteral(context, block);
+            // A locked or read-only block shows what it holds; it is not edited.
+            if (controller.canEdit(blockId)) _maybeOpenLiteral(context, block);
           },
           // Selects only: the selection bar offers Replace and Delete.
           onLongPress: () {

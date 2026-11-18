@@ -8,6 +8,7 @@ import '../../l10n/content_text.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/terms.dart';
 import '../../shared/load_failed.dart';
+import '../../shared/mode_badge.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/content_width.dart';
 import '../../state/l10n_providers.dart';
@@ -157,6 +158,10 @@ class _PuzzleRow extends StatelessWidget {
                             ),
                           ),
                         ),
+                        if (hasModeBadge(puzzle.mode)) ...[
+                          const SizedBox(width: AppSpace.s2),
+                          ModeBadge(mode: puzzle.mode),
+                        ],
                         if (current) ...[
                           const SizedBox(width: AppSpace.s2),
                           Text(
@@ -173,7 +178,11 @@ class _PuzzleRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      puzzleStatusText(status, saved, missing, l, text),
+                      // The steps and blocks of a program the player only
+                      // read are not a best of theirs.
+                      puzzle.isPredict && status == PuzzleStatus.completed
+                          ? l.statusSolved
+                          : puzzleStatusText(status, saved, missing, l, text),
                       style: TextStyle(
                         color: status == PuzzleStatus.completed ? context.palette.fg : context.palette.muted,
                         fontSize: 13,

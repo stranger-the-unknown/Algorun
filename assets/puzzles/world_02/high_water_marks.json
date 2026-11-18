@@ -1,0 +1,392 @@
+{
+  "id": "high_water_marks",
+  "version": 1,
+  "title": "High-Water Marks",
+  "world": "world_02",
+  "chapter": "running_maximum_list",
+  "tier": 2,
+  "mode": "complete",
+  "concepts": [
+    "arrays"
+  ],
+  "prerequisites": [],
+  "story": "A river gauge is read once a day. For every day, the harbour master writes down the highest level seen so far, that day included. Levels are 0 or more. Return the list of those marks, one per day. The program already writes a mark for each day, but its marks never rise.",
+  "io": {
+    "inputs": [
+      {
+        "name": "levels",
+        "type": "array<num>"
+      }
+    ],
+    "output": {
+      "type": "array<num>"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "There are 0 to 60 days.",
+      "Each level is a whole number from 0 to 100."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arr.append",
+      "cmp.gt",
+      "ctrl.foreach",
+      "ctrl.if",
+      "ctrl.return",
+      "lit.num",
+      "new.array",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 26
+  },
+  "limits": {
+    "maxOps": 250,
+    "maxDepth": 32,
+    "maxAlloc": 50
+  },
+  "hints": [
+    "The program writes one mark per day, and the mark is always best. Nothing ever changes best.",
+    "Before a day's mark is written, check whether that day's level beats the best so far.",
+    "Inside FOR EACH, above APPEND: IF level is GREATER THAN best, SET best to level."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "levels": [
+            2,
+            5,
+            3,
+            6
+          ]
+        },
+        "out": [
+          2,
+          5,
+          5,
+          6
+        ]
+      },
+      {
+        "id": "v2",
+        "in": {
+          "levels": [
+            4,
+            1,
+            1
+          ]
+        },
+        "out": [
+          4,
+          4,
+          4
+        ]
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "levels": []
+        },
+        "out": []
+      },
+      {
+        "id": "h02",
+        "in": {
+          "levels": [
+            0,
+            0
+          ]
+        },
+        "out": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "h03",
+        "in": {
+          "levels": [
+            7
+          ]
+        },
+        "out": [
+          7
+        ]
+      },
+      {
+        "id": "h04",
+        "in": {
+          "levels": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "out": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "id": "h05",
+        "in": {
+          "levels": [
+            5,
+            5,
+            2,
+            9,
+            9,
+            1
+          ]
+        },
+        "out": [
+          5,
+          5,
+          5,
+          9,
+          9,
+          9
+        ]
+      },
+      {
+        "id": "h06",
+        "in": {
+          "levels": [
+            0,
+            3,
+            0,
+            3,
+            8,
+            2,
+            8
+          ]
+        },
+        "out": [
+          0,
+          3,
+          3,
+          3,
+          8,
+          8,
+          8
+        ]
+      },
+      {
+        "id": "h07",
+        "in": {
+          "levels": [
+            100,
+            40,
+            99,
+            100,
+            0
+          ]
+        },
+        "out": [
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      }
+    ]
+  },
+  "edgeCases": [
+    "no days at all",
+    "a level equal to the best so far",
+    "levels that only fall"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "marks",
+        "type": "array<num>"
+      },
+      {
+        "name": "best",
+        "type": "num"
+      },
+      {
+        "name": "level",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "running_maximum_list"
+  },
+  "starter": {
+    "graph": {
+      "blocks": {
+        "b0": {
+          "id": "b0",
+          "catalogId": "new.array",
+          "slots": {},
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b1": {
+          "id": "b1",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b0"
+            }
+          },
+          "literals": {
+            "name": "marks"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b2": {
+          "id": "b2",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b3": {
+          "id": "b3",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b2"
+            }
+          },
+          "literals": {
+            "name": "best"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b4": {
+          "id": "b4",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "levels"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b5": {
+          "id": "b5",
+          "catalogId": "ctrl.foreach",
+          "slots": {
+            "collection": {
+              "ref": "b4"
+            },
+            "body": {
+              "list": [
+                "b14"
+              ]
+            }
+          },
+          "literals": {
+            "name": "level"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b12": {
+          "id": "b12",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "best"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b13": {
+          "id": "b13",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "marks"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b14": {
+          "id": "b14",
+          "catalogId": "arr.append",
+          "slots": {
+            "array": {
+              "ref": "b13"
+            },
+            "value": {
+              "ref": "b12"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b15": {
+          "id": "b15",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "marks"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b16": {
+          "id": "b16",
+          "catalogId": "ctrl.return",
+          "slots": {
+            "value": {
+              "ref": "b15"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        }
+      },
+      "entryIds": [
+        "b1",
+        "b3",
+        "b5",
+        "b16"
+      ],
+      "variables": {
+        "levels": "array<num>",
+        "marks": "array<num>",
+        "best": "num",
+        "level": "num"
+      }
+    }
+  }
+}

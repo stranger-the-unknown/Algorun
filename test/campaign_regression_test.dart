@@ -24,7 +24,7 @@ void main() {
       for (final id in world.puzzleIds) (world.id, campaign.puzzles[id]!),
   ];
 
-  test('149 campaign puzzles', () => expect(entries, hasLength(149)));
+  test('158 campaign puzzles', () => expect(entries, hasLength(158)));
 
   for (final (world, puzzle) in entries) {
     final metrics = referenceFile(world, puzzle.id)['metrics']! as Map<String, Object?>;

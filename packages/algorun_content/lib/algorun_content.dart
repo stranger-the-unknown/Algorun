@@ -12,3 +12,4 @@ export 'src/oracles/registry.dart';
 export 'src/progression_check.dart';
 export 'src/redundancy.dart';
 export 'src/reference_check.dart';
+export 'src/starter_check.dart';

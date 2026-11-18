@@ -226,8 +226,9 @@ void main() {
     });
 
     test('a mode the product cannot play yet is refused', () {
-      final report = _run([_candidate(mode: 'repair')]);
-      expect(_says(report, Severity.error, Level.blocks, 'Mode "repair" is not playable yet'), isTrue);
+      // M1 made complete, repair and predict playable; ops still is not.
+      final report = _run([_candidate(mode: 'ops')]);
+      expect(_says(report, Severity.error, Level.blocks, 'Mode "ops" is not playable yet'), isTrue);
     });
 
     test('a reference using a block outside the allowlist is refused', () {
@@ -526,7 +527,7 @@ void main() {
           'world_a': {'target': 3, 'tiers': [1, 2]},
         },
         'families': {'array_scan': 2, 'sorting_builtin': 1},
-        'modes': {'repair': 1},
+        'modes': {'ops': 1},
       });
       final report = _run([_candidate()], targets: targets);
       final matrix = report.coverage!;
@@ -537,7 +538,7 @@ void main() {
       expect(gaps, contains(equals({'area': 'world', 'id': 'world_a', 'have': 1, 'want': 3})));
       expect(gaps, contains(equals({'area': 'tiers', 'id': 'world_a', 'missing': [2]})));
       expect(gaps, contains(equals({'area': 'family', 'id': 'sorting_builtin', 'have': 0, 'want': 1, 'note': 'blocked by the language'})));
-      expect(gaps.where((g) => g['id'] == 'repair').single['note'], startsWith('blocked:'));
+      expect(gaps.where((g) => g['id'] == 'ops').single['note'], startsWith('blocked:'));
       // Deterministic: the same corpus gives the same text.
       expect(coverageJson(_run([_candidate()], targets: targets).coverage!), coverageJson(matrix));
     });
@@ -591,7 +592,7 @@ void main() {
     test('every campaign puzzle is accepted at every level', () {
       expect(report.errors, isEmpty, reason: report.errors.join('\n'));
       final campaign = report.verdicts.where((v) => v.campaign).toList();
-      expect(campaign, hasLength(149));
+      expect(campaign, hasLength(158));
       expect(campaign.where((v) => !v.accepted), isEmpty);
     });
 

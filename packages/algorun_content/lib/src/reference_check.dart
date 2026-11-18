@@ -23,9 +23,13 @@ const budgetWarningShare = 0.8;
 
 /// What a checked reference file gave the corpus checks.
 final class CheckedReference {
-  const CheckedReference({this.spec, this.solution});
+  const CheckedReference({this.spec, this.solution, this.graph});
 
   final ContentSpec? spec;
+
+  /// The solution graph as written, whether or not it passed: what a starter
+  /// program is compared with (M1).
+  final BlockGraph? graph;
 
   /// The solution graph, when it proved the puzzle.
   final BlockGraph? solution;
@@ -134,10 +138,12 @@ final class ReferenceChecker {
     if (oracle != null) _oracleFixtures(puzzle, oracle, error);
 
     BlockGraph? solution;
+    BlockGraph? written;
     if (!json.containsKey('solution')) {
       error(Level.schema, 'solution', 'Required: the reference solution as a block graph.');
     } else {
       final graph = _graph(json['solution'], 'solution', error);
+      written = graph;
       if (graph != null) {
         final (:program, :passed) = _solution(puzzle, graph, json['metrics'], error, warn, info);
         if (passed) solution = graph;
@@ -158,7 +164,7 @@ final class ReferenceChecker {
       }
     }
     _performance(puzzle, baselines, error);
-    return CheckedReference(spec: spec, solution: solution);
+    return CheckedReference(spec: spec, solution: solution, graph: written);
   }
 
   /// Level 2: the family and the mode must be something the language (and the

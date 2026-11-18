@@ -1667,4 +1667,117 @@ class AppLocalizationsEn extends AppLocalizations {
   String traceNowIs(String name, String value) {
     return '$name is now $value.';
   }
+
+  @override
+  String get modeComplete => 'complete';
+
+  @override
+  String get modeRepair => 'repair';
+
+  @override
+  String get modePredict => 'predict';
+
+  @override
+  String get modeHelpComplete =>
+      'Part of this program is already here. Fill in what is missing, then RUN.';
+
+  @override
+  String get modeHelpRepair =>
+      'This program has a mistake. Find it and fix it, then RUN.';
+
+  @override
+  String get modeHelpPredict =>
+      'Read the program. Without running it, say what it returns for each input, then CHECK.';
+
+  @override
+  String get startOver => 'Start over';
+
+  @override
+  String get startOverTitle => 'Start over?';
+
+  @override
+  String get startOverBody =>
+      'The program goes back to how the puzzle gave it. Your changes are replaced; UNDO brings them back.';
+
+  @override
+  String get startOverConfirm => 'Start over';
+
+  @override
+  String get programReset =>
+      'The program is back to how the puzzle gave it. UNDO brings your version back.';
+
+  @override
+  String get noticeLocked =>
+      'This block is part of the puzzle: it stays as it is.';
+
+  @override
+  String get lockedBlock => 'Locked block';
+
+  @override
+  String get predictReadOnly => 'read only';
+
+  @override
+  String predictQuestion(int n, int total) {
+    return 'QUESTION $n OF $total';
+  }
+
+  @override
+  String predictQuestionSemantics(int n) {
+    return 'Question $n';
+  }
+
+  @override
+  String get predictItReturns => 'IT RETURNS';
+
+  @override
+  String get predictTapToAnswer => 'Tap to answer';
+
+  @override
+  String predictAnswered(int done, int total) {
+    return '$done of $total answered';
+  }
+
+  @override
+  String get predictCheck => 'CHECK';
+
+  @override
+  String get predictChecking => 'CHECKING';
+
+  @override
+  String get predictMeaningCorrect =>
+      'Every answer is what the program returns.';
+
+  @override
+  String predictMeaningWrong(int right, int total) {
+    return '$right of $total answers are what the program returns.';
+  }
+
+  @override
+  String get predictAnswers => 'YOUR ANSWERS';
+
+  @override
+  String get predictRight => 'right';
+
+  @override
+  String get predictWrong => 'not what the program returns';
+
+  @override
+  String get predictNoAnswer => 'no answer';
+
+  @override
+  String get predictYourAnswer => 'your answer';
+
+  @override
+  String get predictNotShown =>
+      'The right answer is not shown. Read the program again, step by step, or take a hint.';
+
+  @override
+  String get predictBack => 'BACK TO THE QUESTIONS';
+
+  @override
+  String get enginePredictWrong =>
+      'That is not what the program returns for this input.';
+
+  @override
+  String get enginePredictRight => 'Every answer is what the program returns.';
 }

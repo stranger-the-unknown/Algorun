@@ -7,6 +7,7 @@ import 'difficulty.dart';
 import 'progression_check.dart';
 import 'redundancy.dart';
 import 'reference_check.dart';
+import 'starter_check.dart';
 
 /// Offline content gate — the content pipeline. No content is ever executed as
 /// code: reference solutions are block graphs, and they run only inside the
@@ -21,7 +22,8 @@ import 'reference_check.dart';
 /// 2. **blocks** — allowlist, block budget, the language capability audit
 ///    (`content/capabilities.json`);
 /// 3. **replay** — the reference rebuilt through the editor's commands, and
-///    lowered;
+///    lowered; a starter program rebuilt the same way, and what its mode
+///    promises about it and the reference (`StarterChecker`, M1);
 /// 4. **execution** — every visible and hidden case through the real
 ///    `TestRunner`, every reject ending in its declared verdict, the
 ///    independent oracle agreeing with the fixtures and with the reference;
@@ -31,9 +33,12 @@ import 'reference_check.dart';
 ///
 /// Errors block a commit. Warnings are advice. Info records facts.
 final class ContentValidator {
-  const ContentValidator({this.checker = const ReferenceChecker()});
+  const ContentValidator({this.checker = const ReferenceChecker(), this.starters = const StarterChecker()});
 
   final ReferenceChecker checker;
+
+  /// Starter programs against what their mode promises (M1).
+  final StarterChecker starters;
 
   /// One puzzle on its own: the schema, plus single-file advice.
   ContentReport validatePuzzleSource(String source, {String file = 'puzzle.json'}) {
@@ -106,6 +111,20 @@ final class ContentValidator {
     final manifest = worldsSource == null ? null : _checkWorlds(worldsSource, worldsFile, byId, issues);
     final listed = manifest == null ? null : {for (final w in manifest.worlds) ...w.puzzleIds};
     final checked = _checkReferences(byId, listed, references, referencesLabel, capabilities, issues);
+    for (final id in byId.keys.toList()..sort()) {
+      final (:file, :puzzle) = byId[id]!;
+      if (starterModes.contains(puzzle.mode) && puzzle.reference == null) {
+        issues.add(ContentIssue(
+          Severity.error,
+          file,
+          'reference',
+          'A ${puzzle.mode.name} puzzle is checked against its reference solution: declare reference metadata.',
+          level: Level.schema,
+          puzzle: id,
+        ));
+      }
+      starters.check(puzzle, file, issues, reference: checked[id]?.graph);
+    }
 
     Map<String, Object?>? coverage;
     if (manifest != null) {

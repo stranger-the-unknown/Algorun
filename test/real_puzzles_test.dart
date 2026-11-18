@@ -151,7 +151,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('probe'), findsNothing);
-    expect(find.text('0 of 12 solved'), findsOneWidget);
+    expect(find.text('0 of 15 solved'), findsOneWidget);
     expect(find.text('Hash Maps'), findsOneWidget);
     expect(find.text('Locked — learn variables first'), findsOneWidget);
     expect(find.text('Locked — learn arrays first'), findsWidgets);

@@ -19,7 +19,9 @@ bool completes(SuiteResult suite) => suite.kind == ResultKind.correct;
 final class OpenedPuzzle {
   const OpenedPuzzle({this.graph, this.puzzleChanged = false, this.progress});
 
-  /// The program to restore: the draft, else the best solution, else none.
+  /// The program to restore: the draft, else the best solution, else none
+  /// (the editor then opens with the puzzle's starter program, if it has one,
+  /// M1). A draft the player emptied is still a draft: it is restored empty.
   final BlockGraph? graph;
 
   /// The saved progress was earned on another version of the puzzle.
@@ -92,11 +94,16 @@ PlayerSave saveDraft(PlayerSave save, Campaign campaign, Puzzle puzzle, BlockGra
 /// becomes the best solution when it needs strictly fewer operations (the
 /// first solution stays on a tie). A failing run never overwrites a success.
 /// A run of a locked puzzle is not recorded.
+///
+/// [graph] is null when the player built nothing — a predict puzzle (M1),
+/// where the run is a set of answers about the puzzle's own program: the
+/// draft and the best solution are then left as they are (none), and
+/// everything else is recorded the same way.
 (PlayerSave, RunRecordOutcome) recordRun(
   PlayerSave save,
   Campaign campaign,
   Puzzle puzzle,
-  BlockGraph graph,
+  BlockGraph? graph,
   SuiteResult suite,
 ) {
   if (!campaign.contains(puzzle.id)) return (save, const RunRecordOutcome());
@@ -105,14 +112,15 @@ PlayerSave saveDraft(PlayerSave save, Campaign campaign, Puzzle puzzle, BlockGra
   final current = _onVersion(save[puzzle.id], puzzle);
   final numbers = RunNumbers.of(suite.metrics);
   var progress = current.copyWith(
-    draft: graph,
+    draft: graph ?? current.draft,
     editedSinceRun: false,
     lastRun: RunRecord(result: suite.kind, numbers: numbers),
   );
   if (completes(suite)) {
     final previous = current.best;
     final firstCompletion = !current.completed;
-    final newSolution = previous == null || current.solution == null || numbers.ops < previous.ops;
+    final newSolution =
+        graph != null && (previous == null || current.solution == null || numbers.ops < previous.ops);
     progress = progress.copyWith(
       completed: true,
       best: previous == null ? numbers : previous.bestWith(numbers),
