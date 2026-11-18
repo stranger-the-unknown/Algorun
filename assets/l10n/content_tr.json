@@ -1391,6 +1391,87 @@
         "Her kare için bir tane olmak üzere 0'lardan oluşan bir done listesi tut. Bir kare öncelik kuyruğundan ilk kez çıktığında maliyeti en ucuzdur: done'ı SET ELEMENT ile 1 yap. IF son kareyse maliyeti RETURN et.",
         "Bir kareden dört adımı dene (1, -1, 0, 0 tutan dr ve dc listeleri işe yarar): tarlanın içindeki ve done olmayan her komşu için (maliyet PLUS ücreti) × 1000 PLUS numarasını INSERT et. Bir kare birkaç kez girebilir; yalnızca ilk çıkışı sayılır."
       ]
+    },
+    "flag_lines": {
+      "title": "Bayrak Sıraları",
+      "story": "Bir sokak şenliği için bayraklar yol boyunca sıra sıra asılıyor. İlk sırada 1 bayrak var ve her sırada bir öncekinden 2 fazla bayrak bulunuyor: 1, 3, 5, 7 diye gidiyor. Bütün sıralarda toplam kaç bayrak asılı? Program sıraları zaten dolaşıyor; her sırada ne yapılacağı eksik.",
+      "hints": [
+        "Döngünün her turu bir bayrak sırasıdır: o sıranın toplama eklenmesi gerekir.",
+        "Bir sıra eklendikten sonra flags, 2 fazla bayrak tutan bir sonraki sıraya hazırlanmalı.",
+        "FOR içinde: total değişkenini total PLUS flags olarak SET et, sonra flags değişkenini flags PLUS 2 olarak SET et."
+      ]
+    },
+    "fence_posts": {
+      "title": "Çit Direkleri",
+      "story": "Bir çit, belli bir metre uzunluğundaki tarla kenarı boyunca uzanıyor. 0. metrede bir direk durur; sonra çitin üzerinde kaldığı sürece her gap metrede bir direk daha gelir. Tam çitin sonuna denk gelen direk de sayılır. Program direkleri saymalı, ama bazen cevabı bir eksik çıkıyor. Hatayı bul ve düzelt.",
+      "hints": [
+        "Gördüğün iki vakayı karşılaştır: cevap yalnızca bir direk tam çitin sonuna denk geldiğinde yanlış.",
+        "Uzunluğu 12 metre, aralığı 4 olan bir çit için pos değerini döngü boyunca izle. pos 12'ye ulaşınca ne oluyor?",
+        "WHILE koşulu bir direk erken duruyor: en sondaki direk için LESS THAN değil, LESS OR EQUAL gerekir."
+      ]
+    },
+    "halve_or_step": {
+      "title": "Yarıla ya da İn",
+      "story": "Bir sayma makinesine bir başlangıç sayısı verilir ve makine, geriye hiçbir şey kalmayana kadar bu sayıyla oynar. Program makinenin kural kitabıdır; döndürdüğü değer oyunun ne kadar sürdüğüdür. Programı oku ve her başlangıç sayısı için ne döndürdüğünü söyle.",
+      "hints": [
+        "Kâğıda küçük bir tablo yap: WHILE döngüsünün her turu için bir satır, içinde x ve moves olsun.",
+        "Çift bir sayı için REMAINDER 2 sonucu 0'dır. Çift sayılar ilk dala, tek sayılar ELSE dalına girer.",
+        "5 için sayı 5, 4, 2, 1, 0 diye gider: dört hamle. Sayıları değil, sayılar arasındaki adımları say."
+      ]
+    },
+    "high_water_marks": {
+      "title": "En Yüksek Su İzleri",
+      "story": "Bir nehir ölçeği günde bir kez okunuyor. Liman başkanı her gün için, o gün dahil o ana kadar görülen en yüksek seviyeyi yazıyor. Seviyeler 0 ya da daha büyük. Bu işaretlerin listesini, her güne bir tane olacak şekilde döndür. Program her gün için zaten bir işaret yazıyor, ama işaretleri hiç yükselmiyor.",
+      "hints": [
+        "Program her gün bir işaret yazıyor ve işaret hep best oluyor. best değerini hiçbir şey değiştirmiyor.",
+        "Bir günün işareti yazılmadan önce, o günün seviyesinin şimdiye kadarki en iyiyi geçip geçmediğine bak.",
+        "FOR EACH içinde, APPEND satırının üstünde: IF level, best değerinden GREATER THAN ise best değişkenini level olarak SET et."
+      ]
+    },
+    "no_step_down": {
+      "title": "İnen Basamak Yok",
+      "story": "Bir merdiven ustası her basamağın yüksekliğini aşağıdan yukarıya doğru listeliyor. Hiçbir basamak kendinden öncekinden alçak değilse merdiven uygundur; aynı yükseklikte iki basamak olabilir. Program uygun merdivenler için TRUE, diğerleri için FALSE demeli, ama bazı uygun merdivenleri geri çeviriyor. Hatayı bul ve düzelt.",
+      "hints": [
+        "Programın yanlış bildiği vakaya bak: hangi iki basamaktan şikâyet ediyor?",
+        "Aynı yükseklikte iki basamak olabilir. İki yükseklik eşit olduğunda IF ne yapıyor?",
+        "Karşılaştırma fazla katı: bir basamak yalnızca öncekinden LESS THAN ise yanlıştır, LESS OR EQUAL ise değil."
+      ]
+    },
+    "one_pass": {
+      "title": "Tek Geçiş",
+      "story": "Bir sıralama robotu, numaralı sandıklardan oluşan bir sıra boyunca soldan sağa bir kez yürüyor. Program onun kural kitabıdır; döndürdüğü değer bir sayımdır. Programı oku ve her sandık sırası için ne döndürdüğünü söyle.",
+      "hints": [
+        "Sırayı kâğıda yaz ve programın yaptığı gibi değiştir: bir SWAP, sonraki karşılaştırmanın gördüğünü değiştirir.",
+        "Bir SWAP sonrasında büyük sandık bir yer sağa kaymıştır ve sonraki turda yeniden karşılaştırılır.",
+        "2, 1, 3 için: 2 ile 1 yer değiştirir (bir takas), sonra 2 ile 3 yerinde kalır. Program 1 döndürür."
+      ]
+    },
+    "mirror_shelf": {
+      "title": "Ayna Raf",
+      "story": "Bir vitrin rafı, iki ucundan da aynı okunuyorsa düzgün görünür: ilk parça sonuncuyla, ikinci parça sondan ikinciyle eşleşir ve böyle devam eder. Parçalar sayı olarak verilir. Raf kendi aynasıysa TRUE döndür. Program iki işaretçiyi zaten birbirine doğru yürütüyor; ikinci işaretçinin nereden başlayacağı ve her durakta neyin kontrol edileceği eksik.",
+      "hints": [
+        "lo ilk parçadan başlıyor. hi, son parçayı göstermesi için nereden başlamalı?",
+        "WHILE döngüsünün her turu bir çifte bakar: lo konumundaki parça ile hi konumundaki parça. Farklı tek bir çift cevabı belirler.",
+        "hi değişkenini items için LENGTH MINUS 1 olarak SET et. WHILE içinde, iki hareketin üstünde: IF lo konumundaki parça hi konumundaki parçaya NOT EQUAL ise RETURN FALSE."
+      ]
+    },
+    "glove_pairs": {
+      "title": "Eldiven Çiftleri",
+      "story": "İki kutuda eldivenler var: birinde sol tekler, diğerinde sağ tekler. Her eldivenin üzerinde bedeni yazıyor ve her kutu küçükten büyüğe sıralı. Bir sol eldiven aynı bedendeki bir sağ eldivenle çift olur ve bir eldiven yalnızca tek bir çifte girebilir. Program çiftleri saymalı, ama bazı kutularda fazla sayıyor. Hatayı bul ve düzelt.",
+      "hints": [
+        "Cevap yalnızca bir beden bir kutuda birden fazla kez geçtiğinde fazla çıkıyor. Hatalı vakayı elle izle.",
+        "İki eldiven çift olduğunda ikisi de kullanılmış olur. Program iki kutuda da ilerliyor mu?",
+        "Bedenlerin EQUAL olduğu dalda program i değerini ilerletiyor ama j değerini ilerletmiyor: oraya INCREMENT j ekle."
+      ]
+    },
+    "closing_in": {
+      "title": "Yaklaşan İşaretler",
+      "story": "İki işaret, numaralı kartlardan oluşan bir sıranın iki ucundan başlayıp birbirine doğru yürüyor. Program onların kural kitabıdır. Programı oku ve her sıra için ne döndürdüğünü söyle. Sırada her zaman en az bir kart vardır.",
+      "hints": [
+        "Sıranın üzerinde iki parmak tut, biri lo biri hi için; WHILE döngüsünün her turunda bir parmağı oynat.",
+        "Her turda küçük kartın üzerindeki işaret yürür. İki kart eşitse hi yürür.",
+        "Bir işaret hangi kartın üzerinden hiç ayrılamaz? Döngü, iki işaret de onun üzerindeyken biter."
+      ]
     }
   }
 }

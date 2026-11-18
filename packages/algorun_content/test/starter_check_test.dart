@@ -345,6 +345,22 @@ void main() {
       _refused(_check(mode: 'predict', starter: _holeGraph()), 'starter.graph.blocks.start', 'whole program that runs');
     });
 
+    test('an answer the number pad cannot enter is refused', () {
+      _refused(
+        _check(
+          mode: 'predict',
+          starter: _totalGraph(),
+          visible: '''[
+            { "id": "v1", "in": { "nums": [1, 2, 3] }, "out": 6 },
+            { "id": "v2", "in": { "nums": [999999, 1] }, "out": 1000000 }
+          ]''',
+        ),
+        'fixtures.visible[1].out',
+        'number pad',
+        level: Level.execution,
+      );
+    });
+
     test('one visible case is one question: too few', () {
       _refused(
         _check(

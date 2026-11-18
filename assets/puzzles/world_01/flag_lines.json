@@ -1,0 +1,288 @@
+{
+  "id": "flag_lines",
+  "version": 1,
+  "title": "Flag Lines",
+  "world": "world_01",
+  "chapter": "sum_of_growing_terms",
+  "tier": 1,
+  "mode": "complete",
+  "concepts": [
+    "variables",
+    "control"
+  ],
+  "prerequisites": [],
+  "story": "For a street party, flags hang in lines across the road. The first line holds 1 flag, and every line holds 2 more flags than the line before it: 1, 3, 5, 7 and so on. How many flags hang in all the lines together? The program already walks through the lines; what happens at each line is missing.",
+  "io": {
+    "inputs": [
+      {
+        "name": "lines",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "There are 0 to 40 lines."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "ctrl.for_range",
+      "ctrl.return",
+      "lit.num",
+      "var.get",
+      "var.set"
+    ],
+    "maxBlocks": 26
+  },
+  "limits": {
+    "maxOps": 1150,
+    "maxDepth": 32,
+    "maxAlloc": 50
+  },
+  "hints": [
+    "Each trip through the loop is one line of flags: that line has to be added to the total.",
+    "After a line is added, flags must be made ready for the next line, which holds 2 more.",
+    "Inside FOR: SET total to total PLUS flags, then SET flags to flags PLUS 2."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "lines": 3
+        },
+        "out": 9
+      },
+      {
+        "id": "v2",
+        "in": {
+          "lines": 5
+        },
+        "out": 25
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "lines": 0
+        },
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {
+          "lines": 1
+        },
+        "out": 1
+      },
+      {
+        "id": "h03",
+        "in": {
+          "lines": 2
+        },
+        "out": 4
+      },
+      {
+        "id": "h04",
+        "in": {
+          "lines": 7
+        },
+        "out": 49
+      },
+      {
+        "id": "h05",
+        "in": {
+          "lines": 10
+        },
+        "out": 100
+      },
+      {
+        "id": "h06",
+        "in": {
+          "lines": 40
+        },
+        "out": 1600
+      }
+    ]
+  },
+  "edgeCases": [
+    "no lines at all",
+    "a single line"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "total",
+        "type": "num"
+      },
+      {
+        "name": "flags",
+        "type": "num"
+      },
+      {
+        "name": "line",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "sum_of_growing_terms"
+  },
+  "starter": {
+    "graph": {
+      "blocks": {
+        "b0": {
+          "id": "b0",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b1": {
+          "id": "b1",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b0"
+            }
+          },
+          "literals": {
+            "name": "total"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b2": {
+          "id": "b2",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 1
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b3": {
+          "id": "b3",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b2"
+            }
+          },
+          "literals": {
+            "name": "flags"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b4": {
+          "id": "b4",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b5": {
+          "id": "b5",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "lines"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b6": {
+          "id": "b6",
+          "catalogId": "ctrl.for_range",
+          "slots": {
+            "start": {
+              "ref": "b4"
+            },
+            "end": {
+              "ref": "b5"
+            },
+            "body": {
+              "list": []
+            }
+          },
+          "literals": {
+            "name": "line"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b15": {
+          "id": "b15",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "total"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b16": {
+          "id": "b16",
+          "catalogId": "ctrl.return",
+          "slots": {
+            "value": {
+              "ref": "b15"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        }
+      },
+      "entryIds": [
+        "b1",
+        "b3",
+        "b6",
+        "b16"
+      ],
+      "variables": {
+        "lines": "num",
+        "total": "num",
+        "flags": "num",
+        "line": "num"
+      }
+    },
+    "locked": [
+      "b0",
+      "b1",
+      "b2",
+      "b3",
+      "b4",
+      "b5",
+      "b6",
+      "b15",
+      "b16"
+    ]
+  }
+}

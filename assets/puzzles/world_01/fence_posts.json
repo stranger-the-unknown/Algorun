@@ -1,0 +1,384 @@
+{
+  "id": "fence_posts",
+  "version": 1,
+  "title": "Fence Posts",
+  "world": "world_01",
+  "chapter": "count_marks_inclusive_end",
+  "tier": 1,
+  "mode": "repair",
+  "concepts": [
+    "variables",
+    "control"
+  ],
+  "prerequisites": [],
+  "story": "A fence runs along a field edge that is some metres long. A post stands at 0 metres, and then one every gap metres for as long as it is still on the fence; a post exactly at the far end counts too. The program should count the posts, but sometimes its answer is one short. Find the mistake and fix it.",
+  "io": {
+    "inputs": [
+      {
+        "name": "length",
+        "type": "num"
+      },
+      {
+        "name": "gap",
+        "type": "num"
+      }
+    ],
+    "output": {
+      "type": "num"
+    }
+  },
+  "constraints": {
+    "notes": [
+      "The fence is 0 to 500 metres long.",
+      "The gap is a whole number from 1 to 50."
+    ]
+  },
+  "blocks": {
+    "allow": [
+      "arith.add",
+      "cmp.le",
+      "cmp.lt",
+      "ctrl.return",
+      "ctrl.while",
+      "lit.num",
+      "var.get",
+      "var.inc",
+      "var.set"
+    ],
+    "maxBlocks": 23
+  },
+  "limits": {
+    "maxOps": 2800,
+    "maxDepth": 32,
+    "maxAlloc": 50
+  },
+  "hints": [
+    "Compare the two cases you can see: the answer is wrong only when a post lands exactly on the end of the fence.",
+    "Follow pos through the loop for a 12 metre fence with a gap of 4. What happens when pos reaches 12?",
+    "The WHILE condition stops one post early: the post at the very end needs LESS OR EQUAL, not LESS THAN."
+  ],
+  "validators": {
+    "output": "equal"
+  },
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "length": 10,
+          "gap": 4
+        },
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {
+          "length": 12,
+          "gap": 4
+        },
+        "out": 4
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "length": 0,
+          "gap": 5
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "length": 9,
+          "gap": 3
+        },
+        "out": 4
+      },
+      {
+        "id": "h03",
+        "in": {
+          "length": 7,
+          "gap": 7
+        },
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {
+          "length": 20,
+          "gap": 6
+        },
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {
+          "length": 1,
+          "gap": 1
+        },
+        "out": 2
+      },
+      {
+        "id": "h06",
+        "in": {
+          "length": 3,
+          "gap": 50
+        },
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {
+          "length": 100,
+          "gap": 1
+        },
+        "out": 101
+      },
+      {
+        "id": "h08",
+        "in": {
+          "length": 500,
+          "gap": 7
+        },
+        "out": 72
+      }
+    ]
+  },
+  "edgeCases": [
+    "a post exactly at the end",
+    "a fence of 0 metres",
+    "a gap longer than the fence"
+  ],
+  "variables": {
+    "pool": [
+      {
+        "name": "posts",
+        "type": "num"
+      },
+      {
+        "name": "pos",
+        "type": "num"
+      }
+    ]
+  },
+  "reference": {
+    "strategy": "count_marks_inclusive_end"
+  },
+  "starter": {
+    "graph": {
+      "blocks": {
+        "b0": {
+          "id": "b0",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b1": {
+          "id": "b1",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b0"
+            }
+          },
+          "literals": {
+            "name": "posts"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b2": {
+          "id": "b2",
+          "catalogId": "lit.num",
+          "slots": {},
+          "literals": {
+            "value": 0
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b3": {
+          "id": "b3",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b2"
+            }
+          },
+          "literals": {
+            "name": "pos"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b4": {
+          "id": "b4",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "pos"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b5": {
+          "id": "b5",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "length"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b6": {
+          "id": "b6",
+          "catalogId": "cmp.lt",
+          "slots": {
+            "left": {
+              "ref": "b4"
+            },
+            "right": {
+              "ref": "b5"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b7": {
+          "id": "b7",
+          "catalogId": "ctrl.while",
+          "slots": {
+            "condition": {
+              "ref": "b6"
+            },
+            "body": {
+              "list": [
+                "b8",
+                "b12"
+              ]
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b8": {
+          "id": "b8",
+          "catalogId": "var.inc",
+          "slots": {},
+          "literals": {
+            "name": "posts"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b9": {
+          "id": "b9",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "pos"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b10": {
+          "id": "b10",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "gap"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b11": {
+          "id": "b11",
+          "catalogId": "arith.add",
+          "slots": {
+            "left": {
+              "ref": "b9"
+            },
+            "right": {
+              "ref": "b10"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b12": {
+          "id": "b12",
+          "catalogId": "var.set",
+          "slots": {
+            "value": {
+              "ref": "b11"
+            }
+          },
+          "literals": {
+            "name": "pos"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b13": {
+          "id": "b13",
+          "catalogId": "var.get",
+          "slots": {},
+          "literals": {
+            "name": "posts"
+          },
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        },
+        "b14": {
+          "id": "b14",
+          "catalogId": "ctrl.return",
+          "slots": {
+            "value": {
+              "ref": "b13"
+            }
+          },
+          "literals": {},
+          "x": 0.0,
+          "y": 0.0,
+          "collapsed": false
+        }
+      },
+      "entryIds": [
+        "b1",
+        "b3",
+        "b7",
+        "b14"
+      ],
+      "variables": {
+        "length": "num",
+        "gap": "num",
+        "posts": "num",
+        "pos": "num"
+      }
+    }
+  }
+}

@@ -36,8 +36,9 @@ const predictMinQuestions = 2;
 /// `predict`: the starter is a whole program that runs, it **is** the
 /// reference (the same lowered program), it returns every fixture's answer —
 /// so each expected answer is the reference's own output, which the oracle
-/// has already been compared with — and there are at least
-/// [predictMinQuestions] visible cases to ask.
+/// has already been compared with — there are at least
+/// [predictMinQuestions] visible cases to ask, and every number asked for can
+/// be entered on the number pad.
 ///
 /// That the reference itself passes, and agrees with the independent oracle,
 /// is `ReferenceChecker`'s job and unchanged.
@@ -184,6 +185,15 @@ final class StarterChecker {
     if (puzzle.visibleTests.length < predictMinQuestions) {
       error(Level.execution, 'fixtures.visible',
           'A predict puzzle asks one question per visible case; give at least $predictMinQuestions.');
+    }
+    // A number is answered on the game's number pad: whole, and within its
+    // reach. Anything else could be shown but never entered.
+    for (final (i, testCase) in puzzle.visibleTests.indexed) {
+      final out = testCase.output;
+      if (out is NumValue && (out.value != out.value.roundToDouble() || out.value.abs() > editorNumberLimit)) {
+        error(Level.execution, 'fixtures.visible[$i].out',
+            'The number pad enters whole numbers from -$editorNumberLimit to $editorNumberLimit: this answer could not be given.');
+      }
     }
     final program = _whole(puzzle, starter.graph, 'predict', error);
     if (program == null) return;
