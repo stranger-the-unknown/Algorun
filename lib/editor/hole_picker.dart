@@ -372,6 +372,7 @@ class _PasteChip extends StatelessWidget {
       button: true,
       label: '${l.pasteHere} $what',
       excludeSemantics: true,
+      onTap: onTap,
       child: Material(
         key: const Key('picker-paste'),
         color: context.palette.subtle,

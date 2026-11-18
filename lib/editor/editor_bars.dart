@@ -207,6 +207,9 @@ class _BarAction extends StatelessWidget {
         enabled: enabled,
         label: tooltip,
         excludeSemantics: true,
+        // Said here too: the node hides its children, and a screen reader
+        // can only press a button that offers the action.
+        onTap: onPressed,
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(AppRadius.sm),

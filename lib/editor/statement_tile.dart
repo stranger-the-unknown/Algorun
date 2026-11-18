@@ -567,6 +567,9 @@ final class AddStepButton extends StatelessWidget {
       button: true,
       label: context.l10n.addStep,
       excludeSemantics: true,
+      // The tap is said here too: the node hides its children, and a
+      // screen reader can only press a button that offers the action.
+      onTap: onTap,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -645,6 +648,7 @@ final class NameChip extends StatelessWidget {
       button: true,
       label: context.l10n.variableChange(name),
       excludeSemantics: true,
+      onTap: onTap,
       child: Material(
         color: context.palette.subtle,
         borderRadius: BorderRadius.circular(AppRadius.xs),

@@ -252,6 +252,7 @@ class _OutlineRow extends StatelessWidget {
       selected: selected,
       label: number == null ? line.text : l.outlineLine(number, line.text),
       excludeSemantics: true,
+      onTap: onTap,
       child: Material(
         color: selected ? palette.subtle : Colors.transparent,
         borderRadius: BorderRadius.circular(AppRadius.xs),

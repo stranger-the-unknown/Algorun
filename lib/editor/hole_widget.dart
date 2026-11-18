@@ -45,6 +45,9 @@ final class HoleWidget extends StatelessWidget {
       label: context.l10n.emptySlot(caption),
       selected: selected,
       excludeSemantics: true,
+      // The tap is said here too: the node hides its children, and a
+      // screen reader can only press a button that offers the action.
+      onTap: () => HolePicker.open(context, controller, hole),
       child: Material(
         color: selected ? context.palette.subtle : Colors.transparent,
         borderRadius: BorderRadius.circular(20),

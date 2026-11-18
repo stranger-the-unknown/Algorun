@@ -112,6 +112,7 @@ class _EmptyProgram extends StatelessWidget {
       button: true,
       label: l.addStep,
       excludeSemantics: true,
+      onTap: onTap,
       child: Material(
         color: context.palette.elevated,
         borderRadius: BorderRadius.circular(AppRadius.md),
