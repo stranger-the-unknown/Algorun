@@ -1607,6 +1607,114 @@
         "Öyleyse uykulu gecelerinde en çok gemi geçen k gecelik diziyi bul. Diziyi her adımda bir gece kaydır: giren geceyi ekle, çıkan geceyi çıkar; bir geceyi yalnızca awake değeri 0 ise say.",
         "Geceler üzerinde tek bir FOR ile üç sayı tut: zaten sayılan gemiler, şimdiki dizinin ek gemileri ve görülen en büyük ek (MAX). Konum k'ye GREATER OR EQUAL olduğunda bir gece diziden çıkar. Birinci PLUS üçüncüyü RETURN et."
       ]
+    },
+    "weekly_menu": {
+      "title": "Haftalık Menü",
+      "story": "Bir yemekhane her gün tek çeşit yemek pişiriyor: çorba, makarna ya da pilav. costs listesinde her gün için üç yemeğin o günkü maliyeti bu sırayla yazılı (malzeme fiyatları değişiyor). Aynı yemek iki gün üst üste pişirilmez. Bütün günlerin en ucuz toplamı kaç? Günün en ucuz yemeği her zaman doğru seçim değildir: yarının çok daha ucuz yemeğinin önünü kesebilir. Hiç gün yoksa cevap 0.",
+      "hints": [
+        "Üç yemeğin her biri için, o yemekle biten bir menünün şimdiye kadarki en ucuz toplamını tut.",
+        "Bugün çorbayla biten bir menünün maliyeti: bugünkü çorba PLUS dün makarnayla ya da pilavla biten iki toplamdan ucuz olanı, yani ikisinin MIN değeri.",
+        "Yeni toplamları, hâlâ gereken eski bir toplamın üzerine yazmadan önce eskilerden hesapla (yedek değişken kullan). Sonda üçünün MIN değerini RETURN et."
+      ]
+    },
+    "shared_route": {
+      "title": "Ortak Rota",
+      "story": "İki dağcı, çıktıkları zirvelerin numaralarını sırasıyla not etmiş; bir dağcı aynı zirveye birden çok kez çıkmış olabilir. İkisinin de aynı sırayla çıktığı en uzun zirve listesini arıyorlar: iki günlükte de aradaki zirveler atlanabilir ama sıra değişemez. Bu liste kaç zirveden oluşur? Günlükler 3 1 2 ve 1 2 3 ise cevap 2'dir (önce 1, sonra 2 numaralı zirve).",
+      "hints": [
+        "Her baş kısım çifti için daha küçük bir soruyu yanıtla: bir günlüğün yalnızca ilk i zirvesi ile ötekinin ilk j zirvesi kullanılarak bulunan en uzun ortak liste.",
+        "i. zirve ile j. zirve eşitse (EQUAL), cevap iki daha kısa baş kısmın cevabından bir fazladır. Değilse, i. zirve atılınca ya da j. zirve atılınca çıkan cevaplardan büyüğüdür: MAX.",
+        "Bu cevapları satır satır tut, her satır bir NEW LIST olsun: ilk günlüğün her zirvesi için bir satır, ikinci günlüğün her baş kısmı için bir değer, başta 0. Bir satıra yalnızca kendinden önceki satır gerekir."
+      ]
+    },
+    "square_plot": {
+      "title": "Kare Parsel",
+      "story": "Bir tarla haritası ızgara biçiminde: 1 verimli toprağı, 0 kayalığı gösterir. Bir çiftçi yalnızca verimli topraktan oluşan en büyük kare parseli istiyor. Parselin alanını bildir: kenarı 3 hücre olan karenin alanı 9'dur, hiç verimli hücre yoksa cevap 0'dır. Olası her kareyi hücre hücre denemek büyük bir haritada fazlasıyla yavaş kalır.",
+      "hints": [
+        "Her hücre için şunu sor: sağ alt köşesi bu hücre olan en büyük verimli karenin kenarı kaç? Kayalık hücrede cevap 0.",
+        "Verimli bir hücre üç kareyi birden büyütür: hemen üstünde, hemen solunda ve sol üst çaprazında bitenleri. Kendi kenarı, bu üçünün MIN değeri PLUS 1'dir.",
+        "Üst satırın cevaplarını bir listede tut, şimdiki satırı bir NEW LIST içinde kur; ilk sütunun da bir sol komşusu olsun diye her satıra fazladan bir 0 ile başla. En uzun kenarı aklında tut ve kenar TIMES kenar değerini RETURN et."
+      ]
+    },
+    "two_loads": {
+      "title": "İki Yük Tuz",
+      "story": "Bir kervan her gün bir pazar kasabasına uğruyor; prices listesinde, yol sırasıyla, her kasabadaki bir yük tuzun fiyatı var. Tüccarın devesi tek yük taşır: yükü bir kasabada alır, daha sonraki bir kasabada satar. En fazla iki alışverişe vakit var ve ikinci yük ancak birincisi satıldıktan sonra alınabilir (aynı kasabada da olur). Tüccar en fazla ne kadar kazanabilir? Hiçbir alışveriş kazandırmıyorsa cevap 0. Uzun bir yolculuk işlem bütçesi içinde bitmeli: her kasabayı iki alışverişin arası sayıp iki yanı her seferinde baştan dolaşmak fazla yavaş.",
+      "hints": [
+        "Kasaba kasaba güncellenen dört sayı yeter: ilk yükün en düşük maliyeti, tek alışverişle en iyi kazanç, ikinci yükün en düşük maliyeti ve iki alışverişle en iyi kazanç.",
+        "İkinci yükün gerçek maliyeti, fiyatı MINUS ilk alışverişten zaten elde edilmiş kazançtır. İki alışverişi birbirine bağlayan budur.",
+        "Maliyetleri 999999, kazançları 0 ile başlat. Her fiyat için: ilk maliyet, kendisi ile fiyatın MIN değeri; ilk kazanç, kendisi ile fiyat MINUS ilk maliyetin MAX değeri; ikinci maliyet, kendisi ile fiyat MINUS ilk kazancın MIN değeri; ikinci kazanç, kendisi ile fiyat MINUS ikinci maliyetin MAX değeri. Sonda ikinci kazancı RETURN et."
+      ]
+    },
+    "assembly_hours": {
+      "title": "Montaj Saatleri",
+      "story": "Bir makine numaralı adımlarla kuruluyor. steps, her adım için ancak o bittikten sonra başlayabilecek adımları listeler. Her adım tam bir saat sürer ve hazır olan adımlardan istenildiği kadarı aynı anda yapılabilir. İşin tamamı en az kaç saat sürer? Bazı adımlar halka olup birbirini bekliyorsa iş hiç bitmez: -1 bildir.",
+      "hints": [
+        "Bir adım, beklediği bütün adımlar bitince başlayabilir. Her adım için hâlâ kaç adımı beklediğini say; sayısı 0 olanlar ilk saatte yapılır.",
+        "İkinci bir liste tut: her adımın bittiği saat. Bir adım h. saatte bitiyorsa onu bekleyen her adım en erken h PLUS 1. saatte biter: MAX olanı sakla.",
+        "Hazır adımlar için bir NEW QUEUE kullan. Bir adımı DEQUEUE et, NEIGHBORS listesindeki her adımın sayısını bir azalt ve sayısı 0'a inen komşuyu ENQUEUE et. Cevap en büyük saattir; kuyruktan çıkan adım sayısı NODE COUNT değerinden azsa -1."
+      ]
+    },
+    "friend_groups": {
+      "title": "Arkadaş Grupları",
+      "story": "Bir yaz kampına gelen kampçılar 0'dan başlayarak numaralı ve birbirini tanımıyor; people kampçı sayısıdır. Arkadaşlıklar birer birer kuruluyor: k. arkadaşlık a[k] ile b[k] numaralı kampçıları birleştiriyor. Arkadaşın arkadaşı aynı gruptadır; hiç arkadaşı olmayan kampçı tek kişilik bir gruptur. Her arkadaşlıktan sonra kaç ayrı grup var? Bu sayıların listesini döndür. Büyük bir kamp işlem bütçesi içinde bitmeli: her arkadaşlıkta baştan saymak ya da bütün bir grubu yeniden adlandırmak fazla yavaş; her seferinde grubun liderine uzun bir yoldan gitmek de öyle.",
+      "hints": [
+        "Her grubun bir lideri olsun. Bir boss listesi tut: bir kampçının boss değeri lidere daha yakın birini, liderinki ise kendisini göstersin.",
+        "Bir kampçının liderini bulmak için, kampçı kendi boss değerine eşit değilken (WHILE … NOT EQUAL) boss'u izle. İki kampçı, ancak liderleri aynıysa zaten aynı gruptadır.",
+        "Her arkadaşlıkta iki lideri de bul. IF farklılarsa, SET ELEMENT ile bir liderin boss değerini öteki lider yap; grup sayısı 1 azalır. Her arkadaşlıktan sonra sayıyı APPEND et. Lidere giden yol uzayabilir; izlerken kısalt: her kampçıyı boss'unun boss'una bağla."
+      ]
+    },
+    "festival_stage": {
+      "title": "Festival Sahnesi",
+      "story": "Bir festivalde tek sahne var. Her grup sahneyi bir başlangıç dakikasından bir bitiş dakikasına kadar istiyor ve kaç seyirci çekeceği biliniyor; istekler bitiş dakikasına göre, en erken biten başta olacak şekilde sıralı. İki grup aynı anda çalamaz ama biri, ötekinin bittiği dakikada başlayabilir. Toplam seyirci en çok olacak şekilde grupları seç ve bu toplamı bildir. Erken biten bir isteği almak her zaman kazandırmaz: kalabalığı büyük tek bir uzun konser birkaç küçüğünü geçebilir.",
+      "hints": [
+        "Soruyu sırayla ilk 1, 2, 3 … istek için yanıtla ve cevapları 0 ile başlayan bir listede tut.",
+        "i. istek ya dışarıda kalır ve cevap olduğu gibi kalır, ya da alınır: o zaman seyircisini, en geç onun başladığı dakikada biten isteklerin en iyi cevabına ekle. İkisinden MAX olanı sakla.",
+        "İstekler bitiş dakikasına göre sıralı olduğundan zamanında bitenler listenin baş kısmıdır. Kaç tane olduklarını geriye doğru adım adım giderek ya da FLOOR DIVIDE ile ortadan bölerek bul; bu sayı, cevap listendeki konumdur."
+      ]
+    },
+    "cold_spells": {
+      "title": "Her Soğuk Dönem",
+      "story": "Bir dağ kulübesi her gecenin en düşük sıcaklığını kaydediyor. Bir araştırma için, art arda gelen bir ya da daha çok geceden oluşan her döneme bir puan veriliyor: o dönemdeki en soğuk ölçüm. Bütün dönemlerin puanlarını topla. Ölçümler 3 1 2 ise altı dönemin puanları 3, 1, 2, 1, 1 ve 1'dir; cevap 9. Uzun bir kış işlem bütçesi içinde bitmeli: her dönemi tek tek dolaşmak fazla yavaş.",
+      "hints": [
+        "Dönemleri bittikleri geceye göre grupla. Bu gece için, kesinlikle daha soğuk olan en son önceki geceyi bul: o geceden sonra başlayıp bu gece biten her dönemin puanı bu gecenin ölçümüdür.",
+        "O soğuk gecede ya da daha önce başlayan dönemlerin puanı, o gecede bittiklerinde aldıkları puanla aynıdır. Yani bu gecenin toplamı: bu gecenin ölçümü TIMES soğuk geceden beri geçen gece sayısı, PLUS o gecenin kendi toplamı.",
+        "İleride birinin soğuk gecesi olabilecek gecelerin konumlarını bir NEW STACK içinde tut: tepedeki gece bu geceden soğuk değilken (WHILE) POP yap, sonra PEEK ile bak. Her gecenin toplamını bir listede sakla, genel toplama ekle ve bu geceyi PUSH et."
+      ]
+    },
+    "smallest_ribbon": {
+      "title": "En Küçük Şerit",
+      "story": "Bir şeritte numaralı boncuklar yan yana dizili. Boncukları öyle kes ki tam keep boncuk kalsın, sıraları bozulmasın ve kalan dizi olabilecek en küçük dizi olsun: iki dizi soldan başlanarak boncuk boncuk karşılaştırılır, ilk küçük boncuk kimdeyse o dizi küçüktür. Kalan diziyi döndür. 4 2 6 3 5 ve keep 3 için cevap 2 3 5'tir.",
+      "hints": [
+        "Küçük bir boncuğun önündeki büyük boncuğu, kesme hakkın varken kesmeye değer: dizi böylece daha küçük başlar.",
+        "Kaç boncuk kesebileceğini hesapla: LENGTH MINUS keep. Boncukları bir NEW STACK ile dolaş: kesme hakkı varken ve tepedeki boncuk yeni boncuktan büyükken (WHILE … GREATER THAN) tepedekini POP et ve bir hak harca. Sonra yeni boncuğu PUSH et.",
+        "Sonda hak kaldıysa tepeden POP ederek harca. Yığında artık cevap var, son boncuk tepede: keep yerlik bir listeyi sondan başa doğru SET ELEMENT ile doldur."
+      ]
+    },
+    "lone_request": {
+      "title": "Tek İstek",
+      "story": "Dinleyiciler bir radyo programını sırayla arıyor ve her biri bir şarkıyı numarasıyla istiyor. Her aramadan sonra sunucu, o ana kadar tam bir kez istenmiş şarkılar arasından en önce isteneni duyuruyor; böyle bir şarkı yoksa -1 diyor. Duyuruların listesini döndür. İstekler 3 5 3 7 ise duyurular 3 3 5 5 olur.",
+      "hints": [
+        "Şarkıları ilk istendikleri sırayla tut ve her şarkının bir kez mi, birden çok kez mi istendiğini bil.",
+        "Bir NEW QUEUE şarkıları ilk istenme sırasıyla tutar; bir NEW SET en az bir kez istenen şarkıları, bir başkası yeniden istenenleri hatırlar. Bir şarkı kuyruğa yalnızca ilk istendiğinde girer.",
+        "Her aramadan sonra, FRONT değerindeki şarkı yeniden istenmişken (WHILE) DEQUEUE et. Sonra FRONT değerini APPEND et; IF kuyruk boşsa (IS EMPTY) -1 ekle."
+      ]
+    },
+    "twice_read_clue": {
+      "title": "İki Kez Okunan İpucu",
+      "story": "Bir hazine avı, ipucu kartlarından oluşan bir zincirdir: her kart seni bir sonrakine gönderir, son kart da avı bitirmelidir. Şakacının biri son kartı daha önceki bir karta geri göndermiş olabilir; o zaman av sonsuza dek döner. İkinci kez okuyacağın ilk kartın konumunu, 0'dan sayarak bildir; av bitiyorsa -1 bildir. Her kartın üzerinde bir sayı var ama sayılar tekrar ediyor, yani sayıya bakarak elindeki kartın hangisi olduğunu bilemezsin. Uzun bir av işlem bütçesi içinde bitmeli: her kartı kendinden önceki bütün kartlarla karşılaştırmak fazla yavaş.",
+      "hints": [
+        "İlk karttan iki yürüyücü yolla: biri her adımda bir kart, öteki iki kart ilerlesin. Hızlı olan NOTHING ile karşılaşırsa av biter; ikisi bir gün aynı kartta durursa av dönüp duruyordur.",
+        "Buluştukları kart döngünün içindedir ama çoğu zaman döngünün başladığı kart değildir. İşin sürprizi şu: biri zincirin başından, öteki buluşma kartından yola çıkan ve birer kart ilerleyen iki yürüyücü, döngünün ilk kartına aynı anda varır.",
+        "Öyleyse buluştuklarında zincirin başından üçüncü bir yürüyücü başlat; onu ve yavaş yürüyücüyü, ikisi eşit değilken (WHILE … NOT EQUAL) birer kart ilerlet ve adımları say. Döngünün ilk kartında buluşurlar: sayıyı RETURN et."
+      ]
+    },
+    "two_trains": {
+      "title": "İki Tren, Tek Hat",
+      "story": "İki tren yan hatlarda bekliyor; ikisi de vagon numarasına göre küçükten büyüğe sıralı, numaralar tekrar edebilir. İkisini aynı biçimde sıralı tek bir tren olarak birleştir. Hiçbir vagon kopyalanamaz ya da yeniden kurulamaz: yalnızca hangi vagonun hangisini izlediğini değiştir. Birleşen trenin ön vagonunu döndür; iki hat da boşsa NOTHING döndür. Hatlardan biri boş olabilir, en küçük numaralı vagon da iki hattan herhangi birinde durabilir.",
+      "hints": [
+        "Bekleyen iki trenin yalnızca ön vagonlarına bak: küçük numaralı olan, birleşen trenin sıradaki vagonudur.",
+        "Son bağladığın vagonu aklında tut. Küçük ön vagonu al, SET NEXT ile son vagonun arkasına bağla, onu yeni son vagon say ve trenini NEXT NODE ile bir ilerlet. Aldığın ilk vagon birleşen trenin önüdür.",
+        "Trenlerden biri bitince (IS NOTHING) dur ve ötekinden kalanı tek hamlede son vagonun arkasına bağla. IF hiç vagon bağlanmadıysa hatlardan biri baştan boştu: öteki treni RETURN et."
+      ]
     }
   }
 }

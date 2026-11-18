@@ -152,9 +152,12 @@
         "josephus_line",
         "stack_sorted",
         "plate_minimum",
+        "lone_request",
         "ticket_minutes",
         "snowball_clash",
-        "largest_billboard"
+        "smallest_ribbon",
+        "largest_billboard",
+        "cold_spells"
       ]
     },
     {
@@ -178,7 +181,9 @@
         "drop_faulty_cars",
         "kth_from_end",
         "no_repeats",
-        "loop_detector"
+        "loop_detector",
+        "two_trains",
+        "twice_read_clue"
       ]
     },
     {
@@ -341,10 +346,14 @@
         "aisle_cost",
         "open_lanes",
         "best_stretch",
+        "weekly_menu",
         "exact_change",
         "diagonal_haul",
         "pack_bins",
-        "rising_line"
+        "rising_line",
+        "shared_route",
+        "square_plot",
+        "two_loads"
       ]
     },
     {
@@ -359,6 +368,9 @@
         "graph"
       ],
       "puzzles": [
+        "assembly_hours",
+        "friend_groups",
+        "festival_stage",
         "many_shortest_routes"
       ]
     }

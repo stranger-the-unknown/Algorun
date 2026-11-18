@@ -1,0 +1,126 @@
+{
+  "id": "shared_route",
+  "version": 1,
+  "title": "The Shared Route",
+  "world": "world_13",
+  "chapter": "common_subsequence_rows",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["dp"],
+  "prerequisites": [],
+  "story": "Two hikers each wrote down the numbers of the peaks they climbed, in order; a hiker may climb the same peak more than once. They want the longest list of peaks that both climbed in the same order: peaks may be skipped in either diary, but the order may not change. How long is that list? With diaries 3 1 2 and 1 2 3 the answer is 2 (peak 1, then peak 2).",
+  "io": {
+    "inputs": [
+      {"name": "first", "type": "array<num>"},
+      {"name": "second", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 60},
+    "notes": ["Each diary lists 0 to 60 peaks.", "Peak numbers are whole numbers from 1 to 30."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.max", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.lt", "cmp.ne", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "new.array", "var.get", "var.set"],
+    "maxBlocks": 93
+  },
+  "limits": {"maxOps": 600000, "maxDepth": 32, "maxAlloc": 20000},
+  "hints": ["Answer a smaller question for every pair of beginnings: the longest shared list using only the first i peaks of one diary and the first j peaks of the other.", "If peak i and peak j are EQUAL, the answer is one more than the answer for the two shorter beginnings. If not, it is the MAX of the answers with peak i dropped or with peak j dropped.", "Keep these answers row by row, each row a NEW LIST: one row per peak of the first diary, one entry per beginning of the second, starting with 0. A row only needs the row before it."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"first": [4, 7, 2, 9, 5], "second": [7, 1, 9, 5, 3]},
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {"first": [1, 2, 3, 4], "second": [2, 4, 1, 3]},
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"first": [], "second": [1, 2, 3]},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"first": [5, 5], "second": []},
+        "out": 0
+      },
+      {
+        "id": "h03",
+        "in": {"first": [3, 1, 2], "second": [1, 2, 3]},
+        "out": 2
+      },
+      {
+        "id": "h04",
+        "in": {"first": [6, 8, 6, 9], "second": [6, 8, 6, 9]},
+        "out": 4
+      },
+      {
+        "id": "h05",
+        "in": {"first": [1, 2, 3], "second": [4, 5, 6]},
+        "out": 0
+      },
+      {
+        "id": "h06",
+        "in": {"first": [2, 2, 2, 2], "second": [2, 2]},
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {"first": [1, 3, 1, 3, 1], "second": [3, 1, 3]},
+        "out": 3
+      },
+      {
+        "id": "h08",
+        "in": {"first": [9], "second": [1, 9, 9]},
+        "out": 1
+      },
+      {
+        "id": "h09",
+        "in": {"first": [1, 2, 3, 4, 5, 6], "second": [6, 5, 4, 3, 2, 1]},
+        "out": 1
+      },
+      {
+        "id": "h10",
+        "in": {"first": [5, 1, 2, 3, 4], "second": [1, 2, 3, 4, 5]},
+        "out": 4
+      },
+      {
+        "id": "h11",
+        "in": {
+          "first": [1, 6, 5, 4, 3, 6, 2, 4, 6, 2, 1, 1, 1, 6, 4, 1, 1, 5, 2, 3, 6, 2, 6, 1, 5],
+          "second": [1, 2, 1, 3, 4, 4, 6, 5, 3, 6, 3, 3, 2, 2, 4, 1, 4, 5, 6, 6, 6, 4, 2, 5, 2, 6, 5, 4, 5, 5]
+        },
+        "out": 14
+      },
+      {
+        "id": "h12",
+        "in": {
+          "first": [12, 3, 15, 16, 18, 20, 1, 19, 10, 25, 17, 21, 1, 21, 18, 8, 1, 4, 9, 9, 24, 15, 8, 19, 17, 6, 5, 12, 24, 8, 3, 7, 13, 2, 8, 18, 5, 11, 5, 25, 30, 29, 13, 19, 26, 25, 18, 23, 24, 28, 16, 24, 19, 4, 29, 22, 30, 17, 10, 14],
+          "second": [4, 18, 14, 19, 10, 12, 19, 26, 3, 1, 30, 27, 27, 12, 11, 4, 23, 29, 3, 3, 7, 11, 1, 28, 7, 6, 26, 27, 26, 27, 1, 8, 30, 21, 4, 15, 9, 12, 12, 17, 25, 23, 15, 19, 24, 21, 27, 3, 5, 21, 28, 9, 15, 27, 26, 26, 20, 18, 11, 28]
+        },
+        "out": 15
+      }
+    ]
+  },
+  "edgeCases": ["the first match is not the best one to take", "a peak climbed several times", "an empty diary", "no shared peak", "the same peaks in opposite order"],
+  "variables": {
+    "pool": [
+      {"name": "prev", "type": "array<num>"},
+      {"name": "row", "type": "array<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "j", "type": "num"},
+      {"name": "x", "type": "num"},
+      {"name": "from", "type": "num"},
+      {"name": "k", "type": "num"},
+      {"name": "count", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "common_subsequence_rows"}
+}

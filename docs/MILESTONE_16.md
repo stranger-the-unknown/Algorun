@@ -5,8 +5,7 @@ or screen code changed. No shipped puzzle was edited, so no `version` bump.
 Unlock rules are unchanged, and no new world, concept word or asset folder
 was added.
 
-**Status: PARTS 1 and 2 of 3 written in this file so far.** (Part 3's section
-is added by its commit.)
+**Status: complete.** 36 puzzles in three parts, 149 → 185 campaign puzzles.
 
 Branch `claude/ms16-content-be9897`, on top of `main` = `4fbbfed`.
 
@@ -150,6 +149,81 @@ Notes:
 | Count the nodes with no larger label above them | The same root-to-leaf state on a second stack as Trail Sum. |
 | Fewest roads to walk through a warehouse grid, damp spreading in a cellar grid | Classic judge problems that would have been reworded rather than invented; Two Buttons covers "build the graph yourself" with an original setting. |
 | Largest total with fewest interval points / covering a line with intervals | The same earliest-end reasoning as One Room. |
+
+## Part 3 — Dynamic Programming, Advanced, Stack & Queue, Linked Lists (12 puzzles, 173 → 185)
+
+| World | Puzzle (id) | Tier | Mode / class | Pattern | The idea in one sentence |
+|---|---|---|---|---|---|
+| 13 Dynamic Programming | Weekly Menu (`weekly_menu`) | 3 | build / correctness | `three_running_totals_no_repeat` | Three dishes with daily costs and never the same dish twice running: three running totals, one per last dish. |
+| 13 Dynamic Programming | The Shared Route (`shared_route`) | 4 | build / correctness | `common_subsequence_rows` | The longest list two diaries share in the same order, filled row by row with only the row before. |
+| 13 Dynamic Programming | The Square Plot (`square_plot`) | 4 | optimize / optimization | `largest_square_min_of_three` | The largest all-fertile square: each cell is 1 plus the smallest of its three upper-left neighbours. |
+| 13 Dynamic Programming | Two Loads of Salt (`two_loads`) | 5 | budget / budget | `two_deals_four_running_states` | At most two buy-then-sell deals: four running numbers, the second load's cost reduced by the first deal's gain. |
+| 14 Advanced | Assembly Hours (`assembly_hours`) | 4 | build / correctness | `kahn_longest_chain_hours` | Hours for a job whose steps wait on each other: waiting counts, a queue of ready steps and the longest chain; -1 on a circle. |
+| 14 Advanced | Friend Groups (`friend_groups`) | 4 | budget / budget | `union_find_groups_over_time` | The number of groups after every friendship: union-find in a list, shortening the way to a leader. |
+| 14 Advanced | Festival Stage (`festival_stage`) | 4 | build / correctness | `weighted_schedule_table_search` | Non-overlapping slots for the largest total crowd: a table over requests sorted by end, and a search for the last one that ends in time. |
+| 06 Stack & Queue | Every Cold Spell (`cold_spells`) | 5 | budget / budget | `stretch_minimums_by_end` | The sum of the coldest reading over every stretch, by the night a stretch ends on, with a stack of colder nights. |
+| 06 Stack & Queue | The Smallest Ribbon (`smallest_ribbon`) | 4 | build / correctness | `smallest_kept_row_with_cuts` | Keep exactly `keep` beads in order so the row is smallest: a stack that pops bigger beads while cuts remain. |
+| 06 Stack & Queue | The Lone Request (`lone_request`) | 3 | build / correctness | `first_single_in_stream` | After each call, the earliest song requested exactly once: a queue in first-request order and two sets. |
+| 07 Linked Lists | The Twice-Read Clue (`twice_read_clue`) | 5 | budget / budget | `floyd_cycle_entry` | Where a looping chain begins to repeat: the slow and fast walkers meet, then a walker from the head meets the slow one at the loop's first card. |
+| 07 Linked Lists | Two Trains, One Track (`two_trains`) | 4 | build / correctness | `merge_sorted_by_relinking` | Merge two sorted chains by relinking only, with no new node and no dummy head. |
+
+Rejects (each passes the visible cases and ends in the verdict shown):
+
+| Puzzle | Rejects |
+|---|---|
+| `weekly_menu` | each day the cheapest dish that is not yesterday's (wrongAnswer) |
+| `shared_route` | takes the next place each peak appears, never looking back (wrongAnswer) |
+| `square_plot` | tries every square cell by cell (operationLimit); looks above and to the left but not diagonally (wrongAnswer) |
+| `two_loads` | tries every town between the two deals and scans both sides again (operationLimit); the two biggest unbroken climbs (wrongAnswer); adds up every rise, as if deals were unlimited (wrongAnswer) |
+| `assembly_hours` | starts a step as soon as the first step it waits for is done (wrongAnswer) |
+| `friend_groups` | renames a whole group at every friendship (operationLimit); follows the chain to the leader every time and never shortens it (operationLimit); moves only one of the two friends into the other group (wrongAnswer) |
+| `festival_stage` | takes every band that fits after the last one taken (wrongAnswer) |
+| `cold_spells` | goes through every stretch (operationLimit); counts a stretch once for each of its equal coldest nights (wrongAnswer) |
+| `smallest_ribbon` | cuts at most one bead in front of each new bead (wrongAnswer) |
+| `lone_request` | drops at most one song from the front after each call (wrongAnswer) |
+| `twice_read_clue` | checks each card against all the cards before it (operationLimit); remembers the numbers on the cards in a set (wrongAnswer) |
+| `two_trains` | always puts the left train's front car first (wrongAnswer) |
+
+Notes:
+
+- **Explicit limits on every part 3 puzzle.** The kit's default (twice the
+  reference) would turn a `build` puzzle into a hidden race. Build puzzles
+  get room for a plain second solution: `weekly_menu` 20 000,
+  `shared_route` / `assembly_hours` / `festival_stage` / `smallest_ribbon`
+  600 000, `two_trains` 300 000, `lone_request` 1 000 000 (the largest of the
+  batch; Rising Line, shipped, has 1 186 500). Timed puzzles sit at about
+  three times their reference.
+- `two_loads` and `twice_read_clue` are **budget** puzzles: a quadratic
+  solution (split and rescan; compare each card with all earlier ones)
+  would otherwise pass and the tier 5 would not be honest. Each has that
+  solution as a proven baseline and says so in its story.
+- `friend_groups` needs the way to a leader to be shortened (or union by
+  size, estimated to fit, not built): a plain parent-pointer union-find is
+  a second proven slow baseline on the 1 200-camper case. Story and hint 3
+  say so. Declared factor 2.
+- `cold_spells`: the reference sums "stretches that end tonight", which
+  equal readings cannot break; the tie trap is proven by the reject. A
+  correct two-pass solution was built and fits the budget.
+- `twice_read_clue`: the oracle is the fixture's own `cycleTo`, as Loop
+  Detector's is.
+- `square_plot`: the visible fields hold no L-shaped corner, so the
+  no-diagonal reject passes them; hidden cases hold the L shapes.
+- Not verified by building them: the left / right lists solution of
+  `two_loads` and union by size for `friend_groups` are estimated to fit
+  their budgets.
+
+## Changed or dropped (part 3)
+
+| Idea | What happened |
+|---|---|
+| Two voyages / paid talks / coldest stretches / first single / loop start | Kept with new stories and ids: `two_loads`, `festival_stage`, `cold_spells`, `lone_request`, `twice_read_clue`. |
+| "Keep the `keep` smallest beads" as the reject of `smallest_ribbon` | Fails the visible cases; replaced by the IF-instead-of-WHILE mistake. |
+| "Forgets the cars left over" as a reject of `two_trains` | Can never pass a visible case. |
+| Fewest changes to turn one necklace into another (edit distance) | The same table as The Shared Route; one of the two was enough for this batch. Kept in reserve as a tier 5. |
+| Longest rising line within a budget (tails list and binary search) | The same question as Rising Line with a tighter budget and a new coat of paint. |
+| Lowest water level that lets a hiker cross a grid (search the answer + flood fill) | About 80 blocks of grid BFS inside a binary search; too close to Cheapest Crossing for what it would add. |
+| A list that reads the same both ways, in almost no memory (middle, reverse half, compare) | Three techniques the world already teaches one by one; kept in reserve. |
+| Evaluate a list of numbers and operator codes with a stack | Needs made-up operator codes (-1 for plus …) to stand in for text. Text is blocked; not faked. |
 
 ## Ideas dropped (part 1)
 
