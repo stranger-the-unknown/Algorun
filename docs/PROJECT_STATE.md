@@ -51,7 +51,7 @@ T1 (`claude/t1-step-trace-d1bb5c`), E1 (`claude/e1-editor-8a8a35`), M1
 | E1 | Block search in the picker and palette, COPY / PASTE, folds that never hide the selection, long-press drag of instructions, a numbered program outline with START / END. | `MILESTONE_E1.md` — `EditorController.checkMove` / `moveTo` / `paste`, `lib/editor/block_*.dart`, `program_outline.dart` |
 | M1 | Puzzles can open with a starter program (`starter: {graph, locked}`); complete, repair and predict modes are playable; validator rules for starters; nine puzzles in worlds 01, 02 and 04. | `MILESTONE_M1.md` — `puzzles/predict.dart`, `starter_check.dart`, `lib/screens/puzzle/predict_view.dart` |
 | L3 | algorun-lang D1 and D5–D12: text blocks, deque blocks, SORT, pairs (with a fixture form), a deep COPY, CALL with up to six values, missing-RETURN and SORT-type static checks; `blocks.texts`; world 15 "Text, Sorting & Pairs" with ten puzzles. | `MILESTONE_L3.md`, `MILESTONE_L3_PLAN.md` |
-| MS16 | 36 puzzles with the pre-L3 blocks across eleven worlds; tier 5 went from 2 to 15. | `MILESTONE_16.md` |
+| MS16 | 36 puzzles with the pre-L3 blocks across eleven worlds; tier 5 went from 8 to 15. | `MILESTONE_16.md` |
 
 **What the merge itself changed (not in any milestone document):**
 
