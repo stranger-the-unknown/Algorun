@@ -278,6 +278,7 @@ class _CBlock extends StatelessWidget {
                     Align(
                       alignment: Alignment.topCenter,
                       child: IconButton(
+                        key: ValueKey('fold:${block.id}'),
                         tooltip: collapsed ? context.l10n.expand : context.l10n.collapse,
                         onPressed: () => controller.toggleCollapsed(block.id),
                         icon: Icon(
@@ -293,7 +294,7 @@ class _CBlock extends StatelessWidget {
             ),
             if (collapsed)
               _FoldedSummary(
-                count: controller.subtreeOf(block.id).length - 1,
+                count: controller.hiddenCount(block.id),
                 onOpen: () => controller.toggleCollapsed(block.id),
               )
             else ...[

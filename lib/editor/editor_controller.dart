@@ -247,9 +247,25 @@ final class EditorController extends ChangeNotifier {
 
   void toggleCollapsed(String id) {
     if (!collapsedIds.add(id)) collapsedIds.remove(id);
+    _selectionOutOfFolds();
     foldsVersion++;
     notifyListeners();
   }
+
+  /// A fold never leaves the selection on a block the player cannot see
+  /// (E1): the selection moves to the outermost folded block that hides it,
+  /// so the selection bar always acts on something on screen.
+  void _selectionOutOfFolds() {
+    final id = selectedBlockId;
+    if (id == null) return;
+    final hiding = ancestorsOf(id).where(collapsedIds.contains);
+    if (hiding.isEmpty) return;
+    // An ELSE is drawn as part of its IF and folds with it.
+    selectedBlockId = hiding.last;
+  }
+
+  /// The blocks a folded [id] hides: everything inside it.
+  int hiddenCount(String id) => subtreeOf(id).length - 1;
 
   bool isCollapsed(String id) => collapsedIds.contains(id);
 
@@ -263,6 +279,7 @@ final class EditorController extends ChangeNotifier {
     collapsedIds
       ..clear()
       ..addAll(cBlockIds);
+    _selectionOutOfFolds();
     foldsVersion++;
     notifyListeners();
   }
