@@ -764,11 +764,11 @@ abstract class AppLocalizations {
   /// **'IN'**
   String get actionIn;
 
-  /// No description provided for @actionCopy.
+  /// No description provided for @actionDuplicate.
   ///
   /// In en, this message translates to:
-  /// **'COPY'**
-  String get actionCopy;
+  /// **'CLONE'**
+  String get actionDuplicate;
 
   /// No description provided for @actionDelete.
   ///
@@ -811,6 +811,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Duplicate'**
   String get duplicate;
+
+  /// No description provided for @copyForPaste.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy, to paste somewhere else'**
+  String get copyForPaste;
+
+  /// No description provided for @pasteHere.
+  ///
+  /// In en, this message translates to:
+  /// **'PASTE'**
+  String get pasteHere;
+
+  /// No description provided for @clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'COPIED'**
+  String get clipboard;
 
   /// No description provided for @delete.
   ///
@@ -913,6 +931,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied {label} with {blocks} inside.'**
   String noticeCopiedWithInside(String label, String blocks);
+
+  /// No description provided for @noticeClipCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {label}. Tap where it should go, then choose PASTE.'**
+  String noticeClipCopied(String label);
+
+  /// No description provided for @noticeClipCopiedWithInside.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {label} with {blocks} inside. Tap where it should go, then choose PASTE.'**
+  String noticeClipCopiedWithInside(String label, String blocks);
+
+  /// No description provided for @noticePasted.
+  ///
+  /// In en, this message translates to:
+  /// **'Pasted {label}.'**
+  String noticePasted(String label);
+
+  /// No description provided for @noticePastedWithInside.
+  ///
+  /// In en, this message translates to:
+  /// **'Pasted {label} with {blocks} inside.'**
+  String noticePastedWithInside(String label, String blocks);
 
   /// No description provided for @noticeTapSlotFirst.
   ///

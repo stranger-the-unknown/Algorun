@@ -49,9 +49,9 @@ final class FlashBanner extends StatelessWidget {
   }
 }
 
-/// What can be done to the selected block. Instructions move, copy and
-/// delete; a value can be replaced or taken out of its slot. Every action is
-/// one undo step.
+/// What can be done to the selected block. Instructions move, duplicate and
+/// delete; a value can be replaced or taken out of its slot; both can be
+/// copied to paste elsewhere (E1). Every change is one undo step.
 final class BlockActionsBar extends StatelessWidget {
   const BlockActionsBar({super.key, required this.controller, required this.info});
   final EditorController controller;
@@ -101,8 +101,8 @@ final class BlockActionsBar extends StatelessWidget {
               info.moves.contains(MoveDirection.into) ? () => controller.moveSelected(MoveDirection.into) : null,
         ),
         _BarAction(
-          icon: Icons.content_copy,
-          label: l.actionCopy,
+          icon: Icons.control_point_duplicate,
+          label: l.actionDuplicate,
           tooltip: l.duplicate,
           onPressed: info.canDuplicate ? controller.duplicateSelected : null,
         ),
@@ -145,6 +145,23 @@ final class BlockActionsBar extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  // COPY (E1) takes the block to the clipboard; the picker of
+                  // a place it fits then offers PASTE.
+                  IconButton(
+                    key: const Key('selection-copy'),
+                    tooltip: l.copyForPaste,
+                    onPressed: info.canCopy
+                        ? () {
+                            HapticFeedback.selectionClick();
+                            controller.copySelected();
+                          }
+                        : null,
+                    icon: Icon(
+                      Icons.content_copy,
+                      size: 20,
+                      color: info.canCopy ? context.palette.muted : context.palette.faint.withValues(alpha: 0.55),
                     ),
                   ),
                   IconButton(

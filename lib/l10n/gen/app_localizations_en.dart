@@ -410,7 +410,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionIn => 'IN';
 
   @override
-  String get actionCopy => 'COPY';
+  String get actionDuplicate => 'CLONE';
 
   @override
   String get actionDelete => 'DELETE';
@@ -432,6 +432,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get duplicate => 'Duplicate';
+
+  @override
+  String get copyForPaste => 'Copy, to paste somewhere else';
+
+  @override
+  String get pasteHere => 'PASTE';
+
+  @override
+  String get clipboard => 'COPIED';
 
   @override
   String get delete => 'Delete';
@@ -496,6 +505,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String noticeCopiedWithInside(String label, String blocks) {
     return 'Copied $label with $blocks inside.';
+  }
+
+  @override
+  String noticeClipCopied(String label) {
+    return 'Copied $label. Tap where it should go, then choose PASTE.';
+  }
+
+  @override
+  String noticeClipCopiedWithInside(String label, String blocks) {
+    return 'Copied $label with $blocks inside. Tap where it should go, then choose PASTE.';
+  }
+
+  @override
+  String noticePasted(String label) {
+    return 'Pasted $label.';
+  }
+
+  @override
+  String noticePastedWithInside(String label, String blocks) {
+    return 'Pasted $label with $blocks inside.';
   }
 
   @override

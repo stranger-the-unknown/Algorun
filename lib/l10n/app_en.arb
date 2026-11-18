@@ -340,7 +340,7 @@
   "actionDown": "DOWN",
   "actionOut": "OUT",
   "actionIn": "IN",
-  "actionCopy": "COPY",
+  "actionDuplicate": "CLONE",
   "actionDelete": "DELETE",
   "actionReplace": "REPLACE",
   "moveUp": "Move up",
@@ -348,6 +348,9 @@
   "moveOut": "Move out of the block around it",
   "moveIn": "Move into the block above",
   "duplicate": "Duplicate",
+  "copyForPaste": "Copy, to paste somewhere else",
+  "pasteHere": "PASTE",
+  "clipboard": "COPIED",
   "delete": "Delete",
   "deleteWithInside": "Delete it and the {blocks} inside",
   "@deleteWithInside": {
@@ -417,6 +420,44 @@
   },
   "noticeCopiedWithInside": "Copied {label} with {blocks} inside.",
   "@noticeCopiedWithInside": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeClipCopied": "Copied {label}. Tap where it should go, then choose PASTE.",
+  "@noticeClipCopied": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeClipCopiedWithInside": "Copied {label} with {blocks} inside. Tap where it should go, then choose PASTE.",
+  "@noticeClipCopiedWithInside": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "noticePasted": "Pasted {label}.",
+  "@noticePasted": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "noticePastedWithInside": "Pasted {label} with {blocks} inside.",
+  "@noticePastedWithInside": {
     "placeholders": {
       "label": {
         "type": "String"

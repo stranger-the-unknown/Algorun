@@ -410,7 +410,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get actionIn => 'İÇERİ';
 
   @override
-  String get actionCopy => 'KOPYALA';
+  String get actionDuplicate => 'ÇOĞALT';
 
   @override
   String get actionDelete => 'SİL';
@@ -432,6 +432,15 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get duplicate => 'Çoğalt';
+
+  @override
+  String get copyForPaste => 'Başka bir yere yapıştırmak için kopyala';
+
+  @override
+  String get pasteHere => 'YAPIŞTIR';
+
+  @override
+  String get clipboard => 'KOPYALANAN';
 
   @override
   String get delete => 'Sil';
@@ -496,6 +505,26 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String noticeCopiedWithInside(String label, String blocks) {
     return '$label, içindeki $blocks ile birlikte kopyalandı.';
+  }
+
+  @override
+  String noticeClipCopied(String label) {
+    return '$label kopyalandı. Gideceği yere dokun, sonra YAPIŞTIR\'ı seç.';
+  }
+
+  @override
+  String noticeClipCopiedWithInside(String label, String blocks) {
+    return '$label, içindeki $blocks ile birlikte kopyalandı. Gideceği yere dokun, sonra YAPIŞTIR\'ı seç.';
+  }
+
+  @override
+  String noticePasted(String label) {
+    return '$label yapıştırıldı.';
+  }
+
+  @override
+  String noticePastedWithInside(String label, String blocks) {
+    return '$label, içindeki $blocks ile birlikte yapıştırıldı.';
   }
 
   @override

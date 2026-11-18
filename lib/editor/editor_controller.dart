@@ -47,6 +47,7 @@ final class SelectionInfo {
     required this.canDuplicate,
     required this.moves,
     this.canDelete = true,
+    this.canCopy = false,
   });
 
   final String blockId;
@@ -62,6 +63,37 @@ final class SelectionInfo {
 
   /// A FUNCTION comes from the puzzle (L2): it stays where it is.
   final bool canDelete;
+
+  /// Whether the block can go on the clipboard (E1), to be pasted wherever
+  /// it fits.
+  final bool canCopy;
+}
+
+/// A copied block with everything inside it (E1): a snapshot, so later edits
+/// to the program do not change what PASTE brings back.
+final class BlockClip {
+  const BlockClip({
+    required this.rootId,
+    required this.blocks,
+    required this.label,
+    required this.isStatement,
+    this.folded = const {},
+  });
+
+  /// The copied block's id inside [blocks] (ids are renewed on paste).
+  final String rootId;
+
+  /// The copied block and everything inside it, as they were when copied.
+  final Map<String, BlockInstance> blocks;
+
+  /// Player words for the copied block (`WHILE`, `GET ELEMENT`).
+  final String label;
+  final bool isStatement;
+
+  /// The C-blocks that were folded when copied.
+  final Set<String> folded;
+
+  int get size => blocks.length;
 }
 
 /// Owns [GraphHistory]. Pointer / sheet UI does not go through Riverpod.
@@ -107,6 +139,10 @@ final class EditorController extends ChangeNotifier {
   PortRef? activeHole;
   String? selectedBlockId;
   EditorNotice? flash;
+
+  /// What COPY took (E1). It belongs to this editor, so it only ever holds
+  /// blocks of this puzzle; it is not saved and is not an undo step.
+  BlockClip? clipboard;
 
   /// Folded C-blocks. UI state: never an undo step, saved with the draft.
   final Set<String> collapsedIds = {};
@@ -450,9 +486,10 @@ final class EditorController extends ChangeNotifier {
       label: _labelOf(block),
       size: subtreeOf(id).length,
       isStatement: statement,
-      canDuplicate: statement && !given,
+      canDuplicate: statement && !given && _allAllowed(subtreeOf(id)),
       moves: statement && !given ? _moves(id) : const {},
       canDelete: !given,
+      canCopy: canCopy(id),
     );
   }
 
@@ -521,55 +558,14 @@ final class EditorController extends ChangeNotifier {
   /// typed connect, like a placement.
   String? duplicateSelected() {
     final id = selectedBlockId;
-    if (id == null || !isStatement(id)) return null;
+    if (id == null || !isStatement(id) || isFunction(id)) return null;
     final at = graph.parentOf(id);
     if (at == null) return null;
     final tree = subtreeOf(id);
-    final ids = <String, String>{};
-    final taken = {...graph.blocks.keys};
-    var n = 1;
-    for (final b in tree) {
-      while (taken.contains('b$n')) {
-        n++;
-      }
-      ids[b] = 'b$n';
-      taken.add('b$n');
-    }
-    final commands = <GraphCommand>[];
-    void copy(String b) {
-      final block = graph.blocks[b]!;
-      commands.add(AddBlockCommand(
-        catalogId: block.catalogId,
-        id: ids[b],
-        literals: block.literals,
-      ));
-    }
-
-    void fill(String b) {
-      final block = graph.blocks[b]!;
-      final def = BlockCatalog.of(block.catalogId)!;
-      for (final port in def.inputs) {
-        final children = graph.slotList(b, port.name);
-        for (final (k, child) in children.indexed) {
-          final childDef = BlockCatalog.of(graph.blocks[child]!.catalogId)!;
-          copy(child);
-          commands.add(ConnectCommand(
-            from: PortRef(ids[child]!, childDef.outputs.first.name),
-            to: PortRef(ids[b]!, port.name),
-            index: port.kind == PortKind.statement ? k : null,
-          ));
-          fill(child);
-        }
-      }
-    }
-
-    copy(id);
-    commands.add(AttachStatementCommand(
-      blockId: ids[id]!,
-      to: PortRef(at.blockId, at.port),
-      index: at.index + 1,
-    ));
-    fill(id);
+    if (!_allAllowed(tree)) return null;
+    final blocks = {for (final b in tree) b: graph.blocks[b]!};
+    final ids = _freshIds(tree);
+    final commands = _cloneCommands(blocks, id, ids, to: PortRef(at.blockId, at.port), index: at.index + 1);
     if (!apply(_Batch(commands))) return null;
     final copyId = ids[id]!;
     for (final b in tree) {
@@ -584,6 +580,167 @@ final class EditorController extends ChangeNotifier {
     _reveal(copyId);
     notifyListeners();
     return copyId;
+  }
+
+  // ---- copy and paste (E1) -------------------------------------------------
+
+  /// Every block of [tree] is one the puzzle lets the player add. A block a
+  /// puzzle gave without allowing it (a FUNCTION, a starter block) cannot be
+  /// multiplied by copying.
+  bool _allAllowed(Iterable<String> tree) {
+    final allow = puzzle.blocks.allow;
+    return tree.every((b) => allow.contains(graph.blocks[b]?.catalogId));
+  }
+
+  /// A new id for each of [tree], none of them in the program.
+  Map<String, String> _freshIds(Iterable<String> tree) {
+    final ids = <String, String>{};
+    final taken = {...graph.blocks.keys};
+    var n = 1;
+    for (final b in tree) {
+      while (taken.contains('b$n')) {
+        n++;
+      }
+      ids[b] = 'b$n';
+      taken.add('b$n');
+    }
+    return ids;
+  }
+
+  static List<String> _slotIds(BlockInstance block, String port) => switch (block.slots[port]) {
+        RefBinding(:final blockId) => [blockId],
+        ListBinding(:final blockIds) => blockIds,
+        null => const [],
+      };
+
+  /// The engine commands that rebuild [rootId] of [source] under new [ids]
+  /// at [to]: the block is plugged in first and filled from the top down, so
+  /// every connection is typed by `GraphTyping` in the place it lands in.
+  List<GraphCommand> _cloneCommands(
+    Map<String, BlockInstance> source,
+    String rootId,
+    Map<String, String> ids, {
+    required PortRef to,
+    int? index,
+  }) {
+    final commands = <GraphCommand>[];
+    void add(String b, PortRef to, int? index) {
+      final block = source[b]!;
+      final def = BlockCatalog.of(block.catalogId)!;
+      commands.add(AddBlockCommand(catalogId: block.catalogId, id: ids[b], literals: block.literals));
+      commands.add(ConnectCommand(from: PortRef(ids[b]!, def.outputs.first.name), to: to, index: index));
+      for (final port in def.inputs) {
+        for (final (k, child) in _slotIds(block, port.name).indexed) {
+          if (!source.containsKey(child)) continue;
+          add(child, PortRef(ids[b]!, port.name), port.kind == PortKind.statement ? k : null);
+        }
+      }
+    }
+
+    add(rootId, to, index);
+    return commands;
+  }
+
+  /// Whether [id] can go on the clipboard: any instruction or value except
+  /// what the puzzle gave without allowing it.
+  bool canCopy(String id) {
+    final block = graph.blocks[id];
+    if (block == null || isFunction(id)) return false;
+    final def = BlockCatalog.of(block.catalogId);
+    if (def == null || def.outputs.isEmpty) return false;
+    // An ELSE is part of its IF; it is copied with it, never alone.
+    if (def.outputs.first.kind == PortKind.elseClause) return false;
+    return _allAllowed(subtreeOf(id));
+  }
+
+  /// Puts the selected block, with everything inside it, on the clipboard.
+  /// The program does not change.
+  bool copySelected() {
+    final id = selectedBlockId;
+    return id != null && copyTree(id);
+  }
+
+  bool copyTree(String id) {
+    if (!canCopy(id)) return false;
+    final tree = subtreeOf(id);
+    final label = _labelOf(graph.blocks[id]!);
+    clipboard = BlockClip(
+      rootId: id,
+      blocks: {for (final b in tree) b: graph.blocks[b]!},
+      label: label,
+      isStatement: isStatement(id),
+      folded: {
+        for (final b in tree)
+          if (collapsedIds.contains(b)) b,
+      },
+    );
+    final inside = tree.length - 1;
+    flash = EditorNotice((l) => inside == 0
+        ? l.noticeClipCopied(label)
+        : l.noticeClipCopiedWithInside(label, blocksText(inside, l)));
+    notifyListeners();
+    return true;
+  }
+
+  /// The givens a block at [hole] cannot see: inside a FUNCTION only its own
+  /// values are known (L2). Empty anywhere else.
+  Set<String> _unseenAt(PortRef hole) {
+    final owner = graph.blocks[hole.blockId];
+    final fn = owner?.catalogId == BlockIds.fnDef ? owner : FunctionTable.enclosing(graph, hole.blockId);
+    final sig = fn == null ? null : FunctionSignature.of(fn);
+    if (sig == null) return const {};
+    return {
+      for (final input in puzzle.io.inputs)
+        if (!sig.params.any((p) => p.name == input.name)) input.name,
+    };
+  }
+
+  /// Whether none of [blocks] reads a given that is unknown at [hole].
+  bool _seesItsNames(Iterable<BlockInstance> blocks, PortRef hole) {
+    final unseen = _unseenAt(hole);
+    if (unseen.isEmpty) return true;
+    return blocks.every((b) => b.catalogId != BlockIds.varGet || !unseen.contains(b.literals['name']));
+  }
+
+  _Batch? _pasteBatch(PortRef to, int? index, [Map<String, String>? ids]) {
+    final clip = clipboard;
+    if (clip == null) return null;
+    if (!clip.blocks.values.every((b) => puzzle.blocks.allow.contains(b.catalogId))) return null;
+    if (!_seesItsNames(clip.blocks.values, to)) return null;
+    return _Batch(_cloneCommands(clip.blocks, clip.rootId, ids ?? _freshIds(clip.blocks.keys), to: to, index: index));
+  }
+
+  /// Whether PASTE would be accepted at [to]: the clipboard is rebuilt there
+  /// by the engine's own typed commands, without keeping the result.
+  bool canPaste(PortRef to, {int? index}) => _pasteBatch(to, index)?.execute(graph).ok ?? false;
+
+  /// Pastes the clipboard at [to], as one undo step. The copy is selected
+  /// and scrolled into view. Returns the new block's id, or null when the
+  /// clipboard does not fit there (nothing changes then).
+  String? paste(PortRef to, {int? index}) {
+    final clip = clipboard;
+    if (clip == null) return null;
+    final ids = _freshIds(clip.blocks.keys);
+    final batch = _pasteBatch(to, index, ids);
+    if (batch == null) {
+      flash = EditorNotice((l) => l.noticePieceDoesNotFit);
+      notifyListeners();
+      return null;
+    }
+    if (!apply(batch)) return null;
+    final id = ids[clip.rootId]!;
+    for (final b in clip.folded) {
+      collapsedIds.add(ids[b]!);
+    }
+    selectedBlockId = id;
+    activeHole = null;
+    final inside = clip.size - 1;
+    flash = EditorNotice((l) => inside == 0
+        ? l.noticePasted(clip.label)
+        : l.noticePastedWithInside(clip.label, blocksText(inside, l)));
+    _reveal(id);
+    notifyListeners();
+    return id;
   }
 
   /// Moves the selected instruction, as one undo step.

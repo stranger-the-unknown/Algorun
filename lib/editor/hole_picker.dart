@@ -120,6 +120,10 @@ class _PickerBodyState extends State<_PickerBody> {
   bool _searching = false;
   String _query = '';
 
+  /// Whether the clipboard fits this slot (E1), asked once: the engine
+  /// rebuilds the copy here to decide, like PASTE itself.
+  late final bool _canPaste = controller.canPaste(hole);
+
   EditorController get controller => widget.controller;
   PortRef get hole => widget.hole;
   List<Placement> get placements => widget.placements;
@@ -135,6 +139,10 @@ class _PickerBodyState extends State<_PickerBody> {
       groups.putIfAbsent(cat, () => []).add(p);
     }
     final muted = TextStyle(color: context.palette.muted);
+    final clip = _canPaste ? controller.clipboard : null;
+    final showPaste = clip != null &&
+        (BlockSearch.words(_query).isEmpty ||
+            BlockSearch.words(_query).every(BlockSearch.fold('${l.pasteHere} ${clip.label}').contains));
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 4, 4, 12),
@@ -211,12 +219,21 @@ class _PickerBodyState extends State<_PickerBody> {
                     ),
                     const SizedBox(height: 12),
                   ],
-                  if (placements.isEmpty)
+                  if (showPaste) ...[
+                    Text(l.clipboard, style: AppText.label(context)),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: _PasteChip(clip: clip, onTap: () => _paste(context)),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (placements.isEmpty && !_canPaste)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Text(l.nothingFits, style: muted),
                     )
-                  else if (groups.isEmpty)
+                  else if (groups.isEmpty && !showPaste && placements.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Text(l.noBlockMatches(_query.trim()), style: muted),
@@ -244,6 +261,15 @@ class _PickerBodyState extends State<_PickerBody> {
         ),
       ),
     );
+  }
+
+  void _paste(BuildContext context) {
+    Navigator.pop(context);
+    if (controller.paste(hole) == null) {
+      HapticFeedback.vibrate();
+    } else {
+      HapticFeedback.selectionClick();
+    }
   }
 
   Future<void> _pick(BuildContext context, Placement placement) async {
@@ -324,6 +350,62 @@ class _PlacementChip extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// PASTE, first in the picker when the copied block fits this slot (E1).
+class _PasteChip extends StatelessWidget {
+  const _PasteChip({required this.clip, required this.onTap});
+  final BlockClip clip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final what = clip.size > 1 ? l.selectionTitle(clip.label, blocksText(clip.size, l)) : clip.label;
+    return Semantics(
+      container: true,
+      button: true,
+      label: '${l.pasteHere} $what',
+      excludeSemantics: true,
+      child: Material(
+        key: const Key('picker-paste'),
+        color: context.palette.subtle,
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 48),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+              border: Border.all(color: context.palette.accent),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.content_paste, size: 18, color: context.palette.fg),
+                const SizedBox(width: 8),
+                Text(
+                  l.pasteHere,
+                  style: const TextStyle(fontWeight: FontWeight.w700, letterSpacing: 0.6, fontSize: 13),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    what,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: context.palette.muted, fontSize: 14),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -42,8 +42,20 @@ Future<void> openEditor(
 EditorController editorOf(WidgetTester tester) =>
     tester.widget<ScriptView>(find.byType(ScriptView)).controller;
 
-/// Scrolls [finder] into view and taps it; it must be hittable.
+/// The program's own scroll view.
+final scriptScrollable =
+    find.descendant(of: find.byType(ScriptView), matching: find.byType(Scrollable)).first;
+
+/// A piece of text inside the program (the palette shows block names too).
+Finder inScript(String text) => find.descendant(of: find.byType(ScriptView), matching: find.text(text));
+
+/// Scrolls [finder] into view and taps it; it must be hittable. A block
+/// further down a long program is not built yet: the program is scrolled
+/// until it is.
 Future<void> tapVisible(WidgetTester tester, Finder finder) async {
+  if (finder.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(finder, 200, scrollable: scriptScrollable);
+  }
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
   expect(finder.hitTestable(), findsOneWidget);
