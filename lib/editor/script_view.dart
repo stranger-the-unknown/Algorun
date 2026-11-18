@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/l10n.dart';
 import '../shared/theme/app_theme.dart';
+import 'block_drag.dart';
 import 'editor_controller.dart';
 import 'hole_picker.dart';
 import 'statement_tile.dart';
@@ -23,10 +24,12 @@ final class ScriptView extends StatelessWidget {
     final ids = controller.graph.entryIds;
     // While a reveal is pending, build far past the viewport so a moved
     // block that left the lazy window still mounts and can scroll-into-view.
-    return CustomScrollView(
+    // A dragged block (E1) must stay built while the program scrolls under
+    // the finger, for the same reason.
+    final scroll = CustomScrollView(
       key: const PageStorageKey('script'),
       // ignore: deprecated_member_use
-      cacheExtent: controller.revealId != null ? 100000 : null,
+      cacheExtent: controller.revealId != null || controller.draggingId != null ? 100000 : null,
       slivers: [
         if (header.isNotEmpty) SliverList.list(children: header),
         if (ids.isEmpty)
@@ -63,7 +66,11 @@ final class ScriptView extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(12, 0, 12, MediaQuery.sizeOf(context).height * 0.35),
             sliver: SliverToBoxAdapter(
               child: Builder(
-                builder: (context) => DecoratedBox(
+                builder: (context) {
+                  // END in the program outline (E1) scrolls here: the last
+                  // instruction above, this row in the lower half.
+                  revealWhenBuilt(context, controller, EditorController.endOfProgram, alignment: 0.7);
+                  return DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(
@@ -72,17 +79,22 @@ final class ScriptView extends StatelessWidget {
                           : context.palette.border,
                     ),
                   ),
-                  child: AddStepButton(
-                    key: const ValueKey('add-step:main'),
-                    onTap: () => HolePicker.open(context, controller, PortRef.mainBody),
+                  child: DropAnchor.listEnd(
+                    list: PortRef.mainBody,
+                    child: AddStepButton(
+                      key: const ValueKey('add-step:main'),
+                      onTap: () => HolePicker.open(context, controller, PortRef.mainBody),
+                    ),
                   ),
-                ),
+                );
+                },
               ),
             ),
           ),
         ],
       ],
     );
+    return BlockDragLayer(controller: controller, child: scroll);
   }
 }
 
@@ -100,6 +112,7 @@ class _EmptyProgram extends StatelessWidget {
       button: true,
       label: l.addStep,
       excludeSemantics: true,
+      onTap: onTap,
       child: Material(
         color: context.palette.elevated,
         borderRadius: BorderRadius.circular(AppRadius.md),

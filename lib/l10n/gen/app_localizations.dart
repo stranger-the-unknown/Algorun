@@ -398,6 +398,48 @@ abstract class AppLocalizations {
   /// **'Program options'**
   String get programOptions;
 
+  /// No description provided for @programOutline.
+  ///
+  /// In en, this message translates to:
+  /// **'Program outline'**
+  String get programOutline;
+
+  /// No description provided for @outlineStart.
+  ///
+  /// In en, this message translates to:
+  /// **'START'**
+  String get outlineStart;
+
+  /// No description provided for @outlineEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'END'**
+  String get outlineEnd;
+
+  /// No description provided for @goToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the start of the program'**
+  String get goToStart;
+
+  /// No description provided for @goToEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the end of the program'**
+  String get goToEnd;
+
+  /// No description provided for @outlineEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The program is empty.'**
+  String get outlineEmpty;
+
+  /// No description provided for @outlineLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {number}: {text}'**
+  String outlineLine(int number, String text);
+
   /// No description provided for @foldAll.
   ///
   /// In en, this message translates to:
@@ -764,11 +806,11 @@ abstract class AppLocalizations {
   /// **'IN'**
   String get actionIn;
 
-  /// No description provided for @actionCopy.
+  /// No description provided for @actionDuplicate.
   ///
   /// In en, this message translates to:
-  /// **'COPY'**
-  String get actionCopy;
+  /// **'CLONE'**
+  String get actionDuplicate;
 
   /// No description provided for @actionDelete.
   ///
@@ -811,6 +853,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Duplicate'**
   String get duplicate;
+
+  /// No description provided for @copyForPaste.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy, to paste somewhere else'**
+  String get copyForPaste;
+
+  /// No description provided for @pasteHere.
+  ///
+  /// In en, this message translates to:
+  /// **'PASTE'**
+  String get pasteHere;
+
+  /// No description provided for @clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'COPIED'**
+  String get clipboard;
 
   /// No description provided for @delete.
   ///
@@ -914,6 +974,30 @@ abstract class AppLocalizations {
   /// **'Copied {label} with {blocks} inside.'**
   String noticeCopiedWithInside(String label, String blocks);
 
+  /// No description provided for @noticeClipCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {label}. Tap where it should go, then choose PASTE.'**
+  String noticeClipCopied(String label);
+
+  /// No description provided for @noticeClipCopiedWithInside.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {label} with {blocks} inside. Tap where it should go, then choose PASTE.'**
+  String noticeClipCopiedWithInside(String label, String blocks);
+
+  /// No description provided for @noticePasted.
+  ///
+  /// In en, this message translates to:
+  /// **'Pasted {label}.'**
+  String noticePasted(String label);
+
+  /// No description provided for @noticePastedWithInside.
+  ///
+  /// In en, this message translates to:
+  /// **'Pasted {label} with {blocks} inside.'**
+  String noticePastedWithInside(String label, String blocks);
+
   /// No description provided for @noticeTapSlotFirst.
   ///
   /// In en, this message translates to:
@@ -925,6 +1009,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This piece does not fit here.'**
   String get noticePieceDoesNotFit;
+
+  /// No description provided for @noticeNotInsideItself.
+  ///
+  /// In en, this message translates to:
+  /// **'A block cannot go inside itself.'**
+  String get noticeNotInsideItself;
 
   /// No description provided for @chooseAPiece.
   ///
@@ -949,6 +1039,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing in this puzzle fits here.'**
   String get nothingFits;
+
+  /// No description provided for @searchBlocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Search blocks'**
+  String get searchBlocks;
+
+  /// No description provided for @closeSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Close search'**
+  String get closeSearch;
+
+  /// No description provided for @noBlockMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'No block matches “{query}”.'**
+  String noBlockMatches(String query);
 
   /// No description provided for @targetProgram.
   ///

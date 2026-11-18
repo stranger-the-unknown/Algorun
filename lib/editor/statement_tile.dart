@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../l10n/l10n.dart';
 import '../l10n/terms.dart';
 import '../shared/theme/app_theme.dart';
+import 'block_drag.dart';
 import 'editor_controller.dart';
 import 'editor_theme.dart';
 import 'hole_picker.dart';
@@ -14,7 +15,8 @@ import 'literal_sheet.dart';
 
 /// One instruction. Tap or long-press selects it (the selection bar then
 /// offers move, duplicate and delete); nothing is ever deleted by a gesture
-/// alone. A C-block (IF, WHILE, FOR) folds to one line.
+/// alone. A long press followed by a drag moves it (E1, `block_drag.dart`).
+/// A C-block (IF, WHILE, FOR) folds to one line.
 final class StatementTile extends StatelessWidget {
   const StatementTile({
     super.key,
@@ -33,6 +35,20 @@ final class StatementTile extends StatelessWidget {
     if (def == null) return const SizedBox.shrink();
     final chrome = BlockChrome.of(block.catalogId);
     revealWhenBuilt(context, controller, blockId);
+    // The drag layer (E1) reads where this instruction is; while it is being
+    // dragged it stays in its place, dimmed, until the finger lifts. The
+    // wrappers are always there, so starting a drag never rebuilds the tile
+    // under the finger from scratch.
+    return DropAnchor.tile(
+      blockId: blockId,
+      child: Opacity(
+        opacity: controller.draggingId == blockId ? 0.45 : 1,
+        child: _tile(block, def, chrome),
+      ),
+    );
+  }
+
+  Widget _tile(BlockInstance block, BlockDefinition def, BlockChrome chrome) {
     if (chrome.layout == BlockLayout.cBlock) {
       return _CBlock(
         controller: controller,
@@ -55,7 +71,7 @@ final class StatementTile extends StatelessWidget {
 ///
 /// Only adjusts scroll when the block is not already fully visible, so a
 /// short UP/DOWN inside the viewport does not jump the camera.
-void revealWhenBuilt(BuildContext context, EditorController controller, String blockId) {
+void revealWhenBuilt(BuildContext context, EditorController controller, String blockId, {double alignment = 0.3}) {
   if (controller.revealId != blockId) return;
   final epoch = controller.revealEpoch;
   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -63,7 +79,7 @@ void revealWhenBuilt(BuildContext context, EditorController controller, String b
     if (blockFullyVisible(context)) return;
     Scrollable.ensureVisible(
       context,
-      alignment: 0.3,
+      alignment: alignment,
       duration: Duration.zero,
       alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
     );
@@ -89,6 +105,25 @@ bool blockFullyVisible(BuildContext context, {double slack = 4}) {
 void _select(EditorController controller, String id) {
   HapticFeedback.selectionClick();
   controller.selectBlock(id);
+}
+
+/// The touch surface of an instruction: a tap selects it; a long press
+/// selects it too and, when the finger then moves, drags it (E1).
+Widget _dragHandle(
+  EditorController controller,
+  String blockId, {
+  required BorderRadius borderRadius,
+  required Widget child,
+}) {
+  return BlockDragHandle(
+    controller: controller,
+    blockId: blockId,
+    child: InkWell(
+      borderRadius: borderRadius,
+      onTap: () => _select(controller, blockId),
+      child: child,
+    ),
+  );
 }
 
 bool _named(String catalogId) =>
@@ -119,10 +154,10 @@ class _Hat extends StatelessWidget {
       child: Material(
         color: context.palette.elevated,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        child: InkWell(
+        child: _dragHandle(
+          controller,
+          block.id,
           borderRadius: BorderRadius.circular(AppRadius.md),
-          onTap: () => _select(controller, block.id),
-          onLongPress: () => _select(controller, block.id),
           child: Container(
             constraints: const BoxConstraints(minHeight: 48),
             decoration: BoxDecoration(
@@ -246,12 +281,12 @@ class _CBlock extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            InkWell(
+            _dragHandle(
+              controller,
+              block.id,
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(AppRadius.md),
               ),
-              onTap: () => _select(controller, block.id),
-              onLongPress: () => _select(controller, block.id),
               child: IntrinsicHeight(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -278,6 +313,7 @@ class _CBlock extends StatelessWidget {
                     Align(
                       alignment: Alignment.topCenter,
                       child: IconButton(
+                        key: ValueKey('fold:${block.id}'),
                         tooltip: collapsed ? context.l10n.expand : context.l10n.collapse,
                         onPressed: () => controller.toggleCollapsed(block.id),
                         icon: Icon(
@@ -293,7 +329,7 @@ class _CBlock extends StatelessWidget {
             ),
             if (collapsed)
               _FoldedSummary(
-                count: controller.subtreeOf(block.id).length - 1,
+                count: controller.hiddenCount(block.id),
                 onOpen: () => controller.toggleCollapsed(block.id),
               )
             else ...[
@@ -478,10 +514,13 @@ class _Well extends StatelessWidget {
                   StatementTile(controller: controller, blockId: id),
                   const SizedBox(height: 6),
                 ],
-                AddStepButton(
-                  key: ValueKey('add-step:$parentId.$port'),
-                  compact: ids.isNotEmpty,
-                  onTap: () => HolePicker.open(context, controller, hole),
+                DropAnchor.listEnd(
+                  list: hole,
+                  child: AddStepButton(
+                    key: ValueKey('add-step:$parentId.$port'),
+                    compact: ids.isNotEmpty,
+                    onTap: () => HolePicker.open(context, controller, hole),
+                  ),
                 ),
               ],
             ),
@@ -528,6 +567,9 @@ final class AddStepButton extends StatelessWidget {
       button: true,
       label: context.l10n.addStep,
       excludeSemantics: true,
+      // The tap is said here too: the node hides its children, and a
+      // screen reader can only press a button that offers the action.
+      onTap: onTap,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -606,6 +648,7 @@ final class NameChip extends StatelessWidget {
       button: true,
       label: context.l10n.variableChange(name),
       excludeSemantics: true,
+      onTap: onTap,
       child: Material(
         color: context.palette.subtle,
         borderRadius: BorderRadius.circular(AppRadius.xs),

@@ -190,6 +190,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get programOptions => 'Program options';
 
   @override
+  String get programOutline => 'Program outline';
+
+  @override
+  String get outlineStart => 'START';
+
+  @override
+  String get outlineEnd => 'END';
+
+  @override
+  String get goToStart => 'Go to the start of the program';
+
+  @override
+  String get goToEnd => 'Go to the end of the program';
+
+  @override
+  String get outlineEmpty => 'The program is empty.';
+
+  @override
+  String outlineLine(int number, String text) {
+    return 'Line $number: $text';
+  }
+
+  @override
   String get foldAll => 'Fold every block';
 
   @override
@@ -410,7 +433,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionIn => 'IN';
 
   @override
-  String get actionCopy => 'COPY';
+  String get actionDuplicate => 'CLONE';
 
   @override
   String get actionDelete => 'DELETE';
@@ -432,6 +455,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get duplicate => 'Duplicate';
+
+  @override
+  String get copyForPaste => 'Copy, to paste somewhere else';
+
+  @override
+  String get pasteHere => 'PASTE';
+
+  @override
+  String get clipboard => 'COPIED';
 
   @override
   String get delete => 'Delete';
@@ -499,10 +531,33 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String noticeClipCopied(String label) {
+    return 'Copied $label. Tap where it should go, then choose PASTE.';
+  }
+
+  @override
+  String noticeClipCopiedWithInside(String label, String blocks) {
+    return 'Copied $label with $blocks inside. Tap where it should go, then choose PASTE.';
+  }
+
+  @override
+  String noticePasted(String label) {
+    return 'Pasted $label.';
+  }
+
+  @override
+  String noticePastedWithInside(String label, String blocks) {
+    return 'Pasted $label with $blocks inside.';
+  }
+
+  @override
   String get noticeTapSlotFirst => 'Tap a value slot first.';
 
   @override
   String get noticePieceDoesNotFit => 'This piece does not fit here.';
+
+  @override
+  String get noticeNotInsideItself => 'A block cannot go inside itself.';
 
   @override
   String get chooseAPiece => 'Choose a piece';
@@ -517,6 +572,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nothingFits => 'Nothing in this puzzle fits here.';
+
+  @override
+  String get searchBlocks => 'Search blocks';
+
+  @override
+  String get closeSearch => 'Close search';
+
+  @override
+  String noBlockMatches(String query) {
+    return 'No block matches “$query”.';
+  }
 
   @override
   String get targetProgram => 'the program';

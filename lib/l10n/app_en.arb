@@ -172,6 +172,23 @@
   "puzzleChangedNotice": "This puzzle changed since you last played it. Your program was kept; RUN shows what to update.",
   "solved": "Solved",
   "programOptions": "Program options",
+  "programOutline": "Program outline",
+  "outlineStart": "START",
+  "outlineEnd": "END",
+  "goToStart": "Go to the start of the program",
+  "goToEnd": "Go to the end of the program",
+  "outlineEmpty": "The program is empty.",
+  "outlineLine": "Line {number}: {text}",
+  "@outlineLine": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  },
   "foldAll": "Fold every block",
   "unfoldAll": "Unfold every block",
   "clearProgram": "Clear the program",
@@ -340,7 +357,7 @@
   "actionDown": "DOWN",
   "actionOut": "OUT",
   "actionIn": "IN",
-  "actionCopy": "COPY",
+  "actionDuplicate": "CLONE",
   "actionDelete": "DELETE",
   "actionReplace": "REPLACE",
   "moveUp": "Move up",
@@ -348,6 +365,9 @@
   "moveOut": "Move out of the block around it",
   "moveIn": "Move into the block above",
   "duplicate": "Duplicate",
+  "copyForPaste": "Copy, to paste somewhere else",
+  "pasteHere": "PASTE",
+  "clipboard": "COPIED",
   "delete": "Delete",
   "deleteWithInside": "Delete it and the {blocks} inside",
   "@deleteWithInside": {
@@ -426,8 +446,47 @@
       }
     }
   },
+  "noticeClipCopied": "Copied {label}. Tap where it should go, then choose PASTE.",
+  "@noticeClipCopied": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeClipCopiedWithInside": "Copied {label} with {blocks} inside. Tap where it should go, then choose PASTE.",
+  "@noticeClipCopiedWithInside": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
+  "noticePasted": "Pasted {label}.",
+  "@noticePasted": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "noticePastedWithInside": "Pasted {label} with {blocks} inside.",
+  "@noticePastedWithInside": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "String"
+      }
+    }
+  },
   "noticeTapSlotFirst": "Tap a value slot first.",
   "noticePieceDoesNotFit": "This piece does not fit here.",
+  "noticeNotInsideItself": "A block cannot go inside itself.",
   "chooseAPiece": "Choose a piece",
   "pickerFor": "For {target}. Only pieces that fit this slot are listed.",
   "@pickerFor": {
@@ -439,6 +498,16 @@
   },
   "close": "Close",
   "nothingFits": "Nothing in this puzzle fits here.",
+  "searchBlocks": "Search blocks",
+  "closeSearch": "Close search",
+  "noBlockMatches": "No block matches “{query}”.",
+  "@noBlockMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
   "targetProgram": "the program",
   "targetSlot": "this slot",
   "targetElse": "ELSE",
