@@ -228,54 +228,110 @@ final class TraceVariableRow extends StatelessWidget {
       emphasised: changed && simple,
     );
     // A bar down the left edge says "changed" before the word is read.
-    return Semantics(
-      container: true,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          child: Container(
-            key: Key('trace-var:$name'),
-            padding: const EdgeInsets.fromLTRB(10, 6, 8, 6),
-            decoration: BoxDecoration(
-              color: p.elevated,
-              border: Border(
-                left: BorderSide(
-                  color: changed ? p.warn : p.borderStrong,
-                  width: 3,
+    return _Reveal(
+      active: changed,
+      token: step.index,
+      child: Semantics(
+        container: true,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+            child: Container(
+              key: Key('trace-var:$name'),
+              padding: const EdgeInsets.fromLTRB(10, 6, 8, 6),
+              decoration: BoxDecoration(
+                color: p.elevated,
+                border: Border(
+                  left: BorderSide(
+                    color: changed ? p.warn : p.borderStrong,
+                    width: 3,
+                  ),
                 ),
               ),
+              child: simple
+                  ? Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        nameText,
+                        Text('=', style: TextStyle(color: p.muted)),
+                        view,
+                        ?tagChip,
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(child: nameText),
+                            ?tagChip,
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        view,
+                      ],
+                    ),
             ),
-            child: simple
-                ? Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: [
-                      nameText,
-                      Text('=', style: TextStyle(color: p.muted)),
-                      view,
-                      ?tagChip,
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(child: nameText),
-                          ?tagChip,
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      view,
-                    ],
-                  ),
           ),
         ),
       ),
     );
   }
+}
+
+/// Brings its child into view when a step has just changed it: the name the
+/// player is looking for may be below the fold.
+class _Reveal extends StatefulWidget {
+  const _Reveal({
+    required this.active,
+    required this.token,
+    required this.child,
+  });
+
+  final bool active;
+
+  /// The step: a new one is a new reason to look.
+  final int token;
+  final Widget child;
+
+  @override
+  State<_Reveal> createState() => _RevealState();
+}
+
+class _RevealState extends State<_Reveal> {
+  @override
+  void initState() {
+    super.initState();
+    _reveal();
+  }
+
+  @override
+  void didUpdateWidget(_Reveal old) {
+    super.didUpdateWidget(old);
+    if (old.token != widget.token || old.active != widget.active) _reveal();
+  }
+
+  void _reveal() {
+    if (!widget.active) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || Scrollable.maybeOf(context) == null) return;
+      // The least movement that shows all of it, from either side.
+      Scrollable.ensureVisible(
+        context,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+      Scrollable.ensureVisible(
+        context,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 /// A value at one step, drawn by what it is.

@@ -1596,4 +1596,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get traceHelpHidden =>
       'Only the cases you can see can be stepped through. Hidden cases stay hidden.';
+
+  @override
+  String traceNowIs(String name, String value) {
+    return '$name is now $value.';
+  }
 }

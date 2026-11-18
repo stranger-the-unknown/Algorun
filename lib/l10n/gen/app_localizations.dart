@@ -2791,6 +2791,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only the cases you can see can be stepped through. Hidden cases stay hidden.'**
   String get traceHelpHidden;
+
+  /// No description provided for @traceNowIs.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is now {value}.'**
+  String traceNowIs(String name, String value);
 }
 
 class _AppLocalizationsDelegate

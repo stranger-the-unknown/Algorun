@@ -448,5 +448,6 @@
   "traceHelpValues": "DEĞERLER, her adı o bloktan hemen sonraki haliyle gösterir. Bloğun az önce değiştirdiği değer renkle ve “değişti” ya da “yeni” sözüyle işaretlenir. Bir değer beklediğin gibi olmayana kadar ilerle: bakman gereken yer o bloktur.",
   "traceHelpCalls": "Bir FUNCTION içinde ÇAĞRILAR, hâlâ açık olan her çağrıyı, çalışan en başta olacak şekilde listeler. Kendi değerlerini görmek için birine dokun.",
   "traceHelpCost": "“Kullanılan adım”, sonuç ekranının bütçeyle karşılaştırdığı sayıdır: çalışan her blok bir adım tutar, bir komutun içindeki değer blokları da.",
-  "traceHelpHidden": "Yalnızca görebildiğin vakalar adım adım izlenebilir. Gizli vakalar gizli kalır."
+  "traceHelpHidden": "Yalnızca görebildiğin vakalar adım adım izlenebilir. Gizli vakalar gizli kalır.",
+  "traceNowIs": "{name} artık {value}."
 }

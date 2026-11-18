@@ -25,12 +25,12 @@ is still data.
 | Results screen | Every row under CASES has **STEP THROUGH** (`ADIM ADIM İZLE`). A failed case's button is in the foreground colour, a passed one's is quieter. The HIDDEN section is a count, as before: no row, no button. |
 | `/trace` | Top to bottom on a phone: the case (`expected … · you gave …`), the program (read only) with the block that just ran outlined and marked with an arrow, one sentence about what that step did, what it has cost so far, VALUES, and the controls. From 720 dp wide the program and the values sit side by side, inside `ContentWidth.editor`. |
 | The marked block | An instruction that ran: accent outline, a play arrow. IF and WHILE also carry what their condition came to (`TRUE` / `FALSE`). The failure that stopped a run: danger colour and an error icon on the instruction, and the outline on the exact value block that failed. The program scrolls just enough to keep the marked line in view. |
-| The sentence | `Start. These are the given values.` · `The condition is FALSE: THEN is skipped.` · `The loop starts a pass.` · `Nothing left: the loop ends.` · `pairs starts, one level deeper.` · `RETURN gives back 5.` · `The program’s answer: 7` · `Stopped here. This program went too many levels deep.` Engine messages go through `engineText`, so they are Turkish in Turkish. |
+| The sentence | `Start. These are the given values.` · `total is now 5.` · `The condition is FALSE: THEN is skipped.` · `The loop starts a pass.` · `Nothing left: the loop ends.` · `pairs starts, one level deeper.` · `RETURN gives back 5.` · `The program’s answer: 7` · `Stopped here. This program went too many levels deep.` Engine messages go through `engineText`, so they are Turkish in Turkish. |
 | Cost so far | `Steps used so far: 37 of 7,200` — the same count, against the same budget, as the result screen's Steps row — and `Depth 4 of 80` inside a call. |
-| VALUES | One row per name of the frame on show. A name the step just bound says **new**, one it rebound or whose content it changed says **changed**, with a bar in the warn colour down the row's edge (colour and words, never colour alone). |
+| VALUES | One row per name of the frame on show. A name the step just bound says **new**, one it rebound or whose content it changed says **changed**, with a bar in the warn colour down the row's edge (colour and words, never colour alone). The list scrolls by itself, as little as it takes, so the row that just changed is in view however many names are above it. |
 | Collections | A list is a row of cells numbered from 0; the cell that changed is outlined and bold. A stack names its `top` (last item), a queue its `front`, a heap its `top` and lists smallest (or largest) first. A set is cells without numbers, a map is `key: value` cells. Appending marks the new cell only; taking from an end marks nothing in what is left. |
 | Linked lists, trees, graphs | A chain `1 → 2 → 3 → NOTHING` with, under each node, the names that hold it (`head`, `cur`); a chain that comes back on itself ends in `loops back` instead of running on. A tree is an outline (root, then LEFT / RIGHT one step in). A graph lists each node with who it leads to and a check on the visited ones. |
-| CALLS | Shown when more than one call is open: `CALLS · 4 OPEN`, then the calls innermost first (`4 · pairs  month=3, memo={…}`), built lazily so 160 open calls cost a handful of widgets. Tapping one shows that call's names (`main is waiting for the call it made to finish.`); the next step shows the running call again. |
+| CALLS | Shown when more than one call is open, pinned above the values so it never scrolls away: `CALLS · 4 OPEN`, then the calls innermost first (`4 · pairs  month=3, memo={…}`), built lazily so 160 open calls cost a handful of widgets. Tapping one shows that call's names (`main is waiting for the call it made to finish.`); the next step shows the running call again. |
 | Controls | Slider over the whole run, `12 / 48`, then first · back one · play / pause · forward one · last · speed (`0.5×`, `1×`, `2×`, `4×` = 1, 2, 4, 8 instructions a second). All 48 dp. Stepping by hand pauses a run that is playing; play at the end starts over. |
 | Help | The `?` in the app bar: five short paragraphs (what Forward does, what VALUES shows, CALLS, what "steps used" counts, hidden cases stay hidden). |
 
@@ -199,7 +199,7 @@ second, independent witness of claim 1.
 | Values | `lib/screens/trace/trace_values.dart` | `TraceVariableRow`, `TraceValueView`, `traceValueText` (one-line text of any value), `traceChain`, `traceContentChanged`. Everything is bounded: 48 cells / entries / nodes, then `+452 more`. |
 | Results | `lib/screens/results/results_screen.dart` | `ResultsArgs.graph` (optional) and the button on `_CaseRow`. |
 | Puzzle | `lib/screens/puzzle/puzzle_screen.dart` | **One line**: RUN passes `graph: _controller.graph` to the results. |
-| Strings | `app_en.arb`, `app_tr.arb` | 49 keys, all `trace…`, appended at the end of both files; generated code committed. Block words (TRUE, FALSE, NOTHING, THEN, RETURN…) stay English in Turkish, as everywhere. |
+| Strings | `app_en.arb`, `app_tr.arb` | 50 keys, all `trace…`, appended at the end of both files; generated code committed. Block words (TRUE, FALSE, NOTHING, THEN, RETURN…) stay English in Turkish, as everywhere. |
 
 ### The program view does not reuse the editor's tiles
 
@@ -234,7 +234,7 @@ change: `TraceProgramView` is one widget with four inputs.
 | `packages/algorun_content` `dart test` | **86 passed** (unchanged) |
 | Content validator | `PIPELINE 149 of 149 campaign puzzle(s) accepted, 5 probe(s) checked` · `OK 154 puzzle(s), 5 warning(s)` (unchanged) |
 | `flutter analyze` | no issues |
-| `flutter test` | **FLUTTER_COUNT passed** (540 before; +26 `trace_ui_test.dart`, +5 `trace_session_test.dart`) |
+| `flutter test` | **571 passed** (540 before; +26 `trace_ui_test.dart`, +5 `trace_session_test.dart`) |
 
 `trace_parity_test.dart` takes about 50 s (it runs the corpus three times,
 the rejects that run to their operation limit included); the engine suite went
@@ -272,7 +272,34 @@ What the new tests hold:
 
 ## Emulator
 
-EMULATOR_SECTION
+Done on 2026-11-18, 04:18–04:33, on the `algorun_phone` AVD (Android 15,
+software rendering), `wm size 720x1600` + `wm density 320` = **360 × 800 dp**,
+light theme, English, with the debug APK of the branch's final code. The
+emulator is shared by five sessions; T1 queued behind M1 through the shared
+notes folder and released it to E1.
+
+Two wrong programs were put on the device as saved drafts (a save file
+written with the app's own `encodeSave`, pushed with `run-as`; the save that
+was there was put back afterwards), then played by taps:
+
+| Puzzle | The mistake | What was done | Seen |
+|---|---|---|---|
+| The Smallest Cart (Arrays) | trips counted from 0, not 1 | open from the world list → RUN → **WRONG ANSWER**, v1 `expected 8, you gave 6`, 5 of 8 hidden → STEP THROUGH on v1 → 33 × forward → play for 5 s → pause → last → help | `1 / 142` at the start with `weights` as six numbered cells; the IF outlined with `FALSE` and *THEN is skipped*; play moved 34 → 44 in five seconds at 1×; the changed name (`w = 2 changed`) in view below `weights`, `trips`, `lo`, `hi`; `142 / 142` *The program's answer: 6* on RETURN; the program followed the marked block all the way |
+| Rabbit Months (Recursion) | base case `month < 1`, not `< 2` | open → RUN → **WRONG ANSWER**, v1 `expected 8, you gave -8`, v2 too, 1 of 6 hidden → STEP THROUGH on v1 → 39 × forward → tap call 5 → last | `Depth 6 of 80`, `CALLS · 6 OPEN` with `6 · pairs  month=2, memo={1: -1, 2: -1}` first; PUT marks `memo` **changed** and outlines the entry `2: -1`; tapping call 5 shows *pairs is waiting for the call it made to finish.* with that call's names (the shared map changed there too); the IF `month LESS THAN 1` → `FALSE` with `month = 1` is the bug, plainly |
+
+Both results screens showed STEP THROUGH on each visible case and only the
+count under HIDDEN. Screenshots: [`docs/t1/`](t1/) (results, a changed value
+in the array puzzle, the calls and a changed map entry in the recursion
+puzzle, a waiting frame, the help sheet).
+
+An earlier build of the same day was on the emulator first and showed three
+faults no widget test had caught, all fixed before the pass above: a list's
+cells each stretched to full width and stacked; the play icon took the text
+colour on the accent; the changed value could be below the fold. (The first
+two were also visible in PNGs rendered from a widget test with the real
+Roboto — the test font is why layout tests alone missed them.) A "System UI
+isn't responding" dialog appeared once at first launch, while five sessions
+were compiling; *Wait* dismissed it and it did not come back.
 
 ## Known limits
 
@@ -304,7 +331,27 @@ EMULATOR_SECTION
 
 ## NOT TESTED
 
-NOT_TESTED_SECTION
+- **No physical phone.** Emulator only, software rendering. Frame timing
+  while playing at 4× and the pause when a far window of a very long run is
+  recorded were not measured on real hardware.
+- **Emulator: light theme, English, 360 × 800 only.** Dark theme, Turkish,
+  text ×1.6 and other phone sizes are covered by widget tests
+  (`trace_ui_test.dart`, group *layout*) and by rendered PNGs, not on the
+  emulator.
+- **Emulator: a windowed (long) run, a run that ends in a failure, linked
+  lists, trees, graphs, stacks, queues and heaps** were not opened on the
+  emulator. Each has widget tests (*long runs*, *functions* → depth limit,
+  *values*).
+- **The web build was not built or opened.** The wide layout is tested at
+  1600 × 900 in a widget test and looked at as a rendered PNG at 1400 × 850;
+  nothing in the new code is platform specific, but nobody has stepped
+  through a case in a browser.
+- **TalkBack / screen readers.** Semantics labels are there (the marked
+  block, `changed` on cells, slider position); none was listened to.
+- **Landscape phone.** The side-by-side layout starts at 720 dp wide, so a
+  phone on its side gets it with very little height. Not tried.
+- **With the other sessions' work.** Nothing here was run against E1's
+  editor, L3's blocks, M1's puzzle kinds or MS16's puzzles.
 
 ## For the coordinator
 
@@ -319,7 +366,7 @@ NOT_TESTED_SECTION
 - Important APIs → Interpreter: the event table above; `frames` / `locals` are
   live during the sink. New section "Step trace (T1)": `recordTrace`,
   `traceVisibleCase`, `TraceLimits`, the window rule, the hidden-case rule.
-- Test table: engine 428, Flutter FLUTTER_COUNT (plus whatever the other sessions add).
+- Test table: engine 428, Flutter 571 (plus whatever the other sessions add).
 - Known limitations: the list above. Remove *"The `PuzzleScreen` →
   `ResultsScreen` navigation is not pumped in a test"* — `trace_ui_test.dart`
   (*in the app*) pumps RUN → results → trace → back.
@@ -333,7 +380,7 @@ NOT_TESTED_SECTION
 |---|---|---|
 | `lib/screens/puzzle/puzzle_screen.dart` | one added argument in `_run` (`graph: _controller.graph`) | E1, if it reworks `_run`: keep the argument |
 | `lib/screens/results/results_screen.dart` | `ResultsArgs.graph`, `_CaseRow.onTrace` + button | M1, if new puzzle kinds change the case rows |
-| `lib/l10n/app_*.arb` + `gen/` | 49 keys appended at the end | every session appends there: keep both sides, run `flutter gen-l10n` |
+| `lib/l10n/app_*.arb` + `gen/` | 50 keys appended at the end | every session appends there: keep both sides, run `flutter gen-l10n` |
 | `lib/app.dart` | `/trace` route, one import | trivial |
 | `packages/algorun_engine/lib/src/execution/interpreter.dart` | `_emit` sites, `_invoke` frame push / catch, `_emitHalt` | **L3**: new statement kinds should `_emit` after they run (an instruction with no event is a step the player cannot stop on — the trace still works, it just skips that line). New blocks that are `CallExpr`s inside `_call` need nothing. |
 | `packages/algorun_engine/lib/algorun_engine.dart` | two exports | trivial |

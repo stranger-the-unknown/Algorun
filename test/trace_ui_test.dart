@@ -75,6 +75,7 @@ void main() {
       expect(textOf(tester, 'trace-position'), '2 / 8');
       expect(currentBlock(tester), 'start');
       expect(variableTexts(tester, 'total'), ['total', '=', '1', 'new']);
+      expect(textOf(tester, 'trace-sentence'), 'total is now 1.');
       expect(tagOf(tester, 'nums'), isNull);
       expect(textOf(tester, 'trace-cost'), 'Steps used so far: 2 of 400');
 
@@ -562,6 +563,17 @@ void main() {
           expect(at.top, lessThan(program.bottom - 20), reason: 'step ${i + 1}');
           if (at.height <= program.height) {
             expect(at.bottom, lessThanOrEqualTo(program.bottom + 1), reason: 'step ${i + 1}');
+          }
+          // …and so does the value the step changed, however many names
+          // there are above it.
+          final tags = find.byWidgetPredicate(
+            (w) => w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith('trace-changed:'),
+          );
+          if (tags.evaluate().length == 1) {
+            final values = tester.getRect(find.byKey(const Key('trace-values')));
+            final tag = tester.getRect(tags);
+            expect(tag.top, greaterThanOrEqualTo(values.top - 1), reason: 'step ${i + 1}: the changed value is in view');
+            expect(tag.bottom, lessThanOrEqualTo(values.bottom + 1), reason: 'step ${i + 1}');
           }
         }
         expect(textOf(tester, 'trace-position'), '$total / $total');

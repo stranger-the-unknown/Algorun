@@ -248,6 +248,13 @@ class _Status extends StatelessWidget {
     final value = step.value;
     final shown = value == null ? null : traceValueText(session.recording, value, step.index, l);
     final truth = value is TraceBool ? value.value : null;
+    // A SET, INCREMENT or DECREMENT of one name says what the name holds now.
+    final written = step.kind == TraceKinds.assign || step.kind == TraceKinds.inc || step.kind == TraceKinds.dec;
+    if (written && step.changed.length == 1 && step.frames.isNotEmpty) {
+      final name = step.changed.single;
+      final now = step.frames.last.vars[name];
+      if (now != null) return l.traceNowIs(name, traceValueText(session.recording, now, step.index, l));
+    }
     return switch (step.kind) {
       TraceKinds.start => l.traceStart,
       TraceKinds.call => l.traceCall(step.frames.isEmpty ? '' : step.frames.last.function),
@@ -347,11 +354,16 @@ class _Values extends StatelessWidget {
     final shownIndex = session.frameIndex;
     final frame = shownIndex >= 0 && shownIndex < frames.length ? frames[shownIndex] : null;
     final running = shownIndex == frames.length - 1;
-    return ListView(
-      key: const Key('trace-values'),
-      padding: const EdgeInsets.fromLTRB(AppSpace.s3, AppSpace.s2, AppSpace.s3, AppSpace.s3),
-      children: [
-        if (frames.length > 1) ...[
+    // The open calls stay put above the values: whatever the values list has
+    // scrolled to, where the program is in its calls is always in view.
+    final calls = frames.length <= 1
+        ? null
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpace.s3, AppSpace.s2, AppSpace.s3, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 4),
             child: Text(l.traceCalls(frames.length), key: const Key('trace-calls'), style: AppText.label(context)),
@@ -403,7 +415,18 @@ class _Values extends StatelessWidget {
               padding: const EdgeInsets.only(left: 4, bottom: AppSpace.s2),
               child: Text(l.traceWaiting(frame.function), style: TextStyle(color: p.muted, fontSize: 12)),
             ),
-        ],
+                      ],
+            ),
+          );
+    // Not a lazy list: every row is laid out, so the one that just changed
+    // can bring itself into view. A frame has a handful of names and every
+    // value is drawn within fixed limits.
+    final values = SingleChildScrollView(
+      key: const Key('trace-values'),
+      padding: const EdgeInsets.fromLTRB(AppSpace.s3, AppSpace.s2, AppSpace.s3, AppSpace.s3),
+      child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 6),
           child: Text(l.traceValues, style: AppText.label(context)),
@@ -423,6 +446,12 @@ class _Values extends StatelessWidget {
               running: running,
             ),
       ],
+      ),
+    );
+    if (calls == null) return values;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [calls, Expanded(child: values)],
     );
   }
 }

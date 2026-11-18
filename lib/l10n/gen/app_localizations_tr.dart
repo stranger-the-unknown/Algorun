@@ -1585,4 +1585,9 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get traceHelpHidden =>
       'Yalnızca görebildiğin vakalar adım adım izlenebilir. Gizli vakalar gizli kalır.';
+
+  @override
+  String traceNowIs(String name, String value) {
+    return '$name artık $value.';
+  }
 }

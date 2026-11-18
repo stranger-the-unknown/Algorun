@@ -1286,5 +1286,16 @@
   "traceHelpValues": "VALUES shows every name as it stands right after that block. What the block just changed is marked in colour and with the word “changed” or “new”. Step until a value is not what you expected: that block is where to look.",
   "traceHelpCalls": "Inside a FUNCTION, CALLS lists every call that is still open, the running one first. Tap one to see its own values.",
   "traceHelpCost": "“Steps used” is the count the result screen holds against the budget: every block that works costs one, the value blocks inside an instruction too.",
-  "traceHelpHidden": "Only the cases you can see can be stepped through. Hidden cases stay hidden."
+  "traceHelpHidden": "Only the cases you can see can be stepped through. Hidden cases stay hidden.",
+  "traceNowIs": "{name} is now {value}.",
+  "@traceNowIs": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  }
 }
