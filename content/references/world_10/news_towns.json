@@ -1,0 +1,1157 @@
+{
+  "puzzle": "news_towns",
+  "notes": "Count the towns with no incoming road: every other town hears the story from further up, and the roads never loop. Counting dead ends answers a different question; phoning the lowest-numbered town that has not heard yet wastes a call whenever that town lies downstream of a higher-numbered one.",
+  "spec": {
+    "family": "graph_connectivity",
+    "pattern": "count_sources_of_one_way_network",
+    "structure": "graph",
+    "secondary": [],
+    "performance": "correctness",
+    "traps": ["a town with no roads at all", "a town that hears the story from a town with a higher number", "a town reached by two roads", "as many towns without a way in as without a way out is a coincidence"],
+    "oracle": "news_towns"
+  },
+  "metrics": {"blocks": 40, "ops": 3063, "peakAlloc": 355, "peakDepth": 1},
+  "solution": {
+    "blocks": {
+      "b0": {
+        "id": "b0",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "roads"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b1": {
+        "id": "b1",
+        "catalogId": "graph.node_count",
+        "slots": {
+          "graph": {"ref": "b0"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b2": {
+        "id": "b2",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b1"}
+        },
+        "literals": {"name": "n"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b3": {
+        "id": "b3",
+        "catalogId": "new.array",
+        "slots": {},
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b4": {
+        "id": "b4",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b3"}
+        },
+        "literals": {"name": "into"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b5": {
+        "id": "b5",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b6": {
+        "id": "b6",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "n"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b7": {
+        "id": "b7",
+        "catalogId": "ctrl.for_range",
+        "slots": {
+          "start": {"ref": "b5"},
+          "end": {"ref": "b6"},
+          "body": {"list": ["b10"]}
+        },
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b8": {
+        "id": "b8",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b9": {
+        "id": "b9",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "into"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b10": {
+        "id": "b10",
+        "catalogId": "arr.append",
+        "slots": {
+          "array": {"ref": "b9"},
+          "value": {"ref": "b8"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b11": {
+        "id": "b11",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b12": {
+        "id": "b12",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "n"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b13": {
+        "id": "b13",
+        "catalogId": "ctrl.for_range",
+        "slots": {
+          "start": {"ref": "b11"},
+          "end": {"ref": "b12"},
+          "body": {"list": ["b17"]}
+        },
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b14": {
+        "id": "b14",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "roads"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b15": {
+        "id": "b15",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b16": {
+        "id": "b16",
+        "catalogId": "graph.neighbors",
+        "slots": {
+          "graph": {"ref": "b14"},
+          "node": {"ref": "b15"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b17": {
+        "id": "b17",
+        "catalogId": "ctrl.foreach",
+        "slots": {
+          "collection": {"ref": "b16"},
+          "body": {"list": ["b25"]}
+        },
+        "literals": {"name": "v"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b18": {
+        "id": "b18",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "v"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b19": {
+        "id": "b19",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "into"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b20": {
+        "id": "b20",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "v"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b21": {
+        "id": "b21",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b19"},
+          "index": {"ref": "b20"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b22": {
+        "id": "b22",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b23": {
+        "id": "b23",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {"ref": "b21"},
+          "right": {"ref": "b22"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b24": {
+        "id": "b24",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "into"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b25": {
+        "id": "b25",
+        "catalogId": "arr.set",
+        "slots": {
+          "array": {"ref": "b24"},
+          "index": {"ref": "b18"},
+          "value": {"ref": "b23"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b26": {
+        "id": "b26",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b27": {
+        "id": "b27",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b26"}
+        },
+        "literals": {"name": "count"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b28": {
+        "id": "b28",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b29": {
+        "id": "b29",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "n"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b30": {
+        "id": "b30",
+        "catalogId": "ctrl.for_range",
+        "slots": {
+          "start": {"ref": "b28"},
+          "end": {"ref": "b29"},
+          "body": {"list": ["b36"]}
+        },
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b31": {
+        "id": "b31",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "into"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b32": {
+        "id": "b32",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b33": {
+        "id": "b33",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b31"},
+          "index": {"ref": "b32"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b34": {
+        "id": "b34",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b35": {
+        "id": "b35",
+        "catalogId": "cmp.eq",
+        "slots": {
+          "left": {"ref": "b33"},
+          "right": {"ref": "b34"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b36": {
+        "id": "b36",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {"ref": "b35"},
+          "then": {"list": ["b37"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b37": {
+        "id": "b37",
+        "catalogId": "var.inc",
+        "slots": {},
+        "literals": {"name": "count"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b38": {
+        "id": "b38",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "count"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b39": {
+        "id": "b39",
+        "catalogId": "ctrl.return",
+        "slots": {
+          "value": {"ref": "b38"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      }
+    },
+    "entryIds": ["b2", "b4", "b7", "b13", "b27", "b30", "b39"],
+    "variables": {"roads": "graph", "n": "num", "into": "array<num>", "i": "num", "u": "num", "v": "num", "count": "num"}
+  },
+  "rejects": [
+    {
+      "name": "counts the towns that no road leaves",
+      "expect": "wrongAnswer",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "graph.node_count",
+            "slots": {
+              "graph": {"ref": "b0"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b1"}
+            },
+            "literals": {"name": "n"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b3"}
+            },
+            "literals": {"name": "count"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "n"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "ctrl.for_range",
+            "slots": {
+              "start": {"ref": "b5"},
+              "end": {"ref": "b6"},
+              "body": {"list": ["b9", "b13", "b18"]}
+            },
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b8"}
+            },
+            "literals": {"name": "out"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "graph.neighbors",
+            "slots": {
+              "graph": {"ref": "b10"},
+              "node": {"ref": "b11"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "ctrl.foreach",
+            "slots": {
+              "collection": {"ref": "b12"},
+              "body": {"list": ["b14"]}
+            },
+            "literals": {"name": "v"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "var.inc",
+            "slots": {},
+            "literals": {"name": "out"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "out"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "cmp.eq",
+            "slots": {
+              "left": {"ref": "b15"},
+              "right": {"ref": "b16"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b18": {
+            "id": "b18",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b17"},
+              "then": {"list": ["b19"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b19": {
+            "id": "b19",
+            "catalogId": "var.inc",
+            "slots": {},
+            "literals": {"name": "count"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b20": {
+            "id": "b20",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "count"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b21": {
+            "id": "b21",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {"ref": "b20"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": ["b2", "b4", "b7", "b21"],
+        "variables": {"roads": "graph", "n": "num", "u": "num", "v": "num", "count": "num", "out": "num"}
+      }
+    },
+    {
+      "name": "phones the lowest-numbered town that has not heard yet, again and again",
+      "expect": "wrongAnswer",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "graph.node_count",
+            "slots": {
+              "graph": {"ref": "b0"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b1"}
+            },
+            "literals": {"name": "n"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b3"}
+            },
+            "literals": {"name": "count"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "new.stack",
+            "slots": {},
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b5"}
+            },
+            "literals": {"name": "pile"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "n"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "ctrl.for_range",
+            "slots": {
+              "start": {"ref": "b7"},
+              "end": {"ref": "b8"},
+              "body": {"list": ["b14"]}
+            },
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "graph.visited",
+            "slots": {
+              "graph": {"ref": "b10"},
+              "node": {"ref": "b11"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "logic.not",
+            "slots": {
+              "arg": {"ref": "b12"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b13"},
+              "then": {"list": ["b15", "b18", "b21", "b25"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "var.inc",
+            "slots": {},
+            "literals": {"name": "count"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b18": {
+            "id": "b18",
+            "catalogId": "graph.mark",
+            "slots": {
+              "graph": {"ref": "b17"},
+              "node": {"ref": "b16"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b19": {
+            "id": "b19",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b20": {
+            "id": "b20",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "pile"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b21": {
+            "id": "b21",
+            "catalogId": "stack.push",
+            "slots": {
+              "stack": {"ref": "b20"},
+              "value": {"ref": "b19"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b22": {
+            "id": "b22",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "pile"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b23": {
+            "id": "b23",
+            "catalogId": "stack.empty",
+            "slots": {
+              "stack": {"ref": "b22"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b24": {
+            "id": "b24",
+            "catalogId": "logic.not",
+            "slots": {
+              "arg": {"ref": "b23"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b25": {
+            "id": "b25",
+            "catalogId": "ctrl.while",
+            "slots": {
+              "condition": {"ref": "b24"},
+              "body": {"list": ["b28", "b32"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b26": {
+            "id": "b26",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "pile"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b27": {
+            "id": "b27",
+            "catalogId": "stack.pop",
+            "slots": {
+              "stack": {"ref": "b26"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b28": {
+            "id": "b28",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b27"}
+            },
+            "literals": {"name": "here"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b29": {
+            "id": "b29",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b30": {
+            "id": "b30",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "here"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b31": {
+            "id": "b31",
+            "catalogId": "graph.neighbors",
+            "slots": {
+              "graph": {"ref": "b29"},
+              "node": {"ref": "b30"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b32": {
+            "id": "b32",
+            "catalogId": "ctrl.foreach",
+            "slots": {
+              "collection": {"ref": "b31"},
+              "body": {"list": ["b37"]}
+            },
+            "literals": {"name": "v"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b33": {
+            "id": "b33",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b34": {
+            "id": "b34",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "v"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b35": {
+            "id": "b35",
+            "catalogId": "graph.visited",
+            "slots": {
+              "graph": {"ref": "b33"},
+              "node": {"ref": "b34"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b36": {
+            "id": "b36",
+            "catalogId": "logic.not",
+            "slots": {
+              "arg": {"ref": "b35"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b37": {
+            "id": "b37",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b36"},
+              "then": {"list": ["b40", "b43"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b38": {
+            "id": "b38",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "v"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b39": {
+            "id": "b39",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "roads"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b40": {
+            "id": "b40",
+            "catalogId": "graph.mark",
+            "slots": {
+              "graph": {"ref": "b39"},
+              "node": {"ref": "b38"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b41": {
+            "id": "b41",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "v"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b42": {
+            "id": "b42",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "pile"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b43": {
+            "id": "b43",
+            "catalogId": "stack.push",
+            "slots": {
+              "stack": {"ref": "b42"},
+              "value": {"ref": "b41"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b44": {
+            "id": "b44",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "count"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b45": {
+            "id": "b45",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {"ref": "b44"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": ["b2", "b4", "b6", "b9", "b45"],
+        "variables": {
+          "roads": "graph",
+          "n": "num",
+          "u": "num",
+          "v": "num",
+          "count": "num",
+          "pile": "stack<num>",
+          "here": "num"
+        }
+      }
+    }
+  ]
+}

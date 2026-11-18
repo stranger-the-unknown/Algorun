@@ -1,0 +1,123 @@
+{
+  "id": "four_shelves",
+  "version": 1,
+  "title": "Four Shelves",
+  "world": "world_03",
+  "chapter": "pair_totals_meet_in_the_middle",
+  "tier": 4,
+  "mode": "budget",
+  "concepts": ["hash_map"],
+  "prerequisites": [],
+  "story": "A lunch counter has four shelves: starters, mains, sides and desserts, each with a list of prices. A lunch is one item from every shelf. How many different lunches cost exactly the target? Two items with the same price on one shelf are still different items. Trying every lunch one by one is too slow.",
+  "io": {
+    "inputs": [
+      {"name": "starters", "type": "array<num>"},
+      {"name": "mains", "type": "array<num>"},
+      {"name": "sides", "type": "array<num>"},
+      {"name": "desserts", "type": "array<num>"},
+      {"name": "target", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 25},
+    "notes": ["0 to 25 items on each shelf, prices from 1 to 40.", "The target is 1 to 200."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.sub", "arr.get", "arr.len", "cmp.eq", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "lit.num", "logic.is_not_nothing", "logic.is_nothing", "map.get", "map.has", "map.set", "new.map", "new.set", "set.add", "set.has", "var.get", "var.set"],
+    "maxBlocks": 82
+  },
+  "limits": {"maxOps": 42550, "maxDepth": 32, "maxAlloc": 200},
+  "performance": {"required": true, "baselineFactor": 10},
+  "hints": ["Split the lunch in two halves: a starter with a main, and a side with a dessert. The two halves must add up to the target.", "Go through every starter with every main and count, in a map, how many pairs give each total.", "Then go through every side with every dessert: the first half must cost the target MINUS this pair. GET that total from the map and, IF it IS NOT NOTHING, add its count to the answer."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"starters": [1, 2], "mains": [10, 20], "sides": [3, 4], "desserts": [5, 6], "target": 20},
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {"starters": [5], "mains": [5, 6], "sides": [2, 7, 2], "desserts": [1], "target": 13},
+        "out": 2
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"starters": [3, 4], "mains": [], "sides": [1], "desserts": [2], "target": 9},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"starters": [2, 2], "mains": [3], "sides": [1], "desserts": [4], "target": 10},
+        "out": 2
+      },
+      {
+        "id": "h03",
+        "in": {"starters": [1, 1, 1], "mains": [1, 1, 1], "sides": [1, 1, 1], "desserts": [1, 1, 1], "target": 4},
+        "out": 81
+      },
+      {
+        "id": "h04",
+        "in": {"starters": [1, 2, 3], "mains": [3, 2, 1], "sides": [4], "desserts": [5], "target": 13},
+        "out": 3
+      },
+      {
+        "id": "h05",
+        "in": {"starters": [9, 8], "mains": [7, 9], "sides": [6, 6], "desserts": [5], "target": 12},
+        "out": 0
+      },
+      {
+        "id": "h06",
+        "in": {
+          "starters": [36, 33, 3, 39, 29, 38, 18, 9, 14, 31, 23, 30, 11, 15, 28, 2, 15, 3, 31, 7, 15, 8, 10, 39, 34],
+          "mains": [28, 30, 15, 17, 11, 5, 36, 1, 37, 30, 12, 22, 1, 8, 24, 12, 14, 39, 26, 4, 23, 24, 38, 5, 32],
+          "sides": [3, 7, 3, 24, 39, 20, 18, 15, 10, 38, 2, 8, 32, 23, 34, 22, 16, 26, 28, 12, 5, 33, 20, 7, 32],
+          "desserts": [1, 15, 6, 30, 17, 3, 2, 31, 3, 28, 26, 5, 11, 37, 31, 34, 32, 30, 15, 24, 28, 37, 40, 32, 19],
+          "target": 82
+        },
+        "out": 6273
+      },
+      {
+        "id": "h07",
+        "in": {
+          "starters": [7, 7, 1, 2, 1, 9, 6, 2, 4, 9, 7, 3],
+          "mains": [7, 12, 7, 4, 1, 6, 4, 10, 8, 1, 2, 1],
+          "sides": [8, 9, 7, 9, 12, 9, 5, 8, 7, 12, 7, 5],
+          "desserts": [7, 1, 11, 11, 7, 9, 5, 4, 11, 12, 3, 11],
+          "target": 26
+        },
+        "out": 1297
+      },
+      {
+        "id": "h08",
+        "in": {
+          "starters": [34, 26, 35, 26, 28, 25, 35, 22, 24, 32, 34, 33],
+          "mains": [22, 25, 36, 30, 22, 36, 34, 30, 25, 37, 25, 27],
+          "sides": [27, 23, 35, 32, 36, 32, 30, 20, 28, 37, 38, 22],
+          "desserts": [31, 20, 22, 30, 28, 33, 27, 36, 30, 21, 33, 23],
+          "target": 70
+        },
+        "out": 0
+      }
+    ]
+  },
+  "edgeCases": ["several pairs with the same total", "equal prices on one shelf", "an empty shelf", "a target no lunch reaches", "trying every lunch is over budget"],
+  "variables": {
+    "pool": [
+      {"name": "pairs", "type": "map<num,num>"},
+      {"name": "a", "type": "num"},
+      {"name": "b", "type": "num"},
+      {"name": "c", "type": "num"},
+      {"name": "d", "type": "num"},
+      {"name": "sum", "type": "num"},
+      {"name": "was", "type": "num?"},
+      {"name": "total", "type": "num"},
+      {"name": "made", "type": "set<num>"}
+    ]
+  },
+  "reference": {"strategy": "pair_totals_meet_in_the_middle"}
+}

@@ -1,0 +1,126 @@
+{
+  "id": "playlist_cuts",
+  "version": 1,
+  "title": "Set Breaks",
+  "world": "world_11",
+  "chapter": "cut_at_farthest_last_occurrence",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["greedy"],
+  "prerequisites": [],
+  "story": "A DJ plays a long list of tracks, each written as the number of its style, from 0 to 99. She wants to cut the night into sets, each a run of tracks next to each other, so that no style is heard in two different sets, and she wants as many sets as possible. Report the number of tracks in each set, in order. With styles 4 7 4 2 2 the sets are 4 7 4 and 2 2, so the answer is 3 2. An empty night has no sets.",
+  "io": {
+    "inputs": [
+      {"name": "styles", "type": "array<num>"}
+    ],
+    "output": {"type": "array<num>"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 300},
+    "notes": ["0 to 300 tracks.", "Styles are whole numbers from 0 to 99."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.max", "arith.min", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.not", "logic.or", "new.array", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 85
+  },
+  "limits": {"maxOps": 10850, "maxDepth": 32, "maxAlloc": 450},
+  "hints": ["A set that contains a style must run at least as far as the last track of that style. First find, for every style, the position where it is played for the last time.", "Walk through the tracks keeping the end of the current set: the MAX of the last positions of every style met in this set so far. Styles met on the way can push the end further.", "When your position is EQUAL to that end, the set closes here: APPEND its size, the position MINUS the set's first position PLUS 1, and the next set begins on the next track."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"styles": [1, 5, 3, 5, 1, 2, 2, 7, 9, 7]},
+        "out": [5, 2, 3]
+      },
+      {
+        "id": "v2",
+        "in": {"styles": [3, 8, 8, 3, 6, 4, 4, 6, 6]},
+        "out": [4, 5]
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"styles": []},
+        "out": []
+      },
+      {
+        "id": "h02",
+        "in": {"styles": [7]},
+        "out": [1]
+      },
+      {
+        "id": "h03",
+        "in": {"styles": [1, 2, 1, 2]},
+        "out": [4]
+      },
+      {
+        "id": "h04",
+        "in": {"styles": [0, 99, 0]},
+        "out": [3]
+      },
+      {
+        "id": "h05",
+        "in": {"styles": [4, 7, 4, 2, 2]},
+        "out": [3, 2]
+      },
+      {
+        "id": "h06",
+        "in": {"styles": [5, 1, 5, 9, 1, 3, 9, 6, 6, 8]},
+        "out": [7, 2, 1]
+      },
+      {
+        "id": "h07",
+        "in": {"styles": [2, 3, 4, 2, 5, 3, 6, 4, 7, 7]},
+        "out": [8, 2]
+      },
+      {
+        "id": "h08",
+        "in": {
+          "styles": [42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
+        },
+        "out": [50]
+      },
+      {
+        "id": "h09",
+        "in": {
+          "styles": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+        },
+        "out": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      },
+      {
+        "id": "h10",
+        "in": {
+          "styles": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 0]
+        },
+        "out": [101]
+      },
+      {
+        "id": "h11",
+        "in": {
+          "styles": [2, 1, 2, 7, 5, 5, 9, 8, 10, 9, 10, 10, 10, 15, 13, 13, 12, 12, 14, 12, 18, 18, 19, 19, 17, 19, 20, 21, 20, 20, 21, 22, 23, 23, 20, 24, 24, 27, 26, 26, 28, 28, 28, 30, 29, 28, 29, 28, 29, 33, 35, 34, 33, 32, 35, 34, 35, 34, 32, 35, 34, 33, 35, 36, 37, 36, 39, 38, 41, 43, 41, 40, 42, 47, 46, 45, 46, 44, 49, 50, 48, 50, 50, 50, 49, 51, 50, 49, 48, 50, 52, 54, 54, 52, 53, 53, 53, 53, 57, 58, 59, 59, 56, 57, 57, 56, 59, 56, 56, 57, 57, 63, 60, 63, 63, 61, 62, 63, 63, 63, 60, 62, 60, 60, 60, 67, 66, 67, 66, 65, 67, 64, 65, 64, 64, 70, 68, 71, 70, 70, 71, 71, 68, 69, 71, 69, 70, 74, 72, 75, 72, 74, 75, 77, 78, 77, 79, 76, 78, 78, 76, 78, 79, 77, 76, 83, 80, 82, 80, 81, 80, 81, 83, 80, 81, 81, 83, 83, 82, 86, 85, 85, 85, 87, 87, 85, 85, 86, 85, 85, 84, 84, 85, 90, 90, 88, 91, 88, 89, 90, 94, 95, 92, 95, 92, 94, 92, 92, 93, 92, 95]
+        },
+        "out": [3, 1, 2, 7, 1, 2, 4, 2, 4, 9, 2, 1, 2, 9, 14, 3, 1, 1, 3, 1, 1, 1, 3, 1, 12, 4, 4, 13, 14, 10, 12, 6, 12, 14, 14, 7, 11]
+      },
+      {
+        "id": "h12",
+        "in": {
+          "styles": [1, 1, 3, 1, 3, 2, 2, 1, 1, 1, 2, 5, 5, 5, 9, 8, 8, 9, 8, 8, 9, 10, 9, 11, 10, 9, 9, 9, 12, 13, 12, 14, 12, 15, 15, 12, 14, 13, 13, 15, 12, 19, 19, 16, 19, 18, 19, 18, 17, 16, 16, 22, 22, 21, 23, 22, 20, 21, 23, 20, 20, 23, 22, 27, 26, 27, 26, 26, 24, 27, 24, 24, 26, 26, 26, 24, 27, 28, 30, 28, 30, 31, 29, 33, 32, 32, 32, 33, 32, 33, 33, 35, 35, 35, 32, 38, 39, 38, 42, 43, 42, 40, 43, 40, 43, 42, 40, 43, 46, 47, 44, 46, 46, 45, 46, 47, 46, 50, 48, 51, 48, 51, 50, 49, 50, 49, 50, 48, 49, 48, 55, 52, 55, 53, 53, 52, 55, 54, 58, 58, 58, 59, 58, 57, 56, 60, 62, 60, 63, 62, 63, 60, 63, 63, 61, 62, 63, 62, 66, 66, 67, 67, 64, 71, 68, 68, 69, 71, 69, 69, 75, 74, 75, 73, 72, 74, 75, 75, 73, 73, 75, 73, 73, 78, 76, 79, 78, 77, 82, 83, 81, 80, 82, 82, 81, 80, 80, 82, 87, 87, 87, 85, 85, 87, 86, 86, 85, 85, 85, 85, 87, 90, 89, 89, 88, 90, 88, 89, 89, 91, 89, 89, 95, 93, 94, 94, 94, 93, 92, 92, 95, 94]
+        },
+        "out": [11, 3, 14, 13, 10, 12, 14, 4, 1, 1, 12, 3, 10, 9, 13, 7, 1, 5, 1, 1, 13, 2, 2, 1, 7, 13, 4, 1, 10, 13, 11, 10]
+      }
+    ]
+  },
+  "edgeCases": ["a style inside a set that is played again after the set's opening style has finished", "two styles that interleave", "one style all night", "every track a different style", "an empty night"],
+  "variables": {
+    "pool": [
+      {"name": "last", "type": "array<num>"},
+      {"name": "sizes", "type": "array<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "start", "type": "num"},
+      {"name": "end", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "cut_at_farthest_last_occurrence"}
+}

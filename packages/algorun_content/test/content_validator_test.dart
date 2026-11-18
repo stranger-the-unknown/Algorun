@@ -240,7 +240,7 @@ void main() {
         references: _files('../../content/references'),
       );
       expect(report.errors, isEmpty, reason: report.issues.join('\n'));
-      expect(report.puzzleCount, 173);
+      expect(report.puzzleCount, 209);
     });
 
     test('every playable puzzle has a reference file', () {
@@ -249,7 +249,7 @@ void main() {
         for (final w in worlds.worlds)
           for (final id in w.puzzleIds) '${w.id}/$id.json',
       ];
-      expect(playable, hasLength(168));
+      expect(playable, hasLength(204));
       expect(_files('../../content/references').map((r) => r.path), containsAll(playable));
     });
   });
@@ -628,7 +628,7 @@ void main() {
         '../../content/references',
       ]);
       expect(result.exitCode, 0, reason: '${result.stdout}${result.stderr}');
-      expect('${result.stdout}', contains('OK 173 puzzle(s)'));
+      expect('${result.stdout}', contains('OK 209 puzzle(s)'));
       expect('${result.stdout}', isNot(contains('ERROR')));
     });
 

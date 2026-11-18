@@ -1,0 +1,1559 @@
+{
+  "id": "full_rows",
+  "version": 1,
+  "title": "Full Rows",
+  "world": "world_08",
+  "chapter": "bfs_no_node_after_gap",
+  "tier": 4,
+  "mode": "edge",
+  "concepts": ["tree", "bfs"],
+  "prerequisites": [],
+  "story": "Singers stand on risers that branch like a tree: one singer at the top, and under each singer a place on the left and a place on the right, each taken or empty. Read the places row by row from the top, each row from left to right. The choir is tidy when, once you meet an empty place, no singer comes after it, in that row or in any row below. Is the choir tidy? An empty stage is tidy.",
+  "io": {
+    "inputs": [
+      {"name": "root", "type": "treeNode?"}
+    ],
+    "output": {"type": "bool"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 130},
+    "notes": ["0 to 130 singers.", "The numbers on the singers do not matter, only which places are taken."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.bool", "lit.num", "logic.and", "logic.is_not_nothing", "logic.is_nothing", "logic.not", "logic.or", "new.queue", "new.stack", "queue.deq", "queue.empty", "queue.enq", "stack.empty", "stack.pop", "stack.push", "tree.left", "tree.right", "tree.value", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 82
+  },
+  "limits": {"maxOps": 6300, "maxDepth": 32, "maxAlloc": 150},
+  "hints": ["Reading row by row is what a queue of nodes does: DEQUEUE a singer, look at the LEFT place and then the RIGHT place, and ENQUEUE the singers you find there.", "Keep one yes/no variable: has an empty place been seen yet? It starts as no and never goes back, not even when a new row begins.", "For each of the two places: IF it IS NOT NOTHING, then IF an empty place was seen before RETURN no, otherwise ENQUEUE it; ELSE remember that an empty place has been seen. When the queue runs out, RETURN yes."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 1, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 4, "left": null, "right": null}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 8,
+              "left": {"type": "treeNode", "value": 7, "left": null, "right": null},
+              "right": null
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": {"type": "treeNode", "value": 4, "left": null, "right": null}
+            },
+            "right": {"type": "treeNode", "value": 8, "left": null, "right": null}
+          }
+        },
+        "out": false
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"root": null},
+        "out": true
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {"type": "treeNode", "value": 7, "left": null, "right": null}
+        },
+        "out": true
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 7,
+            "left": {"type": "treeNode", "value": 2, "left": null, "right": null},
+            "right": null
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 7,
+            "left": null,
+            "right": {"type": "treeNode", "value": 9, "left": null, "right": null}
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": null
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 6, "left": null, "right": null},
+              "right": null
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 5, "left": null, "right": null}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": null,
+              "right": {"type": "treeNode", "value": 7, "left": null, "right": null}
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 5, "left": null, "right": null}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 6, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 7, "left": null, "right": null}
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {"type": "treeNode", "value": 8, "left": null, "right": null},
+                "right": null
+              },
+              "right": {"type": "treeNode", "value": 5, "left": null, "right": null}
+            },
+            "right": {"type": "treeNode", "value": 3, "left": null, "right": null}
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h09",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": null
+            },
+            "right": null
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h10",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {"type": "treeNode", "value": 8, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 9, "left": null, "right": null}
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {"type": "treeNode", "value": 10, "left": null, "right": null},
+                "right": null
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 6, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 7, "left": null, "right": null}
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h11",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {"type": "treeNode", "value": 8, "left": null, "right": null},
+                "right": null
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {"type": "treeNode", "value": 10, "left": null, "right": null},
+                "right": null
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 6, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 7, "left": null, "right": null}
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h12",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 5, "left": null, "right": null}
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {"type": "treeNode", "value": 6, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {"type": "treeNode", "value": 14, "left": null, "right": null},
+                "right": null
+              }
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h13",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 16,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 32,
+                      "left": {"type": "treeNode", "value": 64, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 65, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 33,
+                      "left": {"type": "treeNode", "value": 66, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 67, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 17,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 34,
+                      "left": {"type": "treeNode", "value": 68, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 69, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 35,
+                      "left": {"type": "treeNode", "value": 70, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 71, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 18,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 36,
+                      "left": {"type": "treeNode", "value": 72, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 73, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 37,
+                      "left": {"type": "treeNode", "value": 74, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 75, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 19,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 38,
+                      "left": {"type": "treeNode", "value": 76, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 77, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 39,
+                      "left": {"type": "treeNode", "value": 78, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 79, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {
+                  "type": "treeNode",
+                  "value": 10,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 20,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 40,
+                      "left": {"type": "treeNode", "value": 80, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 81, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 41,
+                      "left": {"type": "treeNode", "value": 82, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 83, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 21,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 42,
+                      "left": {"type": "treeNode", "value": 84, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 85, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 43,
+                      "left": {"type": "treeNode", "value": 86, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 87, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 11,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 22,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 44,
+                      "left": {"type": "treeNode", "value": 88, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 89, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 45,
+                      "left": {"type": "treeNode", "value": 90, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 91, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 23,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 46,
+                      "left": {"type": "treeNode", "value": 92, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 93, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 47,
+                      "left": {"type": "treeNode", "value": 94, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 95, "left": null, "right": null}
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {
+                  "type": "treeNode",
+                  "value": 12,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 24,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 48,
+                      "left": {"type": "treeNode", "value": 96, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 97, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 49,
+                      "left": {"type": "treeNode", "value": 98, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 99, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 25,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 50,
+                      "left": {"type": "treeNode", "value": 100, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 101, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 51,
+                      "left": {"type": "treeNode", "value": 102, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 103, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 13,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 26,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 52,
+                      "left": {"type": "treeNode", "value": 104, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 105, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 53,
+                      "left": {"type": "treeNode", "value": 106, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 107, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 27,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 54,
+                      "left": {"type": "treeNode", "value": 108, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 109, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 55,
+                      "left": {"type": "treeNode", "value": 110, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 111, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 14,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 28,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 56,
+                      "left": {"type": "treeNode", "value": 112, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 113, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 57,
+                      "left": {"type": "treeNode", "value": 114, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 115, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 29,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 58,
+                      "left": {"type": "treeNode", "value": 116, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 117, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 59,
+                      "left": {"type": "treeNode", "value": 118, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 119, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 15,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 30,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 60,
+                      "left": {"type": "treeNode", "value": 120, "left": null, "right": null},
+                      "right": null
+                    },
+                    "right": {"type": "treeNode", "value": 61, "left": null, "right": null}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 31,
+                    "left": {"type": "treeNode", "value": 62, "left": null, "right": null},
+                    "right": {"type": "treeNode", "value": 63, "left": null, "right": null}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": true
+      },
+      {
+        "id": "h14",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 16,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 32,
+                      "left": {"type": "treeNode", "value": 64, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 65, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 33,
+                      "left": {"type": "treeNode", "value": 66, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 67, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 17,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 34,
+                      "left": {"type": "treeNode", "value": 68, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 69, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 35,
+                      "left": {"type": "treeNode", "value": 70, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 71, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 18,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 36,
+                      "left": {"type": "treeNode", "value": 72, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 73, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 37,
+                      "left": {"type": "treeNode", "value": 74, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 75, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 19,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 38,
+                      "left": {"type": "treeNode", "value": 76, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 77, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 39,
+                      "left": {"type": "treeNode", "value": 78, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 79, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {
+                  "type": "treeNode",
+                  "value": 10,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 20,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 40,
+                      "left": {"type": "treeNode", "value": 80, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 81, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 41,
+                      "left": {"type": "treeNode", "value": 82, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 83, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 21,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 42,
+                      "left": {"type": "treeNode", "value": 84, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 85, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 43,
+                      "left": {"type": "treeNode", "value": 86, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 87, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 11,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 22,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 44,
+                      "left": {"type": "treeNode", "value": 88, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 89, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 45,
+                      "left": {"type": "treeNode", "value": 90, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 91, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 23,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 46,
+                      "left": {"type": "treeNode", "value": 92, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 93, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 47,
+                      "left": {"type": "treeNode", "value": 94, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 95, "left": null, "right": null}
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {
+                  "type": "treeNode",
+                  "value": 12,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 24,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 48,
+                      "left": {"type": "treeNode", "value": 96, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 97, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 49,
+                      "left": {"type": "treeNode", "value": 98, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 99, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 25,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 50,
+                      "left": {"type": "treeNode", "value": 100, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 101, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 51,
+                      "left": {"type": "treeNode", "value": 102, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 103, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 13,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 26,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 52,
+                      "left": {"type": "treeNode", "value": 104, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 105, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 53,
+                      "left": {"type": "treeNode", "value": 106, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 107, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 27,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 54,
+                      "left": {"type": "treeNode", "value": 108, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 109, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 55,
+                      "left": null,
+                      "right": {"type": "treeNode", "value": 111, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 14,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 28,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 56,
+                      "left": {"type": "treeNode", "value": 112, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 113, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 57,
+                      "left": {"type": "treeNode", "value": 114, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 115, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 29,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 58,
+                      "left": {"type": "treeNode", "value": 116, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 117, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 59,
+                      "left": {"type": "treeNode", "value": 118, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 119, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 15,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 30,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 60,
+                      "left": {"type": "treeNode", "value": 120, "left": null, "right": null},
+                      "right": null
+                    },
+                    "right": {"type": "treeNode", "value": 61, "left": null, "right": null}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 31,
+                    "left": {"type": "treeNode", "value": 62, "left": null, "right": null},
+                    "right": {"type": "treeNode", "value": 63, "left": null, "right": null}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h15",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 16,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 32,
+                      "left": {"type": "treeNode", "value": 64, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 65, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 33,
+                      "left": {"type": "treeNode", "value": 66, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 67, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 17,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 34,
+                      "left": {"type": "treeNode", "value": 68, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 69, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 35,
+                      "left": {"type": "treeNode", "value": 70, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 71, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 18,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 36,
+                      "left": {"type": "treeNode", "value": 72, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 73, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 37,
+                      "left": {"type": "treeNode", "value": 74, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 75, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 19,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 38,
+                      "left": {"type": "treeNode", "value": 76, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 77, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 39,
+                      "left": {"type": "treeNode", "value": 78, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 79, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {
+                  "type": "treeNode",
+                  "value": 10,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 20,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 40,
+                      "left": {"type": "treeNode", "value": 80, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 81, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 41,
+                      "left": {"type": "treeNode", "value": 82, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 83, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 21,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 42,
+                      "left": {"type": "treeNode", "value": 84, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 85, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 43,
+                      "left": {"type": "treeNode", "value": 86, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 87, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 11,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 22,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 44,
+                      "left": {"type": "treeNode", "value": 88, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 89, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 45,
+                      "left": {"type": "treeNode", "value": 90, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 91, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 23,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 46,
+                      "left": {"type": "treeNode", "value": 92, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 93, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 47,
+                      "left": {"type": "treeNode", "value": 94, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 95, "left": null, "right": null}
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {
+                  "type": "treeNode",
+                  "value": 12,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 24,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 48,
+                      "left": {"type": "treeNode", "value": 96, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 97, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 49,
+                      "left": {"type": "treeNode", "value": 98, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 99, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 25,
+                    "left": null,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 51,
+                      "left": {"type": "treeNode", "value": 102, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 103, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 13,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 26,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 52,
+                      "left": {"type": "treeNode", "value": 104, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 105, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 53,
+                      "left": {"type": "treeNode", "value": 106, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 107, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 27,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 54,
+                      "left": {"type": "treeNode", "value": 108, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 109, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 55,
+                      "left": {"type": "treeNode", "value": 110, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 111, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 14,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 28,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 56,
+                      "left": {"type": "treeNode", "value": 112, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 113, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 57,
+                      "left": {"type": "treeNode", "value": 114, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 115, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 29,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 58,
+                      "left": {"type": "treeNode", "value": 116, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 117, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 59,
+                      "left": {"type": "treeNode", "value": 118, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 119, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 15,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 30,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 60,
+                      "left": {"type": "treeNode", "value": 120, "left": null, "right": null},
+                      "right": null
+                    },
+                    "right": {"type": "treeNode", "value": 61, "left": null, "right": null}
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 31,
+                    "left": {"type": "treeNode", "value": 62, "left": null, "right": null},
+                    "right": {"type": "treeNode", "value": 63, "left": null, "right": null}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": false
+      },
+      {
+        "id": "h16",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": {
+              "type": "treeNode",
+              "value": 2,
+              "left": {
+                "type": "treeNode",
+                "value": 4,
+                "left": {
+                  "type": "treeNode",
+                  "value": 8,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 16,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 32,
+                      "left": null,
+                      "right": {"type": "treeNode", "value": 65, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 33,
+                      "left": {"type": "treeNode", "value": 66, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 67, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 17,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 34,
+                      "left": {"type": "treeNode", "value": 68, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 69, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 35,
+                      "left": {"type": "treeNode", "value": 70, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 71, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 9,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 18,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 36,
+                      "left": {"type": "treeNode", "value": 72, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 73, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 37,
+                      "left": {"type": "treeNode", "value": 74, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 75, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 19,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 38,
+                      "left": {"type": "treeNode", "value": 76, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 77, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 39,
+                      "left": {"type": "treeNode", "value": 78, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 79, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 5,
+                "left": {
+                  "type": "treeNode",
+                  "value": 10,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 20,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 40,
+                      "left": {"type": "treeNode", "value": 80, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 81, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 41,
+                      "left": {"type": "treeNode", "value": 82, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 83, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 21,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 42,
+                      "left": {"type": "treeNode", "value": 84, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 85, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 43,
+                      "left": {"type": "treeNode", "value": 86, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 87, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 11,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 22,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 44,
+                      "left": {"type": "treeNode", "value": 88, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 89, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 45,
+                      "left": {"type": "treeNode", "value": 90, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 91, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 23,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 46,
+                      "left": {"type": "treeNode", "value": 92, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 93, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 47,
+                      "left": {"type": "treeNode", "value": 94, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 95, "left": null, "right": null}
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 3,
+              "left": {
+                "type": "treeNode",
+                "value": 6,
+                "left": {
+                  "type": "treeNode",
+                  "value": 12,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 24,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 48,
+                      "left": {"type": "treeNode", "value": 96, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 97, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 49,
+                      "left": {"type": "treeNode", "value": 98, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 99, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 25,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 50,
+                      "left": {"type": "treeNode", "value": 100, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 101, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 51,
+                      "left": {"type": "treeNode", "value": 102, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 103, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 13,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 26,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 52,
+                      "left": {"type": "treeNode", "value": 104, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 105, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 53,
+                      "left": {"type": "treeNode", "value": 106, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 107, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 27,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 54,
+                      "left": {"type": "treeNode", "value": 108, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 109, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 55,
+                      "left": {"type": "treeNode", "value": 110, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 111, "left": null, "right": null}
+                    }
+                  }
+                }
+              },
+              "right": {
+                "type": "treeNode",
+                "value": 7,
+                "left": {
+                  "type": "treeNode",
+                  "value": 14,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 28,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 56,
+                      "left": {"type": "treeNode", "value": 112, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 113, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 57,
+                      "left": {"type": "treeNode", "value": 114, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 115, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 29,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 58,
+                      "left": {"type": "treeNode", "value": 116, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 117, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 59,
+                      "left": {"type": "treeNode", "value": 118, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 119, "left": null, "right": null}
+                    }
+                  }
+                },
+                "right": {
+                  "type": "treeNode",
+                  "value": 15,
+                  "left": {
+                    "type": "treeNode",
+                    "value": 30,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 60,
+                      "left": {"type": "treeNode", "value": 120, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 121, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 61,
+                      "left": {"type": "treeNode", "value": 122, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 123, "left": null, "right": null}
+                    }
+                  },
+                  "right": {
+                    "type": "treeNode",
+                    "value": 31,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 62,
+                      "left": {"type": "treeNode", "value": 124, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 125, "left": null, "right": null}
+                    },
+                    "right": {
+                      "type": "treeNode",
+                      "value": 63,
+                      "left": {"type": "treeNode", "value": 126, "left": null, "right": null},
+                      "right": {"type": "treeNode", "value": 127, "left": null, "right": null}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "out": false
+      }
+    ]
+  },
+  "edgeCases": ["a right place taken beside an empty left place", "an empty place in the middle of the last row", "a singer in a lower row after an empty place", "an empty stage", "a single singer"],
+  "variables": {
+    "pool": [
+      {"name": "line", "type": "queue<treeNode>"},
+      {"name": "node", "type": "treeNode"},
+      {"name": "kid", "type": "treeNode?"},
+      {"name": "gap", "type": "bool"},
+      {"name": "l", "type": "treeNode?"},
+      {"name": "r", "type": "treeNode?"},
+      {"name": "width", "type": "num"},
+      {"name": "next", "type": "num"},
+      {"name": "i", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "bfs_no_node_after_gap"}
+}

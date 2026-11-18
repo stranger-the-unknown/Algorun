@@ -1,0 +1,129 @@
+{
+  "id": "cold_spells",
+  "version": 1,
+  "title": "Every Cold Spell",
+  "world": "world_06",
+  "chapter": "stretch_minimums_by_end",
+  "tier": 5,
+  "mode": "budget",
+  "concepts": ["stack", "monotonic_stack"],
+  "prerequisites": [],
+  "story": "A mountain hut logs the lowest temperature of every night. For a study, every stretch of one or more nights in a row gets a score: the coldest reading in it. Add up the scores of all stretches. With readings 3 1 2 the six stretches score 3, 1, 2, 1, 1 and 1, so the answer is 9. A long winter must be finished within the operation budget: going through every stretch is too slow.",
+  "io": {
+    "inputs": [
+      {"name": "temps", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 600},
+    "notes": ["0 to 600 nights.", "Readings are whole numbers from -30 to 40."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.min", "arith.mul", "arith.sub", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.ge", "cmp.gt", "cmp.lt", "ctrl.else", "ctrl.for_range", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.not", "new.array", "new.stack", "stack.empty", "stack.peek", "stack.pop", "stack.push", "var.get", "var.set"],
+    "maxBlocks": 106
+  },
+  "limits": {"maxOps": 100000, "maxDepth": 32, "maxAlloc": 5000},
+  "performance": {"required": true, "baselineFactor": 5},
+  "hints": ["Group the stretches by the night they end on. For tonight, find the last earlier night that was strictly colder: every stretch that starts after that night and ends tonight scores tonight's reading.", "The stretches that start on or before that colder night score exactly what they scored when they ended on that night. So tonight's sum is tonight's reading TIMES the number of nights since the colder night, PLUS that night's own sum.", "Keep the positions of the nights that may still be someone's colder night in a NEW STACK: POP WHILE the night on top is not colder than tonight, then PEEK. Store every night's sum in a list, add it to the total, and PUSH tonight."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"temps": [3, 1, 2]},
+        "out": 9
+      },
+      {
+        "id": "v2",
+        "in": {"temps": [4, 6, 5, -2]},
+        "out": 20
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"temps": []},
+        "out": 0
+      },
+      {
+        "id": "h02",
+        "in": {"temps": [7]},
+        "out": 7
+      },
+      {
+        "id": "h03",
+        "in": {"temps": [2, 2]},
+        "out": 6
+      },
+      {
+        "id": "h04",
+        "in": {"temps": [5, 5, 5, 5]},
+        "out": 50
+      },
+      {
+        "id": "h05",
+        "in": {"temps": [1, 2, 3, 4, 5]},
+        "out": 35
+      },
+      {
+        "id": "h06",
+        "in": {"temps": [6, 4, 3, 1]},
+        "out": 27
+      },
+      {
+        "id": "h07",
+        "in": {"temps": [-3, -1, -3]},
+        "out": -16
+      },
+      {
+        "id": "h08",
+        "in": {"temps": [2, 1, 2, 1, 2]},
+        "out": 18
+      },
+      {
+        "id": "h09",
+        "in": {"temps": [0, -4, 0, 9, 0, -4]},
+        "out": -47
+      },
+      {
+        "id": "h10",
+        "in": {
+          "temps": [3, -4, 4, 1, -5, -5, -5, 2, -2, -2, -4, 3, -4, 0, -4, 2, 2, 2, 1, -3, 3, -1, -5, 0, 2, 3, -4, -3, -2, -3, 1, 5, 2, 1, 1, 4, 5, -1, -3, 4]
+        },
+        "out": -3407
+      },
+      {
+        "id": "h11",
+        "in": {
+          "temps": [0, 3, 1, 3, 1, 2, 3, 0, 2, 0, 1, 1, 2, 0, 2, 3, 0, 2, 0, 2, 3, 1, 3, 2, 1, 1, 0, 2, 3, 1, 3, 1, 1, 3, 3, 1, 2, 1, 0, 0, 1, 1, 2, 1, 3, 2, 0, 0, 2, 1, 2, 1, 2, 2, 3, 2, 3, 2, 1, 3, 2, 0, 0, 0, 2, 1, 1, 1, 1, 2, 2, 3, 0, 0, 3, 2, 2, 0, 0, 1, 0, 3, 0, 0, 1, 1, 0, 3, 0, 2, 2, 0, 0, 1, 3, 3, 1, 1, 1, 0, 3, 1, 1, 3, 2, 3, 1, 2, 1, 2, 2, 0, 0, 3, 2, 2, 0, 1, 3, 2, 1, 3, 3, 0, 3, 3, 0, 0, 3, 2, 1, 3, 0, 3, 0, 0, 0, 2, 0, 1, 3, 3, 0, 1, 2, 2, 3, 1, 1, 0, 3, 0, 0, 3, 1, 3, 0, 3, 0, 1, 2, 3, 1, 1, 0, 2, 1, 3, 2, 0, 0, 2, 0, 2, 0, 2, 1, 2, 1, 3, 1, 0, 0, 2, 3, 2, 1, 3, 1, 3, 1, 1, 1, 0, 0, 3, 1, 1, 0, 3, 1, 2, 2, 1, 3, 3, 3, 1, 1, 2, 2, 0, 1, 2, 2, 0, 3, 3, 2, 3, 2, 1, 2, 1, 3, 0, 2, 1, 2, 2, 3, 0, 0, 0, 1, 3, 0, 1, 3, 0, 2, 3, 0, 0, 1, 0, 1, 1, 1, 3, 1, 2, 0, 1, 2, 0, 1, 2, 3, 2, 0, 1, 1, 0, 1, 2, 2, 2, 3, 1, 3, 0, 0, 3, 0, 3, 3, 0, 2, 0, 0, 2, 3, 3, 3, 2, 2, 0, 1, 0, 3, 0, 2, 2, 3, 2, 3, 3, 1, 3, 3, 2, 2, 0, 2, 2, 2, 2, 1, 0, 2, 0, 1, 0, 0, 1, 1, 0, 2, 0, 1, 0, 2, 0, 2, 2, 0, 1, 1, 3, 3, 1, 1, 3, 0, 0, 0, 2, 0, 2, 2, 3, 0, 1, 1, 2, 3, 3, 1, 2, 0, 3, 3, 3, 2, 2, 3, 2, 2, 0, 0, 1, 1, 2, 3, 0, 3, 0, 3, 2, 1, 1, 3, 2, 1, 0, 0, 3, 0, 3, 3, 2, 1, 1, 3, 2, 1, 3, 2, 1, 2, 3, 3, 0, 2, 2, 0, 3, 1, 2, 0, 3, 0, 0, 3, 2, 2, 0, 0, 3, 1, 3, 1, 1, 1, 2, 1, 2, 0, 3, 2, 3, 2, 1, 3, 3, 0, 3, 3, 0, 3, 0, 1, 3, 3, 1, 2, 2, 1, 1, 2, 3, 2, 1, 1, 0, 0, 3, 0, 1, 1, 1, 2, 3, 2, 3, 0, 0, 3, 3, 3, 0, 2, 3, 2, 1, 3, 2, 3, 1, 3, 2, 2, 1, 0, 1, 2, 0, 2, 0, 2, 3, 1, 2, 2, 1, 1, 3, 3, 3, 2, 3, 0, 1, 3, 3, 2, 0, 1, 1, 2, 1, 2, 3, 3, 2, 3, 3, 0, 0, 2, 0, 2, 3, 1, 1, 2, 0, 0, 3, 3, 3, 3, 3, 0, 0, 0, 2, 2, 0, 3, 2, 1, 2, 2, 3, 2, 2, 0, 3, 3, 2, 0, 1, 1, 3, 3, 2, 1, 0, 0, 3, 2, 0, 1, 2, 1, 0, 3, 2, 0, 0, 3, 2, 2, 2, 2, 3, 3, 1, 0, 0, 0, 1, 2, 0, 1, 3, 3, 2, 3, 1, 2, 3, 0, 0, 0, 3, 2, 1, 2, 3, 2, 2, 0, 1, 3, 1, 1, 3]
+        },
+        "out": 2632
+      },
+      {
+        "id": "h12",
+        "in": {
+          "temps": [36, 11, -7, 6, 28, -25, -15, -7, 34, 24, 21, -13, -25, -12, 0, 38, -15, -12, -1, 34, -1, -8, -12, 23, 9, -5, 1, 1, -24, -30, 24, 20, -14, 19, 39, -3, -25, 4, 28, -19, 35, 0, -23, 9, -21, 3, -9, 17, 16, -26, 33, 6, -26, 18, -21, 39, 36, -8, -17, -4, -2, 1, -18, -15, 5, 19, 13, 40, 3, 33, 27, -25, 19, -25, 11, -27, 10, 20, 33, 7, 7, 7, 20, 25, -5, -16, 32, 40, 40, 4, 23, -4, -16, 31, 14, -3, 39, -28, 33, -14, 13, -5, 26, 20, 30, 40, 6, 14, 31, 29, -2, 2, -23, 7, -3, 35, 2, 37, -19, 7, 22, 6, -11, 28, 36, 33, 39, 18, -18, 1, 11, 25, 17, 23, 37, -27, -17, 15, -28, 31, 2, 40, -23, -8, 19, 28, -24, -10, 6, -22, 11, 34, 24, -5, -5, -4, -14, -12, 34, -2, -19, -28, 21, 23, -11, -27, 34, 23, 6, 25, 3, 38, 24, 23, 33, -29, 30, 17, -19, 12, 36, -29, -30, 5, -1, -11, -15, 11, -16, 32, 8, 15, -13, -22, 19, -6, 12, 19, 16, 18, 29, -7, -16, 21, -18, 40, -25, -25, 14, -12, 38, -25, 2, -16, -29, 39, 37, -14, -2, -2, -29, -9, 31, 15, -22, 15, 9, 10, -24, 2, -10, -27, -6, 26, 28, -24, -28, -25, 12, 9, -14, 21, -27, 20, -14, 2, 25, -13, 17, 28, 17, 26, 11, -7, 3, 7, -30, -18, 6, 28, -15, -24, 6, -18, -27, 40, -10, -6, 35, -1, 30, 9, 15, 20, 29, 30, -26, 26, 5, 8, 19, 25, 23, 34, -20, -8, 26, -29, -16, 30, -4, 0, 12, 22, -1, 7, -3, 12, 9, 15, -5, -5, 34, 35, -22, -7, -22, -17, -16, 7, 36, 22, 3, -16, -12, 24, 12, 33, -28, 32, 8, 18, -14, 7, 18, 39, -7, 10, 16, -10, 14, 16, 39, -24, -20, 31, 40, 4, -19, -17, -29, -23, 6, 28, -14, 23, 25, -5, 4, -6, -26, -9, -20, -27, 40, -15, 31, -8, 20, -19, -29, 17, 28, -14, -20, 21, -26, 2, -20, -15, 32, 38, 39, -3, 2, 12, 33, 11, -14, 28, -12, 6, 26, -22, -28, -27, 28, -6, -13, 27, -9, 28, 15, 20, 10, 35, 40, 4, -23, -16, 8, 2, -28, 18, -30, -6, 36, 12, -27, 19, 18, -21, -21, -18, 23, 25, 8, 3, 15, -10, 20, 38, 27, 1, 10, -22, 5, 18, 39, -10, 18, -13, -10, 37, 4, 37, 16, 17, 19, 24, 40, -17, 0, 20, -5, 19, -25, -7, -30, 15, -17, 38, 20, -1, 31, -22, 21, 38, 25, 11, 15, -25, 29, 2, -10, 2, 19, 19, 38, -4, 13, 6, 8, -6, -17, 17, -25, 2, 39, 10, 9, -10, -21, 27, 14, -25, -10, 19, 37, 39, 34, -7, 25, -16, 40, 40, 2, 3, -12, 30, -8, -9, 5, 16, -29, -22, 15, 25, -25, -27, 12, 36, 28, 40, 27, 20, 12, -13, -19, -18, 26, -6, 8, 14, 7, 30, -11, 26, -22, 35, -21, -30, -27, 22, -30, -7, 38, 30, 12, 5, -29, -3, 19, 35, -5, 26, 12, -17, -28, 20, -29, -1, 40, -12, 13, 32, -13, 8, -20, 8, 25, -6, 20, -3, 3, 17, 29, 28, 4, 30, 0, 19, 35, -12, 4, 1, -1, 15, -1, 2, 36, -29, 7, -30, 6, -11, -27, 26, -22, 32, -12, 25, 24, -10, 16, -1, 17, 8, 1, -26]
+        },
+        "out": -5264693
+      }
+    ]
+  },
+  "edgeCases": ["equal readings must not be counted twice", "readings below zero", "a winter that only gets colder", "a winter that only gets warmer", "no nights", "going through every stretch is over budget"],
+  "variables": {
+    "pool": [
+      {"name": "colder", "type": "stack<num>"},
+      {"name": "sums", "type": "array<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "cur", "type": "num"},
+      {"name": "total", "type": "num"},
+      {"name": "gone", "type": "num"},
+      {"name": "j", "type": "num"},
+      {"name": "low", "type": "num"},
+      {"name": "later", "type": "stack<num>"},
+      {"name": "back", "type": "array<num>"},
+      {"name": "on", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "stretch_minimums_by_end"}
+}

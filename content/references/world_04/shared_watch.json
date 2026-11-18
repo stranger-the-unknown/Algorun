@@ -1,0 +1,1734 @@
+{
+  "puzzle": "shared_watch",
+  "notes": "One mark per list; the shared minutes of the two watches under the marks, then on from the watch that ends first. Moving on from the watch that started first drops a long watch too early; every pair is the slow baseline.",
+  "spec": {
+    "family": "two_pointers",
+    "pattern": "two_interval_lists_shared_time",
+    "structure": "array",
+    "secondary": [],
+    "performance": "budget",
+    "traps": ["one long watch across several short ones", "watches that only touch", "a guard with no watches", "one watch inside another", "comparing every watch with every watch is over budget"],
+    "oracle": "shared_watch"
+  },
+  "metrics": {"blocks": 60, "ops": 13488, "peakAlloc": 0, "peakDepth": 1},
+  "solution": {
+    "blocks": {
+      "b0": {
+        "id": "b0",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b1": {
+        "id": "b1",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b0"}
+        },
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b2": {
+        "id": "b2",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b3": {
+        "id": "b3",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b2"}
+        },
+        "literals": {"name": "j"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b4": {
+        "id": "b4",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b5": {
+        "id": "b5",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b4"}
+        },
+        "literals": {"name": "total"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b6": {
+        "id": "b6",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b7": {
+        "id": "b7",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "startsA"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b8": {
+        "id": "b8",
+        "catalogId": "arr.len",
+        "slots": {
+          "array": {"ref": "b7"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b9": {
+        "id": "b9",
+        "catalogId": "cmp.lt",
+        "slots": {
+          "left": {"ref": "b6"},
+          "right": {"ref": "b8"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b10": {
+        "id": "b10",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "j"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b11": {
+        "id": "b11",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "startsB"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b12": {
+        "id": "b12",
+        "catalogId": "arr.len",
+        "slots": {
+          "array": {"ref": "b11"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b13": {
+        "id": "b13",
+        "catalogId": "cmp.lt",
+        "slots": {
+          "left": {"ref": "b10"},
+          "right": {"ref": "b12"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b14": {
+        "id": "b14",
+        "catalogId": "logic.and",
+        "slots": {
+          "left": {"ref": "b9"},
+          "right": {"ref": "b13"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b15": {
+        "id": "b15",
+        "catalogId": "ctrl.while",
+        "slots": {
+          "condition": {"ref": "b14"},
+          "body": {"list": ["b23", "b31", "b35", "b49"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b16": {
+        "id": "b16",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "startsA"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b17": {
+        "id": "b17",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b18": {
+        "id": "b18",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b16"},
+          "index": {"ref": "b17"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b19": {
+        "id": "b19",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "startsB"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b20": {
+        "id": "b20",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "j"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b21": {
+        "id": "b21",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b19"},
+          "index": {"ref": "b20"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b22": {
+        "id": "b22",
+        "catalogId": "arith.max",
+        "slots": {
+          "left": {"ref": "b18"},
+          "right": {"ref": "b21"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b23": {
+        "id": "b23",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b22"}
+        },
+        "literals": {"name": "from"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b24": {
+        "id": "b24",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "endsA"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b25": {
+        "id": "b25",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b26": {
+        "id": "b26",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b24"},
+          "index": {"ref": "b25"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b27": {
+        "id": "b27",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "endsB"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b28": {
+        "id": "b28",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "j"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b29": {
+        "id": "b29",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b27"},
+          "index": {"ref": "b28"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b30": {
+        "id": "b30",
+        "catalogId": "arith.min",
+        "slots": {
+          "left": {"ref": "b26"},
+          "right": {"ref": "b29"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b31": {
+        "id": "b31",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b30"}
+        },
+        "literals": {"name": "to"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b32": {
+        "id": "b32",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "to"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b33": {
+        "id": "b33",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "from"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b34": {
+        "id": "b34",
+        "catalogId": "cmp.gt",
+        "slots": {
+          "left": {"ref": "b32"},
+          "right": {"ref": "b33"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b35": {
+        "id": "b35",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {"ref": "b34"},
+          "then": {"list": ["b41"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b36": {
+        "id": "b36",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "total"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b37": {
+        "id": "b37",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "to"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b38": {
+        "id": "b38",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "from"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b39": {
+        "id": "b39",
+        "catalogId": "arith.sub",
+        "slots": {
+          "left": {"ref": "b37"},
+          "right": {"ref": "b38"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b40": {
+        "id": "b40",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {"ref": "b36"},
+          "right": {"ref": "b39"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b41": {
+        "id": "b41",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b40"}
+        },
+        "literals": {"name": "total"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b42": {
+        "id": "b42",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "endsA"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b43": {
+        "id": "b43",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b44": {
+        "id": "b44",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b42"},
+          "index": {"ref": "b43"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b45": {
+        "id": "b45",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "endsB"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b46": {
+        "id": "b46",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "j"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b47": {
+        "id": "b47",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b45"},
+          "index": {"ref": "b46"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b48": {
+        "id": "b48",
+        "catalogId": "cmp.lt",
+        "slots": {
+          "left": {"ref": "b44"},
+          "right": {"ref": "b47"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b49": {
+        "id": "b49",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {"ref": "b48"},
+          "then": {"list": ["b53"]},
+          "else": {"list": ["b54"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b50": {
+        "id": "b50",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b51": {
+        "id": "b51",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b52": {
+        "id": "b52",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {"ref": "b50"},
+          "right": {"ref": "b51"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b53": {
+        "id": "b53",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b52"}
+        },
+        "literals": {"name": "i"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b54": {
+        "id": "b54",
+        "catalogId": "ctrl.else",
+        "slots": {
+          "body": {"list": ["b58"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b55": {
+        "id": "b55",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "j"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b56": {
+        "id": "b56",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b57": {
+        "id": "b57",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {"ref": "b55"},
+          "right": {"ref": "b56"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b58": {
+        "id": "b58",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b57"}
+        },
+        "literals": {"name": "j"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b59": {
+        "id": "b59",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "total"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b60": {
+        "id": "b60",
+        "catalogId": "ctrl.return",
+        "slots": {
+          "value": {"ref": "b59"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      }
+    },
+    "entryIds": ["b1", "b3", "b5", "b15", "b60"],
+    "variables": {
+      "startsA": "array<num>",
+      "endsA": "array<num>",
+      "startsB": "array<num>",
+      "endsB": "array<num>",
+      "i": "num",
+      "j": "num",
+      "from": "num",
+      "to": "num",
+      "total": "num"
+    }
+  },
+  "rejects": [
+    {
+      "name": "compares every watch with every watch",
+      "expect": "operationLimit",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b0"}
+            },
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsA"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "arr.len",
+            "slots": {
+              "array": {"ref": "b3"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "ctrl.for_range",
+            "slots": {
+              "start": {"ref": "b2"},
+              "end": {"ref": "b4"},
+              "body": {"list": ["b9"]}
+            },
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsB"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "arr.len",
+            "slots": {
+              "array": {"ref": "b7"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "ctrl.for_range",
+            "slots": {
+              "start": {"ref": "b6"},
+              "end": {"ref": "b8"},
+              "body": {"list": ["b17", "b25", "b29"]}
+            },
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsA"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b10"},
+              "index": {"ref": "b11"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsB"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b13"},
+              "index": {"ref": "b14"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "arith.max",
+            "slots": {
+              "left": {"ref": "b12"},
+              "right": {"ref": "b15"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b16"}
+            },
+            "literals": {"name": "from"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b18": {
+            "id": "b18",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "endsA"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b19": {
+            "id": "b19",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b20": {
+            "id": "b20",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b18"},
+              "index": {"ref": "b19"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b21": {
+            "id": "b21",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "endsB"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b22": {
+            "id": "b22",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b23": {
+            "id": "b23",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b21"},
+              "index": {"ref": "b22"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b24": {
+            "id": "b24",
+            "catalogId": "arith.min",
+            "slots": {
+              "left": {"ref": "b20"},
+              "right": {"ref": "b23"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b25": {
+            "id": "b25",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b24"}
+            },
+            "literals": {"name": "to"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b26": {
+            "id": "b26",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "to"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b27": {
+            "id": "b27",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "from"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b28": {
+            "id": "b28",
+            "catalogId": "cmp.gt",
+            "slots": {
+              "left": {"ref": "b26"},
+              "right": {"ref": "b27"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b29": {
+            "id": "b29",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b28"},
+              "then": {"list": ["b35"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b30": {
+            "id": "b30",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b31": {
+            "id": "b31",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "to"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b32": {
+            "id": "b32",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "from"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b33": {
+            "id": "b33",
+            "catalogId": "arith.sub",
+            "slots": {
+              "left": {"ref": "b31"},
+              "right": {"ref": "b32"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b34": {
+            "id": "b34",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {"ref": "b30"},
+              "right": {"ref": "b33"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b35": {
+            "id": "b35",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b34"}
+            },
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b36": {
+            "id": "b36",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b37": {
+            "id": "b37",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {"ref": "b36"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": ["b1", "b5", "b37"],
+        "variables": {
+          "startsA": "array<num>",
+          "endsA": "array<num>",
+          "startsB": "array<num>",
+          "endsB": "array<num>",
+          "i": "num",
+          "j": "num",
+          "from": "num",
+          "to": "num",
+          "total": "num"
+        }
+      }
+    },
+    {
+      "name": "moves on from the watch that started first",
+      "expect": "wrongAnswer",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b0"}
+            },
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b2"}
+            },
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b4"}
+            },
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsA"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "arr.len",
+            "slots": {
+              "array": {"ref": "b7"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "cmp.lt",
+            "slots": {
+              "left": {"ref": "b6"},
+              "right": {"ref": "b8"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsB"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "arr.len",
+            "slots": {
+              "array": {"ref": "b11"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "cmp.lt",
+            "slots": {
+              "left": {"ref": "b10"},
+              "right": {"ref": "b12"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "logic.and",
+            "slots": {
+              "left": {"ref": "b9"},
+              "right": {"ref": "b13"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "ctrl.while",
+            "slots": {
+              "condition": {"ref": "b14"},
+              "body": {"list": ["b23", "b31", "b35", "b49"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsA"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b18": {
+            "id": "b18",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b16"},
+              "index": {"ref": "b17"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b19": {
+            "id": "b19",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsB"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b20": {
+            "id": "b20",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b21": {
+            "id": "b21",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b19"},
+              "index": {"ref": "b20"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b22": {
+            "id": "b22",
+            "catalogId": "arith.max",
+            "slots": {
+              "left": {"ref": "b18"},
+              "right": {"ref": "b21"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b23": {
+            "id": "b23",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b22"}
+            },
+            "literals": {"name": "from"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b24": {
+            "id": "b24",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "endsA"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b25": {
+            "id": "b25",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b26": {
+            "id": "b26",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b24"},
+              "index": {"ref": "b25"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b27": {
+            "id": "b27",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "endsB"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b28": {
+            "id": "b28",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b29": {
+            "id": "b29",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b27"},
+              "index": {"ref": "b28"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b30": {
+            "id": "b30",
+            "catalogId": "arith.min",
+            "slots": {
+              "left": {"ref": "b26"},
+              "right": {"ref": "b29"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b31": {
+            "id": "b31",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b30"}
+            },
+            "literals": {"name": "to"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b32": {
+            "id": "b32",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "to"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b33": {
+            "id": "b33",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "from"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b34": {
+            "id": "b34",
+            "catalogId": "cmp.gt",
+            "slots": {
+              "left": {"ref": "b32"},
+              "right": {"ref": "b33"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b35": {
+            "id": "b35",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b34"},
+              "then": {"list": ["b41"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b36": {
+            "id": "b36",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b37": {
+            "id": "b37",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "to"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b38": {
+            "id": "b38",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "from"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b39": {
+            "id": "b39",
+            "catalogId": "arith.sub",
+            "slots": {
+              "left": {"ref": "b37"},
+              "right": {"ref": "b38"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b40": {
+            "id": "b40",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {"ref": "b36"},
+              "right": {"ref": "b39"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b41": {
+            "id": "b41",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b40"}
+            },
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b42": {
+            "id": "b42",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsA"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b43": {
+            "id": "b43",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b44": {
+            "id": "b44",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b42"},
+              "index": {"ref": "b43"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b45": {
+            "id": "b45",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "startsB"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b46": {
+            "id": "b46",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b47": {
+            "id": "b47",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b45"},
+              "index": {"ref": "b46"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b48": {
+            "id": "b48",
+            "catalogId": "cmp.lt",
+            "slots": {
+              "left": {"ref": "b44"},
+              "right": {"ref": "b47"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b49": {
+            "id": "b49",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b48"},
+              "then": {"list": ["b53"]},
+              "else": {"list": ["b54"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b50": {
+            "id": "b50",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b51": {
+            "id": "b51",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 1},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b52": {
+            "id": "b52",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {"ref": "b50"},
+              "right": {"ref": "b51"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b53": {
+            "id": "b53",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b52"}
+            },
+            "literals": {"name": "i"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b54": {
+            "id": "b54",
+            "catalogId": "ctrl.else",
+            "slots": {
+              "body": {"list": ["b58"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b55": {
+            "id": "b55",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b56": {
+            "id": "b56",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 1},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b57": {
+            "id": "b57",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {"ref": "b55"},
+              "right": {"ref": "b56"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b58": {
+            "id": "b58",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b57"}
+            },
+            "literals": {"name": "j"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b59": {
+            "id": "b59",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "total"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b60": {
+            "id": "b60",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {"ref": "b59"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": ["b1", "b3", "b5", "b15", "b60"],
+        "variables": {
+          "startsA": "array<num>",
+          "endsA": "array<num>",
+          "startsB": "array<num>",
+          "endsB": "array<num>",
+          "i": "num",
+          "j": "num",
+          "from": "num",
+          "to": "num",
+          "total": "num"
+        }
+      }
+    }
+  ]
+}

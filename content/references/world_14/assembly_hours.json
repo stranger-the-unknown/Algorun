@@ -1,0 +1,2260 @@
+{
+  "puzzle": "assembly_hours",
+  "notes": "Waiting counts and a queue of ready steps; each step is done one hour after the latest step it waits for, and a step that never becomes ready means a circle. Giving a step the hour of the first step that reaches it is too early when a longer chain also leads to it, and it walks straight through a circle.",
+  "spec": {
+    "family": "multi_concept",
+    "pattern": "kahn_longest_chain_hours",
+    "structure": "graph",
+    "secondary": [],
+    "performance": "correctness",
+    "traps": ["a step that waits for a short chain and a long chain", "a circle that the first steps lead into", "a circle with no step free to start", "two separate jobs", "no rules at all"],
+    "oracle": "assembly_hours"
+  },
+  "metrics": {"blocks": 112, "ops": 41433, "peakAlloc": 2769, "peakDepth": 1},
+  "solution": {
+    "blocks": {
+      "b0": {
+        "id": "b0",
+        "catalogId": "new.array",
+        "slots": {},
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b1": {
+        "id": "b1",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b0"}
+        },
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b2": {
+        "id": "b2",
+        "catalogId": "new.array",
+        "slots": {},
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b3": {
+        "id": "b3",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b2"}
+        },
+        "literals": {"name": "hour"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b4": {
+        "id": "b4",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b5": {
+        "id": "b5",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "steps"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b6": {
+        "id": "b6",
+        "catalogId": "graph.node_count",
+        "slots": {
+          "graph": {"ref": "b5"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b7": {
+        "id": "b7",
+        "catalogId": "ctrl.for_range",
+        "slots": {
+          "start": {"ref": "b4"},
+          "end": {"ref": "b6"},
+          "body": {"list": ["b10", "b13"]}
+        },
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b8": {
+        "id": "b8",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b9": {
+        "id": "b9",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b10": {
+        "id": "b10",
+        "catalogId": "arr.append",
+        "slots": {
+          "array": {"ref": "b9"},
+          "value": {"ref": "b8"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b11": {
+        "id": "b11",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b12": {
+        "id": "b12",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "hour"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b13": {
+        "id": "b13",
+        "catalogId": "arr.append",
+        "slots": {
+          "array": {"ref": "b12"},
+          "value": {"ref": "b11"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b14": {
+        "id": "b14",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b15": {
+        "id": "b15",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "steps"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b16": {
+        "id": "b16",
+        "catalogId": "graph.node_count",
+        "slots": {
+          "graph": {"ref": "b15"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b17": {
+        "id": "b17",
+        "catalogId": "ctrl.for_range",
+        "slots": {
+          "start": {"ref": "b14"},
+          "end": {"ref": "b16"},
+          "body": {"list": ["b21"]}
+        },
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b18": {
+        "id": "b18",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "steps"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b19": {
+        "id": "b19",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b20": {
+        "id": "b20",
+        "catalogId": "graph.neighbors",
+        "slots": {
+          "graph": {"ref": "b18"},
+          "node": {"ref": "b19"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b21": {
+        "id": "b21",
+        "catalogId": "ctrl.foreach",
+        "slots": {
+          "collection": {"ref": "b20"},
+          "body": {"list": ["b29"]}
+        },
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b22": {
+        "id": "b22",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b23": {
+        "id": "b23",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b24": {
+        "id": "b24",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b25": {
+        "id": "b25",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b23"},
+          "index": {"ref": "b24"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b26": {
+        "id": "b26",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b27": {
+        "id": "b27",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {"ref": "b25"},
+          "right": {"ref": "b26"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b28": {
+        "id": "b28",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b29": {
+        "id": "b29",
+        "catalogId": "arr.set",
+        "slots": {
+          "array": {"ref": "b28"},
+          "index": {"ref": "b22"},
+          "value": {"ref": "b27"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b30": {
+        "id": "b30",
+        "catalogId": "new.queue",
+        "slots": {},
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b31": {
+        "id": "b31",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b30"}
+        },
+        "literals": {"name": "ready"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b32": {
+        "id": "b32",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b33": {
+        "id": "b33",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "steps"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b34": {
+        "id": "b34",
+        "catalogId": "graph.node_count",
+        "slots": {
+          "graph": {"ref": "b33"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b35": {
+        "id": "b35",
+        "catalogId": "ctrl.for_range",
+        "slots": {
+          "start": {"ref": "b32"},
+          "end": {"ref": "b34"},
+          "body": {"list": ["b41"]}
+        },
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b36": {
+        "id": "b36",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b37": {
+        "id": "b37",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b38": {
+        "id": "b38",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b36"},
+          "index": {"ref": "b37"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b39": {
+        "id": "b39",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b40": {
+        "id": "b40",
+        "catalogId": "cmp.eq",
+        "slots": {
+          "left": {"ref": "b38"},
+          "right": {"ref": "b39"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b41": {
+        "id": "b41",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {"ref": "b40"},
+          "then": {"list": ["b44", "b48"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b42": {
+        "id": "b42",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b43": {
+        "id": "b43",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "ready"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b44": {
+        "id": "b44",
+        "catalogId": "queue.enq",
+        "slots": {
+          "queue": {"ref": "b43"},
+          "value": {"ref": "b42"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b45": {
+        "id": "b45",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "u"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b46": {
+        "id": "b46",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b47": {
+        "id": "b47",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "hour"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b48": {
+        "id": "b48",
+        "catalogId": "arr.set",
+        "slots": {
+          "array": {"ref": "b47"},
+          "index": {"ref": "b45"},
+          "value": {"ref": "b46"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b49": {
+        "id": "b49",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b50": {
+        "id": "b50",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b49"}
+        },
+        "literals": {"name": "done"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b51": {
+        "id": "b51",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b52": {
+        "id": "b52",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b51"}
+        },
+        "literals": {"name": "last"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b53": {
+        "id": "b53",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "ready"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b54": {
+        "id": "b54",
+        "catalogId": "queue.empty",
+        "slots": {
+          "queue": {"ref": "b53"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b55": {
+        "id": "b55",
+        "catalogId": "logic.not",
+        "slots": {
+          "arg": {"ref": "b54"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b56": {
+        "id": "b56",
+        "catalogId": "ctrl.while",
+        "slots": {
+          "condition": {"ref": "b55"},
+          "body": {"list": ["b59", "b63", "b69", "b73"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b57": {
+        "id": "b57",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "ready"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b58": {
+        "id": "b58",
+        "catalogId": "queue.deq",
+        "slots": {
+          "queue": {"ref": "b57"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b59": {
+        "id": "b59",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b58"}
+        },
+        "literals": {"name": "here"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b60": {
+        "id": "b60",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "done"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b61": {
+        "id": "b61",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b62": {
+        "id": "b62",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {"ref": "b60"},
+          "right": {"ref": "b61"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b63": {
+        "id": "b63",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b62"}
+        },
+        "literals": {"name": "done"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b64": {
+        "id": "b64",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "last"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b65": {
+        "id": "b65",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "hour"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b66": {
+        "id": "b66",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "here"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b67": {
+        "id": "b67",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b65"},
+          "index": {"ref": "b66"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b68": {
+        "id": "b68",
+        "catalogId": "arith.max",
+        "slots": {
+          "left": {"ref": "b64"},
+          "right": {"ref": "b67"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b69": {
+        "id": "b69",
+        "catalogId": "var.set",
+        "slots": {
+          "value": {"ref": "b68"}
+        },
+        "literals": {"name": "last"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b70": {
+        "id": "b70",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "steps"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b71": {
+        "id": "b71",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "here"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b72": {
+        "id": "b72",
+        "catalogId": "graph.neighbors",
+        "slots": {
+          "graph": {"ref": "b70"},
+          "node": {"ref": "b71"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b73": {
+        "id": "b73",
+        "catalogId": "ctrl.foreach",
+        "slots": {
+          "collection": {"ref": "b72"},
+          "body": {"list": ["b85", "b93", "b99"]}
+        },
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b74": {
+        "id": "b74",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b75": {
+        "id": "b75",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "hour"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b76": {
+        "id": "b76",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b77": {
+        "id": "b77",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b75"},
+          "index": {"ref": "b76"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b78": {
+        "id": "b78",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "hour"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b79": {
+        "id": "b79",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "here"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b80": {
+        "id": "b80",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b78"},
+          "index": {"ref": "b79"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b81": {
+        "id": "b81",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b82": {
+        "id": "b82",
+        "catalogId": "arith.add",
+        "slots": {
+          "left": {"ref": "b80"},
+          "right": {"ref": "b81"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b83": {
+        "id": "b83",
+        "catalogId": "arith.max",
+        "slots": {
+          "left": {"ref": "b77"},
+          "right": {"ref": "b82"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b84": {
+        "id": "b84",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "hour"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b85": {
+        "id": "b85",
+        "catalogId": "arr.set",
+        "slots": {
+          "array": {"ref": "b84"},
+          "index": {"ref": "b74"},
+          "value": {"ref": "b83"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b86": {
+        "id": "b86",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b87": {
+        "id": "b87",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b88": {
+        "id": "b88",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b89": {
+        "id": "b89",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b87"},
+          "index": {"ref": "b88"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b90": {
+        "id": "b90",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b91": {
+        "id": "b91",
+        "catalogId": "arith.sub",
+        "slots": {
+          "left": {"ref": "b89"},
+          "right": {"ref": "b90"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b92": {
+        "id": "b92",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b93": {
+        "id": "b93",
+        "catalogId": "arr.set",
+        "slots": {
+          "array": {"ref": "b92"},
+          "index": {"ref": "b86"},
+          "value": {"ref": "b91"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b94": {
+        "id": "b94",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "waits"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b95": {
+        "id": "b95",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b96": {
+        "id": "b96",
+        "catalogId": "arr.get",
+        "slots": {
+          "array": {"ref": "b94"},
+          "index": {"ref": "b95"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b97": {
+        "id": "b97",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": 0},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b98": {
+        "id": "b98",
+        "catalogId": "cmp.eq",
+        "slots": {
+          "left": {"ref": "b96"},
+          "right": {"ref": "b97"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b99": {
+        "id": "b99",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {"ref": "b98"},
+          "then": {"list": ["b102"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b100": {
+        "id": "b100",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "w"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b101": {
+        "id": "b101",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "ready"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b102": {
+        "id": "b102",
+        "catalogId": "queue.enq",
+        "slots": {
+          "queue": {"ref": "b101"},
+          "value": {"ref": "b100"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b103": {
+        "id": "b103",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "done"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b104": {
+        "id": "b104",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "steps"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b105": {
+        "id": "b105",
+        "catalogId": "graph.node_count",
+        "slots": {
+          "graph": {"ref": "b104"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b106": {
+        "id": "b106",
+        "catalogId": "cmp.eq",
+        "slots": {
+          "left": {"ref": "b103"},
+          "right": {"ref": "b105"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b107": {
+        "id": "b107",
+        "catalogId": "ctrl.if",
+        "slots": {
+          "condition": {"ref": "b106"},
+          "then": {"list": ["b109"]},
+          "else": {"list": ["b110"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b108": {
+        "id": "b108",
+        "catalogId": "var.get",
+        "slots": {},
+        "literals": {"name": "last"},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b109": {
+        "id": "b109",
+        "catalogId": "ctrl.return",
+        "slots": {
+          "value": {"ref": "b108"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b110": {
+        "id": "b110",
+        "catalogId": "ctrl.else",
+        "slots": {
+          "body": {"list": ["b112"]}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b111": {
+        "id": "b111",
+        "catalogId": "lit.num",
+        "slots": {},
+        "literals": {"value": -1},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      },
+      "b112": {
+        "id": "b112",
+        "catalogId": "ctrl.return",
+        "slots": {
+          "value": {"ref": "b111"}
+        },
+        "literals": {},
+        "x": 0.0,
+        "y": 0.0,
+        "collapsed": false
+      }
+    },
+    "entryIds": ["b1", "b3", "b7", "b17", "b31", "b35", "b50", "b52", "b56", "b107"],
+    "variables": {
+      "steps": "graph",
+      "waits": "array<num>",
+      "hour": "array<num>",
+      "ready": "queue<num>",
+      "u": "num",
+      "w": "num",
+      "here": "num",
+      "done": "num",
+      "last": "num"
+    }
+  },
+  "rejects": [
+    {
+      "name": "starts a step as soon as the first step it waits for is done",
+      "expect": "wrongAnswer",
+      "graph": {
+        "blocks": {
+          "b0": {
+            "id": "b0",
+            "catalogId": "new.array",
+            "slots": {},
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b1": {
+            "id": "b1",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b0"}
+            },
+            "literals": {"name": "waits"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b2": {
+            "id": "b2",
+            "catalogId": "new.array",
+            "slots": {},
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b3": {
+            "id": "b3",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b2"}
+            },
+            "literals": {"name": "hour"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b4": {
+            "id": "b4",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b5": {
+            "id": "b5",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "steps"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b6": {
+            "id": "b6",
+            "catalogId": "graph.node_count",
+            "slots": {
+              "graph": {"ref": "b5"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b7": {
+            "id": "b7",
+            "catalogId": "ctrl.for_range",
+            "slots": {
+              "start": {"ref": "b4"},
+              "end": {"ref": "b6"},
+              "body": {"list": ["b10", "b13"]}
+            },
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b8": {
+            "id": "b8",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b9": {
+            "id": "b9",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "waits"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b10": {
+            "id": "b10",
+            "catalogId": "arr.append",
+            "slots": {
+              "array": {"ref": "b9"},
+              "value": {"ref": "b8"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b11": {
+            "id": "b11",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b12": {
+            "id": "b12",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "hour"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b13": {
+            "id": "b13",
+            "catalogId": "arr.append",
+            "slots": {
+              "array": {"ref": "b12"},
+              "value": {"ref": "b11"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b14": {
+            "id": "b14",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b15": {
+            "id": "b15",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "steps"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b16": {
+            "id": "b16",
+            "catalogId": "graph.node_count",
+            "slots": {
+              "graph": {"ref": "b15"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b17": {
+            "id": "b17",
+            "catalogId": "ctrl.for_range",
+            "slots": {
+              "start": {"ref": "b14"},
+              "end": {"ref": "b16"},
+              "body": {"list": ["b21"]}
+            },
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b18": {
+            "id": "b18",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "steps"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b19": {
+            "id": "b19",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b20": {
+            "id": "b20",
+            "catalogId": "graph.neighbors",
+            "slots": {
+              "graph": {"ref": "b18"},
+              "node": {"ref": "b19"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b21": {
+            "id": "b21",
+            "catalogId": "ctrl.foreach",
+            "slots": {
+              "collection": {"ref": "b20"},
+              "body": {"list": ["b29"]}
+            },
+            "literals": {"name": "w"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b22": {
+            "id": "b22",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "w"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b23": {
+            "id": "b23",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "waits"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b24": {
+            "id": "b24",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "w"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b25": {
+            "id": "b25",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b23"},
+              "index": {"ref": "b24"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b26": {
+            "id": "b26",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 1},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b27": {
+            "id": "b27",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {"ref": "b25"},
+              "right": {"ref": "b26"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b28": {
+            "id": "b28",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "waits"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b29": {
+            "id": "b29",
+            "catalogId": "arr.set",
+            "slots": {
+              "array": {"ref": "b28"},
+              "index": {"ref": "b22"},
+              "value": {"ref": "b27"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b30": {
+            "id": "b30",
+            "catalogId": "new.queue",
+            "slots": {},
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b31": {
+            "id": "b31",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b30"}
+            },
+            "literals": {"name": "ready"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b32": {
+            "id": "b32",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b33": {
+            "id": "b33",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "steps"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b34": {
+            "id": "b34",
+            "catalogId": "graph.node_count",
+            "slots": {
+              "graph": {"ref": "b33"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b35": {
+            "id": "b35",
+            "catalogId": "ctrl.for_range",
+            "slots": {
+              "start": {"ref": "b32"},
+              "end": {"ref": "b34"},
+              "body": {"list": ["b41"]}
+            },
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b36": {
+            "id": "b36",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "waits"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b37": {
+            "id": "b37",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b38": {
+            "id": "b38",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b36"},
+              "index": {"ref": "b37"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b39": {
+            "id": "b39",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b40": {
+            "id": "b40",
+            "catalogId": "cmp.eq",
+            "slots": {
+              "left": {"ref": "b38"},
+              "right": {"ref": "b39"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b41": {
+            "id": "b41",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b40"},
+              "then": {"list": ["b44", "b48"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b42": {
+            "id": "b42",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b43": {
+            "id": "b43",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "ready"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b44": {
+            "id": "b44",
+            "catalogId": "queue.enq",
+            "slots": {
+              "queue": {"ref": "b43"},
+              "value": {"ref": "b42"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b45": {
+            "id": "b45",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "u"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b46": {
+            "id": "b46",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 1},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b47": {
+            "id": "b47",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "hour"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b48": {
+            "id": "b48",
+            "catalogId": "arr.set",
+            "slots": {
+              "array": {"ref": "b47"},
+              "index": {"ref": "b45"},
+              "value": {"ref": "b46"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b49": {
+            "id": "b49",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b50": {
+            "id": "b50",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b49"}
+            },
+            "literals": {"name": "done"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b51": {
+            "id": "b51",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b52": {
+            "id": "b52",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b51"}
+            },
+            "literals": {"name": "last"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b53": {
+            "id": "b53",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "ready"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b54": {
+            "id": "b54",
+            "catalogId": "queue.empty",
+            "slots": {
+              "queue": {"ref": "b53"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b55": {
+            "id": "b55",
+            "catalogId": "logic.not",
+            "slots": {
+              "arg": {"ref": "b54"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b56": {
+            "id": "b56",
+            "catalogId": "ctrl.while",
+            "slots": {
+              "condition": {"ref": "b55"},
+              "body": {"list": ["b59", "b63", "b69", "b73"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b57": {
+            "id": "b57",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "ready"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b58": {
+            "id": "b58",
+            "catalogId": "queue.deq",
+            "slots": {
+              "queue": {"ref": "b57"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b59": {
+            "id": "b59",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b58"}
+            },
+            "literals": {"name": "here"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b60": {
+            "id": "b60",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "done"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b61": {
+            "id": "b61",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 1},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b62": {
+            "id": "b62",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {"ref": "b60"},
+              "right": {"ref": "b61"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b63": {
+            "id": "b63",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b62"}
+            },
+            "literals": {"name": "done"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b64": {
+            "id": "b64",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "last"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b65": {
+            "id": "b65",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "hour"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b66": {
+            "id": "b66",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "here"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b67": {
+            "id": "b67",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b65"},
+              "index": {"ref": "b66"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b68": {
+            "id": "b68",
+            "catalogId": "arith.max",
+            "slots": {
+              "left": {"ref": "b64"},
+              "right": {"ref": "b67"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b69": {
+            "id": "b69",
+            "catalogId": "var.set",
+            "slots": {
+              "value": {"ref": "b68"}
+            },
+            "literals": {"name": "last"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b70": {
+            "id": "b70",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "steps"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b71": {
+            "id": "b71",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "here"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b72": {
+            "id": "b72",
+            "catalogId": "graph.neighbors",
+            "slots": {
+              "graph": {"ref": "b70"},
+              "node": {"ref": "b71"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b73": {
+            "id": "b73",
+            "catalogId": "ctrl.foreach",
+            "slots": {
+              "collection": {"ref": "b72"},
+              "body": {"list": ["b79"]}
+            },
+            "literals": {"name": "w"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b74": {
+            "id": "b74",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "hour"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b75": {
+            "id": "b75",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "w"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b76": {
+            "id": "b76",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b74"},
+              "index": {"ref": "b75"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b77": {
+            "id": "b77",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 0},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b78": {
+            "id": "b78",
+            "catalogId": "cmp.eq",
+            "slots": {
+              "left": {"ref": "b76"},
+              "right": {"ref": "b77"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b79": {
+            "id": "b79",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b78"},
+              "then": {"list": ["b87", "b90"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b80": {
+            "id": "b80",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "w"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b81": {
+            "id": "b81",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "hour"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b82": {
+            "id": "b82",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "here"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b83": {
+            "id": "b83",
+            "catalogId": "arr.get",
+            "slots": {
+              "array": {"ref": "b81"},
+              "index": {"ref": "b82"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b84": {
+            "id": "b84",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": 1},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b85": {
+            "id": "b85",
+            "catalogId": "arith.add",
+            "slots": {
+              "left": {"ref": "b83"},
+              "right": {"ref": "b84"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b86": {
+            "id": "b86",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "hour"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b87": {
+            "id": "b87",
+            "catalogId": "arr.set",
+            "slots": {
+              "array": {"ref": "b86"},
+              "index": {"ref": "b80"},
+              "value": {"ref": "b85"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b88": {
+            "id": "b88",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "w"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b89": {
+            "id": "b89",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "ready"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b90": {
+            "id": "b90",
+            "catalogId": "queue.enq",
+            "slots": {
+              "queue": {"ref": "b89"},
+              "value": {"ref": "b88"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b91": {
+            "id": "b91",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "done"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b92": {
+            "id": "b92",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "steps"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b93": {
+            "id": "b93",
+            "catalogId": "graph.node_count",
+            "slots": {
+              "graph": {"ref": "b92"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b94": {
+            "id": "b94",
+            "catalogId": "cmp.eq",
+            "slots": {
+              "left": {"ref": "b91"},
+              "right": {"ref": "b93"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b95": {
+            "id": "b95",
+            "catalogId": "ctrl.if",
+            "slots": {
+              "condition": {"ref": "b94"},
+              "then": {"list": ["b97"]},
+              "else": {"list": ["b98"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b96": {
+            "id": "b96",
+            "catalogId": "var.get",
+            "slots": {},
+            "literals": {"name": "last"},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b97": {
+            "id": "b97",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {"ref": "b96"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b98": {
+            "id": "b98",
+            "catalogId": "ctrl.else",
+            "slots": {
+              "body": {"list": ["b100"]}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b99": {
+            "id": "b99",
+            "catalogId": "lit.num",
+            "slots": {},
+            "literals": {"value": -1},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          },
+          "b100": {
+            "id": "b100",
+            "catalogId": "ctrl.return",
+            "slots": {
+              "value": {"ref": "b99"}
+            },
+            "literals": {},
+            "x": 0.0,
+            "y": 0.0,
+            "collapsed": false
+          }
+        },
+        "entryIds": ["b1", "b3", "b7", "b17", "b31", "b35", "b50", "b52", "b56", "b95"],
+        "variables": {
+          "steps": "graph",
+          "waits": "array<num>",
+          "hour": "array<num>",
+          "ready": "queue<num>",
+          "u": "num",
+          "w": "num",
+          "here": "num",
+          "done": "num",
+          "last": "num"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "id": "parts_aisle",
+  "version": 1,
+  "title": "The Parts Aisle",
+  "world": "world_05",
+  "chapter": "shortest_window_covering_multiset",
+  "tier": 5,
+  "mode": "budget",
+  "concepts": ["sliding_window", "hash_map"],
+  "prerequisites": ["arrays", "hash_map"],
+  "story": "A hardware store aisle is a row of bins, each holding one kind of part, written as a number. A repair needs the parts on a list: a kind listed twice is needed twice, and each bin gives only one part. What is the shortest unbroken stretch of bins that gives every part on the list? Report how many bins it has, or -1 if no stretch will do. A long aisle must be checked within the operation budget.",
+  "io": {
+    "inputs": [
+      {"name": "bins", "type": "array<num>"},
+      {"name": "parts", "type": "array<num>"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 0, "max": 700},
+    "notes": ["0 to 700 bins and 1 to 12 parts on the list.", "Kinds are whole numbers from 1 to 50."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arith.min", "arith.sub", "arr.get", "arr.len", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.is_not_nothing", "logic.is_nothing", "logic.not", "logic.or", "map.get", "map.has", "map.remove", "map.set", "map.size", "new.map", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 164
+  },
+  "limits": {"maxOps": 92400, "maxDepth": 32, "maxAlloc": 20000},
+  "performance": {"required": true, "baselineFactor": 5},
+  "hints": ["Grow a stretch to the right until it covers the list, then shrink it from the left for as long as it still covers the list. Every shortest stretch shows up this way.", "Keep a map from each kind to how many of it the stretch still needs: a bin entering the stretch lowers its count, a bin leaving raises it. A count below zero means the stretch holds spares. Keep one more number: how many parts of the list are still missing.", "When a bin enters: IF its count is GREATER THAN 0, one fewer part is missing. WHILE nothing is missing: record the length, then drop the left bin; IF its count was GREATER OR EQUAL to 0 before it went back up, a part is missing again."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {"bins": [7, 4, 1, 9, 1, 2, 4, 9, 3], "parts": [4, 9, 2]},
+        "out": 3
+      },
+      {
+        "id": "v2",
+        "in": {"bins": [8, 5, 5, 3, 6, 6, 8], "parts": [3, 8]},
+        "out": 4
+      },
+      {
+        "id": "v3",
+        "in": {"bins": [5, 5, 1], "parts": [5, 6]},
+        "out": -1
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {"bins": [5, 3, 5, 5, 3], "parts": [5, 5, 3]},
+        "out": 3
+      },
+      {
+        "id": "h02",
+        "in": {"bins": [], "parts": [4]},
+        "out": -1
+      },
+      {
+        "id": "h03",
+        "in": {"bins": [4], "parts": [4]},
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {"bins": [4, 2], "parts": [2, 4, 4]},
+        "out": -1
+      },
+      {
+        "id": "h05",
+        "in": {"bins": [6, 1, 1, 6, 2, 1], "parts": [1, 1, 1]},
+        "out": 5
+      },
+      {
+        "id": "h06",
+        "in": {"bins": [3, 3, 3, 3], "parts": [3, 3]},
+        "out": 2
+      },
+      {
+        "id": "h07",
+        "in": {"bins": [2, 9, 2, 7, 7, 9, 2, 2, 7], "parts": [7, 2, 7, 9]},
+        "out": 4
+      },
+      {
+        "id": "h08",
+        "in": {"bins": [1, 2, 3, 1, 2, 3, 4], "parts": [4, 1, 2, 3]},
+        "out": 4
+      },
+      {
+        "id": "h09",
+        "in": {"bins": [9, 8, 1, 1, 1, 1, 8, 9], "parts": [8, 9]},
+        "out": 2
+      },
+      {
+        "id": "h10",
+        "in": {
+          "bins": [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+          "parts": [7, 7, 7]
+        },
+        "out": 3
+      },
+      {
+        "id": "h11",
+        "in": {
+          "bins": [3, 2, 6, 6, 5, 4, 4, 3, 9, 4, 1, 3, 1, 1, 3, 5, 2, 6, 3, 6, 5, 5, 5, 5, 6, 4, 3, 3, 2, 6, 6, 2, 2, 6, 3, 4, 3, 2, 1, 5, 5, 6, 9, 4, 6, 3, 1, 5, 3, 6, 4, 2, 3, 6, 1, 2, 6, 6, 6, 3, 2, 6, 6, 6, 3, 1, 2, 6, 5, 5, 3, 1, 5, 4, 1, 2, 3, 3, 1, 3, 9, 1, 2, 3, 2, 3, 3, 6, 2, 4, 4, 2, 6, 3, 4, 3, 1, 6, 6, 3, 1, 3, 9, 5, 2, 1, 2, 4, 1, 5, 3, 5, 3, 9, 5, 5, 2, 4, 1, 2],
+          "parts": [9, 9, 1, 5]
+        },
+        "out": 12
+      },
+      {
+        "id": "h12",
+        "in": {
+          "bins": [3, 5, 3, 1, 3, 5, 3, 2, 3, 3, 5, 5, 2, 1, 1, 4, 1, 1, 5, 4, 3, 4, 1, 5, 5, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 3, 2, 1, 2, 5, 2, 1, 2, 1, 4, 5, 1, 1, 1, 4, 1, 5, 5, 3, 1, 2, 2, 1, 4, 4, 5, 5, 3, 2, 3, 3, 5, 2, 3, 3, 2, 1, 1, 2, 1, 4, 1, 5, 3, 2, 3, 2, 4, 1, 5, 1, 5, 1, 4, 4, 3, 3, 3, 3, 1, 2, 3, 4, 2, 2, 3, 1, 5, 4, 4, 2, 2, 1, 4, 4, 5, 3, 1, 5, 2, 4, 2, 4, 4, 4, 1, 4, 1, 5, 3, 3, 2, 1, 4, 3, 1, 3, 5, 2, 1, 4, 4, 4, 9, 5, 2, 2, 5, 2, 2, 3, 1, 1, 3, 5, 3, 1, 5, 4, 2, 5, 3, 5, 5, 2, 2, 2, 4, 2, 4, 3, 3, 2, 2, 4, 5, 1, 5, 4, 1, 1, 5, 5, 5, 2, 3, 5, 3, 1, 5, 4, 4, 4, 3, 2, 1, 5, 1, 4, 2, 5, 4, 3, 4, 2, 1, 5, 5, 5, 2, 3, 2, 1, 5, 2, 1, 3, 2, 3, 4, 1, 3, 1, 3, 2, 4, 3, 1, 5, 2, 4, 2, 3, 5, 3, 5, 3, 1, 3, 5, 2, 2, 1, 5, 3, 5, 4, 1, 5, 2, 1, 1, 4, 4, 1, 1, 5, 5, 5, 3, 1, 5, 5, 2, 2, 1, 1, 2, 1, 3, 3, 1, 5, 1, 1, 4, 2, 2, 2, 3, 4, 5, 3, 2, 1, 2, 4, 3, 2, 1, 1, 2, 3, 4, 3, 5, 2, 1, 1, 5, 5, 3, 1, 3, 5, 3, 5, 2, 5, 4, 3, 1, 1, 5, 3, 3, 4, 1, 4, 2, 2, 1, 4, 1, 4, 4, 4, 1, 2, 1, 2, 4, 5, 4, 2, 2, 2, 3, 4, 4, 3, 4, 5, 5, 4, 4, 3, 5, 5, 3, 4, 1, 5, 3, 2, 5, 2, 2, 4, 1, 4, 1, 4, 4, 5, 1, 1, 5, 5, 5, 4, 2, 1, 1, 3, 5, 3, 4, 4, 2, 4, 2, 2, 3, 5, 5, 2, 3, 5, 5, 4, 5, 4, 4, 4, 5, 1, 1, 1, 5, 1, 4, 2, 3, 4, 3, 2, 2, 5, 3, 3, 5, 5, 3, 1, 1, 3, 2, 5, 4, 1, 1, 3, 5, 5, 1, 4, 2, 1, 2, 5, 4, 2, 1, 4, 3, 3, 3, 5, 4, 2, 4, 1, 5, 3, 2, 1, 3, 1, 4, 2, 5, 5, 4, 3, 5, 4, 3, 2, 3, 3, 3, 1, 5, 4, 3, 2, 1, 1, 1, 5, 3, 3, 1, 2, 4, 3, 4, 2, 4, 4, 5, 3, 2, 2, 3, 3, 5, 3, 4, 1, 4, 3, 2, 5, 1, 3, 1, 2, 2, 3, 1, 5, 4, 3, 2, 2, 3, 1, 5, 1, 5, 5, 1, 1, 2, 3, 5, 5, 3, 4, 5, 3, 9, 4, 3, 1, 3, 4, 4, 5, 1, 1, 2, 3, 1, 5, 5, 2, 3, 3, 5, 2, 5, 2, 1, 1, 3, 4, 4, 1, 3, 4, 2, 5, 1, 3, 2, 4, 5, 2, 3, 1, 5, 4, 2, 4, 4, 4, 3, 4, 2, 2, 5, 3, 5, 4, 4, 2, 4, 3, 5, 2, 3, 1, 2, 2, 1, 2, 2, 4, 1, 4, 4, 4, 3, 5, 2, 4, 3, 4, 2, 1, 5, 4, 3, 4, 3, 2, 5, 3, 3, 1, 5, 5, 4, 3, 5, 2, 1, 1, 4, 3, 4, 4, 1, 2, 1, 1, 1, 1, 3, 2, 5, 2, 4, 4, 4, 5, 5, 3, 1, 4, 3, 2, 4, 4, 1, 4, 5, 5, 3, 4, 4, 4, 5, 5, 2, 5, 2, 3, 2, 3, 4, 1, 4, 4, 1, 2, 1, 3, 4, 3, 1, 3, 1, 4, 4, 3, 4, 5, 5, 2, 4, 1, 4, 4, 1, 5, 5, 4, 5, 4, 4, 4, 4, 2, 2, 2, 1, 4, 2, 4],
+          "parts": [9, 9, 9, 2]
+        },
+        "out": -1
+      },
+      {
+        "id": "h13",
+        "in": {
+          "bins": [7, 4, 8, 2, 3, 4, 3, 2, 2, 1, 1, 5, 7, 2, 6, 8, 4, 8, 1, 4, 5, 4, 5, 7, 1, 1, 1, 4, 1, 6, 1, 8, 2, 7, 6, 3, 6, 4, 1, 8, 5, 8, 2, 1, 2, 1, 8, 7, 3, 7, 7, 1, 1, 7, 6, 2, 8, 5, 6, 8, 6, 5, 2, 7, 7, 8, 4, 7, 1, 1, 6, 2, 1, 1, 7, 3, 4, 1, 2, 4, 7, 3, 3, 5, 8, 7, 6, 5, 2, 8, 3, 7, 7, 4, 8, 8, 3, 6, 3, 4, 4, 6, 2, 6, 2, 2, 2, 4, 5, 7, 7, 1, 8, 1, 7, 4, 3, 8, 5, 30],
+          "parts": [30, 1, 2, 3, 4, 5, 6, 7, 8]
+        },
+        "out": 17
+      }
+    ]
+  },
+  "edgeCases": ["a kind listed twice", "a kind the aisle does not have, or has too few of", "a list longer than the aisle", "the best stretch at the very end", "starting again from every bin is over budget"],
+  "variables": {
+    "pool": [
+      {"name": "need", "type": "map<num,num>"},
+      {"name": "c", "type": "num?"},
+      {"name": "x", "type": "num"},
+      {"name": "missing", "type": "num"},
+      {"name": "best", "type": "num"},
+      {"name": "left", "type": "num"},
+      {"name": "right", "type": "num"},
+      {"name": "have", "type": "map<num,num>"},
+      {"name": "d", "type": "num?"},
+      {"name": "got", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "shortest_window_covering_multiset"}
+}

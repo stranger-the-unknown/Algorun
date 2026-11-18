@@ -1,0 +1,437 @@
+{
+  "id": "news_towns",
+  "version": 1,
+  "title": "Breaking News",
+  "world": "world_10",
+  "chapter": "count_sources_of_one_way_network",
+  "tier": 4,
+  "mode": "build",
+  "concepts": ["graph"],
+  "prerequisites": [],
+  "story": "A news agency wants a story to reach every town. Roads between towns are one-way, and a town that hears the story sends it on along every road that leaves it. No route ever comes back to a town it has left. The agency phones as few towns as it can and lets the roads do the rest. How many towns must it phone? Towns are numbered from 0.",
+  "io": {
+    "inputs": [
+      {"name": "roads", "type": "graph"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 1, "max": 80},
+    "notes": ["1 to 80 towns.", "Following the roads never leads back to a town already left."]
+  },
+  "blocks": {
+    "allow": ["arith.add", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "graph.mark", "graph.neighbors", "graph.node_count", "graph.visited", "lit.num", "logic.and", "logic.not", "logic.or", "new.array", "new.queue", "new.stack", "queue.deq", "queue.empty", "queue.enq", "stack.empty", "stack.pop", "stack.push", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 64
+  },
+  "limits": {"maxOps": 6150, "maxDepth": 32, "maxAlloc": 750},
+  "hints": ["A town with a road leading into it will hear the story from the town at the other end, sooner or later. Which towns can never hear it from anyone?", "Only the towns with no incoming road need a phone call, and phoning all of them is enough: follow any town's incoming roads backwards and you must stop at such a town, because no route goes round in a circle.", "Make a list with a 0 for every town (NODE COUNT tells you how many). FOR every town, FOR EACH of its NEIGHBORS, add 1 to that neighbour's entry. Then count the entries that are still 0."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": [1, 2]},
+              {"id": 1, "neighbors": []},
+              {"id": 2, "neighbors": []},
+              {"id": 3, "neighbors": [2]}
+            ]
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "v2",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": [1]},
+              {"id": 1, "neighbors": [2]},
+              {"id": 2, "neighbors": []},
+              {"id": 3, "neighbors": [4]},
+              {"id": 4, "neighbors": []},
+              {"id": 5, "neighbors": [4, 6]},
+              {"id": 6, "neighbors": []}
+            ]
+          }
+        },
+        "out": 3
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []}
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h02",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []},
+              {"id": 1, "neighbors": []},
+              {"id": 2, "neighbors": []}
+            ]
+          }
+        },
+        "out": 3
+      },
+      {
+        "id": "h03",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []},
+              {"id": 1, "neighbors": [0]}
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h04",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []},
+              {"id": 1, "neighbors": [0]},
+              {"id": 2, "neighbors": [1]},
+              {"id": 3, "neighbors": [2]}
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h05",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []},
+              {"id": 1, "neighbors": [0]},
+              {"id": 2, "neighbors": [0]},
+              {"id": 3, "neighbors": [0]},
+              {"id": 4, "neighbors": [0]}
+            ]
+          }
+        },
+        "out": 4
+      },
+      {
+        "id": "h06",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": [1, 2, 3, 4]},
+              {"id": 1, "neighbors": []},
+              {"id": 2, "neighbors": []},
+              {"id": 3, "neighbors": []},
+              {"id": 4, "neighbors": []}
+            ]
+          }
+        },
+        "out": 1
+      },
+      {
+        "id": "h07",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []},
+              {"id": 1, "neighbors": [0, 2]},
+              {"id": 2, "neighbors": [0]},
+              {"id": 3, "neighbors": [1, 2]},
+              {"id": 4, "neighbors": []},
+              {"id": 5, "neighbors": [4]}
+            ]
+          }
+        },
+        "out": 2
+      },
+      {
+        "id": "h08",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": [3]},
+              {"id": 1, "neighbors": [3]},
+              {"id": 2, "neighbors": [3]},
+              {"id": 3, "neighbors": [4, 5]},
+              {"id": 4, "neighbors": []},
+              {"id": 5, "neighbors": []},
+              {"id": 6, "neighbors": []}
+            ]
+          }
+        },
+        "out": 4
+      },
+      {
+        "id": "h09",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []},
+              {"id": 1, "neighbors": []},
+              {"id": 2, "neighbors": [10, 9]},
+              {"id": 3, "neighbors": [26]},
+              {"id": 4, "neighbors": [29]},
+              {"id": 5, "neighbors": []},
+              {"id": 6, "neighbors": [24, 11, 19]},
+              {"id": 7, "neighbors": [37]},
+              {"id": 8, "neighbors": [3]},
+              {"id": 9, "neighbors": [37]},
+              {"id": 10, "neighbors": []},
+              {"id": 11, "neighbors": []},
+              {"id": 12, "neighbors": [25, 27]},
+              {"id": 13, "neighbors": [21, 26, 8]},
+              {"id": 14, "neighbors": [25]},
+              {"id": 15, "neighbors": [3, 24]},
+              {"id": 16, "neighbors": [8, 1, 3]},
+              {"id": 17, "neighbors": [9]},
+              {"id": 18, "neighbors": []},
+              {"id": 19, "neighbors": [3]},
+              {"id": 20, "neighbors": []},
+              {"id": 21, "neighbors": []},
+              {"id": 22, "neighbors": [32, 7, 38]},
+              {"id": 23, "neighbors": [2, 27, 1]},
+              {"id": 24, "neighbors": []},
+              {"id": 25, "neighbors": [10]},
+              {"id": 26, "neighbors": []},
+              {"id": 27, "neighbors": [9]},
+              {"id": 28, "neighbors": [39]},
+              {"id": 29, "neighbors": [5]},
+              {"id": 30, "neighbors": []},
+              {"id": 31, "neighbors": [0]},
+              {"id": 32, "neighbors": [10]},
+              {"id": 33, "neighbors": [18]},
+              {"id": 34, "neighbors": []},
+              {"id": 35, "neighbors": [7, 3, 37]},
+              {"id": 36, "neighbors": [38, 0, 19]},
+              {"id": 37, "neighbors": []},
+              {"id": 38, "neighbors": [25]},
+              {"id": 39, "neighbors": [7]}
+            ]
+          }
+        },
+        "out": 18
+      },
+      {
+        "id": "h10",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": []},
+              {"id": 1, "neighbors": [0]},
+              {"id": 2, "neighbors": [75]},
+              {"id": 3, "neighbors": []},
+              {"id": 4, "neighbors": []},
+              {"id": 5, "neighbors": []},
+              {"id": 6, "neighbors": []},
+              {"id": 7, "neighbors": []},
+              {"id": 8, "neighbors": [35, 54]},
+              {"id": 9, "neighbors": [17]},
+              {"id": 10, "neighbors": [22]},
+              {"id": 11, "neighbors": []},
+              {"id": 12, "neighbors": [30, 23, 59]},
+              {"id": 13, "neighbors": [10]},
+              {"id": 14, "neighbors": [10, 36, 9, 8, 69]},
+              {"id": 15, "neighbors": [33]},
+              {"id": 16, "neighbors": []},
+              {"id": 17, "neighbors": [56]},
+              {"id": 18, "neighbors": []},
+              {"id": 19, "neighbors": []},
+              {"id": 20, "neighbors": [28]},
+              {"id": 21, "neighbors": []},
+              {"id": 22, "neighbors": [23]},
+              {"id": 23, "neighbors": []},
+              {"id": 24, "neighbors": []},
+              {"id": 25, "neighbors": []},
+              {"id": 26, "neighbors": [55]},
+              {"id": 27, "neighbors": []},
+              {"id": 28, "neighbors": []},
+              {"id": 29, "neighbors": [51, 64]},
+              {"id": 30, "neighbors": []},
+              {"id": 31, "neighbors": [5, 1]},
+              {"id": 32, "neighbors": [63]},
+              {"id": 33, "neighbors": []},
+              {"id": 34, "neighbors": []},
+              {"id": 35, "neighbors": []},
+              {"id": 36, "neighbors": [72]},
+              {"id": 37, "neighbors": [7, 61, 74]},
+              {"id": 38, "neighbors": [53, 22]},
+              {"id": 39, "neighbors": [42, 23]},
+              {"id": 40, "neighbors": []},
+              {"id": 41, "neighbors": [50]},
+              {"id": 42, "neighbors": []},
+              {"id": 43, "neighbors": []},
+              {"id": 44, "neighbors": []},
+              {"id": 45, "neighbors": [10]},
+              {"id": 46, "neighbors": [40, 24]},
+              {"id": 47, "neighbors": [36]},
+              {"id": 48, "neighbors": [58]},
+              {"id": 49, "neighbors": [35]},
+              {"id": 50, "neighbors": [53]},
+              {"id": 51, "neighbors": []},
+              {"id": 52, "neighbors": [72, 56, 42, 31]},
+              {"id": 53, "neighbors": []},
+              {"id": 54, "neighbors": []},
+              {"id": 55, "neighbors": [5, 31]},
+              {"id": 56, "neighbors": []},
+              {"id": 57, "neighbors": [72, 18]},
+              {"id": 58, "neighbors": [44]},
+              {"id": 59, "neighbors": [44]},
+              {"id": 60, "neighbors": [49, 7, 15]},
+              {"id": 61, "neighbors": [28, 60]},
+              {"id": 62, "neighbors": []},
+              {"id": 63, "neighbors": []},
+              {"id": 64, "neighbors": []},
+              {"id": 65, "neighbors": [51]},
+              {"id": 66, "neighbors": []},
+              {"id": 67, "neighbors": [76]},
+              {"id": 68, "neighbors": [19, 23]},
+              {"id": 69, "neighbors": [19]},
+              {"id": 70, "neighbors": []},
+              {"id": 71, "neighbors": [19]},
+              {"id": 72, "neighbors": []},
+              {"id": 73, "neighbors": [4, 62, 35]},
+              {"id": 74, "neighbors": []},
+              {"id": 75, "neighbors": [42]},
+              {"id": 76, "neighbors": []},
+              {"id": 77, "neighbors": [18]},
+              {"id": 78, "neighbors": [10]},
+              {"id": 79, "neighbors": [70]}
+            ]
+          }
+        },
+        "out": 36
+      },
+      {
+        "id": "h11",
+        "in": {
+          "roads": {
+            "type": "graph",
+            "nodes": [
+              {"id": 0, "neighbors": [22, 48, 27, 51]},
+              {"id": 1, "neighbors": [58, 37, 68, 49]},
+              {"id": 2, "neighbors": [27, 61]},
+              {"id": 3, "neighbors": [37, 35]},
+              {"id": 4, "neighbors": []},
+              {"id": 5, "neighbors": [0, 2, 36, 23, 67, 12]},
+              {"id": 6, "neighbors": [60, 30]},
+              {"id": 7, "neighbors": [29]},
+              {"id": 8, "neighbors": []},
+              {"id": 9, "neighbors": [58]},
+              {"id": 10, "neighbors": [27, 53]},
+              {"id": 11, "neighbors": [34, 48]},
+              {"id": 12, "neighbors": [60, 66, 68]},
+              {"id": 13, "neighbors": [66, 60]},
+              {"id": 14, "neighbors": []},
+              {"id": 15, "neighbors": [34]},
+              {"id": 16, "neighbors": [48, 64, 3, 53, 69]},
+              {"id": 17, "neighbors": []},
+              {"id": 18, "neighbors": [60, 67]},
+              {"id": 19, "neighbors": [34, 32, 15, 51]},
+              {"id": 20, "neighbors": [14, 55, 69, 13, 78, 7, 4]},
+              {"id": 21, "neighbors": [30, 3, 76]},
+              {"id": 22, "neighbors": [66, 8]},
+              {"id": 23, "neighbors": [12, 69, 22, 76]},
+              {"id": 24, "neighbors": [56, 1, 46]},
+              {"id": 25, "neighbors": []},
+              {"id": 26, "neighbors": [78, 41]},
+              {"id": 27, "neighbors": [61, 4]},
+              {"id": 28, "neighbors": [41, 0]},
+              {"id": 29, "neighbors": []},
+              {"id": 30, "neighbors": []},
+              {"id": 31, "neighbors": [22, 8, 6]},
+              {"id": 32, "neighbors": [64, 41, 29, 17, 49, 61, 35]},
+              {"id": 33, "neighbors": [32, 39, 6, 68, 59]},
+              {"id": 34, "neighbors": [53]},
+              {"id": 35, "neighbors": []},
+              {"id": 36, "neighbors": [55, 67, 13]},
+              {"id": 37, "neighbors": []},
+              {"id": 38, "neighbors": []},
+              {"id": 39, "neighbors": [2, 61]},
+              {"id": 40, "neighbors": [46, 72, 70, 45]},
+              {"id": 41, "neighbors": [4, 30]},
+              {"id": 42, "neighbors": [49, 9, 21]},
+              {"id": 43, "neighbors": [27, 38]},
+              {"id": 44, "neighbors": [37, 43]},
+              {"id": 45, "neighbors": [14, 18]},
+              {"id": 46, "neighbors": [76, 17]},
+              {"id": 47, "neighbors": [3, 32, 63]},
+              {"id": 48, "neighbors": [61]},
+              {"id": 49, "neighbors": [60, 58, 69, 66, 15]},
+              {"id": 50, "neighbors": [63, 22]},
+              {"id": 51, "neighbors": [60, 75, 76, 64, 55]},
+              {"id": 52, "neighbors": [26, 8, 56]},
+              {"id": 53, "neighbors": []},
+              {"id": 54, "neighbors": [15, 58, 48, 34]},
+              {"id": 55, "neighbors": [60]},
+              {"id": 56, "neighbors": [36]},
+              {"id": 57, "neighbors": [46, 13, 56, 71]},
+              {"id": 58, "neighbors": []},
+              {"id": 59, "neighbors": [71, 72, 34, 43, 26]},
+              {"id": 60, "neighbors": [8]},
+              {"id": 61, "neighbors": [4]},
+              {"id": 62, "neighbors": [55, 38, 57, 43, 56, 64, 79, 17, 40]},
+              {"id": 63, "neighbors": [71, 35]},
+              {"id": 64, "neighbors": [41, 48]},
+              {"id": 65, "neighbors": [72, 15, 23]},
+              {"id": 66, "neighbors": [7, 71]},
+              {"id": 67, "neighbors": [48]},
+              {"id": 68, "neighbors": [48]},
+              {"id": 69, "neighbors": [27, 34]},
+              {"id": 70, "neighbors": [18, 2, 15]},
+              {"id": 71, "neighbors": []},
+              {"id": 72, "neighbors": [51, 4, 35, 53, 13]},
+              {"id": 73, "neighbors": [9, 66, 22, 0]},
+              {"id": 74, "neighbors": [44]},
+              {"id": 75, "neighbors": [12, 64, 53, 37]},
+              {"id": 76, "neighbors": []},
+              {"id": 77, "neighbors": [74, 53, 69, 35, 8]},
+              {"id": 78, "neighbors": [17, 27, 75, 53]},
+              {"id": 79, "neighbors": [34, 28, 69, 61]}
+            ]
+          }
+        },
+        "out": 19
+      }
+    ]
+  },
+  "edgeCases": ["a town with no roads at all", "a town that hears the story from a town with a higher number", "a town reached by two roads", "as many towns without a way in as without a way out is a coincidence"],
+  "variables": {
+    "pool": [
+      {"name": "n", "type": "num"},
+      {"name": "into", "type": "array<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "u", "type": "num"},
+      {"name": "v", "type": "num"},
+      {"name": "count", "type": "num"},
+      {"name": "out", "type": "num"},
+      {"name": "pile", "type": "stack<num>"},
+      {"name": "here", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "count_sources_of_one_way_network"}
+}

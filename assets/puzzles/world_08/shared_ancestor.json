@@ -1,0 +1,1649 @@
+{
+  "id": "shared_ancestor",
+  "version": 1,
+  "title": "Shared Ancestor",
+  "world": "world_08",
+  "chapter": "bst_split_point_descent",
+  "tier": 3,
+  "mode": "restricted",
+  "concepts": ["tree", "bst"],
+  "prerequisites": [],
+  "story": "A family archive is kept as a search tree of member numbers: every number in a node's left branch is smaller than the node, every number in its right branch is larger. Two members, a and b, are both in the tree, and either one may be the smaller. Report the number of their nearest shared ancestor: the deepest node that has both of them at or below it, so a member counts as its own ancestor. The archive's reader has almost no memory: a list or a stack of the nodes along the way will not fit.",
+  "io": {
+    "inputs": [
+      {"name": "root", "type": "treeNode"},
+      {"name": "a", "type": "num"},
+      {"name": "b", "type": "num"}
+    ],
+    "output": {"type": "num"}
+  },
+  "constraints": {
+    "n": {"min": 2, "max": 70},
+    "notes": ["2 to 70 members, all numbers different, 1 to 1000.", "a and b are two different members of the tree.", "The tree can be as deep as it has members."]
+  },
+  "blocks": {
+    "allow": ["arith.max", "arith.min", "arr.append", "arr.get", "arr.len", "arr.set", "cmp.eq", "cmp.ge", "cmp.gt", "cmp.le", "cmp.lt", "cmp.ne", "ctrl.break", "ctrl.else", "ctrl.for_range", "ctrl.foreach", "ctrl.if", "ctrl.return", "ctrl.while", "lit.num", "logic.and", "logic.is_not_nothing", "logic.is_nothing", "logic.not", "logic.or", "new.array", "new.stack", "stack.empty", "stack.pop", "stack.push", "tree.left", "tree.right", "tree.value", "var.dec", "var.get", "var.inc", "var.set"],
+    "maxBlocks": 79
+  },
+  "limits": {"maxOps": 2450, "maxDepth": 32, "maxAlloc": 8},
+  "hints": ["Stand on a node and ask where a and b are. If both are smaller than it, their shared ancestor is in the LEFT branch; if both are larger, it is in the RIGHT branch.", "Otherwise the two go different ways here, or one of them is this very node: this node is the answer. One variable that walks down from the root is enough.", "WHILE the node IS NOT NOTHING: IF a AND b are both LESS THAN its NODE VALUE, SET the node to its LEFT; ELSE IF both are GREATER THAN it, SET the node to its RIGHT; ELSE RETURN the NODE VALUE."],
+  "validators": {"output": "equal"},
+  "fixtures": {
+    "visible": [
+      {
+        "id": "v1",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 20,
+            "left": {
+              "type": "treeNode",
+              "value": 9,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 14,
+                "left": {"type": "treeNode", "value": 11, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 17, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 31,
+              "left": {"type": "treeNode", "value": 26, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 40, "left": null, "right": null}
+            }
+          },
+          "a": 11,
+          "b": 17
+        },
+        "out": 14
+      },
+      {
+        "id": "v2",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 50,
+            "left": {
+              "type": "treeNode",
+              "value": 30,
+              "left": {"type": "treeNode", "value": 20, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 40,
+                "left": {"type": "treeNode", "value": 35, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 45, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 70,
+              "left": {"type": "treeNode", "value": 60, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 80, "left": null, "right": null}
+            }
+          },
+          "a": 20,
+          "b": 45
+        },
+        "out": 30
+      }
+    ],
+    "hidden": [
+      {
+        "id": "h01",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 20,
+            "left": {
+              "type": "treeNode",
+              "value": 9,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 14,
+                "left": {"type": "treeNode", "value": 11, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 17, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 31,
+              "left": {"type": "treeNode", "value": 26, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 40, "left": null, "right": null}
+            }
+          },
+          "a": 9,
+          "b": 17
+        },
+        "out": 9
+      },
+      {
+        "id": "h02",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 20,
+            "left": {
+              "type": "treeNode",
+              "value": 9,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 14,
+                "left": {"type": "treeNode", "value": 11, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 17, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 31,
+              "left": {"type": "treeNode", "value": 26, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 40, "left": null, "right": null}
+            }
+          },
+          "a": 31,
+          "b": 26
+        },
+        "out": 31
+      },
+      {
+        "id": "h03",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 20,
+            "left": {
+              "type": "treeNode",
+              "value": 9,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 14,
+                "left": {"type": "treeNode", "value": 11, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 17, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 31,
+              "left": {"type": "treeNode", "value": 26, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 40, "left": null, "right": null}
+            }
+          },
+          "a": 40,
+          "b": 4
+        },
+        "out": 20
+      },
+      {
+        "id": "h04",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 20,
+            "left": {
+              "type": "treeNode",
+              "value": 9,
+              "left": {"type": "treeNode", "value": 4, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 14,
+                "left": {"type": "treeNode", "value": 11, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 17, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 31,
+              "left": {"type": "treeNode", "value": 26, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 40, "left": null, "right": null}
+            }
+          },
+          "a": 17,
+          "b": 11
+        },
+        "out": 14
+      },
+      {
+        "id": "h05",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 50,
+            "left": {
+              "type": "treeNode",
+              "value": 30,
+              "left": {"type": "treeNode", "value": 20, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 40,
+                "left": {"type": "treeNode", "value": 35, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 45, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 70,
+              "left": {"type": "treeNode", "value": 60, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 80, "left": null, "right": null}
+            }
+          },
+          "a": 80,
+          "b": 60
+        },
+        "out": 70
+      },
+      {
+        "id": "h06",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": null,
+            "right": {"type": "treeNode", "value": 8, "left": null, "right": null}
+          },
+          "a": 5,
+          "b": 8
+        },
+        "out": 5
+      },
+      {
+        "id": "h07",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 5,
+            "left": null,
+            "right": {"type": "treeNode", "value": 8, "left": null, "right": null}
+          },
+          "a": 8,
+          "b": 5
+        },
+        "out": 5
+      },
+      {
+        "id": "h08",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 50,
+            "left": {
+              "type": "treeNode",
+              "value": 30,
+              "left": {"type": "treeNode", "value": 20, "left": null, "right": null},
+              "right": {
+                "type": "treeNode",
+                "value": 40,
+                "left": {"type": "treeNode", "value": 35, "left": null, "right": null},
+                "right": {"type": "treeNode", "value": 45, "left": null, "right": null}
+              }
+            },
+            "right": {
+              "type": "treeNode",
+              "value": 70,
+              "left": {"type": "treeNode", "value": 60, "left": null, "right": null},
+              "right": {"type": "treeNode", "value": 80, "left": null, "right": null}
+            }
+          },
+          "a": 35,
+          "b": 60
+        },
+        "out": 50
+      },
+      {
+        "id": "h09",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1000,
+            "left": {
+              "type": "treeNode",
+              "value": 1,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 999,
+                "left": {
+                  "type": "treeNode",
+                  "value": 2,
+                  "left": null,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 998,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 3,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 997,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 4,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 996,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 5,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 995,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 6,
+                                  "left": null,
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 994,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 7,
+                                      "left": null,
+                                      "right": {
+                                        "type": "treeNode",
+                                        "value": 993,
+                                        "left": {
+                                          "type": "treeNode",
+                                          "value": 8,
+                                          "left": null,
+                                          "right": {
+                                            "type": "treeNode",
+                                            "value": 992,
+                                            "left": {
+                                              "type": "treeNode",
+                                              "value": 9,
+                                              "left": null,
+                                              "right": {
+                                                "type": "treeNode",
+                                                "value": 991,
+                                                "left": {
+                                                  "type": "treeNode",
+                                                  "value": 10,
+                                                  "left": null,
+                                                  "right": {
+                                                    "type": "treeNode",
+                                                    "value": 990,
+                                                    "left": {
+                                                      "type": "treeNode",
+                                                      "value": 11,
+                                                      "left": null,
+                                                      "right": {
+                                                        "type": "treeNode",
+                                                        "value": 989,
+                                                        "left": {
+                                                          "type": "treeNode",
+                                                          "value": 12,
+                                                          "left": null,
+                                                          "right": {
+                                                            "type": "treeNode",
+                                                            "value": 988,
+                                                            "left": {
+                                                              "type": "treeNode",
+                                                              "value": 13,
+                                                              "left": null,
+                                                              "right": {
+                                                                "type": "treeNode",
+                                                                "value": 987,
+                                                                "left": {
+                                                                  "type": "treeNode",
+                                                                  "value": 14,
+                                                                  "left": null,
+                                                                  "right": {
+                                                                    "type": "treeNode",
+                                                                    "value": 986,
+                                                                    "left": {
+                                                                      "type": "treeNode",
+                                                                      "value": 15,
+                                                                      "left": null,
+                                                                      "right": {
+                                                                        "type": "treeNode",
+                                                                        "value": 985,
+                                                                        "left": {
+                                                                          "type": "treeNode",
+                                                                          "value": 16,
+                                                                          "left": null,
+                                                                          "right": {
+                                                                            "type": "treeNode",
+                                                                            "value": 984,
+                                                                            "left": {
+                                                                              "type": "treeNode",
+                                                                              "value": 17,
+                                                                              "left": null,
+                                                                              "right": {
+                                                                                "type": "treeNode",
+                                                                                "value": 983,
+                                                                                "left": {
+                                                                                  "type": "treeNode",
+                                                                                  "value": 18,
+                                                                                  "left": null,
+                                                                                  "right": {
+                                                                                    "type": "treeNode",
+                                                                                    "value": 982,
+                                                                                    "left": {
+                                                                                      "type": "treeNode",
+                                                                                      "value": 19,
+                                                                                      "left": null,
+                                                                                      "right": {
+                                                                                        "type": "treeNode",
+                                                                                        "value": 981,
+                                                                                        "left": {
+                                                                                          "type": "treeNode",
+                                                                                          "value": 20,
+                                                                                          "left": null,
+                                                                                          "right": {
+                                                                                            "type": "treeNode",
+                                                                                            "value": 980,
+                                                                                            "left": {
+                                                                                              "type": "treeNode",
+                                                                                              "value": 21,
+                                                                                              "left": null,
+                                                                                              "right": {
+                                                                                                "type": "treeNode",
+                                                                                                "value": 979,
+                                                                                                "left": {
+                                                                                                  "type": "treeNode",
+                                                                                                  "value": 22,
+                                                                                                  "left": null,
+                                                                                                  "right": {
+                                                                                                    "type": "treeNode",
+                                                                                                    "value": 978,
+                                                                                                    "left": {
+                                                                                                      "type": "treeNode",
+                                                                                                      "value": 23,
+                                                                                                      "left": null,
+                                                                                                      "right": {
+                                                                                                        "type": "treeNode",
+                                                                                                        "value": 977,
+                                                                                                        "left": {
+                                                                                                          "type": "treeNode",
+                                                                                                          "value": 24,
+                                                                                                          "left": null,
+                                                                                                          "right": {
+                                                                                                            "type": "treeNode",
+                                                                                                            "value": 976,
+                                                                                                            "left": {
+                                                                                                              "type": "treeNode",
+                                                                                                              "value": 25,
+                                                                                                              "left": null,
+                                                                                                              "right": {
+                                                                                                                "type": "treeNode",
+                                                                                                                "value": 975,
+                                                                                                                "left": {
+                                                                                                                  "type": "treeNode",
+                                                                                                                  "value": 26,
+                                                                                                                  "left": null,
+                                                                                                                  "right": {
+                                                                                                                    "type": "treeNode",
+                                                                                                                    "value": 974,
+                                                                                                                    "left": {
+                                                                                                                      "type": "treeNode",
+                                                                                                                      "value": 27,
+                                                                                                                      "left": null,
+                                                                                                                      "right": {
+                                                                                                                        "type": "treeNode",
+                                                                                                                        "value": 973,
+                                                                                                                        "left": {
+                                                                                                                          "type": "treeNode",
+                                                                                                                          "value": 28,
+                                                                                                                          "left": null,
+                                                                                                                          "right": {
+                                                                                                                            "type": "treeNode",
+                                                                                                                            "value": 972,
+                                                                                                                            "left": {
+                                                                                                                              "type": "treeNode",
+                                                                                                                              "value": 29,
+                                                                                                                              "left": null,
+                                                                                                                              "right": {
+                                                                                                                                "type": "treeNode",
+                                                                                                                                "value": 971,
+                                                                                                                                "left": {
+                                                                                                                                  "type": "treeNode",
+                                                                                                                                  "value": 30,
+                                                                                                                                  "left": null,
+                                                                                                                                  "right": {
+                                                                                                                                    "type": "treeNode",
+                                                                                                                                    "value": 500,
+                                                                                                                                    "left": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 300,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 200,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 400,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      }
+                                                                                                                                    },
+                                                                                                                                    "right": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 700,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 600,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 800,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      }
+                                                                                                                                    }
+                                                                                                                                  }
+                                                                                                                                },
+                                                                                                                                "right": null
+                                                                                                                              }
+                                                                                                                            },
+                                                                                                                            "right": null
+                                                                                                                          }
+                                                                                                                        },
+                                                                                                                        "right": null
+                                                                                                                      }
+                                                                                                                    },
+                                                                                                                    "right": null
+                                                                                                                  }
+                                                                                                                },
+                                                                                                                "right": null
+                                                                                                              }
+                                                                                                            },
+                                                                                                            "right": null
+                                                                                                          }
+                                                                                                        },
+                                                                                                        "right": null
+                                                                                                      }
+                                                                                                    },
+                                                                                                    "right": null
+                                                                                                  }
+                                                                                                },
+                                                                                                "right": null
+                                                                                              }
+                                                                                            },
+                                                                                            "right": null
+                                                                                          }
+                                                                                        },
+                                                                                        "right": null
+                                                                                      }
+                                                                                    },
+                                                                                    "right": null
+                                                                                  }
+                                                                                },
+                                                                                "right": null
+                                                                              }
+                                                                            },
+                                                                            "right": null
+                                                                          }
+                                                                        },
+                                                                        "right": null
+                                                                      }
+                                                                    },
+                                                                    "right": null
+                                                                  }
+                                                                },
+                                                                "right": null
+                                                              }
+                                                            },
+                                                            "right": null
+                                                          }
+                                                        },
+                                                        "right": null
+                                                      }
+                                                    },
+                                                    "right": null
+                                                  }
+                                                },
+                                                "right": null
+                                              }
+                                            },
+                                            "right": null
+                                          }
+                                        },
+                                        "right": null
+                                      }
+                                    },
+                                    "right": null
+                                  }
+                                },
+                                "right": null
+                              }
+                            },
+                            "right": null
+                          }
+                        },
+                        "right": null
+                      }
+                    },
+                    "right": null
+                  }
+                },
+                "right": null
+              }
+            },
+            "right": null
+          },
+          "a": 200,
+          "b": 400
+        },
+        "out": 300
+      },
+      {
+        "id": "h10",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1000,
+            "left": {
+              "type": "treeNode",
+              "value": 1,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 999,
+                "left": {
+                  "type": "treeNode",
+                  "value": 2,
+                  "left": null,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 998,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 3,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 997,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 4,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 996,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 5,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 995,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 6,
+                                  "left": null,
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 994,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 7,
+                                      "left": null,
+                                      "right": {
+                                        "type": "treeNode",
+                                        "value": 993,
+                                        "left": {
+                                          "type": "treeNode",
+                                          "value": 8,
+                                          "left": null,
+                                          "right": {
+                                            "type": "treeNode",
+                                            "value": 992,
+                                            "left": {
+                                              "type": "treeNode",
+                                              "value": 9,
+                                              "left": null,
+                                              "right": {
+                                                "type": "treeNode",
+                                                "value": 991,
+                                                "left": {
+                                                  "type": "treeNode",
+                                                  "value": 10,
+                                                  "left": null,
+                                                  "right": {
+                                                    "type": "treeNode",
+                                                    "value": 990,
+                                                    "left": {
+                                                      "type": "treeNode",
+                                                      "value": 11,
+                                                      "left": null,
+                                                      "right": {
+                                                        "type": "treeNode",
+                                                        "value": 989,
+                                                        "left": {
+                                                          "type": "treeNode",
+                                                          "value": 12,
+                                                          "left": null,
+                                                          "right": {
+                                                            "type": "treeNode",
+                                                            "value": 988,
+                                                            "left": {
+                                                              "type": "treeNode",
+                                                              "value": 13,
+                                                              "left": null,
+                                                              "right": {
+                                                                "type": "treeNode",
+                                                                "value": 987,
+                                                                "left": {
+                                                                  "type": "treeNode",
+                                                                  "value": 14,
+                                                                  "left": null,
+                                                                  "right": {
+                                                                    "type": "treeNode",
+                                                                    "value": 986,
+                                                                    "left": {
+                                                                      "type": "treeNode",
+                                                                      "value": 15,
+                                                                      "left": null,
+                                                                      "right": {
+                                                                        "type": "treeNode",
+                                                                        "value": 985,
+                                                                        "left": {
+                                                                          "type": "treeNode",
+                                                                          "value": 16,
+                                                                          "left": null,
+                                                                          "right": {
+                                                                            "type": "treeNode",
+                                                                            "value": 984,
+                                                                            "left": {
+                                                                              "type": "treeNode",
+                                                                              "value": 17,
+                                                                              "left": null,
+                                                                              "right": {
+                                                                                "type": "treeNode",
+                                                                                "value": 983,
+                                                                                "left": {
+                                                                                  "type": "treeNode",
+                                                                                  "value": 18,
+                                                                                  "left": null,
+                                                                                  "right": {
+                                                                                    "type": "treeNode",
+                                                                                    "value": 982,
+                                                                                    "left": {
+                                                                                      "type": "treeNode",
+                                                                                      "value": 19,
+                                                                                      "left": null,
+                                                                                      "right": {
+                                                                                        "type": "treeNode",
+                                                                                        "value": 981,
+                                                                                        "left": {
+                                                                                          "type": "treeNode",
+                                                                                          "value": 20,
+                                                                                          "left": null,
+                                                                                          "right": {
+                                                                                            "type": "treeNode",
+                                                                                            "value": 980,
+                                                                                            "left": {
+                                                                                              "type": "treeNode",
+                                                                                              "value": 21,
+                                                                                              "left": null,
+                                                                                              "right": {
+                                                                                                "type": "treeNode",
+                                                                                                "value": 979,
+                                                                                                "left": {
+                                                                                                  "type": "treeNode",
+                                                                                                  "value": 22,
+                                                                                                  "left": null,
+                                                                                                  "right": {
+                                                                                                    "type": "treeNode",
+                                                                                                    "value": 978,
+                                                                                                    "left": {
+                                                                                                      "type": "treeNode",
+                                                                                                      "value": 23,
+                                                                                                      "left": null,
+                                                                                                      "right": {
+                                                                                                        "type": "treeNode",
+                                                                                                        "value": 977,
+                                                                                                        "left": {
+                                                                                                          "type": "treeNode",
+                                                                                                          "value": 24,
+                                                                                                          "left": null,
+                                                                                                          "right": {
+                                                                                                            "type": "treeNode",
+                                                                                                            "value": 976,
+                                                                                                            "left": {
+                                                                                                              "type": "treeNode",
+                                                                                                              "value": 25,
+                                                                                                              "left": null,
+                                                                                                              "right": {
+                                                                                                                "type": "treeNode",
+                                                                                                                "value": 975,
+                                                                                                                "left": {
+                                                                                                                  "type": "treeNode",
+                                                                                                                  "value": 26,
+                                                                                                                  "left": null,
+                                                                                                                  "right": {
+                                                                                                                    "type": "treeNode",
+                                                                                                                    "value": 974,
+                                                                                                                    "left": {
+                                                                                                                      "type": "treeNode",
+                                                                                                                      "value": 27,
+                                                                                                                      "left": null,
+                                                                                                                      "right": {
+                                                                                                                        "type": "treeNode",
+                                                                                                                        "value": 973,
+                                                                                                                        "left": {
+                                                                                                                          "type": "treeNode",
+                                                                                                                          "value": 28,
+                                                                                                                          "left": null,
+                                                                                                                          "right": {
+                                                                                                                            "type": "treeNode",
+                                                                                                                            "value": 972,
+                                                                                                                            "left": {
+                                                                                                                              "type": "treeNode",
+                                                                                                                              "value": 29,
+                                                                                                                              "left": null,
+                                                                                                                              "right": {
+                                                                                                                                "type": "treeNode",
+                                                                                                                                "value": 971,
+                                                                                                                                "left": {
+                                                                                                                                  "type": "treeNode",
+                                                                                                                                  "value": 30,
+                                                                                                                                  "left": null,
+                                                                                                                                  "right": {
+                                                                                                                                    "type": "treeNode",
+                                                                                                                                    "value": 500,
+                                                                                                                                    "left": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 300,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 200,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 400,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      }
+                                                                                                                                    },
+                                                                                                                                    "right": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 700,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 600,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 800,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      }
+                                                                                                                                    }
+                                                                                                                                  }
+                                                                                                                                },
+                                                                                                                                "right": null
+                                                                                                                              }
+                                                                                                                            },
+                                                                                                                            "right": null
+                                                                                                                          }
+                                                                                                                        },
+                                                                                                                        "right": null
+                                                                                                                      }
+                                                                                                                    },
+                                                                                                                    "right": null
+                                                                                                                  }
+                                                                                                                },
+                                                                                                                "right": null
+                                                                                                              }
+                                                                                                            },
+                                                                                                            "right": null
+                                                                                                          }
+                                                                                                        },
+                                                                                                        "right": null
+                                                                                                      }
+                                                                                                    },
+                                                                                                    "right": null
+                                                                                                  }
+                                                                                                },
+                                                                                                "right": null
+                                                                                              }
+                                                                                            },
+                                                                                            "right": null
+                                                                                          }
+                                                                                        },
+                                                                                        "right": null
+                                                                                      }
+                                                                                    },
+                                                                                    "right": null
+                                                                                  }
+                                                                                },
+                                                                                "right": null
+                                                                              }
+                                                                            },
+                                                                            "right": null
+                                                                          }
+                                                                        },
+                                                                        "right": null
+                                                                      }
+                                                                    },
+                                                                    "right": null
+                                                                  }
+                                                                },
+                                                                "right": null
+                                                              }
+                                                            },
+                                                            "right": null
+                                                          }
+                                                        },
+                                                        "right": null
+                                                      }
+                                                    },
+                                                    "right": null
+                                                  }
+                                                },
+                                                "right": null
+                                              }
+                                            },
+                                            "right": null
+                                          }
+                                        },
+                                        "right": null
+                                      }
+                                    },
+                                    "right": null
+                                  }
+                                },
+                                "right": null
+                              }
+                            },
+                            "right": null
+                          }
+                        },
+                        "right": null
+                      }
+                    },
+                    "right": null
+                  }
+                },
+                "right": null
+              }
+            },
+            "right": null
+          },
+          "a": 800,
+          "b": 200
+        },
+        "out": 500
+      },
+      {
+        "id": "h11",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1000,
+            "left": {
+              "type": "treeNode",
+              "value": 1,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 999,
+                "left": {
+                  "type": "treeNode",
+                  "value": 2,
+                  "left": null,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 998,
+                    "left": {
+                      "type": "treeNode",
+                      "value": 3,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 997,
+                        "left": {
+                          "type": "treeNode",
+                          "value": 4,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 996,
+                            "left": {
+                              "type": "treeNode",
+                              "value": 5,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 995,
+                                "left": {
+                                  "type": "treeNode",
+                                  "value": 6,
+                                  "left": null,
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 994,
+                                    "left": {
+                                      "type": "treeNode",
+                                      "value": 7,
+                                      "left": null,
+                                      "right": {
+                                        "type": "treeNode",
+                                        "value": 993,
+                                        "left": {
+                                          "type": "treeNode",
+                                          "value": 8,
+                                          "left": null,
+                                          "right": {
+                                            "type": "treeNode",
+                                            "value": 992,
+                                            "left": {
+                                              "type": "treeNode",
+                                              "value": 9,
+                                              "left": null,
+                                              "right": {
+                                                "type": "treeNode",
+                                                "value": 991,
+                                                "left": {
+                                                  "type": "treeNode",
+                                                  "value": 10,
+                                                  "left": null,
+                                                  "right": {
+                                                    "type": "treeNode",
+                                                    "value": 990,
+                                                    "left": {
+                                                      "type": "treeNode",
+                                                      "value": 11,
+                                                      "left": null,
+                                                      "right": {
+                                                        "type": "treeNode",
+                                                        "value": 989,
+                                                        "left": {
+                                                          "type": "treeNode",
+                                                          "value": 12,
+                                                          "left": null,
+                                                          "right": {
+                                                            "type": "treeNode",
+                                                            "value": 988,
+                                                            "left": {
+                                                              "type": "treeNode",
+                                                              "value": 13,
+                                                              "left": null,
+                                                              "right": {
+                                                                "type": "treeNode",
+                                                                "value": 987,
+                                                                "left": {
+                                                                  "type": "treeNode",
+                                                                  "value": 14,
+                                                                  "left": null,
+                                                                  "right": {
+                                                                    "type": "treeNode",
+                                                                    "value": 986,
+                                                                    "left": {
+                                                                      "type": "treeNode",
+                                                                      "value": 15,
+                                                                      "left": null,
+                                                                      "right": {
+                                                                        "type": "treeNode",
+                                                                        "value": 985,
+                                                                        "left": {
+                                                                          "type": "treeNode",
+                                                                          "value": 16,
+                                                                          "left": null,
+                                                                          "right": {
+                                                                            "type": "treeNode",
+                                                                            "value": 984,
+                                                                            "left": {
+                                                                              "type": "treeNode",
+                                                                              "value": 17,
+                                                                              "left": null,
+                                                                              "right": {
+                                                                                "type": "treeNode",
+                                                                                "value": 983,
+                                                                                "left": {
+                                                                                  "type": "treeNode",
+                                                                                  "value": 18,
+                                                                                  "left": null,
+                                                                                  "right": {
+                                                                                    "type": "treeNode",
+                                                                                    "value": 982,
+                                                                                    "left": {
+                                                                                      "type": "treeNode",
+                                                                                      "value": 19,
+                                                                                      "left": null,
+                                                                                      "right": {
+                                                                                        "type": "treeNode",
+                                                                                        "value": 981,
+                                                                                        "left": {
+                                                                                          "type": "treeNode",
+                                                                                          "value": 20,
+                                                                                          "left": null,
+                                                                                          "right": {
+                                                                                            "type": "treeNode",
+                                                                                            "value": 980,
+                                                                                            "left": {
+                                                                                              "type": "treeNode",
+                                                                                              "value": 21,
+                                                                                              "left": null,
+                                                                                              "right": {
+                                                                                                "type": "treeNode",
+                                                                                                "value": 979,
+                                                                                                "left": {
+                                                                                                  "type": "treeNode",
+                                                                                                  "value": 22,
+                                                                                                  "left": null,
+                                                                                                  "right": {
+                                                                                                    "type": "treeNode",
+                                                                                                    "value": 978,
+                                                                                                    "left": {
+                                                                                                      "type": "treeNode",
+                                                                                                      "value": 23,
+                                                                                                      "left": null,
+                                                                                                      "right": {
+                                                                                                        "type": "treeNode",
+                                                                                                        "value": 977,
+                                                                                                        "left": {
+                                                                                                          "type": "treeNode",
+                                                                                                          "value": 24,
+                                                                                                          "left": null,
+                                                                                                          "right": {
+                                                                                                            "type": "treeNode",
+                                                                                                            "value": 976,
+                                                                                                            "left": {
+                                                                                                              "type": "treeNode",
+                                                                                                              "value": 25,
+                                                                                                              "left": null,
+                                                                                                              "right": {
+                                                                                                                "type": "treeNode",
+                                                                                                                "value": 975,
+                                                                                                                "left": {
+                                                                                                                  "type": "treeNode",
+                                                                                                                  "value": 26,
+                                                                                                                  "left": null,
+                                                                                                                  "right": {
+                                                                                                                    "type": "treeNode",
+                                                                                                                    "value": 974,
+                                                                                                                    "left": {
+                                                                                                                      "type": "treeNode",
+                                                                                                                      "value": 27,
+                                                                                                                      "left": null,
+                                                                                                                      "right": {
+                                                                                                                        "type": "treeNode",
+                                                                                                                        "value": 973,
+                                                                                                                        "left": {
+                                                                                                                          "type": "treeNode",
+                                                                                                                          "value": 28,
+                                                                                                                          "left": null,
+                                                                                                                          "right": {
+                                                                                                                            "type": "treeNode",
+                                                                                                                            "value": 972,
+                                                                                                                            "left": {
+                                                                                                                              "type": "treeNode",
+                                                                                                                              "value": 29,
+                                                                                                                              "left": null,
+                                                                                                                              "right": {
+                                                                                                                                "type": "treeNode",
+                                                                                                                                "value": 971,
+                                                                                                                                "left": {
+                                                                                                                                  "type": "treeNode",
+                                                                                                                                  "value": 30,
+                                                                                                                                  "left": null,
+                                                                                                                                  "right": {
+                                                                                                                                    "type": "treeNode",
+                                                                                                                                    "value": 500,
+                                                                                                                                    "left": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 300,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 200,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 400,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      }
+                                                                                                                                    },
+                                                                                                                                    "right": {
+                                                                                                                                      "type": "treeNode",
+                                                                                                                                      "value": 700,
+                                                                                                                                      "left": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 600,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      },
+                                                                                                                                      "right": {
+                                                                                                                                        "type": "treeNode",
+                                                                                                                                        "value": 800,
+                                                                                                                                        "left": null,
+                                                                                                                                        "right": null
+                                                                                                                                      }
+                                                                                                                                    }
+                                                                                                                                  }
+                                                                                                                                },
+                                                                                                                                "right": null
+                                                                                                                              }
+                                                                                                                            },
+                                                                                                                            "right": null
+                                                                                                                          }
+                                                                                                                        },
+                                                                                                                        "right": null
+                                                                                                                      }
+                                                                                                                    },
+                                                                                                                    "right": null
+                                                                                                                  }
+                                                                                                                },
+                                                                                                                "right": null
+                                                                                                              }
+                                                                                                            },
+                                                                                                            "right": null
+                                                                                                          }
+                                                                                                        },
+                                                                                                        "right": null
+                                                                                                      }
+                                                                                                    },
+                                                                                                    "right": null
+                                                                                                  }
+                                                                                                },
+                                                                                                "right": null
+                                                                                              }
+                                                                                            },
+                                                                                            "right": null
+                                                                                          }
+                                                                                        },
+                                                                                        "right": null
+                                                                                      }
+                                                                                    },
+                                                                                    "right": null
+                                                                                  }
+                                                                                },
+                                                                                "right": null
+                                                                              }
+                                                                            },
+                                                                            "right": null
+                                                                          }
+                                                                        },
+                                                                        "right": null
+                                                                      }
+                                                                    },
+                                                                    "right": null
+                                                                  }
+                                                                },
+                                                                "right": null
+                                                              }
+                                                            },
+                                                            "right": null
+                                                          }
+                                                        },
+                                                        "right": null
+                                                      }
+                                                    },
+                                                    "right": null
+                                                  }
+                                                },
+                                                "right": null
+                                              }
+                                            },
+                                            "right": null
+                                          }
+                                        },
+                                        "right": null
+                                      }
+                                    },
+                                    "right": null
+                                  }
+                                },
+                                "right": null
+                              }
+                            },
+                            "right": null
+                          }
+                        },
+                        "right": null
+                      }
+                    },
+                    "right": null
+                  }
+                },
+                "right": null
+              }
+            },
+            "right": null
+          },
+          "a": 600,
+          "b": 20
+        },
+        "out": 20
+      },
+      {
+        "id": "h12",
+        "in": {
+          "root": {
+            "type": "treeNode",
+            "value": 1,
+            "left": null,
+            "right": {
+              "type": "treeNode",
+              "value": 2,
+              "left": null,
+              "right": {
+                "type": "treeNode",
+                "value": 3,
+                "left": null,
+                "right": {
+                  "type": "treeNode",
+                  "value": 4,
+                  "left": null,
+                  "right": {
+                    "type": "treeNode",
+                    "value": 5,
+                    "left": null,
+                    "right": {
+                      "type": "treeNode",
+                      "value": 6,
+                      "left": null,
+                      "right": {
+                        "type": "treeNode",
+                        "value": 7,
+                        "left": null,
+                        "right": {
+                          "type": "treeNode",
+                          "value": 8,
+                          "left": null,
+                          "right": {
+                            "type": "treeNode",
+                            "value": 9,
+                            "left": null,
+                            "right": {
+                              "type": "treeNode",
+                              "value": 10,
+                              "left": null,
+                              "right": {
+                                "type": "treeNode",
+                                "value": 11,
+                                "left": null,
+                                "right": {
+                                  "type": "treeNode",
+                                  "value": 12,
+                                  "left": null,
+                                  "right": {
+                                    "type": "treeNode",
+                                    "value": 13,
+                                    "left": null,
+                                    "right": {
+                                      "type": "treeNode",
+                                      "value": 14,
+                                      "left": null,
+                                      "right": {
+                                        "type": "treeNode",
+                                        "value": 15,
+                                        "left": null,
+                                        "right": {
+                                          "type": "treeNode",
+                                          "value": 16,
+                                          "left": null,
+                                          "right": {
+                                            "type": "treeNode",
+                                            "value": 17,
+                                            "left": null,
+                                            "right": {
+                                              "type": "treeNode",
+                                              "value": 18,
+                                              "left": null,
+                                              "right": {
+                                                "type": "treeNode",
+                                                "value": 19,
+                                                "left": null,
+                                                "right": {
+                                                  "type": "treeNode",
+                                                  "value": 20,
+                                                  "left": null,
+                                                  "right": {
+                                                    "type": "treeNode",
+                                                    "value": 21,
+                                                    "left": null,
+                                                    "right": {
+                                                      "type": "treeNode",
+                                                      "value": 22,
+                                                      "left": null,
+                                                      "right": {
+                                                        "type": "treeNode",
+                                                        "value": 23,
+                                                        "left": null,
+                                                        "right": {
+                                                          "type": "treeNode",
+                                                          "value": 24,
+                                                          "left": null,
+                                                          "right": {
+                                                            "type": "treeNode",
+                                                            "value": 25,
+                                                            "left": null,
+                                                            "right": {
+                                                              "type": "treeNode",
+                                                              "value": 26,
+                                                              "left": null,
+                                                              "right": {
+                                                                "type": "treeNode",
+                                                                "value": 27,
+                                                                "left": null,
+                                                                "right": {
+                                                                  "type": "treeNode",
+                                                                  "value": 28,
+                                                                  "left": null,
+                                                                  "right": {
+                                                                    "type": "treeNode",
+                                                                    "value": 29,
+                                                                    "left": null,
+                                                                    "right": {
+                                                                      "type": "treeNode",
+                                                                      "value": 30,
+                                                                      "left": null,
+                                                                      "right": {
+                                                                        "type": "treeNode",
+                                                                        "value": 31,
+                                                                        "left": null,
+                                                                        "right": {
+                                                                          "type": "treeNode",
+                                                                          "value": 32,
+                                                                          "left": null,
+                                                                          "right": {
+                                                                            "type": "treeNode",
+                                                                            "value": 33,
+                                                                            "left": null,
+                                                                            "right": {
+                                                                              "type": "treeNode",
+                                                                              "value": 34,
+                                                                              "left": null,
+                                                                              "right": {
+                                                                                "type": "treeNode",
+                                                                                "value": 35,
+                                                                                "left": null,
+                                                                                "right": {
+                                                                                  "type": "treeNode",
+                                                                                  "value": 36,
+                                                                                  "left": null,
+                                                                                  "right": {
+                                                                                    "type": "treeNode",
+                                                                                    "value": 37,
+                                                                                    "left": null,
+                                                                                    "right": {
+                                                                                      "type": "treeNode",
+                                                                                      "value": 38,
+                                                                                      "left": null,
+                                                                                      "right": {
+                                                                                        "type": "treeNode",
+                                                                                        "value": 39,
+                                                                                        "left": null,
+                                                                                        "right": {
+                                                                                          "type": "treeNode",
+                                                                                          "value": 40,
+                                                                                          "left": null,
+                                                                                          "right": {
+                                                                                            "type": "treeNode",
+                                                                                            "value": 41,
+                                                                                            "left": null,
+                                                                                            "right": {
+                                                                                              "type": "treeNode",
+                                                                                              "value": 42,
+                                                                                              "left": null,
+                                                                                              "right": {
+                                                                                                "type": "treeNode",
+                                                                                                "value": 43,
+                                                                                                "left": null,
+                                                                                                "right": {
+                                                                                                  "type": "treeNode",
+                                                                                                  "value": 44,
+                                                                                                  "left": null,
+                                                                                                  "right": {
+                                                                                                    "type": "treeNode",
+                                                                                                    "value": 45,
+                                                                                                    "left": null,
+                                                                                                    "right": {
+                                                                                                      "type": "treeNode",
+                                                                                                      "value": 46,
+                                                                                                      "left": null,
+                                                                                                      "right": {
+                                                                                                        "type": "treeNode",
+                                                                                                        "value": 47,
+                                                                                                        "left": null,
+                                                                                                        "right": {
+                                                                                                          "type": "treeNode",
+                                                                                                          "value": 48,
+                                                                                                          "left": null,
+                                                                                                          "right": {
+                                                                                                            "type": "treeNode",
+                                                                                                            "value": 49,
+                                                                                                            "left": null,
+                                                                                                            "right": {
+                                                                                                              "type": "treeNode",
+                                                                                                              "value": 50,
+                                                                                                              "left": null,
+                                                                                                              "right": {
+                                                                                                                "type": "treeNode",
+                                                                                                                "value": 51,
+                                                                                                                "left": null,
+                                                                                                                "right": {
+                                                                                                                  "type": "treeNode",
+                                                                                                                  "value": 52,
+                                                                                                                  "left": null,
+                                                                                                                  "right": {
+                                                                                                                    "type": "treeNode",
+                                                                                                                    "value": 53,
+                                                                                                                    "left": null,
+                                                                                                                    "right": {
+                                                                                                                      "type": "treeNode",
+                                                                                                                      "value": 54,
+                                                                                                                      "left": null,
+                                                                                                                      "right": {
+                                                                                                                        "type": "treeNode",
+                                                                                                                        "value": 55,
+                                                                                                                        "left": null,
+                                                                                                                        "right": {
+                                                                                                                          "type": "treeNode",
+                                                                                                                          "value": 56,
+                                                                                                                          "left": null,
+                                                                                                                          "right": {
+                                                                                                                            "type": "treeNode",
+                                                                                                                            "value": 57,
+                                                                                                                            "left": null,
+                                                                                                                            "right": {
+                                                                                                                              "type": "treeNode",
+                                                                                                                              "value": 58,
+                                                                                                                              "left": null,
+                                                                                                                              "right": {
+                                                                                                                                "type": "treeNode",
+                                                                                                                                "value": 59,
+                                                                                                                                "left": null,
+                                                                                                                                "right": {
+                                                                                                                                  "type": "treeNode",
+                                                                                                                                  "value": 60,
+                                                                                                                                  "left": null,
+                                                                                                                                  "right": null
+                                                                                                                                }
+                                                                                                                              }
+                                                                                                                            }
+                                                                                                                          }
+                                                                                                                        }
+                                                                                                                      }
+                                                                                                                    }
+                                                                                                                  }
+                                                                                                                }
+                                                                                                              }
+                                                                                                            }
+                                                                                                          }
+                                                                                                        }
+                                                                                                      }
+                                                                                                    }
+                                                                                                  }
+                                                                                                }
+                                                                                              }
+                                                                                            }
+                                                                                          }
+                                                                                        }
+                                                                                      }
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "a": 59,
+          "b": 50
+        },
+        "out": 50
+      }
+    ]
+  },
+  "edgeCases": ["one member is the ancestor of the other", "the larger member given first", "both members deep in one branch", "a tree as deep as it is large: the way down does not fit in memory"],
+  "variables": {
+    "pool": [
+      {"name": "cur", "type": "treeNode?"},
+      {"name": "v", "type": "num"},
+      {"name": "path", "type": "array<num>"},
+      {"name": "i", "type": "num"},
+      {"name": "best", "type": "num"}
+    ]
+  },
+  "reference": {"strategy": "bst_split_point_descent"}
+}
