@@ -405,7 +405,6 @@
   "traceHelp": "Bu nasıl çalışır",
   "traceCannot": "Bu vaka adım adım izlenemiyor.",
   "traceCurrentBlock": "az önce çalışan blok",
-  "tracePosition": "{position} / {total}",
   "traceOpsSoFar": "Şimdiye kadar kullanılan adım: {used} / {budget}",
   "traceDepthNow": "Derinlik {depth} / {budget}",
   "traceLongRun": "Uzun bir çalışma: {total} komut çalıştı. İçinde ilerledikçe her seferinde {window} tanesi yüklenir.",

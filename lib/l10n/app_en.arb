@@ -1157,17 +1157,6 @@
   "traceHelp": "How this works",
   "traceCannot": "This case cannot be stepped through.",
   "traceCurrentBlock": "the block that just ran",
-  "tracePosition": "{position} / {total}",
-  "@tracePosition": {
-    "placeholders": {
-      "position": {
-        "type": "String"
-      },
-      "total": {
-        "type": "String"
-      }
-    }
-  },
   "traceOpsSoFar": "Steps used so far: {used} of {budget}",
   "@traceOpsSoFar": {
     "placeholders": {

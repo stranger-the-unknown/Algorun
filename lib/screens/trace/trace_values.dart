@@ -632,7 +632,7 @@ class _Cell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    final caption = TextStyle(color: p.faint, fontSize: 10, height: 1.2);
+    final caption = TextStyle(color: p.faint, fontSize: 11, height: 1.2);
     final box = Container(
       constraints: const BoxConstraints(minWidth: 30, minHeight: 28),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
@@ -692,7 +692,11 @@ class _Cell extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (above != null)
-            SizedBox(height: 14, child: Text(above!, style: caption)),
+            // Room for one caption line at the player's font size.
+            SizedBox(
+              height: MediaQuery.textScalerOf(context).scale(11) * 1.3,
+              child: Text(above!, style: caption),
+            ),
           cell,
           if (below != null && below!.isNotEmpty)
             Text(below!, style: caption.copyWith(color: p.muted)),

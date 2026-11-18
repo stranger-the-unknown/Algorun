@@ -468,13 +468,14 @@ class _Controls extends StatelessWidget {
                     session.goTo(value.round());
                     onDrag(null);
                   },
-                  semanticFormatterCallback: (value) => l.tracePosition(count(value.round() + 1), count(total)),
+                  semanticFormatterCallback: (value) => '${count(value.round() + 1)} / ${count(total)}',
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: AppSpace.s2),
                 child: Text(
-                  l.tracePosition(count(shown), count(total)),
+                  // The same in every language: no word, just where and how many.
+                  '${count(shown)} / ${count(total)}',
                   key: const Key('trace-position'),
                   style: TextStyle(
                     color: p.fg,

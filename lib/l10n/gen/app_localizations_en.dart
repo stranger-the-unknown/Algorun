@@ -1439,11 +1439,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get traceCurrentBlock => 'the block that just ran';
 
   @override
-  String tracePosition(String position, String total) {
-    return '$position / $total';
-  }
-
-  @override
   String traceOpsSoFar(String used, String budget) {
     return 'Steps used so far: $used of $budget';
   }

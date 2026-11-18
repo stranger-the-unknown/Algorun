@@ -2528,12 +2528,6 @@ abstract class AppLocalizations {
   /// **'the block that just ran'**
   String get traceCurrentBlock;
 
-  /// No description provided for @tracePosition.
-  ///
-  /// In en, this message translates to:
-  /// **'{position} / {total}'**
-  String tracePosition(String position, String total);
-
   /// No description provided for @traceOpsSoFar.
   ///
   /// In en, this message translates to:

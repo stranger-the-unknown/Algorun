@@ -1428,11 +1428,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get traceCurrentBlock => 'az önce çalışan blok';
 
   @override
-  String tracePosition(String position, String total) {
-    return '$position / $total';
-  }
-
-  @override
   String traceOpsSoFar(String used, String budget) {
     return 'Şimdiye kadar kullanılan adım: $used / $budget';
   }

@@ -15,7 +15,8 @@ typedef TraceLoader = TraceRecording Function(int from);
 /// player steps through the whole run without the whole run ever being in
 /// memory.
 final class TraceSession extends ChangeNotifier {
-  TraceSession(this._load, {this.windowSteps = 2000}) : _recording = _load(0);
+  /// [first] is the window from position 0, when the caller already has it.
+  TraceSession(this._load, {this.windowSteps = 2000, TraceRecording? first}) : _recording = first ?? _load(0);
 
   /// The session for one visible case of [puzzle]; null when [caseId] is not
   /// a visible case (a hidden case is never traced).
@@ -25,12 +26,13 @@ final class TraceSession extends ChangeNotifier {
     String caseId, {
     TraceLimits limits = TraceLimits.standard,
   }) {
-    if (traceVisibleCase(program, puzzle, caseId, traceLimits: const TraceLimits(maxSteps: 1, maxCells: 1)) == null) {
-      return null;
-    }
+    // The engine decides what may be traced: null means "not a visible case".
+    final first = traceVisibleCase(program, puzzle, caseId, traceLimits: limits);
+    if (first == null) return null;
     return TraceSession(
       (from) => traceVisibleCase(program, puzzle, caseId, from: from, traceLimits: limits)!,
       windowSteps: limits.maxSteps,
+      first: first,
     );
   }
 
