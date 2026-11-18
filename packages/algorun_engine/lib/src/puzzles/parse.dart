@@ -376,7 +376,7 @@ final class _PuzzleSchema {
   BlockPolicy? _blocks(Map<String, Object?> m) {
     final b = r.object(m, 'blocks', '', required: true);
     if (b == null) return null;
-    r.closed(b, const {'allow', 'forbid', 'maxBlocks'}, 'blocks');
+    r.closed(b, const {'allow', 'forbid', 'maxBlocks', 'texts'}, 'blocks');
     final allow = r.strings(b, 'allow', 'blocks', required: true);
     final forbid = r.strings(b, 'forbid', 'blocks') ?? const [];
     if (allow != null && allow.isEmpty) {
@@ -393,8 +393,46 @@ final class _PuzzleSchema {
       }
     }
     final maxBlocks = r.integer(b, 'maxBlocks', 'blocks', min: 1, max: maxBlocksCeiling);
-    if (allow == null || allow.isEmpty) return null;
-    return BlockPolicy(allow: allow.toSet(), forbid: forbid.toSet(), maxBlocks: maxBlocks);
+    final texts = _texts(b, allow);
+    if (allow == null || allow.isEmpty || texts == null) return null;
+    return BlockPolicy(allow: allow.toSet(), forbid: forbid.toSet(), maxBlocks: maxBlocks, texts: texts);
+  }
+
+  /// `blocks.texts` (L3): the text constants the TEXT block offers, since the
+  /// editor has no keyboard. Closed data like `variables.pool`. The empty
+  /// text is always offered and is not listed.
+  List<String>? _texts(Map<String, Object?> b, List<String>? allow) {
+    if (!b.containsKey('texts')) return const [];
+    final raw = r.list(b, 'texts', 'blocks');
+    if (raw == null) return null;
+    var ok = true;
+    void bad(String at, String message) {
+      r.issue(at, message);
+      ok = false;
+    }
+
+    if (allow != null && !allow.contains(BlockIds.litStr)) {
+      bad('blocks.texts', 'Only meaningful when blocks.allow has "${BlockIds.litStr}".');
+    }
+    if (raw.length > BlockPolicy.maxTexts) {
+      bad('blocks.texts', 'At most ${BlockPolicy.maxTexts} texts.');
+    }
+    final out = <String>[];
+    for (final (i, item) in raw.indexed) {
+      final at = 'blocks.texts[$i]';
+      if (item is! String) {
+        bad(at, 'Must be text.');
+      } else if (item.isEmpty) {
+        bad(at, 'The empty text is always offered; do not list it.');
+      } else if (item.runes.length > BlockPolicy.maxTextLength) {
+        bad(at, 'At most ${BlockPolicy.maxTextLength} characters.');
+      } else if (out.contains(item)) {
+        bad(at, '"$item" is listed twice.');
+      } else {
+        out.add(item);
+      }
+    }
+    return ok ? out : null;
   }
 
   PerformanceTarget? _limits(Map<String, Object?> m) {

@@ -254,6 +254,20 @@ final class TreeNodeValue extends RuntimeValue {
   }
 }
 
+/// algorun-lang D9: an immutable pair of two values (PAIR blocks).
+final class PairValue extends RuntimeValue {
+  PairValue(this.first, this.second, {this.id = 0});
+  final int id;
+  final RuntimeValue first;
+  final RuntimeValue second;
+
+  @override
+  ValueType get type => ValueType.pairOf(first.type, second.type);
+
+  @override
+  Object? toJson() => [first.toJson(), second.toJson()];
+}
+
 /// Adjacency-list graph with a visited set the VM can mark.
 final class GraphValue extends RuntimeValue {
   GraphValue(this.adjacency, {Set<num>? visited, this.id = 0})

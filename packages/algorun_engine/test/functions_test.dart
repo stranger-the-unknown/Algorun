@@ -152,10 +152,11 @@ void main() {
         ],
         'returns': 'num',
       }),
-      ('more than three parameters', {
+      // algorun-lang D10: the limit is six (game: three).
+      ('more than six parameters', {
         'name': 'f',
         'params': [
-          for (final p in ['a', 'b', 'c', 'd']) {'name': p, 'type': 'num'},
+          for (final p in ['a', 'b', 'c', 'd', 'e', 'f', 'g']) {'name': p, 'type': 'num'},
         ],
         'returns': 'num',
       }),
@@ -401,9 +402,11 @@ void main() {
       // Keep only the IF in fact's body: k > 1 falls off the end.
       final body = graph.slotList('fn_fact', 'body');
       final g = graph.replaceBlock(graph.blocks['fn_fact']!.copyWith(slots: {'body': ListBinding([body.first])}));
-      final run = _run(puzzle, g, {'n': 3});
-      expect(run.kind, ResultKind.runtimeError);
-      expect(run.message, 'FUNCTION fact ended without RETURN.');
+      // algorun-lang D11: found before running (game: runtime error).
+      final lowered = lower(g, puzzle);
+      expect(lowered.ok, isFalse);
+      expect(lowered.errors.map((e) => e.code), contains('missing_return'));
+      expect(lowered.errors.first.message, 'FUNCTION fact can end without RETURN.');
     });
   });
 }

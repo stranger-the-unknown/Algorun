@@ -23,6 +23,7 @@
 /// {"type": "listNode", "values": [3, 2, 0, -4], "cycleTo": 1}
 /// {"type": "treeNode", "value": 2, "left": {...}, "right": null}
 /// {"type": "graph", "nodes": [{"id": 0, "neighbors": [1]}, {"id": 1, "neighbors": [0]}]}
+/// {"type": "pair", "first": "ada", "second": 3}  // L3
 /// ```
 ///
 /// Nothing is guessed from an object's shape, and nothing in a fixture is ever
@@ -67,6 +68,7 @@ const Map<String, TypeAtom> fixtureTags = {
   'listNode': TypeAtom.listNode,
   'treeNode': TypeAtom.treeNode,
   'graph': TypeAtom.graph,
+  'pair': TypeAtom.pair,
 };
 
 /// Decode canonical fixture JSON.
@@ -106,8 +108,13 @@ String? fixtureTypeProblem(ValueType type) {
       return 'void is not a value.';
     case TypeAtom.generic:
       return 'A fixture needs a concrete type, not ${type.genericName}.';
-    case TypeAtom.heap || TypeAtom.pair:
+    case TypeAtom.heap:
       return '${type.atom.name} has no fixture format yet.';
+    case TypeAtom.pair:
+      final first = type.param;
+      final second = type.param2;
+      if (first == null || second == null) return 'A pair needs two value types.';
+      return fixtureTypeProblem(first) ?? fixtureTypeProblem(second);
     case TypeAtom.set:
       final element = type.param;
       if (element == null || !_isKeyType(element)) {
@@ -237,8 +244,29 @@ final class _Decoder {
       TypeAtom.listNode => _list(object, path),
       TypeAtom.treeNode => _tree(object, path, depth),
       TypeAtom.graph => _graph(object, path),
+      TypeAtom.pair => _pair(object, type, path, depth),
       _ => throw StateError('unreachable tag $tag'),
     };
+  }
+
+  /// `{"type": "pair", "first": …, "second": …}` (L3). Both sides are
+  /// required; a side that may be empty is written `null`.
+  RuntimeValue _pair(
+    Map<String, Object?> object,
+    ValueType? type,
+    String path,
+    int depth,
+  ) {
+    _closed(object, const {'type', 'first', 'second'}, path);
+    for (final side in const ['first', 'second']) {
+      if (!object.containsKey(side)) {
+        throw FixtureFormatException(path, 'A pair needs "first" and "second".');
+      }
+    }
+    return PairValue(
+      decode(object['first'], type?.param, '$path.first', depth + 1),
+      decode(object['second'], type?.param2, '$path.second', depth + 1),
+    );
   }
 
   RuntimeValue _map(
@@ -537,6 +565,12 @@ final class _Encoder {
       final ListNodeValue head => _list(head, path),
       final TreeNodeValue root => _tree(root, path, depth, <TreeNodeValue>{}),
       final GraphValue graph => _graph(graph, path),
+      // algorun-lang D9 spelling; the game also reads it back (L3).
+      PairValue(:final first, :final second) => {
+          'type': 'pair',
+          'first': encode(first, '$path.first', depth + 1),
+          'second': encode(second, '$path.second', depth + 1),
+        },
     };
   }
 

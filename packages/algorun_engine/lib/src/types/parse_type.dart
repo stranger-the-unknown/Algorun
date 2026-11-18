@@ -13,6 +13,13 @@ ValueType _parseType(String s) {
   }
   final lt = body.indexOf('<');
   if (lt == -1) {
+    // algorun-lang deviation D1: the game's IR writer emits unresolved generic
+    // parameters (T, K, V) via ValueType.toString(), but the game's parser
+    // rejects them, so Program.fromJson(program.toJson()) fails. Accept a
+    // single capital letter as a generic name so IR JSON round-trips.
+    if (RegExp(r'^[A-Z]$').hasMatch(body)) {
+      return ValueType.generic(body, nullable: nullable);
+    }
     return ValueType(_atom(body), nullable: nullable);
   }
   if (!body.endsWith('>')) {
