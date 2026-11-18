@@ -62,6 +62,11 @@ CaseMeasurement measureCase(Program program, Puzzle puzzle, TestCase testCase) {
   );
 }
 
+/// The limits the test runner gives [testCase]: the puzzle's memory and depth
+/// limits and the case's own operation budget. Anything that wants to run a
+/// case exactly as it was graded (the step-through trace, T1) uses this.
+RunLimits caseLimits(Puzzle puzzle, TestCase testCase) => _limits(puzzle, puzzle.opsBudgetFor(testCase));
+
 RunLimits _limits(Puzzle puzzle, int maxOps) => RunLimits(
       maxOps: maxOps,
       maxDepth: puzzle.limits.maxDepth,

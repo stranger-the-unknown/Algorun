@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import '../ast/ir.dart';
 import '../blocks/catalog.dart';
 import '../runtime/limits.dart';
@@ -58,6 +60,13 @@ final class Interpreter {
   int _nesting = 0;
   int _nextId = 1;
 
+  // Trace only: the open frames, and whether the failure has been reported.
+  // Nothing here is touched when [trace] is null.
+  final List<TraceFrame> _frames = [];
+  late final List<TraceFrame> _framesView = UnmodifiableListView(_frames);
+  int _frameSerial = 0;
+  bool _haltEmitted = false;
+
   /// Execute the entry function. Never throws: every failure comes back as a
   /// [RunResult]. [ResultKind.correct] means "ran to completion" — comparing
   /// the output against what a puzzle expects is the test runner's job.
@@ -78,6 +87,7 @@ final class Interpreter {
         output: output,
       );
     } on _Halt catch (halt) {
+      _emitHalt(halt);
       return RunResult(
         kind: halt.kind,
         metrics: _metrics(),
@@ -110,8 +120,19 @@ final class Interpreter {
       );
     }
     if (_depth > _peakDepth) _peakDepth = _depth;
+    final tracing = trace != null;
+    var framed = false;
     try {
       final vars = <String, RuntimeValue>{};
+      if (tracing) {
+        _frames.add(TraceFrame(
+          serial: ++_frameSerial,
+          function: fn.name,
+          blockId: fn.srcBlockId,
+          vars: vars,
+        ));
+        framed = true;
+      }
       for (final param in fn.params) {
         final value = args[param.name];
         if (value == null) {
@@ -130,6 +151,9 @@ final class Interpreter {
           vars.putIfAbsent(entry.key, () => _copy(entry.value, {}));
         }
       }
+      if (tracing) {
+        _emit(isEntry ? TraceKinds.start : TraceKinds.call, fn.srcBlockId, vars);
+      }
       switch (_execAll(fn.body, vars)) {
         case final _Return signal:
           return signal.value;
@@ -147,7 +171,12 @@ final class Interpreter {
           }
           return const NilValue();
       }
+    } on _Halt catch (halt) {
+      // Reported from the innermost frame, while its names are still there.
+      _emitHalt(halt);
+      rethrow;
     } finally {
+      if (framed) _frames.removeLast();
       _depth--;
     }
   }
@@ -174,11 +203,13 @@ final class Interpreter {
         case final SeqStmt s:
           return _execAll(s.stmts, vars);
         case final ExprStmt s:
-          _eval(s.expr, vars);
+          final value = _eval(s.expr, vars);
+          _emit(TraceKinds.expr, s.srcBlockId ?? s.expr.srcBlockId, vars, value: value);
         case final IfStmt s:
           _tick(s.srcBlockId);
-          _emit('if', s.srcBlockId, vars);
-          if (_bool(_eval(s.cond, vars), s.cond.srcBlockId)) {
+          final holds = _bool(_eval(s.cond, vars), s.cond.srcBlockId);
+          _emit(TraceKinds.ifStep, s.srcBlockId, vars, flag: holds);
+          if (holds) {
             return _execAll(s.thenBody, vars);
           } else {
             final otherwise = s.elseBody;
@@ -187,8 +218,9 @@ final class Interpreter {
         case final WhileStmt s:
           while (true) {
             _tick(s.srcBlockId);
-            _emit('while', s.srcBlockId, vars);
-            if (!_bool(_eval(s.cond, vars), s.cond.srcBlockId)) break;
+            final holds = _bool(_eval(s.cond, vars), s.cond.srcBlockId);
+            _emit(TraceKinds.whileStep, s.srcBlockId, vars, flag: holds);
+            if (!holds) break;
             final flow = _loopBody(s.body, vars);
             if (flow is _Return) return flow;
             if (flow != null) break;
@@ -199,19 +231,22 @@ final class Interpreter {
           return _execForEach(s, vars);
         case final BreakStmt s:
           _tick(s.srcBlockId);
+          _emit(TraceKinds.breakStep, s.srcBlockId, vars);
           return _Loop(isBreak: true, blockId: s.srcBlockId);
         case final ContinueStmt s:
           _tick(s.srcBlockId);
+          _emit(TraceKinds.continueStep, s.srcBlockId, vars);
           return _Loop(isBreak: false, blockId: s.srcBlockId);
         case final ReturnStmt s:
           _tick(s.srcBlockId);
-          _emit('return', s.srcBlockId, vars);
           final value = s.value;
-          return _Return(value == null ? const NilValue() : _eval(value, vars));
+          final result = value == null ? const NilValue() : _eval(value, vars);
+          _emit(TraceKinds.returnStep, s.srcBlockId, vars, value: result);
+          return _Return(result);
         case final AssignStmt s:
           _tick(s.srcBlockId);
           _assign(s.target, _eval(s.value, vars), vars);
-          _emit('assign', s.srcBlockId, vars);
+          _emit(TraceKinds.assign, s.srcBlockId, vars);
         case final IncStmt s:
           _step(s.target, 1, s.srcBlockId, vars);
         case final DecStmt s:
@@ -243,12 +278,13 @@ final class Interpreter {
       // The counter belongs to the loop: changing the loop variable inside
       // the body cannot change how many times it runs.
       vars[s.loopVar] = NumValue(cursor);
-      _emit('forRange', s.srcBlockId, vars);
+      _emit(TraceKinds.forRange, s.srcBlockId, vars);
       final flow = _loopBody(s.body, vars);
       if (flow is _Return) return flow;
-      if (flow != null) break;
+      if (flow != null) return null;
       cursor += step;
     }
+    _emit(TraceKinds.loopEnd, s.srcBlockId, vars);
     return null;
   }
 
@@ -262,11 +298,12 @@ final class Interpreter {
       _tick(s.srcBlockId);
       vars[s.itemVar] = items[index];
       if (indexVar != null) vars[indexVar] = NumValue(index);
-      _emit('forEach', s.srcBlockId, vars);
+      _emit(TraceKinds.forEach, s.srcBlockId, vars);
       final flow = _loopBody(s.body, vars);
       if (flow is _Return) return flow;
-      if (flow != null) break;
+      if (flow != null) return null;
     }
+    _emit(TraceKinds.loopEnd, s.srcBlockId, vars);
     return null;
   }
 
@@ -287,7 +324,7 @@ final class Interpreter {
     _tick(blockId);
     final current = _num(_read(target, vars, blockId), blockId);
     _assign(target, NumValue(current + delta), vars);
-    _emit(delta > 0 ? 'inc' : 'dec', blockId, vars);
+    _emit(delta > 0 ? TraceKinds.inc : TraceKinds.dec, blockId, vars);
   }
 
   // --- targets ------------------------------------------------------------
@@ -1007,16 +1044,37 @@ final class Interpreter {
 
   // --- trace --------------------------------------------------------------
 
-  void _emit(String kind, String? blockId, Map<String, RuntimeValue> vars) {
+  /// One step for the sink. Never counts an operation and never touches the
+  /// run: with no sink this returns at once.
+  void _emit(
+    String kind,
+    String? blockId,
+    Map<String, RuntimeValue> vars, {
+    RuntimeValue? value,
+    bool? flag,
+  }) {
     final sink = trace;
     if (sink == null) return;
     sink(TraceEvent(
       opIndex: _ops,
       kind: kind,
       blockId: blockId,
-      locals: {
-        for (final entry in vars.entries) entry.key: '${entry.value.toJson()}',
-      },
+      frames: _framesView,
+      value: value ?? (flag == null ? null : BoolValue(flag)),
+    ));
+  }
+
+  /// The failure that stops the run, once, as the last event.
+  void _emitHalt(_Halt halt) {
+    final sink = trace;
+    if (sink == null || _haltEmitted) return;
+    _haltEmitted = true;
+    sink(TraceEvent(
+      opIndex: _ops,
+      kind: TraceKinds.halt,
+      blockId: halt.blockId,
+      frames: _framesView,
+      message: halt.message,
     ));
   }
 
